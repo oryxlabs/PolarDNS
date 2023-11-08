@@ -5,26 +5,26 @@
 1. [Bad compression](bad-compression.md)
 1. [Empty responses](empty-responses.md)
 1. [Record injections](record-injections.md)
-	- [inj01](#inj01)
-	- [inj02](#inj02)
-	- [inj03](#inj03)
-	- [inj04](#inj04)
-	- [inj05](#inj05)
-	- [inj06](#inj06)
-	- [inj07](#inj07)
-	- [inj08](#inj08)
-	- [inj09](#inj09)
-	- [inj10](#inj10)
-	- [inj11](#inj11)
-	- [inj12](#inj12)
-	- [inj13](#inj13)
-	- [inj14](#inj14)
+	- [Injection 1 - CNAME with injected A record in the end (inj01)](#injection-1---cname-with-injected-a-record-in-the-end-inj01)
+	- [Injection 2 - CNAME with injected A record in the beginning (inj02)](#injection-2---cname-with-injected-a-record-in-the-beginning-inj02)
+	- [Injection 3 - A record with injected A record in the end (inj03)](#injection-3---a-record-with-injected-a-record-in-the-end-inj03)
+	- [Injection 4 - A record with injected A record in the beginning (inj04)](#injection-4---a-record-with-injected-a-record-in-the-beginning-inj04)
+	- [Injection 5 - CNAME and A records in all sections (inj05)](#injection-5---cname-and-a-records-in-all-sections-inj05)
+	- [Injection 6 - CNAME and AAAA records in all sections (inj06)](#injection-6---cname-and-aaaa-records-in-all-sections-inj06)
+	- [Injection 7 - Only injected A record (inj07)](#injection-7---only-injected-a-record-inj07)
+	- [Injection 8 - Only injected A record in all sections (inj08)](#injection-8---only-injected-a-record-in-all-sections-inj08)
+	- [Injection 9 - Only injected PTR record in all sections (inj09)](#injection-9---only-injected-ptr-record-in-all-sections-inj09)
+	- [Injection 10 - Inject NS record variant 1 (inj10)](#injection-10---inject-ns-record-variant-1-inj10)
+	- [Injection 11 - Inject NS record variant 2 (inj11)](#injection-11---inject-ns-record-variant-2-inj11)
+	- [Injection 12 - Inject NS record in all sections (inj12)](#injection-12---inject-ns-record-in-all-sections-inj12)
+	- [Injection 13 - CNAME with injected NS records in all sections (inj13)](#injection-13---cname-with-injected-ns-records-in-all-sections-inj13)
+	- [Injection 14 - CNAME in all sections (inj14)](#injection-14---cname-in-all-sections-inj14)
 
-These injection scenarios typically provide a legitimate answer as the response, but also include an injected additional information, testing whether the resolver will cache the injected information or not.
+These injection scenarios typically provide a legitimate answer as the response, but also include various additional (injected) information, allowing to test whether the resolver will cache the injected information or not.
 
 ##
-### inj01
-Injection test 1: Respond with legit CNAME (end.yourdomain.com) + injected A record (inj1poc.yourdomain.com -> 6.6.6.6).
+### Injection 1 - CNAME with injected A record in the end (inj01)
+Respond with legit CNAME (end.yourdomain.com) + injected A record (inj1poc.yourdomain.com -> 6.6.6.6).
 
 <table>
 <tr><td>format:</td><td>inj01.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -56,8 +56,8 @@ injected01.yourdomain.com. 60	IN	A	6.6.6.1
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 131
 ```
-### inj02
-Injection test 2: Respond with injected A record (inj2poc.yourdomain.com -> 6.6.6.6) + legit CNAME (end.yourdomain.com).
+### Injection 2 - CNAME with injected A record in the beginning (inj02)
+Respond with injected A record (inj2poc.yourdomain.com -> 6.6.6.6) + legit CNAME (end.yourdomain.com).
 
 <table>
 <tr><td>format:</td><td>inj02.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -89,8 +89,8 @@ inj02.yourdomain.com.	60	IN	CNAME	end.yourdomain.com.
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 131
 ```
-### inj03
-Injection test 3: Respond with legit A record (1.2.3.4) + injected A record (inj3poc.yourdomain.com -> 6.6.6.6).
+### Injection 3 - A record with injected A record in the end (inj03)
+Respond with legit A record (1.2.3.4) + injected A record (inj3poc.yourdomain.com -> 6.6.6.6).
 
 <table>
 <tr><td>format:</td><td>inj03.[replq].[addq].yourdomain.com</td></tr>
@@ -122,8 +122,8 @@ injected03.yourdomain.com. 60	IN	A	6.6.6.3
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 115
 ```
-### inj04
-Injection test 4: Respond with injected A record (inj4poc.yourdomain.com -> 6.6.6.6) + legit A record (1.2.3.4).
+### Injection 4 - A record with injected A record in the beginning (inj04)
+Respond with injected A record (inj4poc.yourdomain.com -> 6.6.6.6) + legit A record (1.2.3.4).
 
 <table>
 <tr><td>format:</td><td>inj04.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -155,8 +155,8 @@ inj04.yourdomain.com.	60	IN	A	1.2.3.4
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 115
 ```
-### inj05
-Injection test 5: Respond with CNAME (inj05poc.yourdomain.com) in all sections + inject also A record of it (inj05poc.yourdomain.com -> 6.6.6.6) in all sections.
+### Injection 5 - CNAME and A records in all sections (inj05)
+Respond with CNAME (inj05poc.yourdomain.com) in all sections + inject also A record of it (inj05poc.yourdomain.com -> 6.6.6.6) in all sections.
 
 <table>
 <tr><td>format:</td><td>inj05.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -196,8 +196,8 @@ injected05.yourdomain.com. 60	IN	A	6.6.6.5
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 338
 ```
-### inj06
-Injection test 6: Respond with CNAME (inj06poc.yourdomain.com) in all sections + inject also AAAA record of it (inj06poc.yourdomain.com -> 6666:6666:6666:6666:6666:6666:6666:6666) in all sections.
+### Injection 6 - CNAME and AAAA records in all sections (inj06)
+Respond with CNAME (inj06poc.yourdomain.com) in all sections + inject also AAAA record of it (inj06poc.yourdomain.com -> 6666:6666:6666:6666:6666:6666:6666:6666) in all sections.
 
 <table>
 <tr><td>format:</td><td>inj06.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -237,8 +237,8 @@ injected06.yourdomain.com. 60	IN	AAAA	6666:6666:6666:6666:6666:6666:6666:6666
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 374
 ```
-### inj07
-Injection test 7: Respond only with injected A record (inj07poc.yourdomain.com -> 6.6.6.6).
+### Injection 7 - Only injected A record (inj07)
+Respond only with injected A record (inj07poc.yourdomain.com -> 6.6.6.6).
 
 <table>
 <tr><td>format:</td><td>inj07.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -269,8 +269,8 @@ injected07.yourdomain.com. 60	IN	A	6.6.6.7
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 79
 ```
-### inj08
-Injection test 8: Respond only with injected A record (inj08poc.yourdomain.com -> 6.6.6.6) in all sections.
+### Injection 8 - Only injected A record in all sections (inj08)
+Respond only with injected A record (inj08poc.yourdomain.com -> 6.6.6.6) in all sections.
 
 <table>
 <tr><td>format:</td><td>inj08.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -307,8 +307,8 @@ injected08.yourdomain.com. 60	IN	A	6.6.6.8
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 161
 ```
-### inj09
-Injection test 9: Respond only with injected PTR record (6.6.6.6 -> inj09poc.yourdomain.com) in all sections.
+### Injection 9 - Only injected PTR record in all sections (inj09)
+Respond only with injected PTR record (6.6.6.6 -> inj09poc.yourdomain.com) in all sections.
 
 <table>
 <tr><td>format:</td><td>inj09.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -345,8 +345,8 @@ Sample:
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 215
 ```
-### inj10
-Injection test 10 (NS): Respond with empty answer, but include information in the AUTHORITY section that NS for yourdomain.com is ns1.whatever.com and in the ADDITIONAL section, provide our IP for the ns1.whatever.com.
+### Injection 10 - Inject NS record variant 1 (inj10)
+Respond with empty answer, but include information in the AUTHORITY section that NS for yourdomain.com is ns1.whatever.com and in the ADDITIONAL section, provide our IP for the ns1.whatever.com.
 
 <table>
 <tr><td>format:</td><td>inj10.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -380,8 +380,8 @@ ns1.whatever.com.	60	IN	A	44.196.212.212
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 114
 ```
-### inj11
-Injection test 11 (NS): Respond with empty answer, but include information in the AUTHORITY section that NS for whatever.com is ns1.yourdomain.com.whatever.com and in the ADDITIONAL section, provide our IP for the ns1.yourdomain.com.whatever.com.
+### Injection 11 - Inject NS record variant 2 (inj11)
+Respond with empty answer, but include information in the AUTHORITY section that NS for whatever.com is ns1.yourdomain.com.whatever.com and in the ADDITIONAL section, provide our IP for the ns1.yourdomain.com.whatever.com.
 
 <table>
 <tr><td>format:</td><td>inj11.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -415,8 +415,8 @@ ns1.yourdomain.com.whatever.com. 60 IN	A	44.196.212.212
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 142
 ```
-### inj12
-Injection test 12 (NS): Respond with empty answer, but include information in all sections that NS for yourdomain.com is ns1.whatever.com and also provide our IP for the ns1.whatever.com.
+### Injection 12 - Inject NS record in all sections (inj12)
+Respond with empty answer, but include information in all sections that NS for yourdomain.com is ns1.whatever.com and also provide our IP for the ns1.whatever.com.
 
 <table>
 <tr><td>format:</td><td>inj12.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -456,8 +456,8 @@ ns1.whatever.com.	60	IN	A	44.196.212.212
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 266
 ```
-### inj13
-Injection test 13 (NS): Respond with a CNAME (inj13poc.whatever.com), but include information in all sections that NS for whatever.com is ns1.yourdomain.com and also provide our IP for the ns1.yourdomain.com.
+### Injection 13 - CNAME with injected NS records in all sections (inj13)
+Respond with a CNAME (inj13poc.whatever.com), but include information in all sections that NS for whatever.com is ns1.yourdomain.com and also provide our IP for the ns1.yourdomain.com.
 
 <table>
 <tr><td>format:</td><td>inj13.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
@@ -498,8 +498,8 @@ ns1.yourdomain.com.	60	IN	A	44.196.212.212
 ;; WHEN: Thu Nov 02 16:37:19 +04 2023
 ;; MSG SIZE  rcvd: 329
 ```
-### inj14
-Injection test 14: Respond only with CNAME record of a 3rd party (inj14poc.yourdomain.com -> alwaysXXX.yourdomain.com) in all sections, to see if it will try to resolve the alwaysXXX.
+### Injection 14 - CNAME in all sections (inj14)
+Respond only with CNAME record of a 3rd party (inj14poc.yourdomain.com -> alwaysXXX.yourdomain.com) in all sections, to see if it will try to proactively resolve the alwaysXXX.
 
 <table>
 <tr><td>format:</td><td>inj14.[replq].[addq].[3rdparty].yourdomain.com</td></tr>

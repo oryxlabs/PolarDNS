@@ -326,8 +326,8 @@ Respond with CNAME alias containing a hostname in an illegal form e.g. containin
 
 <table>
 <tr><td>format:</td><td>badcname.&lt;VARIANT-1-11>.yourdomain.com</td></tr>
-<tr><td>example:</td><td><code>dig badcname.9.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig badcname.0.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig badcname.9.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig badcnameanything.1.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>remark:</td><td>VARIANT-0: http://always779768.yourdomain.com/</td></tr>
 <tr><td>remark:</td><td>VARIANT-1: http://always799902.yourdomain.com:80/</td></tr>

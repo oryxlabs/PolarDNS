@@ -151,7 +151,7 @@ Send empty response with only the TXID (first 2 bytes of every DNS response) + a
 <tr><td>format:</td><td>empty4.&lt;NUMBER-OF-NULLS>.yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig empty4.50.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig empty4whatever.50.yourdomain.com @127.0.0.1</code></td></tr>
-<tr><td>example:</td><td><code>dig empty4.0.len200.tc.yourdomain.com @127.0.0.1 # This means the response will be TCP DNS packet with length indicating it is a 200 B packet in size, but there will be just the TXID and nothing else (0 number of NULLs)</code></td></tr>
+<tr><td>example:</td><td><code>dig empty4.0.len200.tc.yourdomain.com @127.0.0.1</code> This means the response will be TCP DNS packet with length indicating it is a 200 B packet in size, but there will be just the TXID and nothing else (0 number of NULLs)</td></tr>
 </table>
 
 Sample:

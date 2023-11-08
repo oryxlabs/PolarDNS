@@ -1,3 +1,4 @@
+# comment
 import struct
 import binascii
 import socket

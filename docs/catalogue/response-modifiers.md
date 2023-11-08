@@ -174,13 +174,22 @@ Set custom DNS packet length in the DNS header. This only works in TCP mode sinc
 Sample:
 ```
 # dig always.len80.yourdomain.com @127.0.0.1 +tcp
-;; communications error to 127.0.0.1#53: end of file
-;; communications error to 127.0.0.1#53: end of file
-;; communications error to 127.0.0.1#53: end of file
+;; Warning: Message parser reports malformed message packet.
 
 ; <<>> DiG 9.18.10-2-Debian <<>> always.len80.yourdomain.com @127.0.0.1 +tcp
 ;; global options: +cmd
-;; no servers could be reached
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 50588
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: Message has 6 extra bytes at end
+
+;; QUESTION SECTION:
+;always.len80.yourdomain.com.	IN	A
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Wed Nov 08 14:42:46 +04 2023
+;; MSG SIZE  rcvd: 80
 
 ```
 ### Set custom flags in the header (flgs)

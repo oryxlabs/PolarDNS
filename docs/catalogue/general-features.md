@@ -3,6 +3,7 @@
 	- [Always resolve to IP (always)](#always-resolve-to-ip-always)
 	- [CNAME alias chain (chain)](#cname-alias-chain-chain)
 	- [CNAME alias chain with 3 records (schain)](#cname-alias-chain-with-3-records-schain)
+	- [CNAME alias loop (loop)](#cname-alias-loop-loop)
 	- [DNAME alias chain (dchain)](#dname-alias-chain-dchain)
 	- [Chunked CNAME aliases (chunkedcnames)](#chunked-cname-aliases-chunkedcnames)
 	- [Cut A record from the end (cutabuf)](#cut-a-record-from-the-end-cutabuf)
@@ -22,7 +23,7 @@
 
 ##
 ### Always resolve to IP (always)
-Always respond with A record (2.3.4.5).
+The most basic functionality to always respond with A record (2.3.4.5).
 
 <table>
 <tr><td>format:</td><td>always&lt;ANYTHING>.yourdomain.com</td></tr>
@@ -53,7 +54,7 @@ always.yourdomain.com.	60	IN	A	2.3.4.5
 
 ```
 ### CNAME alias chain (chain)
-Respond with an incremented CNAME record.
+Respond with an incremented CNAME record. This creates an infinite alias chain.
 
 <table>
 <tr><td>format:</td><td>chain&lt;NUMBER>.yourdomain.com</td></tr>
@@ -115,8 +116,38 @@ schain123456.yourdomain.com. 60	IN	CNAME	schain381071.yourdomain.com.
 ;; MSG SIZE  rcvd: 249
 
 ```
+### CNAME alias loop (loop)
+Respond with CNAME record forming an infinite loop consisting of any number of elements.
+
+<table>
+<tr><td>format:</td><td>loop.&lt;NUMBER>.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig loop.5.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig loop.5.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> loop.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 49118
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop.5.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+loop.5.yourdomain.com.	60	IN	CNAME	loop.5.1.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Nov 08 21:45:01 +04 2023
+;; MSG SIZE  rcvd: 97
+
+```
 ### DNAME alias chain (dchain)
-Respond with an incremented DNAME record.
+Respond with an incremented DNAME record. This creates an infinite alias chain.
 
 <table>
 <tr><td>format:</td><td>dchain&lt;NUMBER>.yourdomain.com</td></tr>
@@ -388,7 +419,7 @@ manybintxt.10.20.yourdomain.com. 60 IN	TXT	"\235\248\229\223\026R\155?\193 K\255
 ;; MSG SIZE  rcvd: 689
 ```
 ### Single A record with arbitrary byte (afuzz1)
-Respond with A record containing arbitrary byte in the middle.
+Respond with A record containing arbitrary byte in the middle of the name in the ANSWER section, essentially giving an incorrect answer.
 
 <table>
 <tr><td>format:</td><td>afuzz1.&lt;BYTE-0-255>.yourdomain.com</td></tr>

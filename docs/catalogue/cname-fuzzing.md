@@ -3,6 +3,7 @@
 1. [Response modifiers](response-modifiers.md)
 1. [CNAME fuzzing](cname-fuzzing.md)
 	- [Long CNAME alias of arbitrary size (bigcname)](#long-cname-alias-of-arbitrary-size-bigcname)
+	- [Long CNAME with arbitrary number of labels (manylabels)](#long-cname-with-arbitrary-number-of-labels-manylabels)
 	- [Many always CNAME aliases (manycnames)](#many-always-cname-aliases-manycnames)
 	- [Many random CNAME aliases, textual (cnamefuzz1)](#many-random-cname-aliases-textual-cnamefuzz1)
 	- [Many random CNAME aliases, binary (cnamefuzz2)](#many-random-cname-aliases-binary-cnamefuzz2)
@@ -18,10 +19,10 @@ Variety of scenarios involving illegally specified CNAME record(s) in the respon
 
 ##
 ### Long CNAME alias of arbitrary size (bigcname)
-Respond with a randomly generated CNAME of arbitrary size.
+Respond with a randomly generated CNAME of arbitrary size, capable of creating oversized domain labels and domain names.
 
 <table>
-<tr><td>format:</td><td>bigcname.&lt;LABEL-SIZE-1>.&lt;LABEL-SIZE-N>.yourdomain.com</td></tr>
+<tr><td>format:</td><td>bigcname.&lt;LABEL-SIZE-1>.[&lt;LABEL-SIZE-N>].yourdomain.com</td></tr>
 <tr><td>remark:</td><td>Max label size is 63</td></tr>
 <tr><td>remark:</td><td>Max size of the whole domain name is 255</td></tr>
 <tr><td>example:</td><td><code>dig bigcname.63.63.63.yourdomain.com @127.0.0.1</code></td></tr>
@@ -48,6 +49,40 @@ bigcname.63.63.63.yourdomain.com. 60 IN	CNAME	always.up42ifbdztiqsnagsvkxw6x5i2f
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; WHEN: Thu Nov 02 16:35:02 +04 2023
 ;; MSG SIZE  rcvd: 309
+```
+### Long CNAME with arbitrary number of labels (manylabels)
+Respond with a CNAME containing arbitrary number of labels (domain components), capable of creating oversized domain labels and domain names.
+
+<table>
+<tr><td>format:</td><td>manylabels.&lt;NUMBER-OF-LABELS>.&lt;LABEL-SIZE>.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>Max label size is 63</td></tr>
+<tr><td>remark:</td><td>Max size of the whole domain name is 255</td></tr>
+<tr><td>example:</td><td><code>dig manylabels.100.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig manylabels.50.2.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig manylabels.300.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig manylabels.100.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> manylabels.100.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4688
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;manylabels.100.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+manylabels.100.yourdomain.com. 60 IN	CNAME	always.t.g.k.s.h.z.b.u.s.d.y.s.b.6.o.h.8.5.r.z.r.z.b.n.w.g.r.r.y.p.9.b.7.9.m.w.r.m.d.3.9.d.q.1.x.d.m.1.f.0.i.u.3.4.e.5.4.u.i.5.k.u.y.x.i.s.v.s.k.p.h.a.r.q.w.g.7.m.t.z.s.x.n.g.g.0.2.h.n.f.q.o.2.e.0.c.3.2.v.h.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Nov 08 16:37:15 +04 2023
+;; MSG SIZE  rcvd: 311
+
 ```
 ### Many always CNAME aliases (manycnames)
 Respond with a arbitrary number of randomly generated CNAME records.

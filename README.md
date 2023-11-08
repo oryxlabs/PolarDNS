@@ -1,4 +1,4 @@
-<img width="802" alt="PolarDNS logo" src="assets/polardns-logo-for-white-bg.png">
+<img width="800" alt="PolarDNS logo" src="assets/polardns-logo-for-white-bg.png">
 PolarDNS is a specialized authoritative DNS server written in Python 3.x, which allows the operator to produce fully custom DNS responses, suitable for DNS protocol testing purposes.
 
 It can be used for testing of:
@@ -46,7 +46,7 @@ dig always.yourdomain.com @127.0.0.1 +tcp
 
 You should receive A 2.3.4.5 record, similarly like in this screenshot:
 
-<img width="640" alt="PolarDNS example usage" src="assets/polardns-example-usage.jpg">
+<img width="900" alt="PolarDNS example usage" src="assets/polardns-example-usage.jpg">
 
 This indicates that the server is working properly.
 
@@ -61,7 +61,7 @@ dig always.ttl2000000000.slp1500.yourdomain.com @127.0.0.1
 
 You should, again, receive A 2.3.4.5 record, but this time with TTL of 2000000000 (63.4 years) and after a delay of 1.5 seconds:
 
-<img width="640" alt="PolarDNS custom TTL and latency" src="assets/polardns-custom-ttl-and-latency.jpg">
+<img width="900" alt="PolarDNS custom TTL and latency" src="assets/polardns-custom-ttl-and-latency.jpg">
 
 In the above example, we have used the `always` basic feature (which always resolves to something), and combined it with the `ttl` modifier to adjust the TTL value and the `slp` modifier to actually respond after a delay of 1.5 seconds.
 

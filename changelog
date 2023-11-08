@@ -1,0 +1,16 @@
+27/Sep/2023
+- fixed exception in the 'close' feature in UDP mode
+
+26/Jul/2023
+- added 'flgs' global modifier to allow specifying custom flags in the DNS header
+
+10/Jul/2023
+- optimization: got rid of the parsing the request in HEX, parsing it in RAW now
+- enhanced parsing of the domain name in the request (added the backslashreplace option in decode())
+
+05/Jul/2023
+- added a collection of tests (252 tests)
+
+16/Jun/2023
+- fixed exceptions when parsing various incomplete requests, too short DNS packets etc.
+

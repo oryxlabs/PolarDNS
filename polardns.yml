@@ -1,0 +1,41 @@
+#########################
+# main settings
+
+domain: yourdomain.com
+ns1: 44.196.212.212
+ns2: 3.12.250.157
+
+#########################
+# other configurables
+
+# server address
+listen_addr: 0.0.0.0:53
+
+# debug (0 or 1)
+debug: 0
+
+# default TTL
+ttl: 60
+
+# default latency (in ms)
+sleep: 0
+
+# a 3rdparty domain which we don't own
+a3rdparty_domain: whatever.com
+
+# known DNS resolvers / clients connecting to us
+known_servers:
+  127.0.0.1:      localhost
+  18.224.139.186: powerdns
+  3.14.145.209:   knotresolver
+  3.129.45.171:   unbound
+  3.143.208.74:   bind
+  3.23.99.211:    msdns
+  18.117.9.155:   dnsmasq
+  3.141.200.97:   sdns
+  3.21.104.68:    technitium
+  3.138.178.163:  maradns
+  3.137.159.37:   systemd
+  18.191.242.246: coredns
+
+#########################

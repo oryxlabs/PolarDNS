@@ -2,8 +2,8 @@
 # main settings
 
 domain: yourdomain.com
-ns1: 44.196.212.212
-ns2: 3.12.250.157
+ns1: 127.0.0.1
+ns2: 127.0.0.1
 
 #########################
 # other configurables

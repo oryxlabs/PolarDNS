@@ -1,4 +1,4 @@
-<img width="802" alt="PolarDNS" src="https://git.oryxlabs.internal/storage/user/23/files/adc04932-6fed-4418-8792-e4daf3268bf7">
+<img width="802" alt="PolarDNS logo" src="assets/polardns-logo-for-white-bg.png">
 PolarDNS is a specialized authoritative DNS server written in Python 3.x, which allows the operator to produce fully custom DNS responses, suitable for DNS protocol testing purposes.
 
 It can be used for testing of:
@@ -36,17 +36,17 @@ You can test it by asking the following sample query, which should always resolv
 
 Ask in UDP mode:
 ```
-dig always.dnslabtest1.com @127.0.0.1
+dig always.yourdomain.com @127.0.0.1
 ```
 
 Ask in TCP mode:
 ```
-dig always.dnslabtest1.com @127.0.0.1 +tcp
+dig always.yourdomain.com @127.0.0.1 +tcp
 ```
 
 You should receive A 2.3.4.5 record, similarly like in this screenshot:
 
-<img width="640" alt="Screenshot 2023-08-03 at 2 26 13 PM" src="https://git.oryxlabs.internal/storage/user/23/files/4ebed875-9a99-431c-bcc4-fa4fcac26197">
+<img width="640" alt="PolarDNS example usage" src="assets/polardns-example-usage.jpg">
 
 This indicates that the server is working properly.
 
@@ -56,12 +56,12 @@ By asking the PolarDNS server to resolve something, you are essentially giving i
 
 For instance, consider the following query:
 ```
-dig always.ttl2000000000.slp1500.dnslabtest1.com @127.0.0.1
+dig always.ttl2000000000.slp1500.yourdomain.com @127.0.0.1
 ```
 
 You should, again, receive A 2.3.4.5 record, but this time with TTL of 2000000000 (63.4 years) and after a delay of 1.5 seconds:
 
-<img width="640" alt="Altering the TTL value and responding with a delay" src="https://git.oryxlabs.internal/storage/user/23/files/fd62a124-e936-4539-a7c1-0233c1311996">
+<img width="640" alt="PolarDNS custom TTL and latency" src="assets/polardns-custom-ttl-and-latency.jpg">
 
 In the above example, we have used the `always` basic feature (which always resolves to something), and combined it with the `ttl` modifier to adjust the TTL value and the `slp` modifier to actually respond after a delay of 1.5 seconds.
 

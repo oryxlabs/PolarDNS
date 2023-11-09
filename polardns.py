@@ -386,8 +386,8 @@ def timeout_conn(self):
    if proto == "tcp":
       # Not possible to just abandon the TCP connections using socketserver.
       # Workaround below:
-      # Wait 20 seconds (the resolver / client will unlikely wait 20 seconds
-      # for an answer) and then close the socket gracefully
+      # Wait 20 seconds and then close the socket gracefully (a resolver or
+      # a client will unlikely wait 20 seconds for an answer) 
       time.sleep(20)
       self.finish()
    else:
@@ -1767,7 +1767,6 @@ def process_DNS(self, req_RAW):
                     bindom += b"\x00"
                     dom  = "always" + str(r) + "." + sld_tld_domain.replace(".", "<DOT>")
                  case 5:  # dotcname.5 - always123456.yourdomain.com<DOT>
-                    # todo
                     bindom  = struct.pack(">B", 12)
                     bindom += bytes("always" + str(r), 'utf-8')
                     bindom += struct.pack(">B", len(sld))
@@ -1786,20 +1785,20 @@ def process_DNS(self, req_RAW):
                     bindom += struct.pack(">B", 1)
                     bindom += b"\x2e\x00"
                     dom  = "always" + str(r) + "." + sld_tld_domain + ".<DOT>"
-                 case 7:  # dotcname.7 - always123456<DOT>yourdomain<DOT>com
+                 case _:  # dotcname.7 - always123456<DOT>yourdomain<DOT>com
                     bindom  = struct.pack(">B", len(dom))
                     bindom += bytes(dom, 'utf-8')
                     bindom += b"\x00"
                     dom = dom.replace(".", "<DOT>")
-                 case _:  # dotcname.* - just a normally formatted CNAME
-                    bindom  = struct.pack(">B", 12)
-                    bindom += bytes("always" + str(r), 'utf-8')
-                    bindom += struct.pack(">B", len(sld))
-                    bindom += bytes(sld, 'utf-8')
-                    bindom += struct.pack(">B", len(tld))
-                    bindom += bytes(tld, 'utf-8')
-                    bindom += b"\x00"
-                    dom  = "always" + str(r) + "." + sld_tld_domain
+                 #case _:  # dotcname.* - just a normally formatted CNAME
+                 #   bindom  = struct.pack(">B", 12)
+                 #   bindom += bytes("always" + str(r), 'utf-8')
+                 #   bindom += struct.pack(">B", len(sld))
+                 #   bindom += bytes(sld, 'utf-8')
+                 #   bindom += struct.pack(">B", len(tld))
+                 #   bindom += bytes(tld, 'utf-8')
+                 #   bindom += b"\x00"
+                 #   dom  = "always" + str(r) + "." + sld_tld_domain
               ### DNS header #######
               buffer = prep_dns_header(b'\x84\x00', req_QURR, 1, 0, 0)
               ### QUESTION SECTION ########
@@ -1813,7 +1812,7 @@ def process_DNS(self, req_RAW):
               log("CNAME %s" % (dom))
               send_buf(self, buffer)
               #####################################################################
-           elif first_label.startswith("cgena"):
+           elif first_label.startswith("cgena") or first_label.startswith("badcname"):
               # Send illegal CNAME record with arbitrary byte(s), with the
               # CNAME potentially resolvable (always* / 1.2.3.4)
               variant = 0
@@ -1827,45 +1826,70 @@ def process_DNS(self, req_RAW):
                  count = int(req_domain_labels[3])
               r = '{:06d}'.format(random.randint(1, 999999))
               match variant:
-                 case 1:  # cgena.1 - <BYTE>.always123456.dnslabtest1.com
-                    bindom  = struct.pack(">B", count) + badbyte.to_bytes(1, 'big')*count
-                    bindom += convData2Bin("always" + str(r))
-                    bindom += convDom2Bin(sld_tld_domain)
-                    dom  = str(badbyte.to_bytes(1, 'big')*count) + "." + "always" + str(r)
-                    dom += "." + sld_tld_domain
                  case 2:  # cgena.2 - <BYTE>always123456.dnslabtest1.com
                     bindom  = struct.pack(">B", 6+count+6) + badbyte.to_bytes(1, 'big')*count
                     bindom += b"always" + bytes(str(r), 'utf-8')
                     bindom += convDom2Bin(sld_tld_domain)
-                    dom  = str(badbyte.to_bytes(1, 'big')*count) + "always" + str(r)
+                    dom  = str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + "always" + str(r)
                     dom += "." + sld_tld_domain
                  case 3:  # cgena.3 - always<BYTE>123456.dnslabtest1.com
                     bindom  = struct.pack(">B", 6+count+6) + b"always" + badbyte.to_bytes(1, 'big')*count
                     bindom += bytes(str(r), 'utf-8')
                     bindom += convDom2Bin(sld_tld_domain)
-                    dom  = "always" + str(badbyte.to_bytes(1, 'big')*count) + str(r)
+                    dom  = "always" + str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + str(r)
                     dom += "." + sld_tld_domain
-                 case 4:  # cgena.4 - always123456.dnslabtest1.<BYTE>com
+                 case 4:  # cgena.4 - always123456<BYTE>.dnslabtest1.com
+                    bindom  = struct.pack(">B", 6+count+6) + b"always" + bytes(str(r), 'utf-8')
+                    bindom += badbyte.to_bytes(1, 'big')*count
+                    bindom += convDom2Bin(sld_tld_domain)
+                    dom  = "always" + str(r) + str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
+                    dom += "." + sld_tld_domain
+                 case 5:  # cgena.5 - always123456<BYTE>dnslabtest1.com
+                    fc = b"always" + bytes(str(r), 'utf-8') + badbyte.to_bytes(1, 'big')*count + bytes(sld, 'utf-8')
+                    bindom  = struct.pack(">B", len(fc))
+                    bindom += fc
+                    bindom += struct.pack(">B", len(tld))
+                    bindom += bytes(tld, 'utf-8')
+                    bindom += b"\x00"
+                    dom  = "always" + str(r) + str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
+                    dom += sld_tld_domain
+                 case 6:  # cgena.6 - always123456.dnslabtest1<BYTE>com
+                    bindom  = struct.pack(">B", 12)
+                    bindom += bytes("always" + str(r), 'utf-8')
+                    bindom += struct.pack(">B", len(sld + tld) + count)
+                    bindom += bytes(sld, 'utf-8')
+                    bindom += badbyte.to_bytes(1, 'big')*count
+                    bindom += bytes(tld, 'utf-8')
+                    bindom += b"\x00"
+                    dom  = "always" + str(r) + "." + sld
+                    dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + tld
+                 case 7:  # cgena.7 - always123456.dnslabtest1.<BYTE>com
                     bindom  = struct.pack(">B", 12) + b"always" + bytes(str(r), 'utf-8')
                     bindom += convData2Bin(sld)
                     bindom += struct.pack(">B", count+len(tld)) + badbyte.to_bytes(1, 'big')*count
                     bindom += bytes(tld, 'utf-8') + b"\x00"
-                    dom  = "always" + str(r) + "."
-                    dom += sld + "." + str(badbyte.to_bytes(1, 'big')*count) + tld
-                 case 5:  # cgena.5 - always123456.dnslabtest1.com<BYTE>
+                    dom  = "always" + str(r) + "." + sld + "."
+                    dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + tld
+                 case 8:  # cgena.8 - always123456.dnslabtest1.com<BYTE>
                     bindom  = struct.pack(">B", 12) + b"always" + bytes(str(r), 'utf-8')
                     bindom += convData2Bin(sld)
                     bindom += struct.pack(">B", count+len(tld)) + bytes(tld, 'utf-8')
                     bindom += badbyte.to_bytes(1, 'big')*count + b"\x00"
                     dom  = "always" + str(r) + "." + sld_tld_domain
-                    dom += str(badbyte.to_bytes(1, 'big')*count)
-                 case _:    # cgena.6 - always123456.dnslabtest1.com.<BYTE>
+                    dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
+                 case 9:    # cgena.9 - always123456.dnslabtest1.com.<BYTE>
                     bindom  = struct.pack(">B", 12) + b"always" + bytes(str(r), 'utf-8')
                     bindom += convData2Bin(sld_tld_domain)
                     bindom += struct.pack(">B", count) + badbyte.to_bytes(1, 'big')*count
                     bindom += b"\x00"
-                    dom  = "always" + str(r) + "."
-                    dom += sld_tld_domain + "." + str(badbyte.to_bytes(1, 'big')*count)
+                    dom  = "always" + str(r) + "." + sld_tld_domain + "." 
+                    dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
+                 case _:  # cgena.1 - <BYTE>.always123456.dnslabtest1.com
+                    bindom  = struct.pack(">B", count) + badbyte.to_bytes(1, 'big')*count
+                    bindom += convData2Bin("always" + str(r))
+                    bindom += convDom2Bin(sld_tld_domain)
+                    dom  = str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
+                    dom += ".always" + str(r) + "." + sld_tld_domain
               ### DNS header #######
               buffer = prep_dns_header(b'\x84\x00', req_QURR, 1, 0, 0)
               ### QUESTION SECTION ########
@@ -1892,45 +1916,70 @@ def process_DNS(self, req_RAW):
                  count = int(req_domain_labels[3])
               r = '{:06d}'.format(random.randint(1, 999999))
               match variant:
-                 case 1:  # cgenb.1 - <BYTE>.nonres123456.dnslabtest1.com
-                    bindom  = struct.pack(">B", count) + badbyte.to_bytes(1, 'big')*count
-                    bindom += convData2Bin("nonres" + str(r))
-                    bindom += convDom2Bin(sld_tld_domain)
-                    dom  = str(badbyte.to_bytes(1, 'big')*count) + "." + "nonres" + str(r)
-                    dom += "." + sld_tld_domain
                  case 2:  # cgenb.2 - <BYTE>nonres123456.dnslabtest1.com
                     bindom  = struct.pack(">B", 6+count+6) + badbyte.to_bytes(1, 'big')*count
                     bindom += b"nonres" + bytes(str(r), 'utf-8')
                     bindom += convDom2Bin(sld_tld_domain)
-                    dom  = str(badbyte.to_bytes(1, 'big')*count) + "nonres" + str(r)
+                    dom  = str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + "nonres" + str(r)
                     dom += "." + sld_tld_domain
                  case 3:  # cgenb.3 - nonres<BYTE>123456.dnslabtest1.com
                     bindom  = struct.pack(">B", 6+count+6) + b"nonres" + badbyte.to_bytes(1, 'big')*count
                     bindom += bytes(str(r), 'utf-8')
                     bindom += convDom2Bin(sld_tld_domain)
-                    dom  = "nonres" + str(badbyte.to_bytes(1, 'big')*count) + str(r)
+                    dom  = "nonres" + str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + str(r)
                     dom += "." + sld_tld_domain
-                 case 4:  # cgenb.4 - nonres123456.dnslabtest1.<BYTE>com
+                 case 4:  # cgenb.4 - nonres123456<BYTE>.dnslabtest1.com
+                    bindom  = struct.pack(">B", 6+count+6) + b"nonres" + bytes(str(r), 'utf-8')
+                    bindom += badbyte.to_bytes(1, 'big')*count
+                    bindom += convDom2Bin(sld_tld_domain)
+                    dom  = "nonres" + str(r) + str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
+                    dom += "." + sld_tld_domain
+                 case 5:  # cgenb.5 - nonres123456<BYTE>dnslabtest1.com
+                    fc = b"nonres" + bytes(str(r), 'utf-8') + badbyte.to_bytes(1, 'big')*count + bytes(sld, 'utf-8')
+                    bindom  = struct.pack(">B", len(fc))
+                    bindom += fc
+                    bindom += struct.pack(">B", len(tld))
+                    bindom += bytes(tld, 'utf-8')
+                    bindom += b"\x00"
+                    dom  = "nonres" + str(r) + str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
+                    dom += sld_tld_domain
+                 case 6:  # cgenb.6 - nonres123456.dnslabtest1<BYTE>com
+                    bindom  = struct.pack(">B", 12)
+                    bindom += bytes("nonres" + str(r), 'utf-8')
+                    bindom += struct.pack(">B", len(sld + tld) + count)
+                    bindom += bytes(sld, 'utf-8')
+                    bindom += badbyte.to_bytes(1, 'big')*count
+                    bindom += bytes(tld, 'utf-8')
+                    bindom += b"\x00"
+                    dom  = "nonres" + str(r) + "." + sld
+                    dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + tld
+                 case 7:  # cgenb.7 - nonres123456.dnslabtest1.<BYTE>com
                     bindom  = struct.pack(">B", 12) + b"nonres" + bytes(str(r), 'utf-8')
                     bindom += convData2Bin(sld)
                     bindom += struct.pack(">B", count+len(tld)) + badbyte.to_bytes(1, 'big')*count
                     bindom += bytes(tld, 'utf-8') + b"\x00"
-                    dom  = "nonres" + str(r) + "."
-                    dom += sld + "." + str(badbyte.to_bytes(1, 'big')*count) + tld
-                 case 5:  # cgenb.5 - nonres123456.dnslabtest1.com<BYTE>
+                    dom  = "nonres" + str(r) + "." + sld + "."
+                    dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + tld
+                 case 8:  # cgenb.8 - nonres123456.dnslabtest1.com<BYTE>
                     bindom  = struct.pack(">B", 12) + b"nonres" + bytes(str(r), 'utf-8')
                     bindom += convData2Bin(sld)
                     bindom += struct.pack(">B", count+len(tld)) + bytes(tld, 'utf-8')
                     bindom += badbyte.to_bytes(1, 'big')*count + b"\x00"
                     dom  = "nonres" + str(r) + "." + sld_tld_domain
-                    dom += str(badbyte.to_bytes(1, 'big')*count)
-                 case _:    # cgenb.6 - nonres123456.dnslabtest1.com.<BYTE>
+                    dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
+                 case 9:  # cgenb.9 - nonres123456.dnslabtest1.com.<BYTE>
                     bindom  = struct.pack(">B", 12) + b"nonres" + bytes(str(r), 'utf-8')
                     bindom += convData2Bin(sld_tld_domain)
                     bindom += struct.pack(">B", count) + badbyte.to_bytes(1, 'big')*count
                     bindom += b"\x00"
-                    dom  = "nonres" + str(r) + "."
-                    dom += sld_tld_domain + "." + str(badbyte.to_bytes(1, 'big')*count)
+                    dom  = "nonres" + str(r) + "." + sld_tld_domain + "." 
+                    dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
+                 case _:  # cgenb.1 - <BYTE>.nonres123456.dnslabtest1.com
+                    bindom  = struct.pack(">B", count) + badbyte.to_bytes(1, 'big')*count
+                    bindom += convData2Bin("nonres" + str(r))
+                    bindom += convDom2Bin(sld_tld_domain)
+                    dom  = str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
+                    dom += ".nonres" + str(r) + "." + sld_tld_domain
               ### DNS header #######
               buffer = prep_dns_header(b'\x84\x00', req_QURR, 1, 0, 0)
               ### QUESTION SECTION ########
@@ -1944,37 +1993,37 @@ def process_DNS(self, req_RAW):
               log("CNAME %s" % (dom))
               send_buf(self, buffer)
               #####################################################################
-           elif first_label.startswith("badcname"):
+           elif first_label.startswith("illcname"):
               # Send illegal CNAME record of various schemes
               r = '{:06d}'.format(random.randint(1, 999999))
               variant = 0
               if req_domain_labels[1].isnumeric():
                  variant = int(req_domain_labels[1])
               match variant:
-                 case 0:  # badcname.0 - http://always123456.dnslabtest1.com/
+                 case 1:  # illcname.0 - http://always123456.dnslabtest1.com/
                     dom = "http://always" + r + "." + sld_tld_domain + "/"
-                 case 1:  # badcname.1 - http://always123456.dnslabtest1.com:80/
+                 case 2:  # illcname.1 - http://always123456.dnslabtest1.com:80/
                     dom = "http://always" + r + "." + sld_tld_domain + ":80/"
-                 case 2:  # badcname.2 - https://always123456.dnslabtest1.com/
+                 case 3:  # illcname.2 - https://always123456.dnslabtest1.com/
                     dom = "https://always" + r + "." + sld_tld_domain + "/"
-                 case 3:  # badcname.3 - https://always123456.dnslabtest1.com:443/
+                 case 4:  # illcname.3 - https://always123456.dnslabtest1.com:443/
                     dom = "https://always" + r + "." + sld_tld_domain + ":443/"
-                 case 4:  # badcname.4 - always123456.dnslabtest1.com:80
+                 case 5:  # illcname.4 - always123456.dnslabtest1.com:80
                     dom = "always" + r + "." + sld_tld_domain + ":80"
-                 case 5:  # badcname.5 - always123456.dnslabtest1.com:443
+                 case 6:  # illcname.5 - always123456.dnslabtest1.com:443
                     dom = "always" + r + "." + sld_tld_domain + ":443"
-                 case 6:  # badcname.6 - 1.2.3.4 (in DNS name notation as 4 labels)
+                 case 7:  # illcname.6 - 1.2.3.4 (in DNS name notation as 4 labels)
                     dom = "1.2.3.4"
-                 case 7:  # badcname.7 - 1.2.3.4:80 (in DNS name notation as 4 labels)
+                 case 8:  # illcname.7 - 1.2.3.4:80 (in DNS name notation as 4 labels)
                     dom = "1.2.3.4:80"
-                 case 8:  # badcname.8 - 1.2.3.4 (in DNS name notation as 1 label)
+                 case 9:  # illcname.8 - 1.2.3.4 (in DNS name notation as 1 label)
                     dom = "1<DOT>2<DOT>3<DOT>4"
-                 case 9:  # badcname.9 - 1.2.3.4:80 (in DNS name notation as 1 label)
+                 case 10:  # illcname.9 - 1.2.3.4:80 (in DNS name notation as 1 label)
                     dom = "1<DOT>2<DOT>3<DOT>4:80"
-                 case 10:  # badcname.10 - <OUR-IP-ADDRESS> (in DNS name notation as 4 labels)
+                 case 11:  # illcname.10 - <OUR-IP-ADDRESS> (in DNS name notation as 4 labels)
                     ourip = ZONEFILE["ns1." + sld_tld_domain]["A"]
                     dom = ourip
-                 case _:  # badcname.11 - <OUT-IP-ADDRESS>:80 (in DNS name notation as 4 labels)
+                 case _:  # illcname.11 - <OUT-IP-ADDRESS>:80 (in DNS name notation as 4 labels)
                     ourip = ZONEFILE["ns1." + sld_tld_domain]["A"]
                     dom = ourip + ":80"
               ### DNS header #######

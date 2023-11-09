@@ -8,9 +8,9 @@
 	- [Many random CNAME aliases, textual (cnamefuzz1)](#many-random-cname-aliases-textual-cnamefuzz1)
 	- [Many random CNAME aliases, binary (cnamefuzz2)](#many-random-cname-aliases-binary-cnamefuzz2)
 	- [CNAME alias with a dot in different positions (dotcname)](#cname-alias-with-a-dot-in-different-positions-dotcname)
-	- [Resolvable CNAME with arbitrary byte string (cgena)](#resolvable-cname-with-arbitrary-byte-string-cgena)
+	- [Resolvable CNAME with arbitrary byte string (cgena / badcname)](#resolvable-cname-with-arbitrary-byte-string-cgena--badcname)
 	- [Unresolvable CNAME with arbitrary byte string (cgenb)](#unresolvable-cname-with-arbitrary-byte-string-cgenb)
-	- [Illegal CNAME formats (badcname)](#illegal-cname-formats-badcname)
+	- [Illegal CNAME formats (illcname)](#illegal-cname-formats-illcname)
 1. [Bad compression](bad-compression.md)
 1. [Empty responses](empty-responses.md)
 1. [Record injections](record-injections.md)
@@ -247,15 +247,9 @@ Respond with CNAME (always123456.yourdomain.com) containing dot character (`.`) 
 
 <table>
 <tr><td>format:</td><td>dotcname.&lt;VARIANT-1-7>.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>Responses produced based on VARIANT:<br><table> <tr><td>1.</td><td>always[DOT]123456.yourdomain.com</td></tr> <tr><td>2.</td><td>always[DOT]a123456.yourdomain.com</td></tr> <tr><td>3.</td><td>always123456[DOT]yourdomain.com</td></tr> <tr><td>4.</td><td>always123456.yourdomain[DOT]com</td></tr> <tr><td>5.</td><td>always123456.yourdomain.com[DOT]</td></tr> <tr><td>6.</td><td>always123456.yourdomain.com.[DOT]</td></tr> <tr><td>7.</td><td>always123456[DOT]yourdomain[DOT]com</td></tr> </table></td></tr>
 <tr><td>example:</td><td><code>dig dotcname.1.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig dotcnameanything.1.yourdomain.com @127.0.0.1</code></td></tr>
-<tr><td>remark:</td><td>VARIANT-1: always[DOT]123456.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>VARIANT-2: always[DOT]a123456.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>VARIANT-3: always123456[DOT]yourdomain.com</td></tr>
-<tr><td>remark:</td><td>VARIANT-4: always123456.yourdomain[DOT]com</td></tr>
-<tr><td>remark:</td><td>VARIANT-5: always123456.yourdomain.com[DOT]</td></tr>
-<tr><td>remark:</td><td>VARIANT-6: always123456.yourdomain.com.[DOT]</td></tr>
-<tr><td>remark:</td><td>VARIANT-7: always123456[DOT]yourdomain[DOT]com</td></tr>
 </table>
 
 Sample:
@@ -280,58 +274,48 @@ dotcname.1.yourdomain.com. 60	IN	CNAME	always\.656868.yourdomain.com.
 ;; MSG SIZE  rcvd: 110
 
 ```
-### Resolvable CNAME with arbitrary byte string (cgena)
+### Resolvable CNAME with arbitrary byte string (cgena / badcname)
 Respond with CNAME (always123456.yourdomain.com) containing arbitrary number of characters (bytes) in different positions based on the selected variant.
 
 <table>
-<tr><td>format:</td><td>cgena.&lt;VARIANT-1-6>.&lt;BYTE-0-255>.&lt;HOWMANY>.yourdomain.com</td></tr>
-<tr><td>example:</td><td><code>dig cgena.4.0.1.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>format:</td><td>cgena.&lt;VARIANT-1-9>.&lt;BYTE-0-255>.&lt;HOWMANY>.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>Responses produced based on VARIANT:<br><table> <tr><td>1.</td><td>&lt;BAD>.always123456.yourdomain.com</td></tr> <tr><td>2.</td><td>&lt;BAD>always123456.yourdomain.com</td></tr> <tr><td>3.</td><td>always&lt;BAD>123456.yourdomain.com</td></tr> <tr><td>4.</td><td>always123456&lt;BAD>.yourdomain.com</td></tr> <tr><td>5.</td><td>always123456&lt;BAD>yourdomain.com</td></tr> <tr><td>6.</td><td>always123456.yourdomain&lt;BAD>.com</td></tr> <tr><td>7.</td><td>always123456.yourdomain.&lt;BAD>com</td></tr> <tr><td>8.</td><td>always123456.yourdomain.com&lt;BAD></td></tr> <tr><td>9.</td><td>always123456.yourdomain.com.&lt;BAD></td></tr> </table></td></tr>
+<tr><td>example:</td><td><code>dig cgena.5.0.4.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig cgena.1.0.5.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig cgenaanything.1.255.100.yourdomain.com @127.0.0.1</code></td></tr>
-<tr><td>remark:</td><td>VARIANT-1: &lt;BAD>.always123456.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>VARIANT-2: &lt;BAD>always123456.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>VARIANT-3: always&lt;BAD>123456.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>VARIANT-4: always123456.yourdomain.&lt;BAD>com</td></tr>
-<tr><td>remark:</td><td>VARIANT-5: always123456.yourdomain.com&lt;BAD></td></tr>
-<tr><td>remark:</td><td>VARIANT-6: always123456.yourdomain.com.&lt;BAD></td></tr>
 </table>
 
 Sample:
 ```
-# dig cgena.4.0.1.yourdomain.com @127.0.0.1
+# dig cgena.5.0.4.yourdomain.com @127.0.0.1
 
-; <<>> DiG 9.18.10-2-Debian <<>> cgena.4.0.1.yourdomain.com @127.0.0.1
+; <<>> DiG 9.18.10-2-Debian <<>> cgena.5.0.4.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 54488
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 60598
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-;cgena.4.0.1.yourdomain.com.	IN	A
+;cgena.5.0.4.yourdomain.com.	IN	A
 
 ;; ANSWER SECTION:
-cgena.4.0.1.yourdomain.com. 60	IN	CNAME	always123633.yourdomain.\000com.
+cgena.5.0.4.yourdomain.com. 60	IN	CNAME	always956701\000\000\000\000yourdomain.com.
 
-;; Query time: 0 msec
+;; Query time: 4 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Wed Nov 08 10:11:14 +04 2023
-;; MSG SIZE  rcvd: 112
+;; WHEN: Thu Nov 09 21:58:55 +04 2023
+;; MSG SIZE  rcvd: 114
 
 ```
 ### Unresolvable CNAME with arbitrary byte string (cgenb)
 Respond with CNAME (nonres123456.yourdomain.com) containing arbitrary number of characters (bytes) in different positions based on the selected variant.
 
 <table>
-<tr><td>format:</td><td>cgenb.&lt;VARIANT-1-6>.&lt;BYTE-0-255>.&lt;HOWMANY>.yourdomain.com</td></tr>
+<tr><td>format:</td><td>cgenb.&lt;VARIANT-1-9>.&lt;BYTE-0-255>.&lt;HOWMANY>.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>Responses produced based on VARIANT:<br><table><tr><td>1.</td><td>&lt;BAD>.nonres123456.yourdomain.com</td></tr> <tr><td>2.</td><td>&lt;BAD>nonres123456.yourdomain.com</td></tr> <tr><td>3.</td><td>nonres&lt;BAD>123456.yourdomain.com</td></tr> <tr><td>4.</td><td>nonres123456&lt;BAD>.yourdomain.com</td></tr> <tr><td>5.</td><td>nonres123456&lt;BAD>yourdomain.com</td></tr> <tr><td>6.</td><td>nonres123456.yourdomain&lt;BAD>.com</td></tr> <tr><td>7.</td><td>nonres123456.yourdomain.&lt;BAD>com</td></tr> <tr><td>8.</td><td>nonres123456.yourdomain.com&lt;BAD></td></tr> <tr><td>9.</td><td>nonres123456.yourdomain.com.&lt;BAD></td></tr> </table></td></tr>
 <tr><td>example:</td><td><code>dig cgenb.5.255.10.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig cgenb.5.39.5.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig cgenbanything.1.255.100.yourdomain.com @127.0.0.1</code></td></tr>
-<tr><td>remark:</td><td>VARIANT-1: &lt;BAD>.nonres123456.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>VARIANT-2: &lt;BAD>nonres123456.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>VARIANT-3: nonres&lt;BAD>123456.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>VARIANT-4: nonres123456.yourdomain.&lt;BAD>com</td></tr>
-<tr><td>remark:</td><td>VARIANT-5: nonres123456.yourdomain.com&lt;BAD></td></tr>
-<tr><td>remark:</td><td>VARIANT-6: nonres123456.yourdomain.com.&lt;BAD></td></tr>
 </table>
 
 Sample:
@@ -341,63 +325,52 @@ Sample:
 ; <<>> DiG 9.18.10-2-Debian <<>> cgenb.5.255.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4227
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 24209
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;cgenb.5.255.10.yourdomain.com.	IN	A
 
 ;; ANSWER SECTION:
-cgenb.5.255.10.yourdomain.com. 60 IN	CNAME	nonres008646.yourdomain.com\255\255\255\255\255\255\255\255\255\255.
+cgenb.5.255.10.yourdomain.com. 60 IN	CNAME	nonres030594\255\255\255\255\255\255\255\255\255\255yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Wed Nov 08 10:46:54 +04 2023
-;; MSG SIZE  rcvd: 127
+;; WHEN: Thu Nov 09 21:39:31 +04 2023
+;; MSG SIZE  rcvd: 126
 
 ```
-### Illegal CNAME formats (badcname)
+### Illegal CNAME formats (illcname)
 Respond with CNAME alias containing a hostname in an illegal form e.g. containing an IP address, a port number or an URL, based on the selected variant.
 
 <table>
-<tr><td>format:</td><td>badcname.&lt;VARIANT-1-11>.yourdomain.com</td></tr>
-<tr><td>example:</td><td><code>dig badcname.0.yourdomain.com @127.0.0.1</code></td></tr>
-<tr><td>example:</td><td><code>dig badcname.9.yourdomain.com @127.0.0.1</code></td></tr>
-<tr><td>example:</td><td><code>dig badcnameanything.1.yourdomain.com @127.0.0.1</code></td></tr>
-<tr><td>remark:</td><td>VARIANT-0: http://always779768.yourdomain.com/</td></tr>
-<tr><td>remark:</td><td>VARIANT-1: http://always799902.yourdomain.com:80/</td></tr>
-<tr><td>remark:</td><td>VARIANT-2: https://always725764.yourdomain.com/</td></tr>
-<tr><td>remark:</td><td>VARIANT-3: https://always006450.yourdomain.com:443/</td></tr>
-<tr><td>remark:</td><td>VARIANT-4: always279856.yourdomain.com:80</td></tr>
-<tr><td>remark:</td><td>VARIANT-5: always260211.yourdomain.com:443</td></tr>
-<tr><td>remark:</td><td>VARIANT-6: 1.2.3.4 (IP address as a hostname)</td></tr>
-<tr><td>remark:</td><td>VARIANT-7: 1.2.3.4:80</td></tr>
-<tr><td>remark:</td><td>VARIANT-8: 1\.2\.3\.4 (IP address as a hostname as a single label by using actual dot symbols)</td></tr>
-<tr><td>remark:</td><td>VARIANT-9: 1\.2\.3\.4:80</td></tr>
-<tr><td>remark:</td><td>VARIANT-10: 44.196.123.123</td></tr>
-<tr><td>remark:</td><td>VARIANT-11: 44.196.123.123:80</td></tr>
+<tr><td>format:</td><td>illcname.&lt;VARIANT-1-12>.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>Responses produced based on VARIANT:<br><table> <tr><td>1.</td><td>http://always779768.yourdomain.com/</td></tr> <tr><td>2.</td><td>http://always799902.yourdomain.com:80/</td></tr> <tr><td>3.</td><td>https://always725764.yourdomain.com/</td></tr> <tr><td>4.</td><td>https://always006450.yourdomain.com:443/</td></tr> <tr><td>5.</td><td>always279856.yourdomain.com:80</td></tr> <tr><td>6.</td><td>always260211.yourdomain.com:443</td></tr> <tr><td>7.</td><td>1.2.3.4 (IP address written in a DNS name notation which is format for hostnames, not IP addresses)</td></tr> <tr><td>8.</td><td>1.2.3.4:80</td></tr> <tr><td>9.</td><td>1\.2\.3\.4 (IP address written in DNS name notation as a single label by using actual dot symbols)</td></tr> <tr><td>10.</td><td>1\.2\.3\.4:80</td></tr> <tr><td>11.</td><td>44.123.123.123 (Our IP address, written in DNS name notation)</td></tr> <tr><td>12.</td><td>44.123.123.123:80</td></tr> </table></td></tr>
+<tr><td>example:</td><td><code>dig illcname.1.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig illcname.9.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig illcnameanything.1.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
 
 Sample:
 ```
-# dig badcname.9.yourdomain.com @127.0.0.1
+# dig illcname.1.yourdomain.com @127.0.0.1
 
-; <<>> DiG 9.18.10-2-Debian <<>> badcname.9.yourdomain.com @127.0.0.1
+; <<>> DiG 9.18.10-2-Debian <<>> illcname.1.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 9827
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 55661
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-;badcname.9.yourdomain.com.	IN	A
+;illcname.1.yourdomain.com.	IN	A
 
 ;; ANSWER SECTION:
-badcname.9.yourdomain.com. 60	IN	CNAME	1\.2\.3\.4:80.
+illcname.1.yourdomain.com. 60	IN	CNAME	http://always208174.yourdomain.com/.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Wed Nov 08 11:22:22 +04 2023
-;; MSG SIZE  rcvd: 92
+;; WHEN: Thu Nov 09 21:50:35 +04 2023
+;; MSG SIZE  rcvd: 117
 
 ```
 

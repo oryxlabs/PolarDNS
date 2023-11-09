@@ -5,7 +5,7 @@
 1. [Bad compression](bad-compression.md)
 1. [Empty responses](empty-responses.md)
 	- [Close the connection (close)](#close-the-connection-close)
-	- [Don't respond (timeout)](#don't-respond-timeout)
+	- [Don't respond (timeout)](#dont-respond-timeout)
 	- [Empty response (empty1)](#empty-response-empty1)
 	- [Only NULL bytes (empty2)](#only-null-bytes-empty2)
 	- [Only NULL bytes, suitable for TCP (empty3)](#only-null-bytes-suitable-for-tcp-empty3)
@@ -151,7 +151,7 @@ Send empty response with only the TXID (first 2 bytes of every DNS response) + a
 <tr><td>format:</td><td>empty4.&lt;NUMBER-OF-NULLS>.yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig empty4.50.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig empty4whatever.50.yourdomain.com @127.0.0.1</code></td></tr>
-<tr><td>example:</td><td><code>dig empty4.0.len200.tc.yourdomain.com @127.0.0.1</code> This means the response will be TCP DNS packet with length indicating it is a 200 B packet in size, but there will be just the TXID and nothing else (0 number of NULLs)</td></tr>
+<tr><td>remark:</td><td><code>dig empty4.0.len200.tc.yourdomain.com @127.0.0.1</code> This means the response will be a TCP DNS packet with length indicating it is a 200 B packet in size, but there will be just the TXID and nothing else (0 number of NULLs)</td></tr>
 </table>
 
 Sample:

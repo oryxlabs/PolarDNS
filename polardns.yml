@@ -26,16 +26,9 @@ a3rdparty_domain: whatever.com
 # known DNS resolvers / clients connecting to us
 known_servers:
   127.0.0.1:      localhost
-  18.224.139.186: powerdns
-  3.14.145.209:   knotresolver
-  3.129.45.171:   unbound
-  3.143.208.74:   bind
-  3.23.99.211:    msdns
-  18.117.9.155:   dnsmasq
-  3.141.200.97:   sdns
-  3.21.104.68:    technitium
-  3.138.178.163:  maradns
-  3.137.159.37:   systemd
-  18.191.242.246: coredns
+  1.2.3.4:        powerdns1
+  1.2.3.5:        powerdns2
+  2.3.4.5:        bind-test1
+  4.5.6.7:        msdns-test1
 
 #########################

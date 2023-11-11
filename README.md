@@ -92,9 +92,7 @@ These can lead to discovery of various vulnerabilities such as:
 -	Resource exhaustion
 -	Crashes, DoS
 
-See the included presentation (.pptx file) in the docs folder for more details and more usage examples.
-
-See the included [catalogue](docs/catalogue/) in the docs folder for the list of all currently implemented (built-in) features and response modifiers.
+See the included [catalogue](docs/catalogue/) for the list of all implemented features and response modifiers.
 
 ## Adding new features
 

@@ -94,6 +94,8 @@ These can lead to discovery of various vulnerabilities such as:
 
 See the included [catalogue](docs/catalogue/) for the list of all implemented features and response modifiers.
 
+See the [presentations](docs/pptx/) from BlackHat MEA 2023 (including BONUS slides) for more details, examples and use-cases.
+
 ## Adding new features
 
 Adding new features to PolarDNS is essential.

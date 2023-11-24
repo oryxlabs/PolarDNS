@@ -1,3 +1,45 @@
+09/Nov/2023
+- cleanup of the 'manylabels' feature
+- cleanup of the 'afuzz1' and 'afuzz2' features
+- enhanced the 'cgena' and 'cgenb' features, added more variants
+
+08/Nov/2023
+- enhanced the 'dotcname' feature, added more variants
+- cleanup of the 'cgena' and 'cgenb' features
+
+07/Nov/2023
+- cleanup of the 'cutabuf' and 'cutcnamebuf' features, should make these as response modifiers in the future (todo)
+
+06/Nov/2023
+- added empty/incomplete responses, namely the 'timeout' and 'close' features
+- socketserver has certain limitations when it comes to these features
+- cleanup of the alias chain scenarios
+
+03/Nov/2023
+- added empty/incomplete responses, namely the 'empty5', 'empty6' and 'empty7' features
+- fixed a bug in the logging causing an exception under certain circumstances
+
+01/Nov/2023
+- improved the tests to automatically read the domain name from the polardns.yml
+- improved the tests to be indepent on the domain name
+
+29/Oct/2023
+- added support for a config file (polardns.yml)
+- the domain name and the IPs are now configurable via the config file
+
+19/Oct/2023
+- added support for SOA records in the ZONEFILE
+
+18/Oct/2023
+- fixed problem with dots '.' in the query domain name not being reflected in the response properly
+- enhanced the tests and added 41 more tests (now there is 293 tests in total)
+
+17/Oct/2023
+- added support for getting version information using 'dig version.polar CH TXT' command
+
+16/Oct/2023
+- added functionality for CNAME loops
+
 27/Sep/2023
 - fixed exception in the 'close' feature in UDP mode
 

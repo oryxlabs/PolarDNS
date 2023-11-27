@@ -7,8 +7,9 @@ WORKDIR /usr/src/app
 # Install any needed packages specified in requirements.txt
 RUN pip install pyyaml
 
-# Copy the current directory contents into the container at /usr/src/app
-COPY . .
+# Copy the required files into the container at /usr/src/app
+COPY polardns.py .
+COPY polardns.yml .
 
 # Make port 53 available to the world outside this container
 EXPOSE 53/udp 53/tcp

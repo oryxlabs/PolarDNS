@@ -30,12 +30,28 @@ This can be useful for:
 pip3 install pyyaml
 ```
 3) (Optional) Edit the `polardns.yml` configuration file and add your domain and nameserver IP addresses.
-## How to run it
+
+## Running PolarDNS
 
 Make sure you are using Python 3.10 or newer to run the PolarDNS server:
 ```
 python polardns.py
 ```
+Alternatively, you can also deploy PolarDNS as a Docker image for which you can use the following steps.
+
+### Building and running PolarDNS Docker image
+
+1) To build the Docker image for PolarDNS:
+```
+docker build -t polar_dns .
+```
+
+2) To run the PolarDNS container:
+```
+docker run -d --name polar_dns_container -p 53:53/tcp -p 53:53/udp polar_dns
+```
+## Working with PolarDNS
+
 By default, the server starts listening on all interfaces on UDP and TCP port 53 (0.0.0.0:53), ready to answer DNS queries.
 
 You can test it locally by asking the following sample query, which should always resolve to something.
@@ -106,20 +122,6 @@ These can lead to discovery of various vulnerabilities such as:
 
 See the [BlackHat MEA 2023](docs/pptx/) presentations (including BONUS slides) for more details, many more examples and use-cases.
 
-## Adding new features
-
-Adding new features to PolarDNS is essential.
-
-PolarDNS allows you to relatively easily implement a new idea, a test case, a feature or a PoC, without a need of implementing your own DNS server.
-
-All you need is a basic / intermediate Python knowledge and knowing a bit of DNS protocol too.
-
-Both can be learned on the go by looking on the PolarDNS code and by simply copying and modifying some of the existing features.
-
-Testing locally using ``dig`` / ``host`` / ``nlsookup`` and [Wireshark](https://www.wireshark.org/) is of essence here.
-
-Plus, the [links](#links) below can help with the DNS protocol.
-
 ## Testing of recursive DNS resolvers
 
 Here's a high-level overview of what you need in order to start testing recursive DNS servers.
@@ -151,6 +153,20 @@ One of your PolarDNS servers will respond to the target DNS resolver. The target
 By instructing the DNS resolver to resolve various subdomains under your example123.com domain, you can effectively test the behavior of the DNS resolver and see how it handles various unexpected situations (responses).
 
 For instance, how does it handle a situation when it obtains a malformed DNS response, a response with an injected record, or a record containing illegal characters, and what kind of answer does it ultimately send to you, the client?
+
+## Adding new features
+
+Adding new features to PolarDNS is essential.
+
+PolarDNS allows you to relatively easily implement a new idea, a test case, a feature or a PoC, without a need of implementing your own DNS server.
+
+All you need is a basic / intermediate Python knowledge and knowing a bit of DNS protocol too.
+
+Both can be learned on the go by looking on the PolarDNS code and by simply copying and modifying some of the existing features.
+
+Testing locally using ``dig`` / ``host`` / ``nlsookup`` and [Wireshark](https://www.wireshark.org/) is of essence here.
+
+Plus, the [links](#links) below can help with the DNS protocol.
 
 ## Links
 

@@ -8,7 +8,7 @@ import random
 import time
 import sys
 import os
-import yaml
+import tomllib
 
 version = "1.0"
 stamp = str(time.time()).ljust(18, "0")
@@ -16,8 +16,25 @@ print("%s | PolarDNS %s server starting up" % (stamp, version))
 
 ################################
 
-config = yaml.safe_load(open("polardns.yml"))
+### PARSE CONFIGURATION
+# note: this has some transformation as not to break the existing usage of config variable
+# please update the usage to simplify this transformation in future iteration`
+with open("polardns.toml", "rb") as f:
+    _config = tomllib.load(f)
+config = {k:v for k,v in _config['main'].items() if k != 'known_servers'}
+
+known_servers = {}
+for line in _config['main']['known_servers'].split('\n'):
+    if not line:
+        continue
+    host, ip_address = line.split()
+    known_servers[host] = ip_address
+
+config['known_servers'] = known_servers
 debug = config['debug']
+
+### END PARSE CONFIGURATION
+
 globalttl = int(config['ttl'])
 globalsleep = float(config['sleep'])
 

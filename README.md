@@ -24,7 +24,7 @@ This can be useful for:
 
 ## Installation
 
-1) Install Python 3.10 or newer.
+1) Install Python 3.11 or newer.
 2) Install PyYAML:
 ```
 pip3 install pyyaml
@@ -33,7 +33,7 @@ pip3 install pyyaml
 
 ## Running PolarDNS
 
-Make sure you are using Python 3.10 or newer to run the PolarDNS server:
+Make sure you are using Python 3.11 or newer to run the PolarDNS server:
 ```
 python polardns.py
 ```

@@ -25,11 +25,7 @@ This can be useful for:
 ## Installation
 
 1) Install Python 3.11 or newer.
-2) Install PyYAML:
-```
-pip3 install pyyaml
-```
-3) (Optional) Edit the `polardns.yml` configuration file and add your domain and nameserver IP addresses.
+2) (Optional) Edit the `polardns.toml` configuration file and add your domain and nameserver IP addresses.
 
 ## Running PolarDNS
 

@@ -162,6 +162,8 @@ Both can be learned on the go by looking on the PolarDNS code and by simply copy
 
 Testing locally using ``dig`` / ``host`` / ``nlsookup`` and [Wireshark](https://www.wireshark.org/) is of essence here.
 
+The `test/test.sh` script has been tested on a machine running `dig 9.18.10`.
+
 Plus, the [links](#links) below can help with the DNS protocol.
 
 ## Links

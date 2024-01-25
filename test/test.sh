@@ -1,6 +1,8 @@
 #!/bin/bash
 
-target="127.0.0.1"
+target_ip="127.0.0.1"
+target_port=53
+timeout=1
 
 nofail=0
 
@@ -8,13 +10,13 @@ nofail=0
 domain=""
 
 # get the domain name from the config file
-config="polardns.yml"
+config="polardns.toml"
 if [ -f "${config}" ]; then
-  domain="`grep -v '^#' ${config} | grep -m1 "domain:" | awk '{print $2}'`"
+  domain="`grep -v '^#' ${config} | grep -m1 "domain = " | awk '{print $3}' | cut -f2 -d"'"`"
 else
-  config="../polardns.yml"
+  config="../polardns.toml"
   if [ -f "${config}" ]; then
-    domain="`grep -v '^#' ${config} | grep -m1 "domain:" | awk '{print $2}'`"
+    domain="`grep -v '^#' ${config} | grep -m1 "domain = " | awk '{print $3}' | cut -f2 -d"'"`"
   fi
 fi
 if [ "${domain}" == "" ]; then
@@ -26,14 +28,17 @@ fi
 
 rundig() {
   d="$1"
-  #tmpfile="/tmp/output.${d//[ +]/}.${target}.$$${RANDOM}"
-  #tmpfile="/tmp/output.${d//[ +]/}.${target}"
-  dig ${d} @${target} +tries=1 +timeout=1 \
+  #tmpfile="/tmp/output.${d//[ +]/}.${target_ip}.$$${RANDOM}"
+  #tmpfile="/tmp/output.${d//[ +]/}.${target_ip}"
+  dig ${d} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port} \
   | grep -v '^; <<>> DiG \| WHEN: \| Query time: ' \
   | sed -e 's/, id: .*/, id: <ID>/;s/expected ID .*, got .*/expected ID <ID>, got <DIF>/' \
   | sed -e 's/\x09\s*/ /g;s/\\000/<NUL>/g;s/\([^0-9]\)[0-9]\{6\}\([^0-9]\)/\1<RANDOM>\2/' \
   | sed -e 's/rcvd: .*/rcvd: <SIZE>/;s/has [0-9]* extra bytes/has <NUM> extra bytes/g' \
   | sed -e "s/${domain//\./\\.}/<OURDOM>/g;s/${domain%.*}/<OURDOM-NOTLD>/g" \
+  | sed -e "s/#${target_port}/#53/g" \
+  | sed -e "s/${target_ip}/127\.0\.0\.1/g" \
+  | sed -e "/IN A/s/127\.0\.0\.1$/44\.196\.212\.212/g" \
   | md5sum | awk '{print $1}'
   #> "${tmpfile}"
   #echo hello | md5sum | awk '{print $1}'
@@ -41,16 +46,19 @@ rundig() {
 
 runddig() {
   d="$1"
-  tmpfile="/tmp/output.${d//[ +]/}.${target}.$$${RANDOM}"
+  tmpfile="/tmp/output.${d//[ +]/}.${target_ip}.$$${RANDOM}"
   echo "---------------------------------------------"
-  echo "# dig ${d} @${target} +tries=1 +timeout=1"
+  echo "# dig ${d} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port} "
   echo
-  dig ${d} @${target} +tries=1 +timeout=1 \
+  dig ${d} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port} \
   | grep -v '^; <<>> DiG \| WHEN: \| Query time: ' \
   | sed -e 's/, id: .*/, id: <ID>/;s/expected ID .*, got .*/expected ID <ID>, got <DIF>/' \
   | sed -e 's/\x09\s*/ /g;s/\\000/<NUL>/g;s/\([^0-9]\)[0-9]\{6\}\([^0-9]\)/\1<RANDOM>\2/' \
   | sed -e 's/rcvd: .*/rcvd: <SIZE>/;s/has [0-9]* extra bytes/has <NUM> extra bytes/g' \
   | sed -e "s/${domain//\./\\.}/<OURDOM>/g;s/${domain%.*}/<OURDOM-NOTLD>/g" \
+  | sed -e "s/#${target_port}/#53/g" \
+  | sed -e "s/${target_ip}/127\.0\.0\.1/g" \
+  | sed -e "/IN A/s/127\.0\.0\.1$/44\.196\.212\.212/g" \
   > "${tmpfile}"
   sum="`md5sum "${tmpfile}" | awk '{print $1}'`"
   cat "${tmpfile}"
@@ -74,7 +82,7 @@ runtest() {
   ((testcount++))
   fail=0
 
-  cmd="dig ${dom} @${target} +tries=1 +timeout=1"
+  cmd="dig ${dom} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port} "
   if [ "${out}" != "${exp}" ]; then
     echo "FAIL    ${cmd}"
     ((failcount++))
@@ -97,7 +105,7 @@ if [ ! -z "${1}" ]; then
   if [ "${1}" == "dig" ]; then
     shift
     arg="${*}"
-    arg="${arg//@${target} +tries=1 +timeout=1/}"
+    arg="${arg//@${target_ip} +tries=1 +timeout=${timeout}/}"
     runddig "${arg}"
     exit 0
   fi
@@ -453,5 +461,3 @@ echo
 echo "TESTS: ${testcount}"
 echo " PASS: ${passcount}"
 echo " FAIL: ${failcount}"
-
-

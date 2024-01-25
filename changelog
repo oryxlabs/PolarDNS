@@ -1,3 +1,9 @@
+12/Jan/2024
+ - edited the test.sh and Dockerfile to use the toml file
+ - added port and timeout feature to test.sh
+ - changes to test.sh to permit tests that use a hard coded IP in the DNS response to pass.
+ - added a comment to the readme about the dig version required for tests.
+
 09/Nov/2023
 - cleanup of the 'manylabels' feature
 - cleanup of the 'afuzz1' and 'afuzz2' features

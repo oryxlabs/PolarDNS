@@ -1,0 +1,14 @@
+[module]
+name = "timeout"
+info = "Don't respond"
+desc = "Don't respond, just let the connection timeout."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("timeout"):
+   # Timeout the connection
+   log("sending nothing (timeout)")
+   timeout_conn(self)
+   #####################################################################
+'''

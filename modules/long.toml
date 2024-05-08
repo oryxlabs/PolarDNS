@@ -1,0 +1,58 @@
+[module]
+name = "long"
+info = ""
+desc = ""
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if len(req.full_domain) == 253 and req.first_subdomain.startswith("long"):
+   nans = 241
+   #nans = 230
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, nans+1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   try:
+      opcode = req.first_subdomain[4]
+   except:
+      opcode = "0"
+   match opcode:
+      case "0":  # long0...
+         for i in range(nans):
+             dom = "long0"
+             for i in range(5):
+                 dom += '.' + ''.join(random.choice(string.ascii_lowercase + string.digits))
+             dom += req.full_domain[15:255]
+             randip = '.'.join(str(random.randint(0, 255)) for _ in range(4))
+             buffer += convDom2Bin(dom) + getTypeBin("A") + getClassBin("IN")
+             buffer += struct.pack(">L", resp.TTL)      ## TTL
+             buffer += struct.pack(">H", 4)             ## Data length
+             buffer += socket.inet_aton(randip)         ## IP
+         # proper answer in the end
+         buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)      ## TTL
+         buffer += struct.pack(">H", 4)             ## Data length
+         buffer += socket.inet_aton("6.6.6.6")      ## IP
+      case _:  # long1...
+         for i in range(nans):
+             dom = req.full_domain[0:227]
+             for i in range(5):
+                 dom += '.' + ''.join(random.choice(string.ascii_lowercase + string.digits))
+             dom += '.' + req.sld_tld_domain
+             randip = '.'.join(str(random.randint(0, 255)) for _ in range(4))
+             buffer += convDom2Bin(dom) + getTypeBin("A") + getClassBin("IN")
+             buffer += struct.pack(">L", resp.TTL)      ## TTL
+             buffer += struct.pack(">H", 4)             ## Data length
+             buffer += socket.inet_aton(randip)         ## IP
+         # proper answer in the end
+         buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)      ## TTL
+         buffer += struct.pack(">H", 4)             ## Data length
+         buffer += socket.inet_aton("6.6.6.5")      ## IP
+   # log and send
+   log("%d randomized long A records (total: %d B)" % (nans+1, len(buffer)))
+   send_buf(self, buffer)
+  #####################################################################
+'''

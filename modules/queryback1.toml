@@ -1,0 +1,16 @@
+[module]
+name = "queryback1"
+info = "Query reflection"
+desc = "Instead of a proper response, send back the exact same query."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("queryback1"):
+   # Domain starts with "queryback1", let's send back the same query
+   buffer = resp.ID + req.RAW[2:]
+   # log and send
+   log("sending back the same query")
+   send_buf(self, buffer)
+   #####################################################################
+'''

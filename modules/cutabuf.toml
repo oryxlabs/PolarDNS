@@ -1,0 +1,32 @@
+[module]
+name = "cutabuf"
+info = "Cut A record from the end"
+desc = "Respond with legit A record, but cut arbitrary number of bytes from the end of the buffer."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("cutabuf"):
+   # Send A record, but cut X bytes from the buffer
+   ip = "1.2.3.4"
+   cutbytes = 0  # how many bytes to cut
+   if req.subdomains[1].isnumeric():
+      cutbytes = int(req.subdomains[1])
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   # A
+   buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                     ## TTL
+   buffer += struct.pack(">H", 4)                            ## Data length
+   buffer += socket.inet_aton(ip)                            ## IP
+   buffer_len = len(buffer)
+   if cutbytes > buffer_len:
+      cutbytes = buffer_len
+   newbuf  = buffer[0:buffer_len-cutbytes]
+   log("A %s (sending %d/%d B)" % (ip, len(newbuf), buffer_len))
+   send_buf(self, newbuf, buffer_len)
+   #####################################################################
+'''

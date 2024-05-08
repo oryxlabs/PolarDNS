@@ -1,0 +1,32 @@
+[module]
+name = "cnamefuzz1"
+info = "Many random CNAME aliases, textual"
+desc = "Respond with many CNAME answers where each answer contains a random string of specified length, made of all kinds of illegal ASCII characters that are likely not allowed in a domain name."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("cnamefuzz1"):
+   # Send bunch of bad (ill-formatted) CNAME records
+   cnames = 1  # number of CNAME records to send
+   if req.subdomains[1].isnumeric():
+      cnames = int(req.subdomains[1])
+   cnamesize = 60  # CNAME size
+   if req.subdomains[2].isnumeric():
+      cnamesize = int(req.subdomains[2])
+   ### DNS header #######
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, cnames, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   for i in range(cnames):
+       data    = ''.join(random.choice(string.printable) for _ in range(cnamesize))
+       buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+       buffer += struct.pack(">L", resp.TTL)            ## TTL
+       buffer += struct.pack(">H", len(data)+2)         ## Data length
+       buffer += convDom2Bin(data)
+   # log and send
+   log("%d illegal CNAME records of %d B (total: %d B)" % (cnames, cnamesize, len(buffer)))
+   send_buf(self, buffer)
+   #####################################################################
+'''

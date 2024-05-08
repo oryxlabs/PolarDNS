@@ -1,0 +1,17 @@
+[module]
+name = "empty1"
+info = "Empty response"
+desc = "Send empty response, simply an empty packet."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("empty1"):
+   # Send empty packet
+   log("empty packet")
+   if proto == "tcp":
+      send_buf_wo_len(self, b"")
+   else:
+      send_buf(self, b"")
+   #####################################################################
+'''

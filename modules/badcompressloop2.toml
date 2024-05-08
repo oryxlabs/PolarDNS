@@ -1,0 +1,28 @@
+[module]
+name = "badcompressloop2"
+info = "Pointer loop in Name field 2"
+desc = "Respond with CNAME, where the answer Name field only contains \"abc\" and a pointer to the beginning of the \"abc\" (=> a loop)."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("badcompressloop2"):
+   # Send answer with a compression pointer loop in the Answer name - variant 2
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   # CNAME
+   offset_to_middle_name = len(req.full_domain) + 18   ## forward pointer to the name in the middle
+   baddom = b"\x03abc" + b"\xc0" + struct.pack(">B", offset_to_middle_name)
+   buffer += baddom + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                ## TTL
+   dom = "always" + str(random.randint(1,100000)) + "." + req.sld_tld_domain
+   buffer += struct.pack(">H", len(dom)+2)              ## Data length
+   buffer += convDom2Bin(dom)                           ## CNAME value
+   # log and send
+   log("CNAME %s (badcomp loop 2, answer Name, abc<LOOP>)" % (dom))
+   send_buf(self, buffer)
+   #####################################################################
+'''

@@ -1,0 +1,15 @@
+[module]
+name = "close"
+info = "Close the connection"
+desc = "Don't respond, just close the connection immediately."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("close"):
+   # Close the connection
+   log("just closing connection")
+   time.sleep(resp.sleep)
+   close_conn(self)
+   #####################################################################
+'''

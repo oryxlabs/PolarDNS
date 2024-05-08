@@ -1,0 +1,22 @@
+[module]
+name = "queryback4"
+info = ""
+desc = ""
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("queryback4"):
+   # Domain starts with "queryback4", let's send back a random variant of the query
+   # to the sender to udp/53 port, as an attempt to make a loop.
+   # Don't send any response to the original query (let it timeout)
+   # Todo
+   buffer = resp.ID + req.RAW[2:]
+   log("sending back the same query to udp port 53")
+   # send back the query to port udp 53
+   s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+   s.sendto(buffer, ((self.client_address[0], 53)))
+   # just close the original connection, don't send anything there
+   close_conn(self)
+   #####################################################################
+'''

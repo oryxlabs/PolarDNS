@@ -1,0 +1,28 @@
+[module]
+name = "empty4"
+info = "Only TXID and NULL bytes"
+desc = "Send empty response with only the TXID (first 2 bytes of every DNS response) + arbitrary number of NULLs."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("empty4"):
+   # Send the query ID + arbitrary number of NULLs
+   nulls = 1 # number of NULLs to send
+   if req.subdomains[1].isnumeric():
+      nulls = int(req.subdomains[1])
+   buffer  = resp.ID
+   buffer += b"\x00" * nulls
+   log("only query ID and %d NULL(s)" % (nulls))
+   if proto == "tcp":
+      if resp.len != 0:
+         buffer  = struct.pack(">H", resp.len)
+         buffer += resp.ID
+         buffer += b"\x00" * nulls
+         send_buf_wo_len(self, buffer)
+      else:
+         send_buf(self, buffer)
+   else:
+      send_buf(self, buffer)
+   #####################################################################
+'''

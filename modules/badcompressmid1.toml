@@ -1,0 +1,27 @@
+[module]
+name = "badcompressmid1"
+info = "Compression in the middle of CNAME"
+desc = "Respond with CNAME, where the CNAME contains \"abc\" + a pointer to the query name + additional \"hello\" string. Data length indicates the \"hello\" string should be included in the CNAME."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("badcompressmid1"):
+   # Send answer with a compression pointer in the CNAME in the middle, trying to
+   # concatenate it with additional string
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   # CNAME
+   buffer += b"\xc0\x0c" + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                ## TTL
+   dom = b"\x03abc" + b"\xc0\x0c" + convDom2Bin("hello")
+   buffer += struct.pack(">H", len(dom))                ## Data length
+   buffer += dom                                        ## CNAME value with pointer to itself
+   # log and send
+   log("CNAME abc.%s.hello (bad comp mid1, appended hello)" % (req.full_domain))
+   send_buf(self, buffer)
+   #####################################################################
+'''

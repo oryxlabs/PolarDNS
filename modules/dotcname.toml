@@ -1,0 +1,96 @@
+[module]
+name = "dotcname"
+info = "CNAME alias with a dot in different positions"
+desc = "Respond with CNAME (always123456.yourdomain.com) containing dot character (`.`) in different positions based on selected variant."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("dotcname"):
+   # Send illegal CNAME record with dots
+   r = '{:06d}'.format(random.randint(100000, 999999))
+   dom = "always" + str(r) + "." + req.sld_tld_domain
+   variant = 0
+   if req.subdomains[1].isnumeric():
+      variant = int(req.subdomains[1])
+   match variant:
+      case 1:  # dotcname.1 - always<DOT>123456.yourdomain.com
+         bindom  = struct.pack(">B", 13)
+         bindom += bytes("always." + str(r), 'utf-8')
+         bindom += struct.pack(">B", len(req.sld))
+         bindom += bytes(req.sld, 'utf-8')
+         bindom += struct.pack(">B", len(req.tld))
+         bindom += bytes(req.tld, 'utf-8')
+         bindom += b"\x00"
+         dom  = "always<DOT>" + str(r) + "." + req.sld_tld_domain
+      case 2:  # dotcname.2 - always<DOT>a123456.yourdomain.com
+         bindom  = struct.pack(">B", 14)
+         bindom += bytes("always.a" + str(r), 'utf-8')
+         bindom += struct.pack(">B", len(req.sld))
+         bindom += bytes(req.sld, 'utf-8')
+         bindom += struct.pack(">B", len(req.tld))
+         bindom += bytes(req.tld, 'utf-8')
+         bindom += b"\x00"
+         dom  = "always<DOT>a" + str(r) + "." + req.sld_tld_domain
+      case 3:  # dotcname.3 - always123456<DOT>yourdomain.com
+         fc = "always" + str(r) + "." + req.sld
+         bindom  = struct.pack(">B", len(fc))
+         bindom += bytes(fc, 'utf-8')
+         bindom += struct.pack(">B", len(req.tld))
+         bindom += bytes(req.tld, 'utf-8')
+         bindom += b"\x00"
+         dom  = fc.replace(".", "<DOT>") + "." + req.tld
+      case 4:  # dotcname.4 - always123456.yourdomain<DOT>com
+         bindom  = struct.pack(">B", 12)
+         bindom += bytes("always" + str(r), 'utf-8')
+         bindom += struct.pack(">B", len(req.sld_tld_domain))
+         bindom += bytes(req.sld_tld_domain, 'utf-8')
+         bindom += b"\x00"
+         dom  = "always" + str(r) + "." + req.sld_tld_domain.replace(".", "<DOT>")
+      case 5:  # dotcname.5 - always123456.yourdomain.com<DOT>
+         bindom  = struct.pack(">B", 12)
+         bindom += bytes("always" + str(r), 'utf-8')
+         bindom += struct.pack(">B", len(req.sld))
+         bindom += bytes(req.sld, 'utf-8')
+         bindom += struct.pack(">B", len(req.tld)+1)
+         bindom += bytes(req.tld + '.', 'utf-8')
+         bindom += b"\x00"
+         dom  = "always" + str(r) + "." + req.sld_tld_domain + "<DOT>"
+      case 6:  # dotcname.6 - always123456.yourdomain.com.<DOT>
+         bindom  = struct.pack(">B", 12)
+         bindom += bytes("always" + str(r), 'utf-8')
+         bindom += struct.pack(">B", len(req.sld))
+         bindom += bytes(req.sld, 'utf-8')
+         bindom += struct.pack(">B", len(req.tld))
+         bindom += bytes(req.tld, 'utf-8')
+         bindom += struct.pack(">B", 1)
+         bindom += b"\x2e\x00"
+         dom  = "always" + str(r) + "." + req.sld_tld_domain + ".<DOT>"
+      case _:  # dotcname.7 - always123456<DOT>yourdomain<DOT>com
+         bindom  = struct.pack(">B", len(dom))
+         bindom += bytes(dom, 'utf-8')
+         bindom += b"\x00"
+         dom = dom.replace(".", "<DOT>")
+      #case _:  # dotcname.* - just a normally formatted CNAME
+      #   bindom  = struct.pack(">B", 12)
+      #   bindom += bytes("always" + str(r), 'utf-8')
+      #   bindom += struct.pack(">B", len(req.sld))
+      #   bindom += bytes(req.sld, 'utf-8')
+      #   bindom += struct.pack(">B", len(req.tld))
+      #   bindom += bytes(req.tld, 'utf-8')
+      #   bindom += b"\x00"
+      #   dom  = "always" + str(r) + "." + req.sld_tld_domain
+   ### DNS header #######
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)          ## TTL
+   buffer += struct.pack(">H", len(bindom))       ## Data length
+   buffer += bindom                               ## CNAME
+   # log and send
+   log("CNAME %s" % (dom))
+   send_buf(self, buffer)
+   #####################################################################
+'''

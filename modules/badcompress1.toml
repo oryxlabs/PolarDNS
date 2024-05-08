@@ -1,0 +1,30 @@
+[module]
+name = "badcompress1"
+info = "Custom offset in Name field"
+desc = "Respond with CNAME (always&lt;RANDOM>.yourdomain.com), where you can specify an arbitrary offset in the answer Name field compression pointer."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("badcompress1"):
+   # Send answer with arbitrary compression pointer in the ANSWER section in the query name
+   offset = 12  # default offset is 12, which points to the domain name in the question
+   if req.subdomains[1].isnumeric():
+      offset = int(req.subdomains[1])
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   # CNAME
+   badcomp = b"\xc0" + struct.pack(">B", offset)        ## arbitrary offset in the answer in the Name
+   buffer += badcomp + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                ## TTL
+   dom = "always" + str(random.randint(1,100000)) + "." + req.sld_tld_domain
+   buffer += struct.pack(">H", len(dom)+2)              ## Data length
+   buffer += convDom2Bin(dom)                           ## CNAME value
+   # log and send
+   log("CNAME %s (badcomp 1, answer Name, offset %d)" % (dom, offset))
+   send_buf(self, buffer)
+   #####################################################################
+'''

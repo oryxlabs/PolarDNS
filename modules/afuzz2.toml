@@ -1,0 +1,48 @@
+[module]
+name = "afuzz2"
+info = "Many bogus A records and legit A record"
+desc = "Respond with many bogus A records containing byte values starting from 0 up to 255 max, followed by a legitimate answer (proper A record) in the end."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("afuzz2"):
+   # Send many A records with a slightly distorted name. In the end, provide the correct one also
+   # af<01>zz2.dnslabtest1.com   A   6.6.6.1
+   # af<02>zz2.dnslabtest1.com   A   6.6.6.2
+   # af<03>zz2.dnslabtest1.com   A   6.6.6.3
+   # ...
+   # af<fe>zz2.dnslabtest1.com   A   6.6.6.254
+   # af<ff>zz2.dnslabtest1.com   A   6.6.6.255
+   # afuzz2.dnslabtest1.com   A   1.2.3.4
+   answers = 1
+   if req.subdomains[1].isnumeric():
+      answers = int(req.subdomains[1])
+   if answers > 256: answers = 256
+   ### DNS header #######
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, answers+1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   #for b in range(1, 255):
+   tmpdom = convDom2Bin(req.full_domain)
+   # multiple bad A
+   for b in range(1, answers+1):
+       newip = "6.6.6." + str(b-1)
+       newdom = tmpdom[0:3]
+       newdom += struct.pack(">B", b-1)
+       newdom += tmpdom[4:]
+       buffer += newdom + getTypeBin("A") + getClassBin("IN")
+       buffer += struct.pack(">L", resp.TTL)           ## TTL
+       buffer += struct.pack(">H", 4)                  ## Data length
+       buffer += socket.inet_aton(newip)               ## IP
+   # good A
+   buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   buffer += struct.pack(">L", resp.TTL)            ## TTL
+   buffer += struct.pack(">H", 4)                   ## Data length
+   buffer += socket.inet_aton("2.3.4.5")            ## IP
+   # log and send
+   log("%d bogus A records + legit A record" % (answers))
+   send_buf(self, buffer)
+   #####################################################################
+'''

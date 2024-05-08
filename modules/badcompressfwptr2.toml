@@ -1,0 +1,28 @@
+[module]
+name = "badcompressfwptr2"
+info = "Double compression pointer"
+desc = "Respond with CNAME (abc.badcompressfwptr2.yourdomain.com) and use a forward pointer in the answer Name field to point to the end (the actual CNAME). But, skip the \"abc\" portion so that it will point directly to another pointer pointing to the beginning (to the domain name in the query)."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("badcompressfwptr2"):
+   # Send answer with a forward compression pointer pointing to another pointer - variant 2
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   # CNAME
+   offset_to_last_cname = len(req.full_domain) + 12 + 18 + 4 ## forward pointer to the CNAME in the end, but also
+                                                        ## skipping the "abc" portion, so it's like a small chain
+   buffer += b"\xc0" + struct.pack(">B", offset_to_last_cname) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)             ## TTL
+   dom = b"\x03abc" + b"\xc0\x0c"                    ## "abc" + pointer to the first domain name (in the query)
+   buffer += struct.pack(">H", len(dom))             ## Data length
+   buffer += dom                                     ## CNAME value
+   # log and send
+   log("CNAME abc.%s (badcomp with forward pointer 2)" % (req.full_domain))
+   send_buf(self, buffer)
+   #####################################################################
+'''

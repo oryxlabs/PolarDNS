@@ -1,0 +1,28 @@
+[module]
+name = "customtype"
+info = "Arbitrary record type with random data"
+desc = "Respond with arbitrary DNS record type e.g., A, NS, CNAME, MX, TXT, SOA by specifying the type code in decimal. The content will be a sample random data. Please note not all record types are implemented."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("customtype"):
+   # Send answer with a custom requested type
+   thetype = getTypeCode("TXT")
+   if req.subdomains[1].isnumeric():
+      thetype = int(req.subdomains[1])
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   databin = getRandomDataOfType(thetype)
+   buffer += convDom2Bin(req.full_domain) + struct.pack(">H", thetype) + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)            ## TTL
+   buffer += struct.pack(">H", len(databin))        ## Data length
+   buffer += databin
+   # log and send
+   log("type %d (%s)" % (thetype, getTypeName(thetype)))
+   send_buf(self, buffer)
+   #####################################################################
+'''

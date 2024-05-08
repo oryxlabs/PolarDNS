@@ -1,0 +1,23 @@
+[module]
+name = "empty3"
+info = "Only NULL bytes, suitable for TCP"
+desc = "Like empty2, but in TCP mode make sure the length is properly provided in the beginning, so just sending 1 NULL will be x00x01x00 in TCP."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("empty3"):
+   # Send arbitrary number of NULLs with consideration for TCP mode.
+   # In TCP there is length field in the beginning (2 bytes), so we must
+   # provide proper length there
+   nulls = 1 # number of NULLs to send
+   if req.subdomains[1].isnumeric():
+      nulls = int(req.subdomains[1])
+   buffer = b"\x00" * nulls
+   if proto == "tcp":
+      log("only %d NULL(s) in TCP mode!" % (nulls))
+   else:
+      log("only %d NULL(s)" % (nulls))
+   send_buf(self, buffer)
+   #####################################################################
+'''

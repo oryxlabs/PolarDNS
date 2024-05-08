@@ -1,0 +1,27 @@
+[module]
+name = "badcompressloop4"
+info = "Pointer loop in CNAME field 1"
+desc = "Respond with CNAME, where the CNAME only contains a pointer to itself (=> a loop)."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("badcompressloop4"):
+   # Send answer with a compression pointer loop in the CNAME - variant 1
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   # CNAME
+   buffer += b"\xc0\x0c" + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                ## TTL
+   offset_to_last_cname = len(req.full_domain) + 12 + 18     ## forward pointer to the CNAME in the end
+   dom = b"\xc0" + struct.pack(">B", offset_to_last_cname)
+   buffer += struct.pack(">H", len(dom))                ## Data length
+   buffer += dom                                        ## CNAME value with pointer to itself
+   # log and send
+   log("CNAME <LOOP> (badcomp loop 4 in CNAME)")
+   send_buf(self, buffer)
+   #####################################################################
+'''

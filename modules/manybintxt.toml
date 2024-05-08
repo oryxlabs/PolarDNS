@@ -1,0 +1,33 @@
+[module]
+name = "manybintxt"
+info = "Many TXT records with binary data"
+desc = "Send arbitrary number of TXT records of arbitrary size. The contents of the TXT records will be a random binary data."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("manybintxt"):
+   # Send many random binary TXT records
+   nans = 10  # number of TXT records to send
+   if req.subdomains[1].isnumeric():
+      nans = int(req.subdomains[1])
+   chunksize = 255  # chunk size
+   if req.subdomains[2].isnumeric():
+      chunksize = int(req.subdomains[2])
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, nans, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   for i in range(nans):
+       data    = os.urandom(chunksize)
+       buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("IN")
+       buffer += struct.pack(">L", resp.TTL)            ## TTL
+       buffer += struct.pack(">H", len(data)+1)         ## Data length
+       buffer += struct.pack(">B", len(data))           ## TXT length
+       buffer += data
+   # log and send
+   log("%d binary TXT records of %d B (total: %d B)" % (nans, chunksize, len(buffer)))
+   send_buf(self, buffer)
+   #####################################################################
+'''

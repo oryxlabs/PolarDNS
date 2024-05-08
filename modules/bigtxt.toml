@@ -1,0 +1,34 @@
+[module]
+name = "bigtxt"
+info = "TXT record with multiple text strings"
+desc = "Send a big TXT record with arbitrary number of labels of arbitrary size. The labels will contain a random ASCII text."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("bigtxt"):
+   # Send big TXT record
+   size = 10  # number of chunks
+   if req.subdomains[1].isnumeric():
+      size = int(req.subdomains[1])
+   chunksize = 255  # chunk size
+   if req.subdomains[2].isnumeric():
+      chunksize = int(req.subdomains[2])
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   data = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(int(chunksize)))
+   for i in range(size-1):
+       data += '.' + ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(int(chunksize)))
+   # TXT
+   buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)            ## TTL
+   buffer += struct.pack(">H", len(data)+1)         ## Data length
+   buffer += convData2Bin(data)
+   # log and send
+   log("TXT with %d labels of %d B each (total: %d B)" % (size, chunksize, len(buffer)))
+   send_buf(self, buffer)
+   #####################################################################
+'''

@@ -1,0 +1,51 @@
+[module]
+name = "inj14"
+info = "Injection 14 - CNAME in all sections"
+desc = "Respond only with CNAME record of a 3rd party (inj14poc.yourdomain.com -> alwaysXXX.yourdomain.com) in all sections, to see if it will try to proactively resolve the alwaysXXX."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("inj14"):
+   # Send only an injected CNAME record pointing to some other subdomain
+   # in all sections, to see if it will try to resolve it or no
+   addedquestions = b''
+   if "3rdparty" in req.subdomains:  # inject a 3rd party domain
+      injdom = "injected14." + a3rdparty_domain
+   else:
+      injdom = "injected14." + req.sld_tld_domain
+   targetdom = "always" + str(random.randint(1,100000)) + "." + req.sld_tld_domain
+   if "replq" in req.subdomains:  # replace the question with our injected stuffs
+      orig_req_domain = req.full_domain
+      req.full_domain = injdom
+      addcustomlog("REPLQ")
+   if "addq" in req.subdomains:  # add additional question for our injected stuffs
+      resp_QUESTIONS  = struct.pack(">H", noq+1)
+      addedquestions  = convDom2Bin(injdom) + req.type_bin + req.class_bin
+      addcustomlog("ADDQ")
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', resp.QURR, 1, 1, 1)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   buffer += addedquestions
+   ### ANSWER SECTION ########
+   # injected CNAME
+   buffer += convDom2Bin(injdom) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                 ## TTL
+   buffer += struct.pack(">H", len(targetdom)+2)         ## Data length
+   buffer += convDom2Bin(targetdom)                      ## CNAME
+   ### AUTHORITY SECTION ########
+   buffer += convDom2Bin(injdom) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                 ## TTL
+   buffer += struct.pack(">H", len(targetdom)+2)         ## Data length
+   buffer += convDom2Bin(targetdom)                      ## CNAME
+   ### ADDITIONAL SECTION ########
+   buffer += convDom2Bin(injdom) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)                 ## TTL
+   buffer += struct.pack(">H", len(targetdom)+2)         ## Data length
+   buffer += convDom2Bin(targetdom)                      ## CNAME
+   # log and send
+   log("CNAME %s -> %s in ALL sections" % (injdom, targetdom))
+   send_buf(self, buffer)
+   #####################################################################
+'''

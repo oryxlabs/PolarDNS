@@ -1,0 +1,27 @@
+[module]
+name = "empty7"
+info = "ANSWER section is NULL bytes"
+desc = "Send normal DNS response, but replace the ANSWER section with NULLs."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("empty7"):
+   # Send back a normal DNS response, but ANSWER SECTION is just NULLs
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   # A                                      2                 2
+   #tmp  = convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+   #tmp += struct.pack(">L", resp.TTL)  #   4              ## TTL
+   #tmp += struct.pack(">H", 4)         #   2              ## Data length
+   #tmp += socket.inet_aton(ip)         #   4              ## IP
+   #buffer += tmp
+   buffer += b"\x00" * (len(convDom2Bin(req.full_domain)) + 14)
+   # log and send
+   log("replacing ANSWER section with NULLs")
+   send_buf(self, buffer)
+   #####################################################################
+'''

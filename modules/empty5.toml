@@ -1,0 +1,23 @@
+[module]
+name = "empty5"
+info = "Only TXID, flags, RRs and NULL bytes"
+desc = "Send normal DNS header including TXID, flags and number of RRs, but then send only arbitrary number of NULLs."
+type = "feature"
+author = "ivan.jedek@oryxlabs.com"
+
+code = '''
+if req.first_subdomain.startswith("empty5"):
+   # Send the query ID + set in DNS header that there is an ANSWER
+   # + send arbitrary number of NULLs
+   nulls = 1 # number of NULLs to send
+   if req.subdomains[1].isnumeric():
+      nulls = int(req.subdomains[1])
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ######## - no more
+   buffer += b"\x00" * nulls
+   # log and send
+   log("only %d NULL(s) after the DNS header" % (nulls))
+   send_buf(self, buffer)
+   #####################################################################
+'''

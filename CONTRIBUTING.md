@@ -1,21 +1,21 @@
-# Table of Contents
+# Contributing to PolarDNS
 
 - [Introduction](#introduction)
-- [Bug Reports](#bug-reports)
-- [Pull Requests](#pull-requests)
-- [Adding New Features](#adding-new-features)
-	- [PolarDNS Modularity](#polardns-modularity)
-	- [Where to Add the Code](#where-to-add-the-code)
-	- [The process_DNS() Function](#the-process-dns-function)
-	- [Crafting DNS Responses](#crafting-dns-responses)
+- [Bug reports](#bug-reports)
+- [Pull requests](#pull-requests)
+- [Adding new features](#adding-new-features)
+	- [PolarDNS modularity](#polardns-modularity)
+	- [Where to add the code](#where-to-add-the-code)
+	- [The process_DNS() function](#the-process-dns-function)
+	- [Crafting DNS responses](#crafting-dns-responses)
 - [Debugging PolarDNS](#debugging)
-- [Other Ways to Contribute](#other-ways-to-contribute)
+- [Other ways to contribute](#other-ways-to-contribute)
 
 ## <a name="introduction"></a>Introduction
 
 This file serves as a supplement to the [README](https://github.com/oryxlabs/PolarDNS/blob/main/README.md) file. It contains information specifically about how contributors can participate in the development of PolarDNS.
 
-## <a name="bug-reports"></a>Bug Reports
+## <a name="bug-reports"></a>Bug reports
 
 PolarDNS uses Github Issues to keep track of bug reports.
 
@@ -23,13 +23,13 @@ You can submit a bug report [here](https://github.com/oryxlabs/PolarDNS/issues).
 
 Please be sure to include the version of PolarDNS that you are using, steps to reproduce the bug, and a description of what you expect to be the correct behavior.
 
-## <a name="pull-requests"></a>Pull Requests
+## <a name="pull-requests"></a>Pull requests
 
 OryxLabs welcomes your code contribution to PolarDNS in the form of a Github Pull Request (PR).
 
 Because not all PolarDNS committers use Github daily, it is helpful to send a notification email to [ivan.jedek@oryxlabs.com](mailto:ivan.jedek@oryxlabs.com) referencing the PR and including a short description of the functionality of the patch.
 
-## <a name="adding-new-features"></a>Adding New Features
+## <a name="adding-new-features"></a>Adding new features
 
 The following sections outline the process of adding new features to PolarDNS. These instructions aim to provide a guidance to follow and a recommended workflow. Some of the core concepts and technical details about the PolarDNS inner workings are mentioned here as well.
 
@@ -48,7 +48,7 @@ Here's a step-by-step overview of the process:
 
 Let's briefly discuss the modularity in PolarDNS.
 
-### <a name="polardns-modularity"></a>PolarDNS Modularity
+### <a name="polardns-modularity"></a>PolarDNS modularity
 
 Since version `v1.1`, PolarDNS has supported features defined as standalone, pluggable modules in the form of `.toml` files. You can look at the module repository [here](https://github.com/oryxlabs/PolarDNS/tree/main/modules).
 
@@ -60,7 +60,7 @@ This has specific implications for debugging the PolarDNS server, which we'll co
 
 Now let's see where we can add our code.
 
-### <a name="where-to-add-the-code"></a>Where to Add the Code
+### <a name="where-to-add-the-code"></a>Where to add the code
 
 When adding new features to PolarDNS, it is generally recommended to work directly within the `polardns.py` file and implement the new feature there, rather than adding it to a `.toml` file right away.
 
@@ -68,7 +68,7 @@ This is because editing a `.py` file is much more convenient. It provides the ad
 
 The correct place to add the new feature code is within the `process_DNS()` function, the core function of PolarDNS. This function does all the parsing and decision making.
 
-### <a name="the-process-dns-function"></a>The process_DNS() Function
+### <a name="the-process-dns-function"></a>The process_DNS() function
 
 Each time the PolarDNS server receives a network packet, it attempts to parse it by calling the `process_DNS()` function. If the parsing goes as expected and we have a proper DNS request, the function will then proceed to decide how to respond.
 
@@ -85,7 +85,7 @@ if req.first_subdomain.startswith("abcd"):
 ```
 Now you just need to actually craft your DNS response and you're all set. Let's see how to do that.
 
-### <a name="crafting-dns-responses"></a>Crafting DNS Responses
+### <a name="crafting-dns-responses"></a>Crafting DNS responses
 
 Crafting the actual DNS responses is a crucial part of the process. This is where PolarDNS provides you the flexibility to innovate and experiment freely.
 
@@ -115,7 +115,7 @@ Here's a step-by-step procedure to confirm that you can debug it:
 4. Send a DNS query to your PolarDNS instance, e.g. `dig always.yourdomain.com @127.0.0.1`
 5. This should immediately trigger your breakpoint
 
-## <a name="other-ways-to-contribute"></a>Other Ways to Contribute
+## <a name="other-ways-to-contribute"></a>Other ways to contribute
 
 Don't worry if you're unable to contribute code or report bugs to PolarDNS.
 

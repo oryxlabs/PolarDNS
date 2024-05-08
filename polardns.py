@@ -885,15 +885,15 @@ def add_modules_and_rerun():
                 # insert them to the new file with proper indentation
                 indent = len(line) - len(line.lstrip())
                 modules_pattern = os.path.join('modules', '*.toml')
-                modules = glob.glob(modules_pattern)
-                for modfile in modules:
-                    print("loading", modfile) if debug else True
-                    with open(modfile, "rb") as mf:
+                modules_files = glob.glob(modules_pattern)
+                for mod_file in sorted(modules_files):
+                    print("loading", mod_file) if debug else True
+                    with open(mod_file, "rb") as mf:
                         mod = tomllib.load(mf)
-                        modlines = mod['module']['code'].splitlines()
-                        if modlines[0].strip().startswith("if"):
-                            modlines[0] = 'elif' + modlines[0][2:]
-                        indented_fixed_code = '\n'.join([' ' * indent + line for line in modlines])
+                        mod_lines = mod['module']['code'].splitlines()
+                        if mod_lines[0].strip().startswith("if"):
+                            mod_lines[0] = 'elif' + mod_lines[0][2:]
+                        indented_fixed_code = '\n'.join([' ' * indent + line for line in mod_lines])
                         # Write each line of additional code with the correct indentation
                         new_file.write(indented_fixed_code + '\n')
             new_file.write(line)

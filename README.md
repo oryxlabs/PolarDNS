@@ -62,26 +62,26 @@ Ask in TCP mode:
 dig always.yourdomain.com @127.0.0.1 +tcp
 ```
 
-You should receive ``A`` record with the ``2.3.4.5`` IP address, similarly like in this screenshot:
+You should receive an ``A`` record with the ``2.3.4.5`` IP address, similarly like in this screenshot:
 
-<img width="900" alt="PolarDNS example usage" src="assets/polardns-example-usage.jpg">
+<img width="700" alt="PolarDNS example usage" src="assets/polardns-example-usage.jpg">
 
 This indicates that the server is working properly.
 
 ## Main concept
 
-By asking the PolarDNS server to resolve something, you are essentially giving it instructions how it should respond to you. This means that you, the client, dictate the PolarDNS server what kind of response it should produce for you.
+By asking the PolarDNS server to resolve something, you are essentially giving it instructions how it should respond to you. This means that you (the client) dictate the PolarDNS server what kind of response it should produce for you.
 
 For instance, consider the following query:
 ```
 dig always.ttl2000000000.slp1500.yourdomain.com @127.0.0.1
 ```
 
-You should, again, receive ``A`` record with the ``2.3.4.5`` IP address, but this time with TTL of 2,000,000,000 (63.4 years) and after a delay of 1.5 seconds:
+You should receive an ``A`` record with the ``2.3.4.5`` IP address again, but this time with a TTL value of 2,000,000,000 (63.4 years) and after a delay of 1.5 seconds:
 
-<img width="900" alt="PolarDNS custom TTL and latency" src="assets/polardns-custom-ttl-and-latency.jpg">
+<img width="700" alt="PolarDNS custom TTL and latency" src="assets/polardns-custom-ttl-and-latency.jpg">
 
-In the above example, we have used the `always` basic feature (which always resolves to something), and combined it with the `ttl` modifier to adjust the TTL value and the `slp` modifier to wait before sending the response out.
+In the above example, we have used the [`always`](docs/catalogue/general-features.md#always-resolve-to-ip-always) basic feature (which always resolves to something), and combined it with the [`ttl`](docs/catalogue/response-modifiers.md#set-custom-ttl-value-ttl) modifier to adjust the TTL value and the [`slp`](docs/catalogue/response-modifiers.md#add-a-delay--latency-slp) modifier to wait before sending the response out.
 
 ## Main functionalities (features and response modifiers)
 
@@ -152,23 +152,17 @@ For instance, how does it handle a situation when it obtains a malformed DNS res
 
 ## Adding new features
 
-Adding new features to PolarDNS is essential.
+Adding new features to PolarDNS is crucial for discovering truly novel DNS issues.
 
-PolarDNS allows you to relatively easily implement a new idea, a test case, a feature or a PoC, without a need of implementing your own DNS server.
+PolarDNS enables you to easily implement a new idea, test case, feature, or PoC without needing to build your own DNS server.
 
-All you need is a basic / intermediate Python knowledge and knowing a bit of DNS protocol too.
+All you need is basic to intermediate Python knowledge and some understanding of the DNS protocol.
 
-Both can be learned on the go by looking on the PolarDNS code and by simply copying and modifying some of the existing features.
-
-Testing locally using ``dig`` / ``host`` / ``nlsookup`` and [Wireshark](https://www.wireshark.org/) is of essence here.
-
-The `test/test.sh` script has been tested on a machine running `dig 9.18.10`.
-
-Plus, the [links](#links) below can help with the DNS protocol.
+For detailed, step-by-step instructions on adding new features, refer to the [CONTRIBUTING](CONTRIBUTING.md) page. There, you'll also find information on how to debug PolarDNS, submit bug reports, share ideas and more.
 
 ## Links
 
-Here are some great resources which can aid in the testing process.
+Here are some excellent resources that are useful when playing with PolarDNS.
 
 DNS Protocol related links:
 - https://en.wikipedia.org/wiki/List_of_DNS_record_types

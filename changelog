@@ -1,4 +1,9 @@
 08/May/2024
+- release version 1.1
+- update of the documentation
+- sorting modules in alphabetical order when constructing polardns_real.py
+
+08/May/2024
 - major update of the contribution page
 - added steps how to implement new features to PolarDNS
 - added steps how to debug PolarDNS in the contribution page

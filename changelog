@@ -1,3 +1,14 @@
+08/May/2024
+- added support for standalone feature modules in the form of `.toml` files
+- moved the majority of existing features to a modular format
+- major cleanup of the polardns codebase
+- major review of the variables scope and naming conventions in the code
+- adopting a more object-oriented approach for DNS request and DNS response variables
+
+07/May/2024
+- release version 1.0
+- relocated the BHMEA presentations to another online location
+
 31/Jan/2024
 - removed the empty1 test from test.sh, because dig behaves differently when run remotely vs. locally due to ethernet padding
 - removed the hard coded IP in the sed command

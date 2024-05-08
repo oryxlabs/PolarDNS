@@ -59,7 +59,7 @@ if req.first_subdomain.startswith("chunkedcnames"):
        if send_buf_wo_len(self, buffer) == -1:
           t = time.localtime()
           stamp = str(time.time()).ljust(18, "0")
-          print("%s Conne closed %s" % (stamp, client))
+          print("%s Conne closed %s" % (stamp, req.info))
           return
    #####################################################################
 '''

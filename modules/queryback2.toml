@@ -10,7 +10,7 @@ if req.first_subdomain.startswith("queryback2"):
    # Domain starts with "queryback2", let's send back the same query - stripped, with only
    # the question without any additional sections (like e.g. the OPT / EDNS0)
    ### DNS header ########
-   buffer = prep_dns_header(req_FLAGS, req.QURR, 0, 0, 0)
+   buffer = prep_dns_header(req.FLAGS, req.QURR, 0, 0, 0)
    ### QUESTION SECTION ########
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    # log and send

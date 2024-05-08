@@ -120,6 +120,7 @@ fi
 #runtest "always123.anrr0.tc.${domain}" "911aebd69bf9ecd9e7b844b99869f9e6"
 #exit 0
 
+runtest "queryback2.${domain}" "8e7424518528278533bc12ecc7cbabff"
 runtest "cgena.1.${domain}" "8bee2a94ebe12cee620a8bfa18169b1d"
 runtest "cgena.2.${domain}" "dc2bd1660fcad388dfabfca711546326"
 runtest "cgena.3.${domain}" "c06177958752766ada88471b59477913"
@@ -449,6 +450,7 @@ runtest "empty5.0.${domain}" "afad2d4f3a29e8c4b3f8d2bc0c5f93c2"
 runtest "empty5.10.${domain}" "ba9e8265f80bdb05878c8fa41ffa1ad9"
 runtest "empty6.${domain}" "19b5f56687b167e29c5056f89cfd7cb9"
 runtest "chunkedcnames.20.slp10.${domain}" "790d58da7fc632d5dfe0144e83e6c10a"
+
 
 echo
 echo "TESTS: ${testcount}"

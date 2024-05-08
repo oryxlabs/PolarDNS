@@ -1,4 +1,9 @@
 08/May/2024
+- major update of the contribution page
+- added steps how to implement new features to PolarDNS
+- added steps how to debug PolarDNS in the contribution page
+
+08/May/2024
 - added support for standalone feature modules in the form of `.toml` files
 - moved the majority of existing features to a modular format
 - major cleanup of the polardns codebase

@@ -96,13 +96,15 @@ They all share a similar structure that should be maintained for clarity. Essent
 1. Steps to construct the DNS header
 2. Steps to construct the QUESTION section
 3. Steps to construct the ANSWER section. This is where you will probably make the most changes.
-4. Steps to send the packet out and print (log) a message on the console
+4. Steps to send the packet out and print a message on the console
 
 Here's the actual code for the [`always`](docs/catalogue/general-features.md#always-resolve-to-ip-always) feature, where you can see these sections and what all the code means:
 
 <img width="1000" alt="PolarDNS always feature code explained" src="assets/polardns-always-feature-code-explained.gif">
 
-And that should cover most of what you need to start adding new features to PolarDNS.
+And that should cover most of what you need to start experimenting and implementing your own ideas.
+
+:point_up: Remember to share your amazing new modules by submitting a PR! :point_up:
 
 ## <a name="debugging"></a>Debugging PolarDNS
 

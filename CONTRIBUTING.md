@@ -89,7 +89,7 @@ Now you just need to actually craft your DNS response and you're all set. Let's 
 
 Crafting the actual DNS responses is a crucial part of the process. This is where PolarDNS provides you the flexibility to innovate and experiment freely.
 
-If you examine a few existing features, you'll notice that they are quite similar and each of them essentially constructs some kind of DNS response.
+If you examine a few existing features, you'll notice that they are quite similar. Each one essentially constructs a type of DNS response from scratch.
 
 They all share a similar structure that should be maintained for clarity. Essentially, each feature typically contains the following four code sections:
 
@@ -98,7 +98,11 @@ They all share a similar structure that should be maintained for clarity. Essent
 3. Steps to construct the ANSWER section. This is where you will probably make the most changes.
 4. Steps to send the packet out and print (log) a message on the console
 
-And that should in essence cover most of what you need for adding new features in PolarDNS.
+Here's the actual code for the [always](docs/catalogue/general-features.md#always-resolve-to-ip-always) feature, where you can see these sections and what all the code means:
+
+<img width="1000" alt="PolarDNS always feature code explained" src="assets/polardns-always-feature-code-explained.gif">
+
+And that should cover most of what you need to start adding new features to PolarDNS.
 
 ## <a name="debugging"></a>Debugging PolarDNS
 

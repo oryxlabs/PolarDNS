@@ -1,9 +1,10 @@
 [module]
 name = "loop"
+type = "feature"
 info = "CNAME alias loop"
 desc = "Respond with CNAME record forming an infinite loop consisting of any number of elements."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("loop"):

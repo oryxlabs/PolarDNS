@@ -1,9 +1,10 @@
 [module]
 name = "inj01"
+type = "feature"
 info = "Injection 1 - CNAME with injected A record in the end"
 desc = "Respond with legit CNAME (end.yourdomain.com) + injected A record (inj1poc.yourdomain.com -> 6.6.6.6)."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Record injections"
 
 code = '''
 if req.first_subdomain.startswith("inj01"):

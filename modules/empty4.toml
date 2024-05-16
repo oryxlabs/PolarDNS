@@ -1,9 +1,10 @@
 [module]
 name = "empty4"
+type = "feature"
 info = "Only TXID and NULL bytes"
 desc = "Send empty response with only the TXID (first 2 bytes of every DNS response) + arbitrary number of NULLs."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Empty responses"
 
 code = '''
 if req.first_subdomain.startswith("empty4"):

@@ -1,9 +1,10 @@
 [module]
 name = "manycnames"
+type = "feature"
 info = "Many always CNAME aliases"
 desc = "Respond with a arbitrary number of randomly generated CNAME records."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "CNAME fuzzing"
 
 code = '''
 if req.first_subdomain.startswith("manycnames"):

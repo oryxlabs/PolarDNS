@@ -1,9 +1,10 @@
 [module]
 name = "badcompressloop4"
+type = "feature"
 info = "Pointer loop in CNAME field 1"
 desc = "Respond with CNAME, where the CNAME only contains a pointer to itself (=> a loop)."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Bad compression"
 
 code = '''
 if req.first_subdomain.startswith("badcompressloop4"):

@@ -1,9 +1,10 @@
 [module]
 name = "bigbintxt"
+type = "feature"
 info = "TXT record with multiple binary strings"
 desc = "Send a big TXT record with arbitrary number of labels of arbitrary size. The labels will contain a random binary data."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("bigbintxt"):

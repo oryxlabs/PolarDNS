@@ -1,9 +1,10 @@
 [module]
 name = "inj09"
+type = "feature"
 info = "Injection 9 - Only injected PTR record in all sections"
 desc = "Respond only with injected PTR record (6.6.6.6 -> inj09poc.yourdomain.com) in all sections."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Record injections"
 
 code = '''
 if req.first_subdomain.startswith("inj09"):

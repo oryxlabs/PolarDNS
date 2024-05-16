@@ -1,9 +1,10 @@
 [module]
 name = "bigtxt"
+type = "feature"
 info = "TXT record with multiple text strings"
 desc = "Send a big TXT record with arbitrary number of labels of arbitrary size. The labels will contain a random ASCII text."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("bigtxt"):

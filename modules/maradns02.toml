@@ -1,9 +1,10 @@
 [module]
 name = "maradns02"
+type = "feature"
 info = ""
 desc = ""
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Experimental"
 
 code = '''
 if req.first_subdomain.startswith("maradns02"):

@@ -1,9 +1,10 @@
 [module]
 name = "inj11"
+type = "feature"
 info = "Injection 11 - Inject NS record variant 2"
 desc = "Respond with empty answer, but include information in the AUTHORITY section that NS for whatever.com is ns1.yourdomain.com.whatever.com and in the ADDITIONAL section, provide our IP for the ns1.yourdomain.com.whatever.com."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Record injections"
 
 code = '''
 if req.first_subdomain.startswith("inj11"):

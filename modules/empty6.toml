@@ -1,9 +1,10 @@
 [module]
 name = "empty6"
+type = "feature"
 info = "ANSWER section is missing"
 desc = "Send normal DNS response, but remove the ANSWER section."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Empty responses"
 
 code = '''
 if req.first_subdomain.startswith("empty6"):

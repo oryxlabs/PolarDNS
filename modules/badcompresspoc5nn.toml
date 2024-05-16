@@ -1,9 +1,10 @@
 [module]
 name = "badcompresspoc5nn"
+type = "feature"
 info = ""
 desc = ""
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Bad compression"
 
 code = '''
 if req.first_subdomain.startswith("badcompresspoc5nn"):

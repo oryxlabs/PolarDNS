@@ -1,9 +1,10 @@
 [module]
 name = "manylabels"
+type = "feature"
 info = "Long CNAME with arbitrary number of labels"
 desc = "Respond with a CNAME containing arbitrary number of labels (domain components), capable of creating oversized domain labels and domain names."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "CNAME fuzzing"
 
 code = '''
 if req.first_subdomain.startswith("manylabels"):

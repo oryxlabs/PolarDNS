@@ -1,9 +1,10 @@
 [module]
 name = "badcompressfwptr2"
+type = "feature"
 info = "Double compression pointer"
 desc = "Respond with CNAME (abc.badcompressfwptr2.yourdomain.com) and use a forward pointer in the answer Name field to point to the end (the actual CNAME). But, skip the \"abc\" portion so that it will point directly to another pointer pointing to the beginning (to the domain name in the query)."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Bad compression"
 
 code = '''
 if req.first_subdomain.startswith("badcompressfwptr2"):

@@ -1,9 +1,10 @@
 [module]
 name = "inj06"
+type = "feature"
 info = "Injection 6 - CNAME and AAAA records in all sections"
 desc = "Respond with CNAME (inj06poc.yourdomain.com) in all sections + inject also AAAA record of it (inj06poc.yourdomain.com -> 6666:6666:6666:6666:6666:6666:6666:6666) in all sections."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Record injections"
 
 code = '''
 if req.first_subdomain.startswith("inj06"):

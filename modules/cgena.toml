@@ -1,9 +1,10 @@
 [module]
 name = "cgena"
+type = "feature"
 info = "Resolvable CNAME with arbitrary byte string"
 desc = "Respond with CNAME (always123456.yourdomain.com) containing arbitrary number of characters (bytes) in different positions based on the selected variant."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "CNAME fuzzing"
 
 code = '''
 if req.first_subdomain.startswith("cgena") or req.first_subdomain.startswith("badcname"):

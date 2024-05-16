@@ -1,9 +1,10 @@
 [module]
 name = "schain"
+type = "feature"
 info = "CNAME alias chain with 3 records"
 desc = "Respond with 3 random CNAME records (schain####.yourdomain.com)."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("schain"):

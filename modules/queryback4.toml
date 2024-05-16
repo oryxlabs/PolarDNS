@@ -1,9 +1,10 @@
 [module]
 name = "queryback4"
+type = "feature"
 info = ""
 desc = ""
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Empty responses"
 
 code = '''
 if req.first_subdomain.startswith("queryback4"):

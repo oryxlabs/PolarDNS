@@ -1,9 +1,10 @@
 [module]
 name = "long"
+type = "feature"
 info = ""
 desc = ""
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Experimental"
 
 code = '''
 if len(req.full_domain) == 253 and req.first_subdomain.startswith("long"):

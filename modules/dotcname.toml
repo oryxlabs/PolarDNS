@@ -1,9 +1,10 @@
 [module]
 name = "dotcname"
+type = "feature"
 info = "CNAME alias with a dot in different positions"
 desc = "Respond with CNAME (always123456.yourdomain.com) containing dot character (`.`) in different positions based on selected variant."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "CNAME fuzzing"
 
 code = '''
 if req.first_subdomain.startswith("dotcname"):

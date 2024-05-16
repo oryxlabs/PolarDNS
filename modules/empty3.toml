@@ -1,9 +1,10 @@
 [module]
 name = "empty3"
+type = "feature"
 info = "Only NULL bytes, suitable for TCP"
 desc = "Like empty2, but in TCP mode make sure the length is properly provided in the beginning, so just sending 1 NULL will be x00x01x00 in TCP."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Empty responses"
 
 code = '''
 if req.first_subdomain.startswith("empty3"):

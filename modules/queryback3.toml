@@ -1,9 +1,10 @@
 [module]
 name = "queryback3"
+type = "feature"
 info = "Query reflection, to port 53"
 desc = "Send back the same query to the sender to port udp/53. This might create a loop if the resolver uses the same IP address for listening for queries and for performing the resolution as well."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Empty responses"
 
 code = '''
 if req.first_subdomain.startswith("queryback3"):

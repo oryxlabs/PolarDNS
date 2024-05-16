@@ -1,9 +1,10 @@
 [module]
 name = "badcompressmid1"
+type = "feature"
 info = "Compression in the middle of CNAME"
 desc = "Respond with CNAME, where the CNAME contains \"abc\" + a pointer to the query name + additional \"hello\" string. Data length indicates the \"hello\" string should be included in the CNAME."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Bad compression"
 
 code = '''
 if req.first_subdomain.startswith("badcompressmid1"):

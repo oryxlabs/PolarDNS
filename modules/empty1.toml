@@ -1,9 +1,10 @@
 [module]
 name = "empty1"
+type = "feature"
 info = "Empty response"
 desc = "Send empty response, simply an empty packet."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Empty responses"
 
 code = '''
 if req.first_subdomain.startswith("empty1"):

@@ -1,9 +1,10 @@
 [module]
 name = "cutcnamebuf"
+type = "feature"
 info = "Cut CNAME record from the end"
 desc = "Respond with legit CNAME record, but cut arbitrary number of bytes from the end of the buffer."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("cutcnamebuf"):

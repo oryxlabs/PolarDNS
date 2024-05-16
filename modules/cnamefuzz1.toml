@@ -1,9 +1,10 @@
 [module]
 name = "cnamefuzz1"
+type = "feature"
 info = "Many random CNAME aliases, textual"
 desc = "Respond with many CNAME answers where each answer contains a random string of specified length, made of all kinds of illegal ASCII characters that are likely not allowed in a domain name."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "CNAME fuzzing"
 
 code = '''
 if req.first_subdomain.startswith("cnamefuzz1"):

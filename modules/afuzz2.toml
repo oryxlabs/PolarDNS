@@ -1,9 +1,10 @@
 [module]
 name = "afuzz2"
+type = "feature"
 info = "Many bogus A records and legit A record"
 desc = "Respond with many bogus A records containing byte values starting from 0 up to 255 max, followed by a legitimate answer (proper A record) in the end."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("afuzz2"):

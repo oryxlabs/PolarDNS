@@ -1,9 +1,10 @@
 [module]
 name = "badcompressloop3"
+type = "feature"
 info = "Double pointer loop"
 desc = "Respond with CNAME, use a forward pointer in the answer Name field pointing to the end (the actual CNAME). The actual CNAME points to the answer Name field, effectively creating a loop."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Bad compression"
 
 code = '''
 if req.first_subdomain.startswith("badcompressloop3"):

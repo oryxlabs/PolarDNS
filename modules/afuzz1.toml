@@ -1,9 +1,10 @@
 [module]
 name = "afuzz1"
+type = "feature"
 info = "Single A record with arbitrary byte"
 desc = "Respond with A record containing arbitrary byte in the middle of the name in the ANSWER section, essentially giving an incorrect answer."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("afuzz1"):

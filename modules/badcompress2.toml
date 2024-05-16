@@ -1,9 +1,10 @@
 [module]
 name = "badcompress2"
+type = "feature"
 info = "Custom offset in CNAME field"
 desc = "Respond with CNAME (abc.badcompress2.yourdomain.com), where you can specify an arbitrary offset in the answer CNAME field compression pointer."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Bad compression"
 
 code = '''
 if req.first_subdomain.startswith("badcompress2"):

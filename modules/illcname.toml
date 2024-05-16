@@ -1,9 +1,10 @@
 [module]
 name = "illcname"
+type = "feature"
 info = "Illegal CNAME formats"
 desc = "Respond with CNAME alias containing a hostname in an illegal form e.g. containing an IP address, a port number or an URL, based on the selected variant."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "CNAME fuzzing"
 
 code = '''
 if req.first_subdomain.startswith("illcname"):

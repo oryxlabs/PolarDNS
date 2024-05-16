@@ -1,9 +1,10 @@
 [module]
 name = "cgenb"
+type = "feature"
 info = "Unresolvable CNAME with arbitrary byte string"
 desc = "Respond with CNAME (nonres123456.yourdomain.com) containing arbitrary number of characters (bytes) in different positions based on the selected variant."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "CNAME fuzzing"
 
 code = '''
 if req.first_subdomain.startswith("cgenb"):

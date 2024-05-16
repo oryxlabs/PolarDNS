@@ -1,9 +1,10 @@
 [module]
 name = "empty5"
+type = "feature"
 info = "Only TXID, flags, RRs and NULL bytes"
 desc = "Send normal DNS header including TXID, flags and number of RRs, but then send only arbitrary number of NULLs."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Empty responses"
 
 code = '''
 if req.first_subdomain.startswith("empty5"):

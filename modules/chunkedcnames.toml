@@ -1,9 +1,10 @@
 [module]
 name = "chunkedcnames"
+type = "feature"
 info = "Chunked CNAME aliases"
 desc = "Respond with N random always####.yourdomain.com CNAMEs in a chunked manner (Truncated flag is set). Add a delay for sending the chunks slowly."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("chunkedcnames"):

@@ -1,9 +1,10 @@
 [module]
 name = "empty2"
+type = "feature"
 info = "Only NULL bytes"
 desc = "Send empty response with arbitrary number of NULLs (x00)."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Empty responses"
 
 code = '''
 if req.first_subdomain.startswith("empty2"):

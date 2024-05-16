@@ -1,9 +1,10 @@
 [module]
 name = "chain"
+type = "feature"
 info = "CNAME alias chain"
 desc = "Respond with an incremented CNAME record. This creates an infinite alias chain."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("chain"):

@@ -1,9 +1,10 @@
 [module]
 name = "close"
+type = "feature"
 info = "Close the connection"
 desc = "Don't respond, just close the connection immediately."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Empty responses"
 
 code = '''
 if req.first_subdomain.startswith("close"):

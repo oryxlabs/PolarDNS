@@ -1,9 +1,10 @@
 [module]
 name = "queryback2"
+type = "feature"
 info = "Query reflection, stripped"
 desc = "Send back the same query, stripped. Send back only the same question, without any additional sections (e.g. the OPT / EDNS0)."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Empty responses"
 
 code = '''
 if req.first_subdomain.startswith("queryback2"):

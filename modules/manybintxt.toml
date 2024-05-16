@@ -1,9 +1,10 @@
 [module]
 name = "manybintxt"
+type = "feature"
 info = "Many TXT records with binary data"
 desc = "Send arbitrary number of TXT records of arbitrary size. The contents of the TXT records will be a random binary data."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("manybintxt"):

@@ -1,9 +1,10 @@
 [module]
 name = "inj03"
+type = "feature"
 info = "Injection 3 - A record with injected A record in the end"
 desc = "Respond with legit A record (1.2.3.4) + injected A record (inj3poc.yourdomain.com -> 6.6.6.6)."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Record injections"
 
 code = '''
 if req.first_subdomain.startswith("inj03"):

@@ -1,9 +1,10 @@
 [module]
 name = "customtype"
+type = "feature"
 info = "Arbitrary record type with random data"
 desc = "Respond with arbitrary DNS record type e.g., A, NS, CNAME, MX, TXT, SOA by specifying the type code in decimal. The content will be a sample random data. Please note not all record types are implemented."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("customtype"):

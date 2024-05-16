@@ -1,9 +1,10 @@
 [module]
 name = "inj14"
+type = "feature"
 info = "Injection 14 - CNAME in all sections"
 desc = "Respond only with CNAME record of a 3rd party (inj14poc.yourdomain.com -> alwaysXXX.yourdomain.com) in all sections, to see if it will try to proactively resolve the alwaysXXX."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Record injections"
 
 code = '''
 if req.first_subdomain.startswith("inj14"):

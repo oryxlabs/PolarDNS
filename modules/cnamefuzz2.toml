@@ -1,9 +1,10 @@
 [module]
 name = "cnamefuzz2"
+type = "feature"
 info = "Many random CNAME aliases, binary"
 desc = "Respond with many CNAME answers where each answer contains a random binary string (NULL terminated) of specified length."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "CNAME fuzzing"
 
 code = '''
 if req.first_subdomain.startswith("cnamefuzz2"):

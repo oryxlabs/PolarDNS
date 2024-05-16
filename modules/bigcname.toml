@@ -1,9 +1,10 @@
 [module]
 name = "bigcname"
+type = "feature"
 info = "Long CNAME alias of arbitrary size"
 desc = "Respond with a randomly generated CNAME of arbitrary size, capable of creating oversized domain labels and domain names."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "CNAME fuzzing"
 
 code = '''
 if req.first_subdomain.startswith("bigcname"):

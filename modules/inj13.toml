@@ -1,9 +1,10 @@
 [module]
 name = "inj13"
+type = "feature"
 info = "Injection 13 - CNAME with injected NS records in all sections"
 desc = "Respond with a CNAME (inj13poc.whatever.com), but include information in all sections that NS for whatever.com is ns1.yourdomain.com and also provide our IP for the ns1.yourdomain.com."
-type = "feature"
 author = "ivan.jedek@oryxlabs.com"
+category = "Record injections"
 
 code = '''
 if req.first_subdomain.startswith("inj13"):

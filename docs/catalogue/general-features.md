@@ -1,10 +1,16 @@
 # PolarDNS catalogue - General features
 1. [General features](general-features.md)
 	- [Always resolve to IP (always)](#always-resolve-to-ip-always)
+	- [Client IP address (self / whatismyip)](#client-ip-address-self--whatismyip)
 	- [CNAME alias chain (chain)](#cname-alias-chain-chain)
-	- [CNAME alias chain with 3 records (schain)](#cname-alias-chain-with-3-records-schain)
 	- [CNAME alias loop (loop)](#cname-alias-loop-loop)
 	- [DNAME alias chain (dchain)](#dname-alias-chain-dchain)
+	- [DNAME alias loop (dloop)](#dname-alias-loop-dloop)
+	- [HTTPS alias chain (httpschain)](#https-alias-chain-httpschain)
+	- [HTTPS alias loop (httpsloop)](#https-alias-loop-httpsloop)
+	- [SVCB alias chain (svcbchain)](#svcb-alias-chain-svcbchain)
+	- [SVCB alias loop (svcbloop)](#svcb-alias-loop-svcbloop)
+	- [CNAME alias chain with 3 records (schain)](#cname-alias-chain-with-3-records-schain)
 	- [Chunked CNAME aliases (chunkedcnames)](#chunked-cname-aliases-chunkedcnames)
 	- [Cut A record from the end (cutabuf)](#cut-a-record-from-the-end-cutabuf)
 	- [Cut CNAME record from the end (cutcnamebuf)](#cut-cname-record-from-the-end-cutcnamebuf)
@@ -53,35 +59,294 @@ always.yourdomain.com.	60	IN	A	2.3.4.5
 ;; MSG SIZE  rcvd: 76
 
 ```
+### Client IP address (self / whatismyip)
+Respond with A and TXT records containing the IP address of the connecting client. The TXT record also contains the port information.
+
+<table>
+<tr><td>format:</td><td>self.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig self.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig A self.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig TXT self.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig TXT whatismyip.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig TXT whatismyip.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> TXT whatismyip.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15082
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;whatismyip.yourdomain.com.	IN	TXT
+
+;; ANSWER SECTION:
+whatismyip.yourdomain.com. 60	IN	TXT	"127.0.0.1:43732"
+
+;; ADDITIONAL SECTION:
+whatismyip.yourdomain.com. 60	IN	A	127.0.0.1
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon May 27 17:10:12 +04 2024
+;; MSG SIZE  rcvd: 137
+
+```
 ### CNAME alias chain (chain)
 Respond with an incremented CNAME record. This creates an infinite alias chain.
 
 <table>
 <tr><td>format:</td><td>chain&lt;NUMBER>.yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig chain.yourdomain.com @127.0.0.1</code></td></tr>
-<tr><td>example:</td><td><code>dig chain123456.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig chain1234.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
 
 Sample:
 ```
-# dig chain123456.yourdomain.com @127.0.0.1
+# dig chain1234.yourdomain.com @127.0.0.1
 
-; <<>> DiG 9.18.10-2-Debian <<>> chain123456.yourdomain.com @127.0.0.1
+; <<>> DiG 9.18.10-2-Debian <<>> chain1234.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 49493
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 47208
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-;chain123456.yourdomain.com.	IN	A
+;chain1234.yourdomain.com.	IN	A
 
 ;; ANSWER SECTION:
-chain123456.yourdomain.com. 60	IN	CNAME	chain123457.yourdomain.com.
+chain1234.yourdomain.com. 60	IN	CNAME	chain1235.yourdomain.com.
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue May 28 12:18:52 +04 2024
+;; MSG SIZE  rcvd: 104
+
+```
+### CNAME alias loop (loop)
+Respond with CNAME record forming an infinite loop consisting of any number of elements.
+
+<table>
+<tr><td>format:</td><td>loop.&lt;NUMBER>.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig loop.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig loop.5.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig loop.5.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> loop.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 49118
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop.5.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+loop.5.yourdomain.com.	60	IN	CNAME	loop.5.1.yourdomain.com.
 
 ;; Query time: 4 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Fri Nov 03 14:30:51 +04 2023
-;; MSG SIZE  rcvd: 110
+;; WHEN: Wed Nov 08 21:45:01 +04 2023
+;; MSG SIZE  rcvd: 97
+
+```
+### DNAME alias chain (dchain)
+Respond with an incremented DNAME record. This creates an infinite alias chain.
+
+<table>
+<tr><td>format:</td><td>dchain&lt;NUMBER>.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig dchain.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig dchain1234.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig dchain1234.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> dchain1234.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37173
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;dchain1234.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+dchain1234.yourdomain.com. 60	IN	DNAME	dchain1235.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue May 28 12:18:52 +04 2024
+;; MSG SIZE  rcvd: 107
+
+```
+### DNAME alias loop (dloop)
+Respond with DNAME record forming an infinite loop consisting of any number of elements.
+
+<table>
+<tr><td>format:</td><td>dloop.&lt;NUMBER>.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig dloop.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig dloop.5.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig dloop.5.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> dloop.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 25597
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;dloop.5.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+dloop.5.yourdomain.com.	60	IN	DNAME	dloop.5.1.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue May 28 11:50:00 +04 2024
+;; MSG SIZE  rcvd: 100
+
+```
+### HTTPS alias chain (httpschain)
+Respond with an incremented HTTPS alias record. This creates an infinite alias chain.
+
+<table>
+<tr><td>format:</td><td>httpschain&lt;NUMBER>.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig httpschain.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig HTTPS httpschain.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig httpschain1234.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig httpschain1234.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> httpschain1234.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 29224
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;httpschain1234.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+httpschain1234.yourdomain.com. 60 IN	HTTPS	0 httpschain1235.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue May 28 12:18:52 +04 2024
+;; MSG SIZE  rcvd: 121
+
+```
+### HTTPS alias loop (httpsloop)
+Respond with an HTTPS record featuring an alias (SvcPriority 0) that creates an infinite loop with any number of elements.
+
+<table>
+<tr><td>format:</td><td>httpsloop.&lt;NUMBER>.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig httpsloop.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig httpsloop.5.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig HTTPS httpsloop.5.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig HTTPS httpsloop.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig HTTPS httpsloop.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> HTTPS httpsloop.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 63583
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;httpsloop.yourdomain.com.	IN	HTTPS
+
+;; ANSWER SECTION:
+httpsloop.yourdomain.com. 60	IN	HTTPS	0 httpsloop.yourdomain.com.
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon May 27 15:26:37 +04 2024
+;; MSG SIZE  rcvd: 106
+
+```
+### SVCB alias chain (svcbchain)
+Respond with an incremented SVCB alias record. This creates an infinite alias chain.
+
+<table>
+<tr><td>format:</td><td>svcbchain&lt;NUMBER>.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig svcbchain.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig SVCB svcbchain.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig svcbchain1234.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig svcbchain1234.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> svcbchain1234.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 45331
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;svcbchain1234.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+svcbchain1234.yourdomain.com. 60 IN	SVCB	0 svcbchain1235.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue May 28 12:18:52 +04 2024
+;; MSG SIZE  rcvd: 118
+
+```
+### SVCB alias loop (svcbloop)
+Respond with an SVCB record featuring an alias (SvcPriority 0) that creates an infinite loop with any number of elements.
+
+<table>
+<tr><td>format:</td><td>svcbloop.&lt;NUMBER>.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig svcbloop.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig svcbloop.5.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig SVCB svcbloop.5.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig SVCB svcbloop.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig SVCB svcbloop.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> SVCB svcbloop.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64873
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;svcbloop.yourdomain.com.	IN	SVCB
+
+;; ANSWER SECTION:
+svcbloop.yourdomain.com. 60	IN	SVCB	0 svcbloop.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon May 27 15:26:38 +04 2024
+;; MSG SIZE  rcvd: 103
 
 ```
 ### CNAME alias chain with 3 records (schain)
@@ -114,66 +379,6 @@ schain123456.yourdomain.com. 60	IN	CNAME	schain381071.yourdomain.com.
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; WHEN: Fri Nov 03 14:30:51 +04 2023
 ;; MSG SIZE  rcvd: 249
-
-```
-### CNAME alias loop (loop)
-Respond with CNAME record forming an infinite loop consisting of any number of elements.
-
-<table>
-<tr><td>format:</td><td>loop.&lt;NUMBER>.yourdomain.com</td></tr>
-<tr><td>example:</td><td><code>dig loop.5.yourdomain.com @127.0.0.1</code></td></tr>
-</table>
-
-Sample:
-```
-# dig loop.5.yourdomain.com @127.0.0.1
-
-; <<>> DiG 9.18.10-2-Debian <<>> loop.5.yourdomain.com @127.0.0.1
-;; global options: +cmd
-;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 49118
-;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
-
-;; QUESTION SECTION:
-;loop.5.yourdomain.com.		IN	A
-
-;; ANSWER SECTION:
-loop.5.yourdomain.com.	60	IN	CNAME	loop.5.1.yourdomain.com.
-
-;; Query time: 4 msec
-;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Wed Nov 08 21:45:01 +04 2023
-;; MSG SIZE  rcvd: 97
-
-```
-### DNAME alias chain (dchain)
-Respond with an incremented DNAME record. This creates an infinite alias chain.
-
-<table>
-<tr><td>format:</td><td>dchain&lt;NUMBER>.yourdomain.com</td></tr>
-<tr><td>example:</td><td><code>dig dchain123456.yourdomain.com @127.0.0.1</code></td></tr>
-</table>
-
-Sample:
-```
-# dig dchain123456.yourdomain.com @127.0.0.1
-
-; <<>> DiG 9.18.10-2-Debian <<>> dchain123456.yourdomain.com @127.0.0.1
-;; global options: +cmd
-;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 14205
-;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
-
-;; QUESTION SECTION:
-;dchain123456.yourdomain.com.	IN	A
-
-;; ANSWER SECTION:
-dchain123456.yourdomain.com. 60	IN	DNAME	dchain123457.yourdomain.com.
-
-;; Query time: 0 msec
-;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Fri Nov 03 14:30:51 +04 2023
-;; MSG SIZE  rcvd: 113
 
 ```
 ### Chunked CNAME aliases (chunkedcnames)

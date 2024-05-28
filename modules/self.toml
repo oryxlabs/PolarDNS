@@ -1,0 +1,50 @@
+[module]
+name = "self"
+type = "feature"
+info = "Client IP address"
+desc = "Respond with A and TXT records containing the IP address of the connecting client. The TXT record also contains the port information"
+author = "ivan.jedek@oryxlabs.com"
+category = "General features"
+
+code = '''
+if req.first_subdomain.startswith("self") or req.first_subdomain.startswith("whatismyip"):
+   # Respond with the client's IP address in A record and in TXT record (IP:port)
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', resp.QURR, 1, 0, 1)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   if req.type_str == "TXT":
+      # TXT
+      ipport = str(self.client_address[0]) + ":" + str(self.client_address[1])
+      buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("IN")
+      buffer += struct.pack(">L", resp.TTL)      ## TTL
+      buffer += struct.pack(">H", len(ipport)+1) ## Data length
+      buffer += struct.pack(">B", len(ipport))   ## TXT length
+      buffer += bytes(ipport, "utf-8")
+      # A
+      ip = self.client_address[0]
+      buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+      buffer += struct.pack(">L", resp.TTL)    ## TTL
+      buffer += struct.pack(">H", 4)           ## Data length
+      buffer += socket.inet_aton(ip)           ## IP
+      log("TXT + A with the client address")
+   else:
+      # A
+      ip = self.client_address[0]
+      buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+      buffer += struct.pack(">L", resp.TTL)    ## TTL
+      buffer += struct.pack(">H", 4)           ## Data length
+      buffer += socket.inet_aton(ip)           ## IP
+      # TXT
+      ipport = str(self.client_address[0]) + ":" + str(self.client_address[1])
+      buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("IN")
+      buffer += struct.pack(">L", resp.TTL)      ## TTL
+      buffer += struct.pack(">H", len(ipport)+1) ## Data length
+      buffer += struct.pack(">B", len(ipport))   ## TXT length
+      buffer += bytes(ipport, "utf-8")
+      log("A + TXT with the client address")
+   # send
+   send_buf(self, buffer)
+   #####################################################################
+'''

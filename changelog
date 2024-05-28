@@ -1,7 +1,20 @@
+28/May/2024
+- added the 'httpsloop' feature for creating alias loops in HTTPS records (RFC 9460)
+- added the 'httpschain' feature for creating infinite alias chains in HTTPS records (RFC 9460)
+- added the 'svcbloop' feature for creating alias loops in SVCB records (RFC 9460)
+- added the 'svcbchain' feature for creating infinite alias chains in SVCB records (RFC 9460)
+- added the 'dloop' feature for creating alias loops in DNAME records
+- added tests for all the new features (total test count: 344)
+- updated the catalogue documentation
+- small code fixes in polardns.py
+
+23/May/2024
+- added the 'self' feature for returning the client's IP address (aka. what is my IP)
+
 08/May/2024
 - release version 1.1
 - update of the documentation
-- sorting modules in alphabetical order when constructing polardns_real.py
+- upon startup, sort the modules in alphabetical order during the construction of polardns_real.py
 
 08/May/2024
 - major update of the contribution page
@@ -63,7 +76,7 @@
 
 18/Oct/2023
 - fixed problem with dots '.' in the query domain name not being reflected in the response properly
-- enhanced the tests and added 41 more tests (now there is 293 tests in total)
+- enhanced the tests and added 41 more tests (total test count: 293)
 
 17/Oct/2023
 - added support for getting version information using 'dig version.polar CH TXT' command
@@ -82,7 +95,7 @@
 - enhanced parsing of the domain name in the request (added the backslashreplace option in decode())
 
 05/Jul/2023
-- added a collection of tests (252 tests)
+- added a collection of tests (total test count: 252)
 
 16/Jun/2023
 - fixed exceptions when parsing various incomplete requests, too short DNS packets etc.

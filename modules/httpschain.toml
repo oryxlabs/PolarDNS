@@ -1,0 +1,29 @@
+[module]
+name = "httpschain"
+type = "feature"
+info = "HTTPS alias chain"
+desc = "Respond with an incremented HTTPS alias record. This creates an infinite alias chain."
+author = "ivan.jedek@oryxlabs.com"
+category = "General features"
+
+code = '''
+if req.first_subdomain.startswith("httpschain"):
+   # Send incremented HTTPS alias record
+   new_domain_name = increment_chain(req.full_domain)
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   # HTTPS
+   data_len = 2+len(convDom2Bin(new_domain_name)) # SvcPriority (2 bytes) + the target name
+   buffer += convDom2Bin(req.full_domain) + getTypeBin("HTTPS") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)        ## TTL
+   buffer += struct.pack(">H", data_len)        ## Data length
+   buffer += struct.pack(">H", 0)               ## SvcPriority (0 means alias mode - RFC 9460)
+   buffer += convDom2Bin(new_domain_name)       ## TargetName
+   # log and send
+   log("HTTPS %s" % (new_domain_name))
+   send_buf(self, buffer)
+   #####################################################################
+'''

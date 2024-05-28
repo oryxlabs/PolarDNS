@@ -1,6 +1,5 @@
-# required minimal Python version 3.11
 import sys
-MIN_VERSION = (3, 11)
+MIN_VERSION = (3, 11) # required minimal Python version
 if sys.version_info < MIN_VERSION:
     sys.exit(f"Python version {'.'.join(map(str, MIN_VERSION))} or later is required.")
 
@@ -16,9 +15,10 @@ import glob
 import time
 import os
 
+polardns_version = "1.2"
+
 ################################
 
-version = "1.1"  # PolarDNS
 stamp = str(time.time()).ljust(18, "0")
 
 # load config
@@ -675,13 +675,13 @@ def process_DNS(self, req):
         # Check if any domain label starts with any of the global modifiers
         # Is there custom sleep (".slpXXXX.") or custom TTL (".ttlXXX.") or custom length (".lenXXX.") in the domain name?
         for label in req.subdomains_lc:
-            if label.startswith('slp'):        # custom delay requested
+            if label.startswith("slp"):        # custom delay requested
                if label[3:].isnumeric():
                   resp.sleep = float(int(label[3:])/1000)
-            elif label.startswith('ttl'):      # custom TTL requested
+            elif label.startswith("ttl"):      # custom TTL requested
                if label[3:].isnumeric():
                   resp.TTL = int(label[3:])
-            elif label.startswith('len'):      # TCP length override
+            elif label.startswith("len"):      # TCP length override
                if label[3:].isnumeric():
                   n = int(label[3:])
                   if n > 65535: n = 65535
@@ -689,7 +689,7 @@ def process_DNS(self, req):
             elif label == "newid":             # new random transaction ID
                resp.ID = struct.pack(">H", random.randint(0,65535))
                addcustomlog("NEWID")
-            elif label.startswith('flgs'):     # set custom flags in the DNS header
+            elif label.startswith("flgs"):     # set custom flags in the DNS header
                if label[4:].isnumeric():
                   n = int(label[4:])
                   if n > 65535: n = 65535
@@ -704,25 +704,25 @@ def process_DNS(self, req):
                   n = random.randint(0,65535)
                   resp.FLGS = struct.pack(">H", n)
                   addcustomlog("FLGS:" + hex(n))
-            elif label.startswith('qurr'):     # set custom number of questions in the DNS header
+            elif label.startswith("qurr"):     # set custom number of questions in the DNS header
                if label[4:].isnumeric():
                   n = int(label[4:])
                   if n > 65535: n = 65535
                   resp.QURR = n
                   addcustomlog("QURR:" + str(resp.QURR))
-            elif label.startswith('anrr'):     # set custom number of answer RR in the DNS header
+            elif label.startswith("anrr"):     # set custom number of answer RR in the DNS header
                if label[4:].isnumeric():
                   n = int(label[4:])
                   if n > 65535: n = 65535
                   resp.ANRR = n
                   addcustomlog("ANRR:" + str(resp.ANRR))
-            elif label.startswith('aurr'):     # set custom number of authority RR in the DNS header
+            elif label.startswith("aurr"):     # set custom number of authority RR in the DNS header
                if label[4:].isnumeric():
                   n = int(label[4:])
                   if n > 65535: n = 65535
                   resp.AURR = n
                   addcustomlog("AURR:" + str(resp.AURR))
-            elif label.startswith('adrr'):     # set custom number of additional RR in the DNS header
+            elif label.startswith("adrr"):     # set custom number of additional RR in the DNS header
                if label[4:].isnumeric():
                   n = int(label[4:])
                   if n > 65535: n = 65535
@@ -841,7 +841,7 @@ def process_DNS(self, req):
               #####################################################################
            elif req.full_domain == "version.polar" and req.type_str == "TXT" and req.class_str == "CH":
               # Version
-              v = "PolarDNS " + version
+              v = "PolarDNS " + polardns_version
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
               ### QUESTION SECTION ########
@@ -908,7 +908,7 @@ if __name__ == "__main__":
       add_modules_and_rerun() 
       exit(0)
 
-   print("%s | PolarDNS v%s server starting up" % (stamp, version))
+   print("%s | PolarDNS v%s server starting up" % (stamp, polardns_version))
    ip, sep, port = config['listen_addr'].rpartition(':')
    assert sep
    ip = str(ip)

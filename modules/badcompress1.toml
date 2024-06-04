@@ -21,7 +21,7 @@ if req.first_subdomain.startswith("badcompress1"):
    badcomp = b"\xc0" + struct.pack(">B", offset)        ## arbitrary offset in the answer in the Name
    buffer += badcomp + getTypeBin("CNAME") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)                ## TTL
-   dom = "always" + str(random.randint(1,100000)) + "." + req.sld_tld_domain
+   dom = "always" + str(random.getrandbits(20) % 100000) + "." + req.sld_tld_domain
    buffer += struct.pack(">H", len(dom)+2)              ## Data length
    buffer += convDom2Bin(dom)                           ## CNAME value
    # log and send

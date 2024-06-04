@@ -1,5 +1,5 @@
 [module]
-name = "dchain"
+name = "dnchain"
 type = "feature"
 info = "DNAME alias chain"
 desc = "Respond with an incremented DNAME record. This creates an infinite alias chain."
@@ -7,8 +7,8 @@ author = "ivan.jedek@oryxlabs.com"
 category = "General features"
 
 code = '''
-if req.first_subdomain.startswith("dchain"):
-   # Send incremented DNAME
+if req.first_subdomain.startswith("dnchain"):
+   # Send incremented DNAME alias
    new_domain_name = increment_chain(req.full_domain)
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)

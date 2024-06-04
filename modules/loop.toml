@@ -1,14 +1,14 @@
 [module]
 name = "loop"
 type = "feature"
-info = "CNAME alias loop"
-desc = "Respond with CNAME record forming an infinite loop consisting of any number of elements."
+info = "alias loop"
+desc = "Respond with a record that creates an infinite loop with any number of elements. This feature supports CNAME/DNAME/HTTPS/SVCB/SRV/MX resource types"
 author = "ivan.jedek@oryxlabs.com"
 category = "General features"
 
 code = '''
 if req.first_subdomain.startswith("loop"):
-   # Do a CNAME loop
+   # Do an alias loop in a CNAME/DNAME/HTTPS/SVCB/SRV/MX record type
    if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():
       # we are already in a loop, e.g.:
       # loop.10.4.dnslabtest.com
@@ -39,13 +39,57 @@ if req.first_subdomain.startswith("loop"):
    ### QUESTION SECTION ########
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
-   # CNAME
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
-   buffer += struct.pack(">L", resp.TTL)                    ## TTL
-   buffer += struct.pack(">H", len(new_domain_name)+2)      ## Data length
-   buffer += convDom2Bin(new_domain_name)                   ## CNAME value
+   bindom = convDom2Bin(new_domain_name)
+   match req.type_str:
+      case "DNAME":
+         type = "DNAME"
+         buffer += convDom2Bin(req.full_domain) + getTypeBin("DNAME") + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)     ## TTL
+         buffer += struct.pack(">H", len(bindom))  ## Data length
+         buffer += bindom                          ## DNAME value
+      case "HTTPS":
+         type = "HTTPS"
+         data_len = 2+len(bindom)                  # SvcPriority (2 bytes) + the target name
+         buffer += convDom2Bin(req.full_domain) + getTypeBin("HTTPS") + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)     ## TTL
+         buffer += struct.pack(">H", data_len)     ## Data length
+         buffer += struct.pack(">H", 0)            ## SvcPriority (0 means alias mode - RFC 9460)
+         buffer += bindom                          ## TargetName
+      case "SVCB":
+         type = "SVCB"
+         data_len = 2+len(bindom)                  # SvcPriority (2 bytes) + the target name
+         buffer += convDom2Bin(req.full_domain) + getTypeBin("SVCB") + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)     ## TTL
+         buffer += struct.pack(">H", data_len)     ## Data length
+         buffer += struct.pack(">H", 0)            ## SvcPriority (0 means alias mode - RFC 9460)
+         buffer += bindom                          ## TargetName
+      case "SRV":
+         type = "SRV"
+         port = random.getrandbits(16)
+         data_len = 2+2+2+len(bindom)  # Priority (2 bytes) + Weight (2 bytes) + Port (2 bytes) + Target domain
+         buffer += convDom2Bin(req.full_domain) + getTypeBin("SRV") + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)     ## TTL
+         buffer += struct.pack(">H", data_len)     ## Data length
+         buffer += struct.pack(">H", 0)            ## Priority
+         buffer += struct.pack(">H", 0)            ## Weight
+         buffer += struct.pack(">H", port)         ## Port
+         buffer += bindom                          ## TargetName
+      case "MX":
+         type = "MX"
+         data_len = 2+len(bindom)                  # Priority (2 bytes) + Target domain
+         buffer += convDom2Bin(req.full_domain) + getTypeBin("MX") + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)     ## TTL
+         buffer += struct.pack(">H", data_len)     ## Data length
+         buffer += struct.pack(">H", 0)            ## Priority
+         buffer += bindom                          ## TargetName
+      case _:
+         type = "CNAME"
+         buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)     ## TTL
+         buffer += struct.pack(">H", len(bindom))  ## Data length
+         buffer += bindom                          ## DNAME value
    # log and send
-   log("CNAME LOOP %s" % (new_domain_name))
+   log("%s LOOP %s" % (type, new_domain_name))
    send_buf(self, buffer)
    #####################################################################
 '''

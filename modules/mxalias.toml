@@ -1,0 +1,35 @@
+[module]
+name = "mxalias"
+type = "feature"
+info = "MX random N aliases"
+desc = "Respond with N number of MX records containing random chain index. BEWARE: This could result in multiplication."
+author = "ivan.jedek@oryxlabs.com"
+category = "General features"
+
+code = '''
+           elif req.first_subdomain.startswith("mxalias"):
+              # Send multiple random MX aliases
+              # BEWARE: This could result in multiplication
+              answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 3
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              doms = []
+              for i in range(answers):
+                  # MX records
+                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                  bindom = convDom2Bin(dom)
+                  data_len = 2+len(bindom)                 # Priority (2 bytes) + Target domain
+                  buffer += convDom2Bin(req.full_domain) + getTypeBin("MX") + getClassBin("IN")
+                  buffer += struct.pack(">L", resp.TTL)    ## TTL
+                  buffer += struct.pack(">H", data_len)    ## Data length
+                  buffer += struct.pack(">H", 0)           ## Priority
+                  buffer += bindom                         ## TargetName
+                  doms.append(dom)
+              # log and send
+              log("%d MX aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
+              send_buf(self, buffer)
+              #####################################################################
+'''

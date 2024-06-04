@@ -1,15 +1,45 @@
+04/Jun/2024
+- release version 1.3
+- enhanced the `nfz` modifier, which can now produce 45 different parametrized domain name variants
+- added tests for the `nfz` name fuzzing modifier (total test count: 545)
+- updated the catalogue documentation
+
+03/Jun/2024
+- the `schain` feature renamed to `alias` to be consistent with the rest of cn/dn/ht/sv/sr/mx alias features
+- the `loop`, `chain` and `alias` features now also support the CNAME/DNAME/HTTPS/SVCB/SRV/MX record types
+- added tests for all the new variants (total test count: 438)
+- updated the catalogue documentation
+
+31/May/2024
+- added the `cnloop`, `cnchain` and `cnalias` features responding with CNAME records
+- added the `dnloop`, `dnchain` and `dnalias` features responding with DNAME records
+- added the `htloop`, `htchain` and `htalias` features responding with HTTPS records
+- added the `svloop`, `svchain` and `svalias` features responding with SVCB records
+- added the `srloop`, `srchain` and `sralias` features responding with SRV records
+- added the `mxloop`, `mxchain` and `mxalias` features responding with MX records
+- added the `nfz` modifier for name fuzzing, which can be utilized in various features
+- added tests for all the new features (total test count: 384)
+- updated the catalogue documentation
+
+30/May/2024
+- optimized the random number generation everywhere to use the random.getrandbits() function which is fastest
+
+29/May/2024
+- improved the startup module loading logic to be more robust and user-friendly
+- release version 1.2
+
 28/May/2024
-- added the 'httpsloop' feature for creating alias loops in HTTPS records (RFC 9460)
-- added the 'httpschain' feature for creating infinite alias chains in HTTPS records (RFC 9460)
-- added the 'svcbloop' feature for creating alias loops in SVCB records (RFC 9460)
-- added the 'svcbchain' feature for creating infinite alias chains in SVCB records (RFC 9460)
-- added the 'dloop' feature for creating alias loops in DNAME records
+- added the `httpsloop` feature for creating alias loops in HTTPS records (RFC 9460)
+- added the `httpschain` feature for creating infinite alias chains in HTTPS records (RFC 9460)
+- added the `svcbloop` feature for creating alias loops in SVCB records (RFC 9460)
+- added the `svcbchain` feature for creating infinite alias chains in SVCB records (RFC 9460)
+- added the `dloop` feature for creating alias loops in DNAME records
 - added tests for all the new features (total test count: 344)
 - updated the catalogue documentation
 - small code fixes in polardns.py
 
 23/May/2024
-- added the 'self' feature for returning the client's IP address (aka. what is my IP)
+- added the `self` feature for returning the client's IP address (aka. what is my IP)
 
 08/May/2024
 - release version 1.1
@@ -43,24 +73,24 @@
 - added a comment to the readme about the dig version required for tests.
 
 09/Nov/2023
-- cleanup of the 'manylabels' feature
-- cleanup of the 'afuzz1' and 'afuzz2' features
-- enhanced the 'cgena' and 'cgenb' features, added more variants
+- cleanup of the `manylabels` feature
+- cleanup of the `afuzz1` and `afuzz2` features
+- enhanced the `cgena` and `cgenb` features, added more variants
 
 08/Nov/2023
-- enhanced the 'dotcname' feature, added more variants
-- cleanup of the 'cgena' and 'cgenb' features
+- enhanced the `dotcname` feature, added more variants
+- cleanup of the `cgena` and `cgenb` features
 
 07/Nov/2023
-- cleanup of the 'cutabuf' and 'cutcnamebuf' features, should make these as response modifiers in the future (todo)
+- cleanup of the `cutabuf` and `cutcnamebuf` features, should make these as response modifiers in the future (todo)
 
 06/Nov/2023
-- added empty/incomplete responses, namely the 'timeout' and 'close' features
+- added empty/incomplete responses, namely the `timeout` and `close` features
 - socketserver has certain limitations when it comes to these features
 - cleanup of the alias chain scenarios
 
 03/Nov/2023
-- added empty/incomplete responses, namely the 'empty5', 'empty6' and 'empty7' features
+- added empty/incomplete responses, namely the `empty5`, `empty6` and `empty7` features
 - fixed a bug in the logging causing an exception under certain circumstances
 
 01/Nov/2023
@@ -75,20 +105,20 @@
 - added support for SOA records in the ZONEFILE
 
 18/Oct/2023
-- fixed problem with dots '.' in the query domain name not being reflected in the response properly
+- fixed problem with dots `.` in the query domain name not being reflected in the response properly
 - enhanced the tests and added 41 more tests (total test count: 293)
 
 17/Oct/2023
-- added support for getting version information using 'dig version.polar CH TXT' command
+- added support for getting version information using `dig version.polar CH TXT` command
 
 16/Oct/2023
 - added functionality for CNAME loops
 
 27/Sep/2023
-- fixed exception in the 'close' feature in UDP mode
+- fixed exception in the `close` feature in UDP mode
 
 26/Jul/2023
-- added 'flgs' global modifier to allow specifying custom flags in the DNS header
+- added `flgs` global modifier to allow specifying custom flags in the DNS header
 
 10/Jul/2023
 - optimization: got rid of the parsing the request in HEX, parsing it in RAW now

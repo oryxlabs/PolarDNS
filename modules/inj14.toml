@@ -15,7 +15,7 @@ if req.first_subdomain.startswith("inj14"):
       injdom = "injected14." + a3rdparty_domain
    else:
       injdom = "injected14." + req.sld_tld_domain
-   targetdom = "always" + str(random.randint(1,100000)) + "." + req.sld_tld_domain
+   targetdom = "always" + str(random.getrandbits(20) % 1000000) + "." + req.sld_tld_domain
    if "replq" in req.subdomains:  # replace the question with our injected stuffs
       orig_req_domain = req.full_domain
       req.full_domain = injdom

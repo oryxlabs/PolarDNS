@@ -18,7 +18,7 @@ if req.first_subdomain.startswith("cgenb"):
    count = 1  # number of bad chars
    if req.subdomains[3].isnumeric():
       count = int(req.subdomains[3])
-   r = '{:06d}'.format(random.randint(1, 999999))
+   r = '{:06d}'.format(random.getrandbits(20) % 1000000)
    match variant:
       case 2:  # cgenb.2 - <BYTE>nonres123456.dnslabtest1.com
          bindom  = struct.pack(">B", 6+count+6) + badbyte.to_bytes(1, 'big')*count

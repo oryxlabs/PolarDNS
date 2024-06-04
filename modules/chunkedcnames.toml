@@ -34,7 +34,7 @@ if req.first_subdomain.startswith("chunkedcnames"):
    # generate alwaysXXXX domains
    doms = []
    for i in range(nans):
-       dom = "always" + str(random.randint(100000,999999)) + "." + req.sld_tld_domain
+       dom = "always" + str(random.getrandbits(20) % 900000 + 100000) + "." + req.sld_tld_domain
        doms.append(dom)
        buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
        buffer += struct.pack(">L", resp.TTL)                ## TTL

@@ -1,0 +1,52 @@
+[module]
+name = "htloop"
+type = "feature"
+info = "HTTPS alias loop"
+desc = "Respond with an HTTPS record featuring an alias (SvcPriority 0) that creates an infinite loop with any number of elements."
+author = "ivan.jedek@oryxlabs.com"
+category = "General features"
+
+code = '''
+if req.first_subdomain.startswith("htloop"):
+   # Do an alias loop in a HTTPS record (SvcPriority 0)
+   if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():
+      # we are already in a loop, e.g.:
+      # htloop.10.4.dnslabtest.com
+      max = int(req.subdomains[1])
+      cur = int(req.subdomains[2])
+      if cur >= max:
+         # go back to the beginning of the loop
+         new_domain_name = req.subdomains[0] + "." + str(max) + ".1"
+      else:
+         # increment the current index
+         new_domain_name = req.subdomains[0] + "." + str(max) + "." + str(cur+1)
+      for i in range(len(req.subdomains)-3):
+         new_domain_name += "." + req.subdomains[i+3]
+   elif req.subdomains[1].isnumeric():
+      # we are in beginning of a loop with a requested max value, e.g.:
+      # htloop.10.dnslabtest.com
+      max = int(req.subdomains[1])
+      if max < 1:
+         max = 1
+      new_domain_name = req.subdomains[0] + "." + str(max) + "." + "1"
+      for i in range(len(req.subdomains)-2):
+         new_domain_name += "." + req.subdomains[i+2]
+   else:
+      # just immediate loop
+      new_domain_name = req.full_domain
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   data_len = 2+len(convDom2Bin(new_domain_name)) # SvcPriority (2 bytes) + the target name
+   buffer += convDom2Bin(req.full_domain) + getTypeBin("HTTPS") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)      ## TTL
+   buffer += struct.pack(">H", data_len)      ## Data length
+   buffer += struct.pack(">H", 0)             ## SvcPriority (0 means alias mode - RFC 9460)
+   buffer += convDom2Bin(new_domain_name)     ## TargetName
+   # log and send
+   log("HTTPS LOOP %s" % (new_domain_name))
+   send_buf(self, buffer)
+   #####################################################################
+'''

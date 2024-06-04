@@ -9,7 +9,7 @@ category = "CNAME fuzzing"
 code = '''
 if req.first_subdomain.startswith("dotcname"):
    # Send illegal CNAME record with dots
-   r = '{:06d}'.format(random.randint(100000, 999999))
+   r = '{:06d}'.format(random.getrandbits(20) % 900000 + 100000)
    dom = "always" + str(r) + "." + req.sld_tld_domain
    variant = 0
    if req.subdomains[1].isnumeric():

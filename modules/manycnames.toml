@@ -19,7 +19,7 @@ if req.first_subdomain.startswith("manycnames"):
    ### ANSWER SECTION ########
    # generate alwaysXXXX domains
    for i in range(nans):
-       dom = "always" + str(random.randint(1,100000)) + "." + req.sld_tld_domain
+       dom = "always" + str(random.getrandbits(20) % 1000000) + "." + req.sld_tld_domain
        buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
        buffer += struct.pack(">L", resp.TTL)                ## TTL
        buffer += struct.pack(">H", len(dom)+2)              ## Data length

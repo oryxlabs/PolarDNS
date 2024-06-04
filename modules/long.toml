@@ -26,7 +26,7 @@ if len(req.full_domain) == 253 and req.first_subdomain.startswith("long"):
              for i in range(5):
                  dom += '.' + ''.join(random.choice(string.ascii_lowercase + string.digits))
              dom += req.full_domain[15:255]
-             randip = '.'.join(str(random.randint(0, 255)) for _ in range(4))
+             randip = '.'.join(str(random.getrandbits(8)) for _ in range(4))
              buffer += convDom2Bin(dom) + getTypeBin("A") + getClassBin("IN")
              buffer += struct.pack(">L", resp.TTL)      ## TTL
              buffer += struct.pack(">H", 4)             ## Data length
@@ -42,7 +42,7 @@ if len(req.full_domain) == 253 and req.first_subdomain.startswith("long"):
              for i in range(5):
                  dom += '.' + ''.join(random.choice(string.ascii_lowercase + string.digits))
              dom += '.' + req.sld_tld_domain
-             randip = '.'.join(str(random.randint(0, 255)) for _ in range(4))
+             randip = '.'.join(str(random.getrandbits(8)) for _ in range(4))
              buffer += convDom2Bin(dom) + getTypeBin("A") + getClassBin("IN")
              buffer += struct.pack(">L", resp.TTL)      ## TTL
              buffer += struct.pack(">H", 4)             ## Data length

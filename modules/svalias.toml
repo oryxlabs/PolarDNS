@@ -1,0 +1,35 @@
+[module]
+name = "svalias"
+type = "feature"
+info = "SVCB random N aliases"
+desc = "Respond with N number of SVCB aliases containing random chain index (`svalias####.yourdomain.com`). BEWARE: This could result in multiplication."
+author = "ivan.jedek@oryxlabs.com"
+category = "General features"
+
+code = '''
+           elif req.first_subdomain.startswith("svalias"):
+              # Send multiple random SVCB aliases (RFC 9460).
+              # BEWARE: This could result in multiplication
+              answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 3
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              doms = []
+              for i in range(answers):
+                  # SVCB alias records
+                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                  bindom = convDom2Bin(dom)
+                  data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
+                  buffer += convDom2Bin(req.full_domain) + getTypeBin("SVCB") + getClassBin("IN")
+                  buffer += struct.pack(">L", resp.TTL)    ## TTL
+                  buffer += struct.pack(">H", data_len)    ## Data length
+                  buffer += struct.pack(">H", 0)           ## SvcPriority (0 means alias mode - RFC 9460)
+                  buffer += bindom                         ## TargetName
+                  doms.append(dom)
+              # log and send
+              log("%d SVCB aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
+              send_buf(self, buffer)
+              #####################################################################
+'''

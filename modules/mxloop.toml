@@ -1,17 +1,17 @@
 [module]
-name = "httpsloop"
+name = "mxloop"
 type = "feature"
-info = "HTTPS alias loop"
-desc = "Respond with an HTTPS record featuring an alias (SvcPriority 0) that creates an infinite loop with any number of elements."
+info = "MX alias loop"
+desc = "Respond with an MX record that creates an infinite loop with any number of elements."
 author = "ivan.jedek@oryxlabs.com"
 category = "General features"
 
 code = '''
-if req.first_subdomain.startswith("httpsloop"):
-   # Do an alias loop in a HTTPS record (SvcPriority 0)
+if req.first_subdomain.startswith("mxloop"):
+   # Do an alias loop in a MX record
    if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():
       # we are already in a loop, e.g.:
-      # httpsloop.10.4.dnslabtest.com
+      # mxloop.10.4.dnslabtest.com
       max = int(req.subdomains[1])
       cur = int(req.subdomains[2])
       if cur >= max:
@@ -24,7 +24,7 @@ if req.first_subdomain.startswith("httpsloop"):
          new_domain_name += "." + req.subdomains[i+3]
    elif req.subdomains[1].isnumeric():
       # we are in beginning of a loop with a requested max value, e.g.:
-      # httpsloop.10.dnslabtest.com
+      # mxloop.10.dnslabtest.com
       max = int(req.subdomains[1])
       if max < 1:
          max = 1
@@ -39,14 +39,15 @@ if req.first_subdomain.startswith("httpsloop"):
    ### QUESTION SECTION ########
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
-   data_len = 2+len(convDom2Bin(new_domain_name)) # SvcPriority (2 bytes) + the target name
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("HTTPS") + getClassBin("IN")
-   buffer += struct.pack(">L", resp.TTL)      ## TTL
-   buffer += struct.pack(">H", data_len)      ## Data length
-   buffer += struct.pack(">H", 0)             ## SvcPriority (0 means alias mode - RFC 9460)
-   buffer += convDom2Bin(new_domain_name)     ## TargetName
+   bindom = convDom2Bin(new_domain_name)
+   data_len = 2+len(bindom)                 # Priority (2 bytes) + Target domain
+   buffer += convDom2Bin(req.full_domain) + getTypeBin("MX") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)    ## TTL
+   buffer += struct.pack(">H", data_len)    ## Data length
+   buffer += struct.pack(">H", 0)           ## Priority
+   buffer += bindom                         ## TargetName
    # log and send
-   log("HTTPS LOOP %s" % (new_domain_name))
+   log("MX LOOP %s" % (new_domain_name))
    send_buf(self, buffer)
    #####################################################################
 '''

@@ -255,16 +255,32 @@ def name_fuzz(n):
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
       case 2:
+         # random printable ASCII character(s)
+         if hasattr(resp, "nfz_sv"):
+            # if there is a sub-variant, it means we want multiple random characters
+            dom = ''.join(random.choice(string.printable) for _ in range(resp.nfz_sv))
+         else:
+            dom = random.choice(string.printable)
+      ######################
+      case 3:
+         # random printable ASCII character(s)
+         if hasattr(resp, "nfz_sv"):
+            # if there is a sub-variant, it means we want repeat the random character
+            dom = random.choice(string.printable) * resp.nfz_sv
+         else:
+            dom = random.choice(string.printable)
+      ######################
+      case 4:
          # random byte(s)
          if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
+            # if there is a sub-variant, it means we want multiple random bytes
             tmp = b''.join(random.getrandbits(8).to_bytes(1, 'big') for _ in range(resp.nfz_sv))
             dom = struct.pack(">B", resp.nfz_sv) + tmp + b'\x00'
          else:
             dom = b'\x01' + random.getrandbits(8).to_bytes(1, 'big') + b'\x00'
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 3:
+      case 5:
          # random byte(s) - repeated
          if hasattr(resp, "nfz_sv"):
             # if there is a sub-variant, it means we want to repeat the byte more times
@@ -274,7 +290,7 @@ def name_fuzz(n):
             dom = b'\x01' + random.getrandbits(8).to_bytes(1, 'big') + b'\x00'
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 4:
+      case 6:
          # byte(s) starting from 0 to 255 (incremental)
          if hasattr(resp, "nfz_sv"):
             # if there is a sub-variant, it means we want to repeat the byte more times
@@ -288,7 +304,7 @@ def name_fuzz(n):
             resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 5:
+      case 7:
          # byte(s) starting from 0 to 255 (repeated)
          if hasattr(resp, "nfz_sv"):
             # if there is a sub-variant, it means we want to repeat the byte more times
@@ -299,7 +315,7 @@ def name_fuzz(n):
          resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 6:
+      case 8:
          # max label sized (63) random binary string
          siz = 63
          if hasattr(resp, "nfz_sv"):
@@ -315,7 +331,7 @@ def name_fuzz(n):
             dom = struct.pack(">B", len(data)) + data + b"\x00"
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 7:
+      case 9:
          # max label sized (63) random string made of printable characters
          siz = 63
          if hasattr(resp, "nfz_sv"):
@@ -327,7 +343,7 @@ def name_fuzz(n):
          else:
             dom = ''.join(random.choice(string.printable) for _ in range(siz))
       ######################
-      case 8:
+      case 10:
          # max label sized (63) random string made of letters and numbers
          siz = 63
          if hasattr(resp, "nfz_sv"):
@@ -339,7 +355,7 @@ def name_fuzz(n):
          else:
             dom = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
       ######################
-      case 9:
+      case 11:
          # random 1 byte long subdomain(s)
          dom = b'\x01' + random.getrandbits(8).to_bytes(1, 'big')
          if hasattr(resp, "nfz_sv"):
@@ -349,7 +365,7 @@ def name_fuzz(n):
          dom += b'\x00'
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 10:
+      case 12:
          # random 1 byte long subdomain(s) made of printable character
          siz = 1
          if hasattr(resp, "nfz_sv"):
@@ -361,7 +377,7 @@ def name_fuzz(n):
          else:
             dom = ''.join(random.choice(string.printable) for _ in range(siz))
       ######################
-      case 11:
+      case 13:
          # random 1 byte long subdomain(s) made of letters and numbers
          siz = 1
          if hasattr(resp, "nfz_sv"):
@@ -373,7 +389,7 @@ def name_fuzz(n):
          else:
             dom = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
       ######################
-      case 12:
+      case 14:
          # 1 byte long subdomain(s) from \x00 to \xff (incremental)
          dom = b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big')
          resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
@@ -385,7 +401,7 @@ def name_fuzz(n):
          dom += b'\x00'
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 13:
+      case 15:
          # 1 byte long subdomain(s) from \x00 to \xff (repeated)
          dom = b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big')
          if hasattr(resp, "nfz_sv"):
@@ -396,8 +412,16 @@ def name_fuzz(n):
          resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 14:
-         # always123456.<NULL byte(s)>.yourdomain.com
+      case 16:
+         # nonres<######>.yourdomain.com
+         dom = "nonres" + rand_suffix + "." + req.sld_tld_domain
+      ######################
+      case 17:
+         # always<######>.yourdomain.com
+         dom = "always" + rand_suffix + "." + req.sld_tld_domain
+      ######################
+      case 18:
+         # always<######>.<NULL byte(s)>.yourdomain.com
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          if hasattr(resp, "nfz_sv"):
             # if there is a sub-variant, it means we want to repeat the byte more times
@@ -408,7 +432,7 @@ def name_fuzz(n):
          dom += convDom2Bin(req.sld_tld_domain)
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 15:
+      case 19:
          # always123456.<random byte(s)>.yourdomain.com
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          if hasattr(resp, "nfz_sv"):
@@ -420,7 +444,7 @@ def name_fuzz(n):
          dom += convDom2Bin(req.sld_tld_domain)
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 16:
+      case 20:
          # always123456.<random byte(s)>.yourdomain.com (repeated)
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          if hasattr(resp, "nfz_sv"):
@@ -432,7 +456,7 @@ def name_fuzz(n):
          dom += convDom2Bin(req.sld_tld_domain)
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 17:
+      case 21:
          # always123456.<byte(s) starting from 0 to 255>.yourdomain.com (incremental)
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          if hasattr(resp, "nfz_sv"):
@@ -448,7 +472,7 @@ def name_fuzz(n):
          dom += convDom2Bin(req.sld_tld_domain)
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 18:
+      case 22:
          # always123456.<byte(s) starting from 0 to 255>.yourdomain.com (repeated)
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          if hasattr(resp, "nfz_sv"):
@@ -461,7 +485,7 @@ def name_fuzz(n):
          resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 19:
+      case 23:
          # always.123456.<random 1 byte long subdomain(s)>.yourdomain.com
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          dom += b'\x01' + random.getrandbits(8).to_bytes(1, 'big')
@@ -472,7 +496,7 @@ def name_fuzz(n):
          dom += convDom2Bin(req.sld_tld_domain)
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 20:
+      case 24:
          # always123456.<random 1 byte long subdomain(s) made of printable character>.yourdomain.com
          siz = 1
          dom = "always" + rand_suffix + "."
@@ -486,7 +510,7 @@ def name_fuzz(n):
             dom += ''.join(random.choice(string.printable) for _ in range(siz))
          dom += "." + req.sld_tld_domain
       ######################
-      case 21:
+      case 25:
          # always123456.<random 1 byte long subdomain(s) made of a letter or a number>.yourdomain.com
          siz = 1
          dom = "always" + rand_suffix + "."
@@ -500,7 +524,7 @@ def name_fuzz(n):
             dom += ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
          dom += "." + req.sld_tld_domain
       ######################
-      case 22:
+      case 26:
          # always123456.<1 byte long subdomain(s) from \x00 to \xff>.yourdomain.com (incremental)
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          if hasattr(resp, "nfz_sv"):
@@ -511,7 +535,7 @@ def name_fuzz(n):
          dom += convDom2Bin(req.sld_tld_domain)
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 23:
+      case 27:
          # always123456.<1 byte long subdomain(s) from \x00 to \xff>.yourdomain.com (repeated)
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          if hasattr(resp, "nfz_sv"):
@@ -522,7 +546,7 @@ def name_fuzz(n):
          resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 24:
+      case 28:
          # <NULL byte(s)>always123456.yourdomain.com
          if hasattr(resp, "nfz_sv"):
             # if there is a sub-variant, it means we want to repeat the byte more times
@@ -534,7 +558,7 @@ def name_fuzz(n):
          dom += convDom2Bin(req.sld_tld_domain)
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 25:
+      case 29:
          # <random byte(s)>always123456.yourdomain.com (truly random)
          if hasattr(resp, "nfz_sv"):
             # if there is a sub-variant, it means we want to repeat the byte more times
@@ -546,7 +570,7 @@ def name_fuzz(n):
          dom += convDom2Bin(req.sld_tld_domain)
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 26:
+      case 30:
          # <random byte(s)>always123456.yourdomain.com (repeated)
          if hasattr(resp, "nfz_sv"):
             # if there is a sub-variant, it means we want to repeat the byte more times
@@ -558,7 +582,7 @@ def name_fuzz(n):
          dom += convDom2Bin(req.sld_tld_domain)
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 27:
+      case 31:
          # <random byte(s) starting from 0 to 255>always123456.yourdomain.com (incremental)
          if hasattr(resp, "nfz_sv"):
             # if there is a sub-variant, it means we want to repeat the byte more times
@@ -574,7 +598,7 @@ def name_fuzz(n):
          dom += convDom2Bin(req.sld_tld_domain)
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 28:
+      case 32:
          # <random byte(s) starting from 0 to 255>always123456.yourdomain.com (repeated)
          if hasattr(resp, "nfz_sv"):
             # if there is a sub-variant, it means we want to repeat the byte more times
@@ -587,7 +611,7 @@ def name_fuzz(n):
          resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 29:
+      case 33:
          # always123456.yourdomain.com<NULL byte(s)>
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          dom += struct.pack(">B", len(req.sld)) + bytes(req.sld, "utf-8")
@@ -600,7 +624,7 @@ def name_fuzz(n):
          dom += b'\x00'
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 30:
+      case 34:
          # always123456.yourdomain.com<random byte(s)> (truly random)
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          dom += struct.pack(">B", len(req.sld)) + bytes(req.sld, "utf-8")
@@ -613,7 +637,7 @@ def name_fuzz(n):
          dom += b'\x00'
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 31:
+      case 35:
          # always123456.yourdomain.com<random byte(s)> (repeated)
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          dom += struct.pack(">B", len(req.sld)) + bytes(req.sld, "utf-8")
@@ -626,7 +650,7 @@ def name_fuzz(n):
          dom += b'\x00'
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 32:
+      case 36:
          # always123456.yourdomain.com<byte(s) starting from 0 to 255> (incremental)
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          dom += struct.pack(">B", len(req.sld)) + bytes(req.sld, "utf-8")
@@ -643,7 +667,7 @@ def name_fuzz(n):
          dom += b'\x00'
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 33:
+      case 37:
          # always123456.yourdomain.com<byte(s) starting from 0 to 255> (repeated)
          dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
          dom += struct.pack(">B", len(req.sld)) + bytes(req.sld, "utf-8")
@@ -657,22 +681,6 @@ def name_fuzz(n):
          resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 34:
-         # http://always123456.yourdomain.com/
-         dom = "http://always" + rand_suffix + "." + req.sld_tld_domain + "/"
-      ######################
-      case 35:
-         # http://always123456.yourdomain.com:80/
-         dom = "http://always" + rand_suffix + "." + req.sld_tld_domain + ":80/"
-      ######################
-      case 36:
-         # https://always123456.yourdomain.com/
-         dom = "https://always" + rand_suffix + "." + req.sld_tld_domain + "/"
-      ######################
-      case 37:
-         # https://always123456.yourdomain.com:443/
-         dom = "https://always" + rand_suffix + "." + req.sld_tld_domain + ":443/"
-      ######################
       case 38:
          # always123456.yourdomain.com:80
          dom = "always" + rand_suffix + "." + req.sld_tld_domain + ":80"
@@ -682,26 +690,42 @@ def name_fuzz(n):
          dom = "always" + rand_suffix + "." + req.sld_tld_domain + ":443"
       ######################
       case 40:
+         # http://always123456.yourdomain.com/
+         dom = "http://always" + rand_suffix + "." + req.sld_tld_domain + "/"
+      ######################
+      case 41:
+         # http://always123456.yourdomain.com:80/
+         dom = "http://always" + rand_suffix + "." + req.sld_tld_domain + ":80/"
+      ######################
+      case 42:
+         # https://always123456.yourdomain.com/
+         dom = "https://always" + rand_suffix + "." + req.sld_tld_domain + "/"
+      ######################
+      case 43:
+         # https://always123456.yourdomain.com:443/
+         dom = "https://always" + rand_suffix + "." + req.sld_tld_domain + ":443/"
+      ######################
+      case 44:
          # 1.2.3.4 (in DNS name notation as 4 labels)
          dom = "1.2.3.4"
       ######################
-      case 41:
+      case 45:
          # 1.2.3.4:80 (in DNS name notation as 4 labels)
          dom = "1.2.3.4:80"
       ######################
-      case 42:
+      case 46:
          # 1.2.3.4 (in DNS name notation as 1 label)
          dom = "1<DOT>2<DOT>3<DOT>4"
       ######################
-      case 43:
+      case 47:
          # 1.2.3.4:80 (in DNS name notation as 1 label)
          dom = "1<DOT>2<DOT>3<DOT>4:80"
       ######################
-      case 44:
+      case 48:
          # <OUR-IP-ADDRESS> (in DNS name notation as 4 labels)
          dom = ZONEFILE["ns1." + req.sld_tld_domain]["A"]
       ######################
-      case 45:
+      case 49:
          # <OUR-IP-ADDRESS>:80 (in DNS name notation as 4 labels)
          ourip = ZONEFILE["ns1." + req.sld_tld_domain]["A"]
          dom = ourip + ":80"
@@ -716,10 +740,19 @@ def name_fuzz(n):
 # Function to increment chainXXX if there is one
 
 def increment_chain(req_domain):
-   req_subdomains = req_domain.split(".")
-   new_subdomains = req_subdomains
+   new_subdomains = req.subdomains
 
-   first_subdomain = req_subdomains[0]
+   # in case of domains with attribute leaves (domains prefixed with an underscore),
+   # do not modify the leading underscored subdomains (up to first 3 subdomains)
+   # e.g., '_sub._service._proto...'
+   skip = 0
+   for i in range(3):
+       if req.subdomains[2-i][0:1] == "_":
+          new_subdomains = req.subdomains[3-i:]
+          skip = 3-i
+          break
+
+   first_subdomain = new_subdomains[0]
    first_subdomain_length = len(first_subdomain)
    if first_subdomain_length > 5:
       # how many last characters are numeric
@@ -752,6 +785,13 @@ def increment_chain(req_domain):
    for l in range(1, len(new_subdomains)):
       new_domain_name += "." + new_subdomains[l]
 
+   # in case of domains with attribute leaves, prepend back the first N subdomains we skipped above
+   if skip:
+      tmp = ""
+      for i in range(skip):
+         tmp += req.subdomains[i] + "."
+      new_domain_name = tmp + new_domain_name
+
    print("new domain name:", new_domain_name) if debug else True
    return new_domain_name
 
@@ -759,10 +799,19 @@ def increment_chain(req_domain):
 # Function to generate random chainXXX
 
 def random_chain(req_domain):
-   req_subdomains = req_domain.split(".")
-   new_subdomains = req_subdomains
+   new_subdomains = req.subdomains
 
-   first_subdomain = req_subdomains[0]
+   # in case of domains with attribute leaves (domains prefixed with an underscore),
+   # do not modify the leading underscored subdomains (up to first 3 subdomains)
+   # e.g., '_sub._service._proto...'
+   skip = 0
+   for i in range(3):
+       if req.subdomains[2-i][0:1] == "_":
+          new_subdomains = req.subdomains[3-i:]
+          skip = 3-i
+          break
+
+   first_subdomain = new_subdomains[0]
    first_subdomain_length = len(first_subdomain)
    new_random_number = random.getrandbits(20) % 1000000
 
@@ -785,13 +834,20 @@ def random_chain(req_domain):
 
    new_subdomain = subd_wo_index + str(new_random_number)
 
-   # replace the subdomain with new incremented index (if there was no index, it will be "chain1")
+   # replace the subdomain with new random index
    new_subdomains[0] = new_subdomain
 
    # now construct a nice full domain name and return it
    new_domain_name = new_subdomain
    for l in range(1, len(new_subdomains)):
       new_domain_name += "." + new_subdomains[l]
+
+   # in case of domains with attribute leaves, prepend back the first N subdomains we skipped above
+   if skip:
+      tmp = ""
+      for i in range(skip):
+         tmp += req.subdomains[i] + "."
+      new_domain_name = tmp + new_domain_name
 
    print("new domain name:", new_domain_name) if debug else True
    return new_domain_name
@@ -1223,6 +1279,7 @@ def process_DNS(self, req):
            # dig . @127.0.0.1 NS +noedns
            # #########################
            # 1) Close the connection
+           # todo: send proper response
            log("just closing connection")
            time.sleep(resp.sleep)
            close_conn(self)
@@ -1376,7 +1433,7 @@ def add_modules_and_rerun():
             new_file.write(line)
 
     # Replace the current process with the new script, passing all arguments
-    os.execvp(sys.executable, ['python', new_script_name] + sys.argv[1:])
+    os.execvp(sys.executable, [sys.executable, new_script_name] + sys.argv[1:])
 
 ################################
 

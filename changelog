@@ -1,3 +1,11 @@
+03/Jul/2024
+- added support for the Attrleaf naming pattern (underscored domain names) for the SRV and SVCB alias/chain/loop features
+- enhanced the `nfz` modifier, added 4 more variants, now it can produce 49 different domain name variants
+- deprecated the `manycnames`, `cnamefuzz1`, `cnamefuzz2` and `illcname` features
+- added tests for the Attrleaf naming patterns and additional `nfz` variants (total test count: 612)
+- various small fixes in polardns.py
+- updated the catalogue documentation
+
 04/Jun/2024
 - release version 1.3
 - enhanced the `nfz` modifier, which can now produce 45 different parametrized domain name variants

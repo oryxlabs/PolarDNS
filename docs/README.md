@@ -3,6 +3,7 @@
 - [Project homepage](/README.md)
 - [Catalogue of PolarDNS features and modifiers](/docs/catalogue/Readme.md)
   - [General features](/docs/catalogue/general-features.md)
+  - [Aliases, loops and chains](/docs/catalogue/aliases-loops-and-chains.md)
   - [Response modifiers](/docs/catalogue/response-modifiers.md)
   - [CNAME fuzzing](/docs/catalogue/cname-fuzzing.md)
   - [Bad compression](/docs/catalogue/bad-compression.md)

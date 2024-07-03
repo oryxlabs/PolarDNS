@@ -1,5 +1,6 @@
 # PolarDNS catalogue - CNAME fuzzing
 1. [General features](general-features.md)
+1. [Aliases, loops and chains](aliases-loops-and-chains.md)
 1. [Response modifiers](response-modifiers.md)
 1. [CNAME fuzzing](cname-fuzzing.md)
 	- [Long CNAME alias of arbitrary size (bigcname)](#long-cname-alias-of-arbitrary-size-bigcname)
@@ -85,7 +86,7 @@ manylabels.100.yourdomain.com. 60 IN	CNAME	always.t.g.k.s.h.z.b.u.s.d.y.s.b.6.o.
 
 ```
 ### Many always CNAME aliases (manycnames)
-Respond with a arbitrary number of randomly generated CNAME records.
+:exclamation:**DEPRECATED**:exclamation: Use an alias with the [nfz](response-modifiers.md#name-fuzzing-generator-nfz) name fuzzer which has more powerful features.Respond with a arbitrary number of randomly generated CNAME records.
 
 <table>
 <tr><td>format:</td><td>manycnames.&lt;NUMBER-OF-RECORDS>.yourdomain.com</td></tr>
@@ -165,7 +166,7 @@ manycnames.50.yourdomain.com. 60 IN	CNAME	always3338.yourdomain.com.
 
 ```
 ### Many random CNAME aliases, textual (cnamefuzz1)
-Respond with many CNAME answers where each answer contains a random string of specified length, made of all kinds of illegal ASCII characters that are likely not allowed in a domain name.
+:exclamation:**DEPRECATED**:exclamation: Use an alias with the [nfz](response-modifiers.md#name-fuzzing-generator-nfz) name fuzzer which has more powerful features.Respond with many CNAME answers where each answer contains a random string of specified length, made of all kinds of illegal ASCII characters that are likely not allowed in a domain name.
 
 <table>
 <tr><td>format:</td><td>cnamefuzz1.&lt;NUMBER-OF-CNAMES>.&lt;CNAME-STRING-SIZE>.yourdomain.com</td></tr>
@@ -204,7 +205,7 @@ cnamefuzz1.10.10.yourdomain.com. 60 IN	CNAME	/._\012\009rr\"\;q.
 ;; MSG SIZE  rcvd: 599
 ```
 ### Many random CNAME aliases, binary (cnamefuzz2)
-Respond with many CNAME answers where each answer contains a random binary string (NULL terminated) of specified length.
+:exclamation:**DEPRECATED**:exclamation: Use an alias with the [nfz](response-modifiers.md#name-fuzzing-generator-nfz) name fuzzer which has more powerful features.Respond with many CNAME answers where each answer contains a random binary string (NULL terminated) of specified length.
 
 <table>
 <tr><td>format:</td><td>cnamefuzz2.&lt;NUMBER-OF-CNAMES>.&lt;CNAME-STRING-SIZE>.yourdomain.com</td></tr>
@@ -341,12 +342,12 @@ cgenb.5.255.10.yourdomain.com. 60 IN	CNAME	nonres030594\255\255\255\255\255\255\
 
 ```
 ### Illegal CNAME formats (illcname)
-Respond with CNAME alias containing a hostname in an illegal form e.g. containing an IP address, a port number or an URL, based on the selected variant.
+:exclamation:**DEPRECATED**:exclamation: Use an alias with the [nfz](response-modifiers.md#name-fuzzing-generator-nfz) name fuzzer which has more powerful features.Respond with CNAME alias containing a hostname in an illegal form e.g. containing an IP address, a port number or an URL, based on the selected variant.
 
 <table>
 <tr><td>format:</td><td>illcname.&lt;VARIANT-1-12>.yourdomain.com</td></tr>
 <tr><td>remark:</td><td>VARIANT produces the following responses:<br><table> <tr><td>1</td><td colspan="2">http://always779768.yourdomain.com/</td></tr> <tr><td>2</td><td colspan="2">http://always799902.yourdomain.com:80/</td></tr> <tr><td>3</td><td colspan="2">https://always725764.yourdomain.com/</td></tr> <tr><td>4</td><td colspan="2">https://always006450.yourdomain.com:443/</td></tr> <tr><td>5</td><td colspan="2">always279856.yourdomain.com:80</td></tr> <tr><td>6</td><td colspan="2">always260211.yourdomain.com:443</td></tr> <tr><td>7</td><td>1.2.3.4</td><td>DNS name notation</td></tr> <tr><td>8</td><td>1.2.3.4:80</td><td>DNS name notation</td></tr> <tr><td>9</td><td>1\.2\.3\.4</td><td>DNS name notation (using a single label with actual dot symbols)</td></tr> <tr><td>10</td><td>1\.2\.3\.4:80</td><td>DNS name notation (using a single label with actual dot symbols)</td></tr> <tr><td>11</td><td>192.0.2.1</td><td>DNS name notation (our own IP address)</td></tr> <tr><td>12</td><td>192.0.2.1:80</td><td>DNS name notation (our own IP address)</td></tr> </table></td></tr>
-<tr><td>remark:</td><td>The <a href="http://www.tcpipguide.com/free/t_DNSNameNotationandMessageCompressionTechnique.htm"><strong>DNS name notation</strong></a> is a format used for hostnames and domain names, not IP addresses</td></tr>
+<tr><td>remark:</td><td>The <a href="http://www.tcpipguide.com/free/t_DNSNameNotationandMessageCompressionTechnique.htm"><strong>DNS name notation</strong></a> is a format used for hostnames and domain names, not IP addresses.</td></tr>
 <tr><td>example:</td><td><code>dig illcname.1.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig illcname.9.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig illcnameanything.1.yourdomain.com @127.0.0.1</code></td></tr>

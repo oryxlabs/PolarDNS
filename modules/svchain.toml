@@ -27,4 +27,25 @@ code = '''
               log("SVCB %s" % (new_domain_name))
               send_buf(self, buffer)
               #####################################################################
+           elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("svchain") or req.subdomains_lc[2].startswith("svchain") or req.subdomains_lc[3].startswith("svchain")):
+              # Send incremented SVCB alias (RFC 9460) for any domain name with attribute leaves (domains
+              # prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.svchain...'
+              new_domain_name = increment_chain(req.full_domain)
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              # SVCB alias record
+              bindom = convDom2Bin(new_domain_name)
+              data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
+              buffer += convDom2Bin(req.full_domain) + getTypeBin("SVCB") + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += struct.pack(">H", data_len)    ## Data length
+              buffer += struct.pack(">H", 0)           ## SvcPriority (0 means alias mode - RFC 9460)
+              buffer += bindom                         ## TargetName
+              # log and send
+              log("SVCB %s" % (new_domain_name))
+              send_buf(self, buffer)
+              #####################################################################
 '''

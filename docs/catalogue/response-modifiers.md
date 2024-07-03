@@ -1,5 +1,6 @@
 # PolarDNS catalogue - Response modifiers
 1. [General features](general-features.md)
+1. [Aliases, loops and chains](aliases-loops-and-chains.md)
 1. [Response modifiers](response-modifiers.md)
 	- [Set random transaction ID (newid)](#set-random-transaction-id-newid)
 	- [Set truncated flag - force TCP mode (tc)](#set-truncated-flag---force-tcp-mode-tc)
@@ -351,9 +352,9 @@ always.adrr50.yourdomain.com. 60 IN	A	2.3.4.5
 Generate various illegal and malformed domain names based on the selected variant and size. This generator was primarily created for alias features (such as alias, cnalias, dnalias, etc.) to provide a unified mechanism for generating malformed domain names.
 
 <table>
-<tr><td>format:</td><td>anything.nfz&lt;VARIANT-0-40>.&lt;SIZE>.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>VARIANT produces the following responses:<br><table> <tr><td>0</td><td colspan="2">NULL byte(s)</td></tr> <tr><td>1</td><td colspan="2">the &lt;ROOT> domain</td></tr> <tr><td>2</td><td colspan="2">random byte(s)</td></tr> <tr><td>3</td><td colspan="2">random byte(s) (repeated)</td></tr> <tr><td>4</td><td colspan="2">incremental byte(s), from 0 to 255</td></tr> <tr><td>5</td><td colspan="2">incremental byte(s), from 0 to 255 (repeated)</td></tr> <tr><td>6</td><td colspan="2">subdomain(s), made of 63 random bytes</td></tr> <tr><td>7</td><td colspan="2">subdomain(s), made of 63 random printable characters</td></tr> <tr><td>8</td><td colspan="2">subdomain(s), made of 63 random letters and numbers</td></tr> <tr><td>9</td><td colspan="2">subdomain(s), made of 1 random byte</td></tr> <tr><td>10</td><td colspan="2">subdomain(s), made of 1 printable character</td></tr> <tr><td>11</td><td colspan="2">subdomain(s), made of 1 letter or a number</td></tr> <tr><td>12</td><td colspan="2">subdomain(s), made of 1 incremental byte from 0 to 255</td></tr> <tr><td>13</td><td colspan="2">subdomain(s), made of 1 incremental byte from 0 to 255 (repeated)</td></tr> <tr><td>14</td><td colspan="2">always123456.&lt;NULL byte(s)>.yourdomain.com</td></tr> <tr><td>15</td><td colspan="2">always123456.&lt;random byte(s)>.yourdomain.com</td></tr> <tr><td>16</td><td colspan="2">always123456.&lt;random byte(s)>.yourdomain.com (repeated)</td></tr> <tr><td>17</td><td colspan="2">always123456.&lt;incremental byte(s) from 0 to 255>.yourdomain.com</td></tr> <tr><td>18</td><td colspan="2">always123456.&lt;incremental byte(s) from 0 to 255>.yourdomain.com (repeated)</td></tr> <tr><td>19</td><td colspan="2">always123456.&lt;random 1 byte long subdomain(s)>.yourdomain.com</td></tr> <tr><td>20</td><td colspan="2">always123456.&lt;random 1 byte long subdomain(s) made of a printable character>.yourdomain.com</td></tr> <tr><td>21</td><td colspan="2">always123456.&lt;random 1 byte long subdomain(s) made of a letter or a number>.yourdomain.com</td></tr> <tr><td>22</td><td colspan="2">always123456.&lt;incremental 1 byte long subdomain(s), from 0 to 255>.yourdomain.com</td></tr> <tr><td>23</td><td colspan="2">always123456.&lt;incremental 1 byte long subdomain(s), from 0 to 255>.yourdomain.com (repeated)</td></tr> <tr><td>24</td><td colspan="2">&lt;NULL byte(s)>always123456.yourdomain.com</td></tr> <tr><td>25</td><td colspan="2">&lt;random byte(s)>always123456.yourdomain.com</td></tr> <tr><td>26</td><td colspan="2">&lt;random byte(s)>always123456.yourdomain.com (repeated)</td></tr> <tr><td>27</td><td colspan="2">&lt;incremental byte(s), from 0 to 255>always123456.yourdomain.com</td></tr> <tr><td>28</td><td colspan="2">&lt;incremental byte(s), from 0 to 255>always123456.yourdomain.com (repeated)</td></tr> <tr><td>29</td><td colspan="2">always123456.yourdomain.com&lt;NULL byte(s)></td></tr> <tr><td>30</td><td colspan="2">always123456.yourdomain.com&lt;random byte(s)></td></tr> <tr><td>31</td><td colspan="2">always123456.yourdomain.com&lt;random byte(s)> (repeated)</td></tr> <tr><td>32</td><td colspan="2">always123456.yourdomain.com&lt;incremental byte(s) from 0 to 255></td></tr> <tr><td>33</td><td colspan="2">always123456.yourdomain.com&lt;incremental byte(s) from 0 to 255> (repeated)</td></tr> <tr><td>34</td><td colspan="2">http://always123456.yourdomain.com/</td></tr> <tr><td>35</td><td colspan="2">http://always123456.yourdomain.com:80/</td></tr> <tr><td>36</td><td colspan="2">https://always123456.yourdomain.com/</td></tr> <tr><td>37</td><td colspan="2">https://always123456.yourdomain.com:443/</td></tr> <tr><td>38</td><td colspan="2">always123456.yourdomain.com:80</td></tr> <tr><td>39</td><td colspan="2">always123456.yourdomain.com:443</td></tr> <tr><td>40</td><td>1.2.3.4</td><td>DNS name notation</td></tr> <tr><td>41</td><td>1.2.3.4:80</td><td>DNS name notation</td></tr> <tr><td>42</td><td>1\.2\.3\.4</td><td>DNS name notation (using a single label with actual dot symbols)</td></tr> <tr><td>43</td><td>1\.2\.3\.4:80</td><td>DNS name notation (using a single label with actual dot symbols)</td></tr> <tr><td>44</td><td>192.0.2.1</td><td>DNS name notation (our own IP address)</td></tr> <tr><td>45</td><td>192.0.2.1:80</td><td>DNS name notation (our own IP address)</td></tr> </table></td></tr>
-<tr><td>remark:</td><td>The <a href="http://www.tcpipguide.com/free/t_DNSNameNotationandMessageCompressionTechnique.htm"><strong>DNS name notation</strong></a> is a format used for hostnames and domain names, not IP addresses</td></tr>
+<tr><td>format:</td><td>something.nfz&lt;VARIANT-0-49>.&lt;SIZE>.yourdomain.com<br>alias.&lt;HOWMANY>.nfz&lt;VARIANT-0-49>.&lt;SIZE>.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>VARIANT produces the following responses:<br><table> <tr><td>0</td><td colspan="2">NULL byte(s)</td></tr> <tr><td>1</td><td colspan="2">the &lt;ROOT> domain</td></tr> <tr><td>2</td><td colspan="2">random printable character(s)</td></tr> <tr><td>3</td><td colspan="2">random printable character(s) (repeated)</td></tr> <tr><td>4</td><td colspan="2">random byte(s)</td></tr> <tr><td>5</td><td colspan="2">random byte(s) (repeated)</td></tr> <tr><td>6</td><td colspan="2">incremental byte(s), from 0 to 255</td></tr> <tr><td>7</td><td colspan="2">incremental byte(s), from 0 to 255 (repeated)</td></tr> <tr><td>8</td><td colspan="2">subdomain(s), made of 63 random bytes</td></tr> <tr><td>9</td><td colspan="2">subdomain(s), made of 63 random printable characters</td></tr> <tr><td>10</td><td colspan="2">subdomain(s), made of 63 random letters and numbers</td></tr> <tr><td>11</td><td colspan="2">subdomain(s), made of 1 random byte</td></tr> <tr><td>12</td><td colspan="2">subdomain(s), made of 1 random printable character</td></tr> <tr><td>13</td><td colspan="2">subdomain(s), made of 1 random letter or a number</td></tr> <tr><td>14</td><td colspan="2">subdomain(s), made of 1 incremental byte from 0 to 255</td></tr> <tr><td>15</td><td colspan="2">subdomain(s), made of 1 incremental byte from 0 to 255 (repeated)</td></tr> <tr><td>16</td><td colspan="2">nonres######.yourdomain.com</td></tr> <tr><td>17</td><td colspan="2">always######.yourdomain.com</td></tr> <tr><td>18</td><td colspan="2">always######.&lt;NULL byte(s)>.yourdomain.com</td></tr> <tr><td>19</td><td colspan="2">always######.&lt;random byte(s)>.yourdomain.com</td></tr> <tr><td>20</td><td colspan="2">always######.&lt;random byte(s)>.yourdomain.com (repeated)</td></tr> <tr><td>21</td><td colspan="2">always######.&lt;incremental byte(s) from 0 to 255>.yourdomain.com</td></tr> <tr><td>22</td><td colspan="2">always######.&lt;incremental byte(s) from 0 to 255>.yourdomain.com (repeated)</td></tr> <tr><td>23</td><td colspan="2">always######.&lt;random 1 byte long subdomain(s)>.yourdomain.com</td></tr> <tr><td>24</td><td colspan="2">always######.&lt;random 1 byte long subdomain(s) made of a printable character>.yourdomain.com</td></tr> <tr><td>25</td><td colspan="2">always######.&lt;random 1 byte long subdomain(s) made of a letter or a number>.yourdomain.com</td></tr> <tr><td>26</td><td colspan="2">always######.&lt;incremental 1 byte long subdomain(s), from 0 to 255>.yourdomain.com</td></tr> <tr><td>27</td><td colspan="2">always######.&lt;incremental 1 byte long subdomain(s), from 0 to 255>.yourdomain.com (repeated)</td></tr> <tr><td>28</td><td colspan="2">&lt;NULL byte(s)>always######.yourdomain.com</td></tr> <tr><td>29</td><td colspan="2">&lt;random byte(s)>always######.yourdomain.com</td></tr> <tr><td>30</td><td colspan="2">&lt;random byte(s)>always######.yourdomain.com (repeated)</td></tr> <tr><td>31</td><td colspan="2">&lt;incremental byte(s), from 0 to 255>always######.yourdomain.com</td></tr> <tr><td>32</td><td colspan="2">&lt;incremental byte(s), from 0 to 255>always######.yourdomain.com (repeated)</td></tr> <tr><td>33</td><td colspan="2">always######.yourdomain.com&lt;NULL byte(s)></td></tr> <tr><td>34</td><td colspan="2">always######.yourdomain.com&lt;random byte(s)></td></tr> <tr><td>35</td><td colspan="2">always######.yourdomain.com&lt;random byte(s)> (repeated)</td></tr> <tr><td>36</td><td colspan="2">always######.yourdomain.com&lt;incremental byte(s) from 0 to 255></td></tr> <tr><td>37</td><td colspan="2">always######.yourdomain.com&lt;incremental byte(s) from 0 to 255> (repeated)</td></tr> <tr><td>38</td><td colspan="2">always######.yourdomain.com:80</td></tr> <tr><td>39</td><td colspan="2">always######.yourdomain.com:443</td></tr> <tr><td>40</td><td colspan="2">http://always######.yourdomain.com/</td></tr> <tr><td>41</td><td colspan="2">http://always######.yourdomain.com:80/</td></tr> <tr><td>42</td><td colspan="2">https://always######.yourdomain.com/</td></tr> <tr><td>43</td><td colspan="2">https://always######.yourdomain.com:443/</td></tr> <tr><td>44</td><td>1.2.3.4</td><td>DNS name notation</td></tr> <tr><td>45</td><td>1.2.3.4:80</td><td>DNS name notation</td></tr> <tr><td>46</td><td>1\.2\.3\.4</td><td>DNS name notation (using a single label with actual dot symbols)</td></tr> <tr><td>47</td><td>1\.2\.3\.4:80</td><td>DNS name notation (using a single label with actual dot symbols)</td></tr> <tr><td>48</td><td>196.0.2.1</td><td>DNS name notation (our own IP address)</td></tr> <tr><td>49</td><td>196.0.2.1:80</td><td>DNS name notation (our own IP address)</td></tr> </table></td></tr>
+<tr><td>remark:</td><td>The <a href="http://www.tcpipguide.com/free/t_DNSNameNotationandMessageCompressionTechnique.htm"><strong>DNS name notation</strong></a> is a format used for hostnames and domain names, not IP addresses.</td></tr>
 <tr><td>example:</td><td><code>dig alias.nfz0.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig DNAME alias.10.nfz0.yourdomain.com @127.0.0.1</code></td></tr>
 <tr><td>example:</td><td><code>dig DNAME alias.10.nfz1.yourdomain.com @127.0.0.1</code></td></tr>
@@ -370,7 +371,7 @@ Samples:
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz0.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 60309
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31364
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
@@ -390,7 +391,7 @@ alias.10.nfz0.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 619
 
 -------------------------------------------------------------------------------------------
@@ -399,7 +400,7 @@ alias.10.nfz0.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz1.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 2564
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37625
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
@@ -419,7 +420,7 @@ alias.10.nfz1.10.yourdomain.com. 60 IN	MX	0 .
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 509
 
 -------------------------------------------------------------------------------------------
@@ -428,27 +429,27 @@ alias.10.nfz1.10.yourdomain.com. 60 IN	MX	0 .
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz2.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 52970
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64787
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz2.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 k\020f\142\173\137\144B\204\$.
-alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 \132\165\165\178\239nr\007\195\237.
-alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 \250\128\141S\026\1627?\198\246.
-alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 \023\148'4_}\1903x\213.
-alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 \217\133\129|\(\030\004\152\130\142.
-alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 \189\018t\139\180\130\170\157\156z.
-alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 \205\142\212\169\153\140e\003\241\;.
-alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 \025\127\175\151\152\148\171r\251\239.
-alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 \203[\171Z|\030O\223\180\(.
-alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 \001\@\203\159\249\;\128\144\190\016.
+alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 f9&Q+M\010-\;O.
+alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 VZsCWh?FA0.
+alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 \"1&\)<SZ\;B|.
+alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 8g!NJKR{Qf.
+alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 ti50%\013wdN8.
+alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 jOx~\$yQB:A.
+alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 yjV\012EHloRy.
+alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 ?w:~\011?&Zg\009.
+alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 dhh7d\$uypE.
+alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 #^Gby\012i\@p\032.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 619
 
 -------------------------------------------------------------------------------------------
@@ -457,27 +458,27 @@ alias.10.nfz2.10.yourdomain.com. 60 IN	MX	0 \001\@\203\159\249\;\128\144\190\016
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz3.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7111
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 22147
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz3.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 \145\145\145\145\145\145\145\145\145\145.
-alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 qqqqqqqqqq.
-alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 \242\242\242\242\242\242\242\242\242\242.
-alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 \152\152\152\152\152\152\152\152\152\152.
-alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 \186\186\186\186\186\186\186\186\186\186.
-alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 \245\245\245\245\245\245\245\245\245\245.
-alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 \151\151\151\151\151\151\151\151\151\151.
-alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 <<<<<<<<<<.
-alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 \230\230\230\230\230\230\230\230\230\230.
+alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 ----------.
+alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 %%%%%%%%%%.
+alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 OOOOOOOOOO.
+alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 hhhhhhhhhh.
+alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 UUUUUUUUUU.
+alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 ||||||||||.
+alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 MMMMMMMMMM.
+alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 CCCCCCCCCC.
+alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 }}}}}}}}}}.
+alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 \009\009\009\009\009\009\009\009\009\009.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 619
 
 -------------------------------------------------------------------------------------------
@@ -486,27 +487,27 @@ alias.10.nfz3.10.yourdomain.com. 60 IN	MX	0 \230\230\230\230\230\230\230\230\230
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz4.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 48756
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 58525
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz4.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \000\001\002\003\004\005\006\007\008\009.
-alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \010\011\012\013\014\015\016\017\018\019.
-alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \020\021\022\023\024\025\026\027\028\029.
-alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \030\031\032!\"#\$%&'.
-alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \(\)*+,-\./01.
-alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 23456789:\;.
-alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 <=>?\@ABCDE.
-alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 FGHIJKLMNO.
-alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 PQRSTUVWXY.
-alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 Z[\\]^_`abc.
+alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \245\021\001I\200\186\127\229\137k.
+alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \238\220\172\001\(\233\212\224\001\022.
+alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 {n\129ji\161\018&\"\157.
+alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \140,?\235\228u#\016[\206.
+alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \026\199\000\168\244*\134\216\188\250.
+alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \186MT\205\191GI3nZ.
+alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 B\188\129\"w\145Zn\014\009.
+alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \199c{\012k\159\205Z=9.
+alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \136D\\\214w\230\208\162\208\181.
+alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 \169\156\219\203^\223!R\225\227.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 619
 
 -------------------------------------------------------------------------------------------
@@ -515,86 +516,86 @@ alias.10.nfz4.10.yourdomain.com. 60 IN	MX	0 Z[\\]^_`abc.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz5.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20528
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37964
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz5.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \001\001\001\001\001\001\001\001\001\001.
-alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \002\002\002\002\002\002\002\002\002\002.
-alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \003\003\003\003\003\003\003\003\003\003.
-alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \004\004\004\004\004\004\004\004\004\004.
-alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \005\005\005\005\005\005\005\005\005\005.
-alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \006\006\006\006\006\006\006\006\006\006.
-alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \007\007\007\007\007\007\007\007\007\007.
-alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \008\008\008\008\008\008\008\008\008\008.
-alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \009\009\009\009\009\009\009\009\009\009.
+alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \\\\\\\\\\\\\\\\\\\\.
+alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 dddddddddd.
+alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \022\022\022\022\022\022\022\022\022\022.
+alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \248\248\248\248\248\248\248\248\248\248.
+alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \169\169\169\169\169\169\169\169\169\169.
+alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \160\160\160\160\160\160\160\160\160\160.
+alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 HHHHHHHHHH.
+alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 hhhhhhhhhh.
+alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \032\032\032\032\032\032\032\032\032\032.
+alias.10.nfz5.10.yourdomain.com. 60 IN	MX	0 \130\130\130\130\130\130\130\130\130\130.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 619
 
 -------------------------------------------------------------------------------------------
-# dig MX alias.10.nfz6.3.yourdomain.com @127.0.0.1
+# dig MX alias.10.nfz6.10.yourdomain.com @127.0.0.1
 
-; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz6.3.yourdomain.com @127.0.0.1
+; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz6.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31234
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7548
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-;alias.10.nfz6.3.yourdomain.com.	IN	MX
+;alias.10.nfz6.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz6.3.yourdomain.com.	60 IN	MX	0 \212\024\195\146\153\245\;&6\248\132\160\202\255\159*\225^\221\017cT\143\133\024g\210\229E'\007\157\030L\173sfl\223\164\$M\128\011Y{<\165:\206\020&\135\005\140>}\242\2478M+\160.\159\1638\"\217\215\211L\032\255\2054??\151sD\2214\226\012\167E3\237\022\030W\005\252\224\210]\186\)V\239\013\244\226\032\173j\001\211\1611\011\009\215\152\213\147\032\155A\222\)\217P\245\132\010.\(%\1655\175[N\137\173\027\163\001*h5/|n\004\141\171\005K}H\170-\251\231\239\190\232\228yJ\146\182\133\161\179\144\136\216\157\172\140\169R\133\219\245Z\(\201\136\1723J\157\166\216\220\239.
-alias.10.nfz6.3.yourdomain.com.	60 IN	MX	0 \157\008,MC\166\027L\200\203\012u\026\225L\230\148\"\210\010\240\0245\175\157\182%\218\010\215\248,\206p\165\255x\136*\162\011\214\206\248\001\223\180\230\012\;\@\193\213\219\213\017\)NB\161\216s\232.j\129\136\251\130\186\224h\180\221\146EJ\001\235\010\201t\152\228\215\251\183\151\255\146\009\0169x\200\024jrT&\209\181\154\252\027\215\244\217l\217\235\1524\248\215-\252\141\144\234\012\2459|yi{.f\009\132\181i\176\0105\169\235\181\250\168L\130\173\152\157\168d\2248_>\168WV\226\002M\204S\019\017!l\205\236\163\251\145\143\179,\183\177\182+\220\168P0w\209\176=\201\231h\130\199\164z.
-alias.10.nfz6.3.yourdomain.com.	60 IN	MX	0 \155\144\187\242\253<\217\214a\173\146\024*\013\184DMe\172\232i\006\@\145\197=D\023A\227C\\y\219\141\(\032o6V\206\250\(\211\198U\009\142\022\166y\001\005\222\195\127\239\184\144\243BMP.\1623&\224\;\192V\163\255\170\237\220\157=\183<\254}\226XN\193\221\189\.\189\255\160u\239z\022+C27r\020\1788\162PQ\184\142\247\230sT\;\213\022\013\239\1819b\021\255\032|5\202.\023~\0196\004\211\173\247\146\165\224\243\155\182NAQ\241\183q\011J\151\214\1721\129\.\198\156\229pDd\)o\011+\242!e\245\163\208\145\219Z\214\181]\019\@r6\206\007p\163\212q\230\220\207.
-alias.10.nfz6.3.yourdomain.com.	60 IN	MX	0 =\190rh\191\003\014\129\248\\O{]tG\210\167^D\003U\\\246\231\024_\193qR\134B\244C\226\171\152QV\019!\015\007\147H\007u\170\213|c2\169\162\013\239\1900K\240\226\225\239\150.z\009JL`\191\212\238\132\148\239R\165VPSjU\014\212,\030\158\156\147\246\169\129\248|TB\155\031\203\197\008\209\017\188w\009\1323\127\145\132\164\195N\1763\004\171\205\0326\237\.\189?o\024.J\135\2338\183\225\246\197\@\178\2337~\151s\224%D8\223\241\234\142\219\172\247\002\1348\030P\205\234\$\019\012\027\154\222`\149\129\221\222n\234\189\204cY\002\222\128\012\161u\148v\183\179\2406P.
-alias.10.nfz6.3.yourdomain.com.	60 IN	MX	0 5\194\026\132=\210O\189\183\230#\030\239GB\\\183\226\139\141\131\252m|\233\253\165\218\199k\229xp\164\178I\1278\246\212\225+\247\226\030\193L40\226\016\152\248W\164\016\239#\013\150\133\226G.t\2128\152\1557\131\215\175\2449\196\178\254b\252\207\2240\132Y\214\144E\192\220\.\017\185\248\167N\006\220\222\193%\194\222\198+\140A\003\181'r\022#\011\238gjl\006\023/Z\213\185l2Q.\250/gy\1994\161\146\2040\183=ij\0227\142\171\231\143\231\207/?\012`^\014\160\128S\195\010c\167\163T\177\000o\243\230\244\242h3,A\"\230\031F\229\019\137\031\230>\173MHE\@.
-alias.10.nfz6.3.yourdomain.com.	60 IN	MX	0 |\127\020\027\166\@`\204\238~A\021\219\233\146\1343\1461\@v\203[\161P\235\144\006\249\198\250y\146\236\$\216\027\254\199\153\159\208}\212\144\016eZ\192\001\180\230\176\170\002\192\2083%\12936N.\247\252W\175\254&\165hu\228L^\212\220\190M\140\.,\027\237\232A\174\024\158\183\252\251\131\207\236>g^?\015\$\197\245\191r\024\251uY?\"4\170\132t\167\224\142?\001W\168\004T3}.\210O\$\020\183\000\189\0184\003\206\220\235\174\137\170\155n\137\149\151\221r\220A\180\018\199\006\156M\012\236\145\192\161\155Z\243Z\011\155*rH\157\142\021\221TO\0264Q\246T\.f\225\228&\142\157.
-alias.10.nfz6.3.yourdomain.com.	60 IN	MX	0 T\222/7K\208o\229\243\142\212\204\232\229\156'\2117A&\175\198\027\017k\234\170\018\001O\019\144\166\182\186\239\006#\212\164\015\005[\222G\157\181\196\003\195\228X\030\184<'\;\1363\015\188|\159.\195Z\.\160\188\010\148|532\027^\236\211\253\136s\171\020\164\240\175\195\244\195'dy\162K\024P\144\211\203l\023\130\167\157T\149,\206U\231\246\179\138\229\012F\166\195\227vY\$\160\170\158\156.\175\204\028Zs\220cj\181[\192\156D6\183K\157\230\2490\205\216\216\148'\170\128\250\(\000\241\160\181\004e\196\018\201\0271\@\151`\157Z\158\017uG\204Aa9\@\211\013\164\219\006m\025\171p.
-alias.10.nfz6.3.yourdomain.com.	60 IN	MX	0 \171m\004\158E\025\222{H\224\140\019i\210\016S4\251`0\138O\(\225<\2123xZ\253\139\002\166\028F{\012\182\225\142\148A\223\223\195\246\136\179\166\129\"\226\231\031\157*\2219\233\206w\022\225.+\@N\142\244\1405\234V\222\030\127\251:\"\005\215\238\208\016\209\224\249`\003\209\202b\254\239d\249\231\138\227n\2500\181\023\009\234\0129\011/\1576\009\245\219E\027\216o\006\152V{\018\179M\149.\255\202\004\220\015P\212\0280T\164z\158L\252%?D\016\167D\020\244\231|\"\152\134a8\244\183Af\200djd\255\023f\012~#4\252\220\;+o\224\201\252#\020mu\159\136\164C\008%.
-alias.10.nfz6.3.yourdomain.com.	60 IN	MX	0 \025W\196A\2319N\176\017c\021\166A\190\239\141\009\152:\206mD\230d7\188BdHVJC\255q\210\208*\241\212\216d_Z\232J\242p\216\009JM\253\161]\170_\239\134=\158!\207|.\030\010\236\176\170NS\162\193{\165\203?\228\234e\191\008U\218v\011m\205\140\010M\242\133M\200\141!\131\139N\218\179e\247YT\176d~\.\217:\239\208eQ`\001\162u5\136\171=\015\"\167.+\227\237\209\218{\155\020F~1\205\153\016\008\032\218Q\196\151\020\168\165\253`\132\188\167\127\217v\158\175\018qQ\208\1493\249kL\180n\141\000\182\146\157\181\001J\197p\003\181\$s\025,\238\006_.
-alias.10.nfz6.3.yourdomain.com.	60 IN	MX	0 \$d?\2501\182\146\134]\017\209\182\(\235\251]\135\005\247\219Q\240\212\156O\022\022\247S\207P\199\240\160%7\014\172\016o\228\005\161\238\143\019\005\015#\019\238818\188fV\241\008\019OZ\229.\017\020\026\031\139#M\015\250\252\133\019\165\171\221V\193<',\233\250\185\154\019\241\018\019s\020\024<\141\225\029\176\017\184!\029<\0042\141~C<\007\004D\013\205-{\028\202\223\242\254\225\152\023\004./\229\154z\174M\199:\012\171_4\214\255\202\237\028\235\196+\248\226\177\032:\158\162O\191\168\163UC\240\(\134/Y\001\237|\148W\251*\200f\180d\172\199[\(F\156}\208\200\142\219\010\134\200.
+alias.10.nfz6.10.yourdomain.com. 60 IN	MX	0 \000\001\002\003\004\005\006\007\008\009.
+alias.10.nfz6.10.yourdomain.com. 60 IN	MX	0 \010\011\012\013\014\015\016\017\018\019.
+alias.10.nfz6.10.yourdomain.com. 60 IN	MX	0 \020\021\022\023\024\025\026\027\028\029.
+alias.10.nfz6.10.yourdomain.com. 60 IN	MX	0 \030\031\032!\"#\$%&'.
+alias.10.nfz6.10.yourdomain.com. 60 IN	MX	0 \(\)*+,-\./01.
+alias.10.nfz6.10.yourdomain.com. 60 IN	MX	0 23456789:\;.
+alias.10.nfz6.10.yourdomain.com. 60 IN	MX	0 <=>?\@ABCDE.
+alias.10.nfz6.10.yourdomain.com. 60 IN	MX	0 FGHIJKLMNO.
+alias.10.nfz6.10.yourdomain.com. 60 IN	MX	0 PQRSTUVWXY.
+alias.10.nfz6.10.yourdomain.com. 60 IN	MX	0 Z[\\]^_`abc.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 2418
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 619
 
 -------------------------------------------------------------------------------------------
-# dig MX alias.10.nfz7.3.yourdomain.com @127.0.0.1
+# dig MX alias.10.nfz7.10.yourdomain.com @127.0.0.1
 
-; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz7.3.yourdomain.com @127.0.0.1
+; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz7.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 23781
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 35050
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-;alias.10.nfz7.3.yourdomain.com.	IN	MX
+;alias.10.nfz7.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz7.3.yourdomain.com.	60 IN	MX	0 vhNzM1%Ab\;'\(Am\(RiOmNY6v%t6U\$\009qm>NH+\)Ks\)0#]Biz{\\[\013&u\013pE*9=^.QMfy.`{k{T8N.|#KXHUq/\)=kx\(z*Y0vN5}^SL~~Y^`<%Gl\(`[\\6`\;=j|GYR[5g3Sds=J.\;I'GbMe1#eV\012'lieT#^TU19\(|evr6!tqYfV\032:6Z9y+8'G=}J[|{[%vYmr5n7rMJ.
-alias.10.nfz7.3.yourdomain.com.	60 IN	MX	0 zh/z2U-ULT4XVo[xX}\"zZYlqg|RWxE^IL#<\010-c>?VM\013\032_*!Tai\"v_EFI\)d|\$n\009k.,iCfU`-OX%/RU\012gP0VXjf+b,Cb!fwXF\(U71`n\012d1=&%.aUM+\011FKnsm!J.7\\?\)s*.rOi1uc5PEycYx00%C7x-G*\009XvxnQ1Lb^pwj3Bd0_rQY\$XM^LpuTG0!E|ou\013c!\\A.
-alias.10.nfz7.3.yourdomain.com.	60 IN	MX	0 \(g{\\GwSpnvw\011tk\010m\('N7A'!\013FxzjYi[f}]%YUo3,T+1`\012-/n^\(,zOLZV\$~=v3V7.]'\009GIIf\012\;|W5j1>YDH\"guuY\@oX\)Pp\011RdvC\010A.9,P<~~eb\0138%q1p>!\032OSx'Fkj`\(.gSUWU\010sINF-A7chf&E-Q\009xNs_dRb/t\0123yG{O:AG]f+H\013kZ6!OWA<\012oWxd60Gv4>.
-alias.10.nfz7.3.yourdomain.com.	60 IN	MX	0 >XxiD_M`>\)GHjA\012//K=PC\009\$:2}KUd`Qq6!VRl9`%\011\"\(V\011\\4S*Wqw3IS+K\)\\seV2.rk#\012HIT~xOef=do|HKoqm\)cxXK\@-&-l87v8GR<VmK9\;#}oLEuTd/\@\032_S7r8:M\$b.<uNWKyDvJ=v'\\*bdS:|D\032GqhtQvR6\(&\\JmBf6^v*!E\012q\)6ylV\012h\@6Jv~]c0/CO\010.
-alias.10.nfz7.3.yourdomain.com.	60 IN	MX	0 pR\032/5y]d+\010d\011__UJ8\013\012\;+/\032b[m9y\010rfL^?<dlWV,LN>\011\009q\\\(>FP2~s\$dY\013plOQA.o\010|lD\"p%}w]a!Nmiw9\013w<O\011Rw\013]65\010Q}*jikUkhiCr0h2jWhZ\@R7Du8\013QTZ*wO0.n>\"\009GNZygl\$:\(?^LA\0090+cN>K\013/>?A\011|y[\$\;r0\0131Ex\010OuqFvdtBe\013ev9`52jF\;]6.
-alias.10.nfz7.3.yourdomain.com.	60 IN	MX	0 6U.:ED=\012^'~=?C{W*L`\032?xVsq\012]^q.\$\$Q9h=-?n>\032G!\@U\013.87\009fU?ErP?V<\@K\;,.=\032OkP&1\)-\(XP~-|_J\(Hpr\032DArK9+\032fT{\032[W\\\)|}B'78I}Gzu*'5.9\;MZHm\032*\)x\;.fJ`2\032\032I\)U\$st5\012\$\"Zg[[SFj'[\;#\"*HlLLJvL\;ga-Tg`{\;I%wyj^H}\010+_>1Aj,lm.
-alias.10.nfz7.3.yourdomain.com.	60 IN	MX	0 U\010\009w\">:Pke].to7cQn7y~Vn\":0M7_PYU3m!ka^0!F'{%dp\$eF\$_-g>4Ckeg\@_jf.HK\009wePnphFRU~9E,%oOY[\012LAz/A\032sWBKkmLKCIj'^M+DPk_0699OEu&l^k\011.\0120~.%3sv\\A+qcizLZ^DL*\$:8]^cCI0%1M\;nv\$wr2vAjV:6Qd-\032?U}aMkK9T>j/`SLXv.
-alias.10.nfz7.3.yourdomain.com.	60 IN	MX	0 ^\@u##\@6\"u'h.~+|T/yM\)Wx<TXoOGyd6ja:8UwLAq\).'O8CdyF2<\011]d'#dB\011?4aT.\0124\\&F\032B\013EZb2]+\"C\010Da\(d3\@!T,KC1\011\012m&:7'gx[d]i/d\012?{O\\e*\@\(jHFu\$\011?mbT.Bci=6fTk\009o0vbnNtHXv#6}\)`U+a<J3}GY`PV6znJfRs!JZ6yNI,q0V\009_\\3+[\009[:.
-alias.10.nfz7.3.yourdomain.com.	60 IN	MX	0 Un\032yg-Q\0115I<\;:{Lg&9C&^cJ\$TvWZZb38OQw.&iLt\@\;fM=F,>6QPhdtJnG{\$5miy.]I:/8ufO=!KW.b1pNTHC%L}3>cT2}~I#}w\(h<0:z?8\;\".\\#a\)S\009yQD40QOu%\013FV.^Q}B-3GFwn!\010YdJw!\@jam-c*l\010IZ\013!{wj\;[L\009E\032}fc|k~\013NzV^vM-kTMS*[{TwO.
-alias.10.nfz7.3.yourdomain.com.	60 IN	MX	0 CL{_bHQ5a~N_Q\)NIi_j6y:L6q=SCB+#McKd\)YtE\012SnG\013vQDk.Od|LR^t{[+p{o\009.\)7i6-b/eE^_diT\011\010^\032S9Us+\032ti{?D\\L[^\)AHQ[Oa.KM=\011\032v2++WpKetK7O0^^\;b.1~MG+[1Qq\012tR8]\010%}s+\032r%qIcl2{\"oU,r0'*<0<6RIl\011SWt!}:z_}>\\b\011hnB\;|/.
+alias.10.nfz7.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz7.10.yourdomain.com. 60 IN	MX	0 \001\001\001\001\001\001\001\001\001\001.
+alias.10.nfz7.10.yourdomain.com. 60 IN	MX	0 \002\002\002\002\002\002\002\002\002\002.
+alias.10.nfz7.10.yourdomain.com. 60 IN	MX	0 \003\003\003\003\003\003\003\003\003\003.
+alias.10.nfz7.10.yourdomain.com. 60 IN	MX	0 \004\004\004\004\004\004\004\004\004\004.
+alias.10.nfz7.10.yourdomain.com. 60 IN	MX	0 \005\005\005\005\005\005\005\005\005\005.
+alias.10.nfz7.10.yourdomain.com. 60 IN	MX	0 \006\006\006\006\006\006\006\006\006\006.
+alias.10.nfz7.10.yourdomain.com. 60 IN	MX	0 \007\007\007\007\007\007\007\007\007\007.
+alias.10.nfz7.10.yourdomain.com. 60 IN	MX	0 \008\008\008\008\008\008\008\008\008\008.
+alias.10.nfz7.10.yourdomain.com. 60 IN	MX	0 \009\009\009\009\009\009\009\009\009\009.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 2418
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 619
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz8.3.yourdomain.com @127.0.0.1
@@ -602,86 +603,86 @@ alias.10.nfz7.3.yourdomain.com.	60 IN	MX	0 CL{_bHQ5a~N_Q\)NIi_j6y:L6q=SCB+#McKd\
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz8.3.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 50899
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 42966
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz8.3.yourdomain.com.	IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 g6ribd2hn4gdygrh3wpneakah7sg74z52jn3yovcm1lsqml5up9evu6x3zgh9mj.2mr67amnw8tj4618yfdoe5i6bwia5v99btyeeyqzcje3ysgb2sdj7uwu4yvusst.ul96gfhmoy6j7ml4ddmuurgbm3mce0z7zrgqomjz74goq2uhzicuzoubm5b9uad.
-alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 5x04z8ntdktfuktg6vnv8te7l039vnc18aokm3l430ccd2slckg7g3kl2ww4ktq.c0wt4iyl4ukcqf7kw9ufldd3num3xdaeg58twntm6x7jos2pc823wl3b1lhslkc.5m87gyfwbtdgkv80eni6gg6220zxhxozmm2zlkzdegkp4b04rx0gayd1302nebf.
-alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 cwhlj7otp06f1f5byy21r860dk8evtpoyc0c16xzmag87en8cwadipa033ayxbo.xe8a26f6t0kvc9k8g44jujwezrbsseelbgpukdbfwosx8q1056y54vserljlcik.ztbrbnutrc6pid3hq3yyzhr7iaquegk2hj6778mtdtr07rqt6av35t1qgkipe1r.
-alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 ib5ajsy6ld5pjxex6bunru0xizmuxjlpot24wpv8dmknc1h36esfq392bsgzvti.0zea2d3vn9v67fcs858ace2mfua5zet8sug6lv19ubj1sor2jpee1wmj2jm41tl.d5ale6x2ob1ncdt9i2ota58a4blvangtfv7el29e5x2j88awr30jcoazx24t55f.
-alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 csyrq0rrao7brgdnk13w1jhg5xeoq5a72tqvlvggdmigws4frozzzteag4sx4ri.z1ymj5b90gkiemsikq3ffbfja4kel7trbhg851flhnuz153303hmnijennitk83.fa0e5hxl73iuw3pd8zevomk4ifcrt7wzounaft6turubjvnvm3oks6hx03wl30l.
-alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 oghzrsyzoeaucvqeonk5m3op728zwo43uourb5k1uilr0rgot4g2hm24drg31ep.it75jjiskh4ud89nb5olj8semmchcjewjanpt2tdq1zlln6a0l55agci2ftb8o7.gfcjk44lh5jn8cnqo4z4w0apa6wateyiyyrvg7i86x0d7ujcnk1o7ebta27225x.
-alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 qlqqt7m9odgjqwvavgbmma42uegvndmpcz861m60v3t0ino0gsvejix3r5lpd9x.153z8s2cl20v60dl5402hy1gbnvwasfgbhna5219d344w37w2lkpl28gx8hki2h.1sn8x5kowkdculuf7f5bgjdm8x1mdiuec9zgvd1vwz77jc6dyq5oow4qqdf6y0b.
-alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 zyey4sjekgsftnvjwnqi2ugadx0nlzifg5zdohoa6ruk4avtrqimx6rkiimdj2o.ugzbf2d4txfw9w7e8obl3im7tpm1gcmdjfkk1au8cztwjt54drkrzlao9qcowhy.m3gif6dcpwhetndnsfseoxwaiqpdoask8d3ta49le1e5zwhpk2cq5t72hlzr302.
-alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 hv1zlcd8igw255o2bnvttlq8twdnjxcdqnlqvufhteiz5wl4yvqugtokfb5r1jm.n7upcinsbgrnft4iic8iqmqu1gbrssz6834jsp9r0wi7mwv8wcz5x11mr5qz4x0.9kpf51k9klpwph0unv0muj9b8w4w3fbcg9tz10ftkgihlncm5njl5fbapmung70.
-alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 7obf77u9umutmduc4m1zf4q9bha7ixmw85otszseo6a96zfbqlhrf3he13mphxi.g3yvlw47p9shdd9tw94vr8ahqu4g9dnc8rirv3rpcyaehyzk4dzl2xv2gai0mwp.55ecx2qd5toclh0ipk1r2d2gxqg09uh5lochbiud5czfy07c7gqjzdsd1ksi826.
+alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 \181Y^\031\162~\220\005\207_\239\177\241d\140f\242\150\248\231\137\159\023\@\137\161\016\215\129!\252\031\210\162hb\029\230\170\023\013\018\190\148\011\217\184\013-\003W|\"^x}I\191^\001\218\201\127.\200\223\191\240F\157\169\243\011W\021\017\204Da:4F\007\028\209\213\135\242}e\229D\200U2\2238\175v\172\024\219\246\166\235\2453B\.\148L\170Nx\130X\190XD\164\195\179\139\158?\245\164.\149\247\003k\024A\176c\135c\212<s\177m\246\230f\217tr\029\196\130L\241\161\239\022\251\227\007\188\156\)\030\237\243\229\152A\223\211\136\2131m\149J\232\165u\196\015\175\140\191\177\181\.\163\2296.
+alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 5\130\(6\182]\227\159\234\161\008\219\214\031\170?\144\189\009\160\194\195\231\127A\015\172\220\215\168\005\192\139\254\004\158W\010\025\227\205\255F\161\150\245\147\200\222\184TC?s\211>\139\202\009\236b\239\003.D\\=\196\004\216\150\170f\184\)\\\136]\159r3\205\172o\185P\192\0034\031\222*\$\244`\0312\007\237\$2\212S\201\130\214e\1615\023\241\188S\2469w\210Q\143\183\244{ec\187e\232.\164zV\026\(s\168Y\128\185\205\003/\152E}\208,\222%\225KD\225\138\133\127t_sk\143c\019\182x\132\181\026\184\254\249\206\228C\153*\015Im\025\221\161\144D\187<\205\004\154{\188`.
+alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 #\252\233\155Z\1468\017\149\.\172\245\148[\001\255\242n\000\206bB\143b\136\213\153\153\175\017\002\011\233^\1756\169\209q*\147\151X\003d\134j<\013\207\002\195A\014\168\176\251^\149\255\240\216>.p>a}\162\185\215\.\226\248\213[\197\161W\017\218\014L\194\221\237\021_\131%\185\157:\237\233\020\241\252\252/u\205:B\016\015\031\017\)\2426\161>\@Rp\194w!\187\135t4\149L\133\168.\162\181N\237\133b&\225\025\202\187<\156l\170\020\141\166\002\246Q0\127\019\246\1748\$\176R\011\127_\231\1644\182m\129\014\012ZQ=\019nI\221\173\174M\141\162P\234\253l\245\233\171\167\175\183.
+alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 \232\251\"\177\026\211\208\190\030+\244\135\143\196\151H\1598~K,\182\229\200``\029\027\179\179p\195\217\009\137#\017\218I\030a\155\158,\145CMg\174\\\133b\233\209\135T\000\030\205\148\014\198\224.O\231-]CG-\206\138\180\185\016\012\012\175\175\141\202\191\(\133-,\229\212\178^2\220\019\248%\010\130u\188\223%\225I\148\165\\\207\131\140\191M\161X\252f\236\238\.\172y\187\219\201\221\024\205.\196o6\008\134\226\@\1658\008T\225>\171\236^\210bg\156\223\2328\202M\017\"\197\192P{|\004\242\017\154\189\213\166\233\180/Nm\008\150\162\203\240\127\130\212\238\224\009|\203\2342\151F\012\".
+alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 \216\011\242\201\003\234\243\131\155\131!\165\145\229\137\159\140Y\134\207Ba\232\222A\175\180\$1\012\183\192\199\169\132\203\224\196\182\012\001\199\139#\181\208\136m\165\224\008\238j9\174M\222\140B\183\013\246\173.h4oLa\219\245\249*J\002\237[EJ\154#\232<\209\004\174^\188\247\138\)\218\"\229J\130I\228\208\148\235\174h\(\139\147\206\167\148H\018\185\216B:\028\0151+p\028\128\220\208\026\195\012.\011\017\194`\153\2534V\010\008\001\253>\199\198\207\183\007\214\168\162\162\188z\157x\166\173\127\008\031\000\209\206\175\235\160\001\217\177\243\137\129\141\2153\192\243\219g+VA`\142X\246\214pi\018R\137.
+alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 \031\198\174\137z\208W\;\129\148\025\028\241\024B\239\178\180\227\199\242\209!\001\164\202\203\1752\170\127=\170\224|e\"Y\005\208\229\174\232\015\157\004S\008Z'\249\171\214\179\127\)\163\006\145S\229\(\032.\204\@\180&R\215y\230-<[r\156\002\187\248b1\232w\138\128\212\139\185\191e\184\019\129vcDV\165He5ZOJd\247\170\145B\175,\219U\229h\142\202*\147i\246\.\179\235\155\207.\164\229a\209\205\006\010Y\204\135,K\174h3\(\166\032\1514\007\220m\130\030\$\243r\183\228\163\196J\200\177\222,\137\021\242\014\@p}g\007n\197g\228=\242\198J\191\178\128I\214\235\216\186\024.
+alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 R}\028\155se\228\130\211'\018s\142\003\249\021\222\"\245\254G/S\174\163&\195\190\022\018O\002\188\186\027\157\142\134\133\226\173\252\182{P\165\)\157\168Gaqf\189\233\205\199\190\237\168C\144\238.\159\247\178:\215\134?L\245\2102\1444\024KA\009?\205W\\],\023kc\143z\245e\176X\019Q\192'S\190\134\252b\189\243\157\$\209\251[\174\158\187HU\000\\\255\218\215\1553\246\221P.\235\000\022\250\221I\136\255I\188\129\158\128m\154\139\032\029\144%Cx\128\243\016o?\2424\222C`_\243_\173i\018\236\014\213\)\248\223\249\233\168\174#\180\237\@\253\151N\229\172\148\22199\156Q.
+alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 \224/[\$\143U\129r\197\137\012\132\154\023\008U\027\"\\\220\239w\028NWF\235\239\004'J\224\009W\229\142\130\185\144\022G\207\245\153\2046\205\218\242U2\139\222\223\014\025\182V\010#\202{\157.j\132\207\238dH\144iS\201>\198k\209\.WR\026\140\147\134i\(\221\164\131\232g\241\0272U\0034\243rh\032\022\030&\159\189W=\0137\193\1277\246\243wB\171\1609\178\186\002f\248\200.\222X\219y\255k\232\$P\026\199R\180\130G&\003\253\142\215\198\210\219C|Y\160\016\164\2338\193_Zy\$\232\214\\\187\175o\197\211\230\254\172o}\235\132\138n~\154E\019\236\145\230#\198s.
+alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 H\173\$\021\216\0198\255\229r\129BE\137J\144J\185`\201\165\240O\238\240\204\;\130\027D0Z\229X\133\144<3\165\003\144\"C\028\032\230\162A\205\247\208]|cS\142\151\012C\173^\176T.\175\249,_\175\018pk\150\;\030*\018\134\240&/\215\216\026\137c\1335\202\163\016y\2180\201\242\189`\238\220:\131\138j\127~\032\252\014\240\238\008\175\131k\029\233\222\246\019e\217\196|\021\244\147.\151\161\246GP\$}\016\211\228\249i\255\028+y\169KG\202\231Y=\194\203\170y\254\004\194\241\201\147\242-\026\179x\190\004/\1869\030\228\208\2310jj\163\242\150g\175\217\158\154\149\012}\127\254.
+alias.10.nfz8.3.yourdomain.com.	60 IN	MX	0 \)N\223\199\217Po\1323o\029\031:\1334i\009\191NzW~\180Tk\153\191\211\160\145\022\"\1646\134\187\152s\2312Z\016\005\163\183\137\248\006\236\030wW\189\179\165*\211J\212\139\023V\193.\013\1468\1600\206\030a\010<P\009\009|\235k\213\168\024pC\136\158\220>#\172\024_3>\211\178\134\190x\179j\216\@S+EeF\193t\154\127P\192\029\170Hd|=/\207Q\243\239\130.\001*b\193\167~\131Q\211\136\249\019\026?\1541c\136\166LH\242,\023\004\156\192\191\001B\137\189\025\212\197\"\194v\024%\247\197\189\227\164\160\026\196\023\021\191}\235\236g\161\181\218\018\253\191\196\214.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 2418
 
 -------------------------------------------------------------------------------------------
-# dig MX alias.10.nfz9.10.yourdomain.com @127.0.0.1
+# dig MX alias.10.nfz9.3.yourdomain.com @127.0.0.1
 
-; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz9.10.yourdomain.com @127.0.0.1
+; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz9.3.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21004
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 59160
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-;alias.10.nfz9.10.yourdomain.com. IN	MX
+;alias.10.nfz9.3.yourdomain.com.	IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz9.10.yourdomain.com. 60 IN	MX	0 \164.O.\010.\163.\018.y.\254.\021.&.\206.
-alias.10.nfz9.10.yourdomain.com. 60 IN	MX	0 \144.n.D.I.\174.c.#.\196.\182.3.
-alias.10.nfz9.10.yourdomain.com. 60 IN	MX	0 \152.\246.{.\211.\201.\194.V.\(.F.*.
-alias.10.nfz9.10.yourdomain.com. 60 IN	MX	0 \231.3.#.\152.O.\144.\146.\228.\176.\130.
-alias.10.nfz9.10.yourdomain.com. 60 IN	MX	0 V.\020.\139.0.3.H.V.\162.].\185.
-alias.10.nfz9.10.yourdomain.com. 60 IN	MX	0 \247.r.\138.\192.9.q.\197.k.E.\010.
-alias.10.nfz9.10.yourdomain.com. 60 IN	MX	0 \016.\185.~.\212.\210.&.\011.\022.\226.\165.
-alias.10.nfz9.10.yourdomain.com. 60 IN	MX	0 \246.\(.n.Q.\213.\150.\180.\004.\221.\147.
-alias.10.nfz9.10.yourdomain.com. 60 IN	MX	0 \185.\000.\024.\008.K.\201.\144.\248.\251.\203.
-alias.10.nfz9.10.yourdomain.com. 60 IN	MX	0 \247.\032.\001.[.\194.&.i.\169.\228.\\.
+alias.10.nfz9.3.yourdomain.com.	60 IN	MX	0 EhLi{_{Pk\\BD8OtB\;k,\032T5jwiDA\012.?nHzm1o\;6n\009rIz3j\0099m2\032TRk!\\TvRz?rj>.ip[OJG\"b\009d/L1~mQB\;!zc5B\012u#YWOtA+H\032v<-Re\$lrNXjr\"M\$+8L\009\)m/W\011#\0129\010*.KQWr~6q2:\032z4\011:?op[`N7blYGARx\(v_R[9}GNs{_.~#[E\)\013nSVO4k~%.02N6\009.l.
+alias.10.nfz9.3.yourdomain.com.	60 IN	MX	0 BSahBme\$J]O{M=b&\012h5HNb\013x-s^&b\013g`cp4Jlu\)S\\=B+fgW[hEr?VmN\"-^gW&=O.y3u?W5r.\009q8xae\032zAMw1oOu{L!hd'd1\(\032>U~b}N~7r!Sgy_9xm}_M3%K_A.fclg.-WleLZn?|UW\)CXCOmRzNcQBMc}pq^+3~zJI\)\@[r>lU9wvr1MA'#\(dAzFhu.\010S0D.
+alias.10.nfz9.3.yourdomain.com.	60 IN	MX	0 KeN7J]nP_<]ghI6|Hz\013q#M\012Saeie{4f^'Cp\(nh_fA>4\"{%o8W-QhseaUj\"tzaZ=.-s0lc\$GR`&uz<\@JP{\013*hTyq|K0bEE>NUqH4Do6P01L'/\013m\(NYk#tVf#Lv:\011?j\010\013.y\013LVF\;~vj-m.4yaz%7Mq|dh,jO.=D\032>]&W8~7gWTAp5]gH^#]bgQ-/qjpxy'`\@v.
+alias.10.nfz9.3.yourdomain.com.	60 IN	MX	0 T`\\hK>y?]A?T-\@re=\0111~P^G1/\"\009\(WM\".}O9:fGm\009I{g7eL\@\"sUCP6PzA6.fw7\011i.[sGyaPZB}6x\011f5[j8|r\009\":+HK6r75`/3Za^!\013\@y{5n\$r~|{Mw*>SxjN!cOmQW_x.8X1nL[Y!JPJoX\)85\@\;\@2b6feoZNw:B\011\013WCLXg|X9u<u\$u4mV\009hpf7][\010b:hfkz-.
+alias.10.nfz9.3.yourdomain.com.	60 IN	MX	0 2Ah>\(:h\009`}5x'p!{GV/q\"b~=_qF{\\yeYs\0114\)Pdh\"]0\009nV\$OpOu\;'\;T\@3\\\012rJ\010M].jz7E\013R]bR+o\)=eH\(IG+MqlyC\\\011O&5c:Y\009zW7.!^UBCyzZd`\032D!-rELQl&v<bn[~.\@%e=\011\009>nw\"u2\013>O'H8c/y{i`}16\009\010ny&C\"?#A\$+W\@\032t\"t\"J\032\011\013.t,\"1\\|x/2XC#.
+alias.10.nfz9.3.yourdomain.com.	60 IN	MX	0 \009qs!4>0<FRn|PXbI,*<9,8,\\J3\009\011DYO26+J%1j\032ISJ\(}\$[\(O^{[\009uza|-\)\;<:?M.YSV\;2N0\(L\011\$\(B2L\013I\0102L{AG!\010K[CTmK'3|\"jzY4yy3*\0107\032_5jC\009Vr1Dx\011\(RIr=2.&\)\;CtsVqJo+h\032+\013?=uyy<4=TDBjpudoKmt+:+ysP\012\(Xm{#Rfalm7n*\010Bokx\0100m\(.
+alias.10.nfz9.3.yourdomain.com.	60 IN	MX	0 QJerrG4\(ZBk\(GACma%U~FA\;Jmu-UAuA5Yv6EU\(3l|G|beUHVCUwY\;\)l{w\"#\"'5b.hy2\(v3c\;\0090sMB\009\\!NSJd\"m<HAXch\;\\/Xz6[W\013k6`UDbAa7g7w5~}\013K|=Ax\(Yagx.8\@RosQ!\@7S\012iI\;E\$k\$+=~H\032\;\009CSvt3\013}MCw\013qFnp/\)aKUoJD\;#o65G\@|\$I<mX1X.
+alias.10.nfz9.3.yourdomain.com.	60 IN	MX	0 %.C`[IST^\012YIUNWZ=4ND6K\\m#KIS7X92\009QlV.iF04\\[\;`2*?!m8.|U&!lGe}EMc.EM\009Co'\$6tVNsV9F#'n\@.^<ug`TzP\$\(9\;A'~y\012\"\0100-cZPAs+q\"1^\;%\011zw1QuNEa!.yOmz8\",Vw6uQ'E#Wf&#,,mn6CD\0323*`k`'+8fu>QB,'\)9\)ieXgi\\U]-4DMbik\$-p.
+alias.10.nfz9.3.yourdomain.com.	60 IN	MX	0 Ve%MO>\$R\(\\kab}-9hSSl1\0138Ff6^5\$AA1:9%.k|P~=-z\010MOb/D\0116\032\032|+kBtzX\@S3.KP\010<v\010,o?Fl9H7=!\011\"\).G0mijFB\009y\$b1\$x.W\011rQ,q80?Q!lYo-k~^J,\032RtS]O-X.p5-f+MI\\zpk0\)x_*\@72?ce'\(]<|v'Mj'|E?<{y\013-\)V&VP:JZPYM'sPa\012:\;~`9\010d.
+alias.10.nfz9.3.yourdomain.com.	60 IN	MX	0 y%7e\\\(&~cV_4Faa`\@>&\\y\;|<DC[/LG`Rp*XW2teV\)\012\012PV9?B],:b\012!JCoc\\Qt\(:.5b6z\032}\;f3xwcF58n,\@[2+w\$<?|\010bwr'yS6Cd\;\012#K/IFba/V]#O+~hG\@dXr~j\)JJ.\\\032fo9OL&}vv\@sHFo&g}RV<\"7qeX{f=Ltz2|c%w+r\@h_<{IVA'\012]3Z?H5\010TECr{%.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 709
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 2418
 
 -------------------------------------------------------------------------------------------
-# dig MX alias.10.nfz10.10.yourdomain.com @127.0.0.1
+# dig MX alias.10.nfz10.3.yourdomain.com @127.0.0.1
 
-; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz10.10.yourdomain.com @127.0.0.1
+; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz10.3.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 40674
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 56747
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-;alias.10.nfz10.10.yourdomain.com. IN	MX
+;alias.10.nfz10.3.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz10.10.yourdomain.com. 60 IN	MX	0 h.o.Y.%.u.q.&.\@.Y.d.
-alias.10.nfz10.10.yourdomain.com. 60 IN	MX	0 h.^.\032.\".\012.a.\009.4.\011.[.
-alias.10.nfz10.10.yourdomain.com. 60 IN	MX	0 W.r.K.Y.F.y.%.\011.D.f.
-alias.10.nfz10.10.yourdomain.com. 60 IN	MX	0 :.c.O.N.S.^.m.5.\@.v.
-alias.10.nfz10.10.yourdomain.com. 60 IN	MX	0 Z.s.x.#.=.6.w.+.:.P.
-alias.10.nfz10.10.yourdomain.com. 60 IN	MX	0 b.v.&.&.\;.e.Z.G.s.\010.
-alias.10.nfz10.10.yourdomain.com. 60 IN	MX	0 \;.m.h.J.8.O.?.].\;.>.
-alias.10.nfz10.10.yourdomain.com. 60 IN	MX	0 Q.J.t.M.G.O.S.4.b.].
-alias.10.nfz10.10.yourdomain.com. 60 IN	MX	0 4.U.&.B.#.7.a.\013.\013.&.
-alias.10.nfz10.10.yourdomain.com. 60 IN	MX	0 ?.x.0.g.:.h.S.7.\@.\010.
+alias.10.nfz10.3.yourdomain.com. 60 IN	MX	0 zlo13jni53o02gqu6ee94l4yt4b5g3aznms5zuf17y7am91seeqmz6gq5v1txu0.w4wnh72shj2gbaq5re3o3j9nf8njenmbmrqmx1pt6d0546f63u18yt2rqg16j5h.g7jxb58z4p469v0fgsq7ly8g8wt7xyp9b2neifw4cs0cog2oecxzdzrisjzp5bq.
+alias.10.nfz10.3.yourdomain.com. 60 IN	MX	0 ghcle0myu5abcjt6k6172xy1ceoihmv0rli7lp9bhxnwvy4quou4zjsdhsospjt.fkaw3se9n2onu92x4fy0gqs4rkpptbmngf4ultgykhl8rmb1wp5mx26zmorwqrm.s3hchp7zq54urpohml676yj4zudvzpteiflwpqei5s691s67b1zlvkd8fak00zb.
+alias.10.nfz10.3.yourdomain.com. 60 IN	MX	0 8banihdu33e60ip9022ncg6ssa2lbiyywc4bphzwsom7u6bhugjpqcs3c5rgre5.dr7734s78bbokzgcpcn3w9yn2fx6kfe75d8p4681jy8huzq1j6pkdlsg6zgnynq.3yekwuut25yv3e63lxyi3it4f520lkx7fa0ek025l8yei0v24qocizyco3rtg7m.
+alias.10.nfz10.3.yourdomain.com. 60 IN	MX	0 a46yiuvnnvawvviwhg3rbou7z9a02cdjg953w2cihydu5l4dcmjgb7h3jlo0txd.40yzdc8l8cbx53f4fjydq7multnx3u7lo2mtem42mv0uqij4y2hc1m8lid8yrc9.y3euxga3ycx4wo8thkhhse5dnf7g8uink9gqzkgqgr927naoci496kkxzh9d72i.
+alias.10.nfz10.3.yourdomain.com. 60 IN	MX	0 gn5yombbpj8e4hrpr31alp8rox5elfkwoh8z64fenyhho6u199hq2dnt0pvlbcc.85g1gpbrbpjh47b3nu36mqhlyiq47kcxr40ulkdylgcbswzfusm9n7lyomg44es.5e3f2ko15i5ywbqzm3s8smc0q7ummi3nenami4oee14x0iebzjee3y9eabpt4sz.
+alias.10.nfz10.3.yourdomain.com. 60 IN	MX	0 zumx32d2e30s1k6nszxtt1v7au4mifugj6xq0jldr0hdt5hk7xl39ixzz46menm.tagonntuw6evk9swurqxxf4dnnj54o03obzsdx135yyktym13pdoty8u7nblnpf.al2q32dqhugorpnxjoljs76cvx5zos2w5qc3tgtt0xzqw5ax1nly8u186hu8e55.
+alias.10.nfz10.3.yourdomain.com. 60 IN	MX	0 loh96vjhaw9foo8yftui6wetvfztia9tf9s7n4h6pp55rqhxaqn9mbet567oja3.qvn2qmg3qs8lzcnam7kafwgwqjiy7v74v7pl1ydrwvmg0h8i7dtig0wr6qy5kzr.k24yvmctgf0z4cfz15csi5668glf30f5wfmkhdsk310yy5ebuuototrvgam4icl.
+alias.10.nfz10.3.yourdomain.com. 60 IN	MX	0 792380s7nce3utbd7rt9z4hxirpv435wdo6ucl9h6fxekc0wg6293gmtxievjlr.2bddop0jh94ypeuhncwdgggkga8yndewsnfbjmjv2rtf2ufxfwesfh6zokwonbp.espi74dn3i60g91s3d2lbdp647x348np8yo80sya8uvplrkubgaik83jqr7nuu1.
+alias.10.nfz10.3.yourdomain.com. 60 IN	MX	0 y69qn1uok4jklnjpxp9qqd0nasricqenomk3qr79r25mwf1yn1ffaqkoewigikc.x7ji765p9myru68y4p36a4uf148b4yodyga2d6ynxt1flsmev32063h4kk973xe.ddxj1cvztnutn4bfvsq0ocrtpw0gcpdheo3h9bx1sqwebkg8piv8wudh7h9l9ed.
+alias.10.nfz10.3.yourdomain.com. 60 IN	MX	0 c1hqt6x5y93339rewi5zgg3f7zfh5tuo6hbipfyrqmn4z5qy6a5jgpk834usx78.02lcbd7qw8t0dffiny49q5nt0xsvzcdjqsdwdnw3vlonm9xlffypk5tu2dr15bj.y4wrhzn3vw1q2ucgoc8s3weomn835su888mellou4n71pxlaj64rdfpm5jlei20.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 720
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 2429
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz11.10.yourdomain.com @127.0.0.1
@@ -689,27 +690,27 @@ alias.10.nfz10.10.yourdomain.com. 60 IN	MX	0 ?.x.0.g.:.h.S.7.\@.\010.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz11.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 8701
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 39701
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz11.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 y.v.s.g.2.p.a.o.2.k.
-alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 p.v.h.9.k.v.z.7.s.o.
-alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 v.x.h.o.g.f.v.3.1.z.
-alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 i.p.g.y.7.d.l.a.u.4.
-alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 z.8.f.9.m.b.r.7.t.6.
-alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 5.7.4.s.s.m.s.q.a.o.
-alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 z.n.h.u.s.f.m.h.r.q.
-alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 7.l.8.b.8.p.q.3.j.x.
-alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 n.2.o.3.p.1.s.p.s.z.
-alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 8.z.o.5.t.z.1.z.c.p.
+alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 F.~.\165.\148.\228.6.\218.\170.\178.\007.
+alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 \224.j.\023.\029.\157.\242.\164.\169.u.I.
+alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 \254.^.\137.w.Z.\233.h.\021.\200.u.
+alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 \198.D.\160.\157.\028.\233.U.\255.\181.\222.
+alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 \$.\203.\147.\\.\165.\025.A.j.\145.\021.
+alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 \153.\199.h.\\.\017.\147.q.].\129.K.
+alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 \197.r.%.\198.g.u.:.i.,.\009.
+alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 \165.\018.\016.#.\202.g.\127.C.N.\230.
+alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 \203.\130.\175.}.\018.8.o.\237.\231.\196.
+alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 \216.d.\207.\197.\203.\239.\232.>.+.\".
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 720
 
 -------------------------------------------------------------------------------------------
@@ -718,27 +719,27 @@ alias.10.nfz11.10.yourdomain.com. 60 IN	MX	0 8.z.o.5.t.z.1.z.c.p.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz12.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 59206
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 40277
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz12.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 \000.\001.\002.\003.\004.\005.\006.\007.\008.\009.
-alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 \010.\011.\012.\013.\014.\015.\016.\017.\018.\019.
-alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 \020.\021.\022.\023.\024.\025.\026.\027.\028.\029.
-alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 \030.\031.\032.!.\".#.\$.%.&.'.
-alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 \(.\).*.+.,.-.\../.0.1.
-alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 2.3.4.5.6.7.8.9.:.\;.
-alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 <.=.>.?.\@.A.B.C.D.E.
-alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 F.G.H.I.J.K.L.M.N.O.
-alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 P.Q.R.S.T.U.V.W.X.Y.
-alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 Z.[.\\.].^._.`.a.b.c.
+alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 1.=.Y.Z.h.\@.\;.\$.2.v.
+alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 9.`.y.5.\010.\012.6.I.3.w.
+alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 f.<.0.:.a.A.S.\\.7.+.
+alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 8.4.1.f./.%.~.M.N.*.
+alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 8.u.N.y.W.q.k.V.N.R.
+alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 \011.1.\;.E.3.Z.k.K.D.}.
+alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 G.u._.a.~.3.\@.t.-.d.
+alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 g.H.+.x.F.4.L.[.d.\$.
+alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 =.2.3.a.:.z.o.M.\010.W.
+alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 f.'.\\.?.i.Q.S.Y.M.C.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 720
 
 -------------------------------------------------------------------------------------------
@@ -747,27 +748,27 @@ alias.10.nfz12.10.yourdomain.com. 60 IN	MX	0 Z.[.\\.].^._.`.a.b.c.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz13.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 3818
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 57026
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz13.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 \000.\000.\000.\000.\000.\000.\000.\000.\000.\000.
-alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 \001.\001.\001.\001.\001.\001.\001.\001.\001.\001.
-alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 \002.\002.\002.\002.\002.\002.\002.\002.\002.\002.
-alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 \003.\003.\003.\003.\003.\003.\003.\003.\003.\003.
-alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 \004.\004.\004.\004.\004.\004.\004.\004.\004.\004.
-alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 \005.\005.\005.\005.\005.\005.\005.\005.\005.\005.
-alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 \006.\006.\006.\006.\006.\006.\006.\006.\006.\006.
-alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 \007.\007.\007.\007.\007.\007.\007.\007.\007.\007.
-alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 \008.\008.\008.\008.\008.\008.\008.\008.\008.\008.
-alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 \009.\009.\009.\009.\009.\009.\009.\009.\009.\009.
+alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 9.x.q.g.d.d.j.p.p.9.
+alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 3.m.r.5.a.u.o.o.8.f.
+alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 q.7.j.a.v.c.w.m.1.i.
+alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 c.5.2.e.r.0.p.i.z.5.
+alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 t.a.6.6.1.1.v.k.r.y.
+alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 y.m.w.m.s.q.d.g.p.s.
+alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 o.o.r.q.8.o.x.c.y.t.
+alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 j.q.l.v.x.m.w.f.t.c.
+alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 m.f.6.i.i.c.8.q.e.9.
+alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 d.n.f.m.g.4.f.g.r.a.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 720
 
 -------------------------------------------------------------------------------------------
@@ -776,28 +777,28 @@ alias.10.nfz13.10.yourdomain.com. 60 IN	MX	0 \009.\009.\009.\009.\009.\009.\009.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz14.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 45589
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 40059
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz14.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 always557038.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
-alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 always846627.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
-alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 always162160.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
-alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 always941344.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
-alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 always152536.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
-alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 always462444.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
-alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 always243507.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
-alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 always202040.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
-alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 always641712.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
-alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 always430407.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
+alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 \000.\001.\002.\003.\004.\005.\006.\007.\008.\009.
+alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 \010.\011.\012.\013.\014.\015.\016.\017.\018.\019.
+alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 \020.\021.\022.\023.\024.\025.\026.\027.\028.\029.
+alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 \030.\031.\032.!.\".#.\$.%.&.'.
+alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 \(.\).*.+.,.-.\../.0.1.
+alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 2.3.4.5.6.7.8.9.:.\;.
+alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 <.=.>.?.\@.A.B.C.D.E.
+alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 F.G.H.I.J.K.L.M.N.O.
+alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 P.Q.R.S.T.U.V.W.X.Y.
+alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 Z.[.\\.].^._.`.a.b.c.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 910
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 720
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz15.10.yourdomain.com @127.0.0.1
@@ -805,28 +806,28 @@ alias.10.nfz14.10.yourdomain.com. 60 IN	MX	0 always430407.\000\000\000\000\000\0
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz15.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 45813
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4160
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz15.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 always480471.\011\243\249\234\@\214\0134\146\193.yourdomain.com.
-alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 always472214.\183\171\$\235\213\003\145GE\161.yourdomain.com.
-alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 always388088.\185|N\150\161P\219\009Uy.yourdomain.com.
-alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 always924517.\202\219\019\178\233\211\2163\015j.yourdomain.com.
-alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 always577908.\240\208\024mK\027\026\008E\238.yourdomain.com.
-alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 always927513.\185\134K\172\133\202d\(\199\134.yourdomain.com.
-alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 always614410.,\163\166\254N\241^\164\)A.yourdomain.com.
-alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 always591280.Q\159\127\132dG\\\252pz.yourdomain.com.
-alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 always751254.\013`\236\209kqd\224B\140.yourdomain.com.
-alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 always811574.\127\170\201\150i\221\208!\007\196.yourdomain.com.
+alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 \000.\000.\000.\000.\000.\000.\000.\000.\000.\000.
+alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 \001.\001.\001.\001.\001.\001.\001.\001.\001.\001.
+alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 \002.\002.\002.\002.\002.\002.\002.\002.\002.\002.
+alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 \003.\003.\003.\003.\003.\003.\003.\003.\003.\003.
+alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 \004.\004.\004.\004.\004.\004.\004.\004.\004.\004.
+alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 \005.\005.\005.\005.\005.\005.\005.\005.\005.\005.
+alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 \006.\006.\006.\006.\006.\006.\006.\006.\006.\006.
+alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 \007.\007.\007.\007.\007.\007.\007.\007.\007.\007.
+alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 \008.\008.\008.\008.\008.\008.\008.\008.\008.\008.
+alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 \009.\009.\009.\009.\009.\009.\009.\009.\009.\009.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 910
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 720
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz16.10.yourdomain.com @127.0.0.1
@@ -834,28 +835,28 @@ alias.10.nfz15.10.yourdomain.com. 60 IN	MX	0 always811574.\127\170\201\150i\221\
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz16.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 60953
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 35881
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz16.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 always180197.\015\015\015\015\015\015\015\015\015\015.yourdomain.com.
-alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 always937160.>>>>>>>>>>.yourdomain.com.
-alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 always818273.&&&&&&&&&&.yourdomain.com.
-alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 always813305.\240\240\240\240\240\240\240\240\240\240.yourdomain.com.
-alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 always802067.GGGGGGGGGG.yourdomain.com.
-alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 always684286.\177\177\177\177\177\177\177\177\177\177.yourdomain.com.
-alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 always792229.\197\197\197\197\197\197\197\197\197\197.yourdomain.com.
-alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 always495150.\"\"\"\"\"\"\"\"\"\".yourdomain.com.
-alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 always667414.\236\236\236\236\236\236\236\236\236\236.yourdomain.com.
-alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 always419127.\223\223\223\223\223\223\223\223\223\223.yourdomain.com.
+alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 nonres662899.yourdomain.com.
+alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 nonres603842.yourdomain.com.
+alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 nonres052019.yourdomain.com.
+alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 nonres292263.yourdomain.com.
+alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 nonres155186.yourdomain.com.
+alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 nonres349984.yourdomain.com.
+alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 nonres784178.yourdomain.com.
+alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 nonres616570.yourdomain.com.
+alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 nonres354861.yourdomain.com.
+alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 nonres779591.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 910
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 800
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz17.10.yourdomain.com @127.0.0.1
@@ -863,28 +864,28 @@ alias.10.nfz16.10.yourdomain.com. 60 IN	MX	0 always419127.\223\223\223\223\223\2
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz17.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31701
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 48579
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz17.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always764531.\000\001\002\003\004\005\006\007\008\009.yourdomain.com.
-alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always434471.\010\011\012\013\014\015\016\017\018\019.yourdomain.com.
-alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always297105.\020\021\022\023\024\025\026\027\028\029.yourdomain.com.
-alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always133137.\030\031\032!\"#\$%&'.yourdomain.com.
-alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always607906.\(\)*+,-\./01.yourdomain.com.
-alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always593015.23456789:\;.yourdomain.com.
-alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always659286.<=>?\@ABCDE.yourdomain.com.
-alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always503295.FGHIJKLMNO.yourdomain.com.
-alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always572667.PQRSTUVWXY.yourdomain.com.
-alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always503831.Z[\\]^_`abc.yourdomain.com.
+alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always774569.yourdomain.com.
+alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always598753.yourdomain.com.
+alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always316242.yourdomain.com.
+alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always550288.yourdomain.com.
+alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always710251.yourdomain.com.
+alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always001530.yourdomain.com.
+alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always305648.yourdomain.com.
+alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always113913.yourdomain.com.
+alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always462548.yourdomain.com.
+alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always368328.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 910
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 800
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz18.10.yourdomain.com @127.0.0.1
@@ -892,27 +893,27 @@ alias.10.nfz17.10.yourdomain.com. 60 IN	MX	0 always503831.Z[\\]^_`abc.yourdomain
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz18.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 25867
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20378
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz18.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always822923.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
-alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always845478.\001\001\001\001\001\001\001\001\001\001.yourdomain.com.
-alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always888272.\002\002\002\002\002\002\002\002\002\002.yourdomain.com.
-alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always343813.\003\003\003\003\003\003\003\003\003\003.yourdomain.com.
-alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always705164.\004\004\004\004\004\004\004\004\004\004.yourdomain.com.
-alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always071889.\005\005\005\005\005\005\005\005\005\005.yourdomain.com.
-alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always685798.\006\006\006\006\006\006\006\006\006\006.yourdomain.com.
-alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always677236.\007\007\007\007\007\007\007\007\007\007.yourdomain.com.
-alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always441042.\008\008\008\008\008\008\008\008\008\008.yourdomain.com.
-alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always470576.\009\009\009\009\009\009\009\009\009\009.yourdomain.com.
+alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always885203.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
+alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always156519.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
+alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always345494.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
+alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always895924.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
+alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always228702.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
+alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always570499.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
+alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always669701.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
+alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always505226.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
+alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always503057.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
+alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always523533.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 910
 
 -------------------------------------------------------------------------------------------
@@ -921,28 +922,28 @@ alias.10.nfz18.10.yourdomain.com. 60 IN	MX	0 always470576.\009\009\009\009\009\0
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz19.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 19472
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64961
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz19.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always292603.\252./.\\.\169.f.:.\250.\026.\018.\146.yourdomain.com.
-alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always199296.\248.\021.\@.\007.P.j.\017.\233.\220.\243.yourdomain.com.
-alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always236563.\177.U.u.\019.z.w.\029.5.\151.\018.yourdomain.com.
-alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always019191.\160.\231.\136.\178.\165.\220.s.\015.\187.d.yourdomain.com.
-alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always679348.\190.\171.\165.\@.}.\143.\197.\232.\214.\006.yourdomain.com.
-alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always235404.\131.\214.\175.\239.\171.|.\180.N.\186.\214.yourdomain.com.
-alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always852487.T.\186.`.\163.\(.:.\030.\004.*.%.yourdomain.com.
-alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always719362.[.\136.\142.E.\252.G.\026.\171.\238.\007.yourdomain.com.
-alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always750560.\211.\194.n.\174.j.\).\009.\189.i.\182.yourdomain.com.
-alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always137108.\012.\235.U.w.\230.\133.\205.\207.m.\187.yourdomain.com.
+alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always181133.\195\229?]\172Or\129D\254.yourdomain.com.
+alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always002812.\138n2\243\134y\175S\238\217.yourdomain.com.
+alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always612569.\023[\160\130\227\178]\021\001Q.yourdomain.com.
+alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always081715.\230\184\131\137\001\144:\252\223*.yourdomain.com.
+alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always896363.m\229\194\247\009\252\133\229\2181.yourdomain.com.
+alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always853795.`\247\189rx\190\226\144\157\184.yourdomain.com.
+alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always642400.\176\154\238\217\218\227F\212\1430.yourdomain.com.
+alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always441430.\233a\142[R\137\129\191\025\184.yourdomain.com.
+alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always356089.\025\015\020\151_\252^\157x\203.yourdomain.com.
+alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always866078.\172/\222\031\136\251\202\158\207\146.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 1000
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 910
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz20.10.yourdomain.com @127.0.0.1
@@ -950,28 +951,28 @@ alias.10.nfz19.10.yourdomain.com. 60 IN	MX	0 always137108.\012.\235.U.w.\230.\13
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz20.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 33839
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 25180
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz20.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always463833.-.,.\\.^.h.`.I.\009.R.l.yourdomain.com.
-alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always947938.*.7.K.,.U.Y.*.%.6.#.yourdomain.com.
-alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always349630.R.n.,.,.c.y.g.\\.\$.\@.yourdomain.com.
-alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always409297.D.\(.}._.>.b.m.q.x.Y.yourdomain.com.
-alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always423933.|.?.T.*.M.-.V.=.i.\011.yourdomain.com.
-alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always563812.H.v.t.:.-.J.I.8.~.c.yourdomain.com.
-alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always595027.s.\".o.Y.6.y.Q.c.\032.Y.yourdomain.com.
-alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always576529.S.\011.y.z.T./.~.W.T.K.yourdomain.com.
-alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always481109.#.s.7.?.=.4.2.>.C.l.yourdomain.com.
-alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always782794.b.a.\010.4.*.W.j.u.,.c.yourdomain.com.
+alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always436010.\197\197\197\197\197\197\197\197\197\197.yourdomain.com.
+alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always449634.\144\144\144\144\144\144\144\144\144\144.yourdomain.com.
+alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always759549.5555555555.yourdomain.com.
+alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always051795.\206\206\206\206\206\206\206\206\206\206.yourdomain.com.
+alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always218844.\140\140\140\140\140\140\140\140\140\140.yourdomain.com.
+alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always356570.~~~~~~~~~~.yourdomain.com.
+alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always881510.\017\017\017\017\017\017\017\017\017\017.yourdomain.com.
+alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always664761.\140\140\140\140\140\140\140\140\140\140.yourdomain.com.
+alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always089092.aaaaaaaaaa.yourdomain.com.
+alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always196257.==========.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 1000
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 910
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz21.10.yourdomain.com @127.0.0.1
@@ -979,28 +980,28 @@ alias.10.nfz20.10.yourdomain.com. 60 IN	MX	0 always782794.b.a.\010.4.*.W.j.u.,.c
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz21.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21504
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 1383
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz21.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always027228.f.h.l.1.7.p.8.u.1.h.yourdomain.com.
-alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always426421.q.r.b.z.q.e.1.g.q.d.yourdomain.com.
-alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always665929.8.5.k.e.l.g.7.o.7.u.yourdomain.com.
-alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always495056.5.0.f.i.o.w.q.w.k.w.yourdomain.com.
-alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always515350.y.5.b.k.0.6.b.v.k.n.yourdomain.com.
-alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always019252.g.c.h.1.u.o.8.m.d.9.yourdomain.com.
-alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always147669.4.p.8.c.3.v.j.e.z.3.yourdomain.com.
-alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always379406.s.4.1.u.3.4.v.c.t.x.yourdomain.com.
-alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always822261.z.q.3.a.k.r.z.8.y.l.yourdomain.com.
-alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always922640.9.9.d.v.y.i.u.u.h.t.yourdomain.com.
+alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always020825.\000\001\002\003\004\005\006\007\008\009.yourdomain.com.
+alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always832117.\010\011\012\013\014\015\016\017\018\019.yourdomain.com.
+alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always850504.\020\021\022\023\024\025\026\027\028\029.yourdomain.com.
+alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always353381.\030\031\032!\"#\$%&'.yourdomain.com.
+alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always041382.\(\)*+,-\./01.yourdomain.com.
+alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always409462.23456789:\;.yourdomain.com.
+alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always230386.<=>?\@ABCDE.yourdomain.com.
+alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always805332.FGHIJKLMNO.yourdomain.com.
+alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always450865.PQRSTUVWXY.yourdomain.com.
+alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always873205.Z[\\]^_`abc.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 1000
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 910
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz22.10.yourdomain.com @127.0.0.1
@@ -1008,28 +1009,28 @@ alias.10.nfz21.10.yourdomain.com. 60 IN	MX	0 always922640.9.9.d.v.y.i.u.u.h.t.yo
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz22.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 26711
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 40155
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz22.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always804025.\000.\001.\002.\003.\004.\005.\006.\007.\008.\009.yourdomain.com.
-alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always324730.\010.\011.\012.\013.\014.\015.\016.\017.\018.\019.yourdomain.com.
-alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always260305.\020.\021.\022.\023.\024.\025.\026.\027.\028.\029.yourdomain.com.
-alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always812149.\030.\031.\032.!.\".#.\$.%.&.'.yourdomain.com.
-alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always859938.\(.\).*.+.,.-.\../.0.1.yourdomain.com.
-alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always725912.2.3.4.5.6.7.8.9.:.\;.yourdomain.com.
-alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always074558.<.=.>.?.\@.A.B.C.D.E.yourdomain.com.
-alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always499807.F.G.H.I.J.K.L.M.N.O.yourdomain.com.
-alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always005941.P.Q.R.S.T.U.V.W.X.Y.yourdomain.com.
-alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always028917.Z.[.\\.].^._.`.a.b.c.yourdomain.com.
+alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always480590.\000\000\000\000\000\000\000\000\000\000.yourdomain.com.
+alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always063696.\001\001\001\001\001\001\001\001\001\001.yourdomain.com.
+alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always506694.\002\002\002\002\002\002\002\002\002\002.yourdomain.com.
+alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always529035.\003\003\003\003\003\003\003\003\003\003.yourdomain.com.
+alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always406740.\004\004\004\004\004\004\004\004\004\004.yourdomain.com.
+alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always704966.\005\005\005\005\005\005\005\005\005\005.yourdomain.com.
+alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always316254.\006\006\006\006\006\006\006\006\006\006.yourdomain.com.
+alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always822482.\007\007\007\007\007\007\007\007\007\007.yourdomain.com.
+alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always027040.\008\008\008\008\008\008\008\008\008\008.yourdomain.com.
+alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always414886.\009\009\009\009\009\009\009\009\009\009.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 1000
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 910
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz23.10.yourdomain.com @127.0.0.1
@@ -1037,27 +1038,27 @@ alias.10.nfz22.10.yourdomain.com. 60 IN	MX	0 always028917.Z.[.\\.].^._.`.a.b.c.y
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz23.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 10686
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 63435
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz23.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always858611.\000.\000.\000.\000.\000.\000.\000.\000.\000.\000.yourdomain.com.
-alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always954134.\001.\001.\001.\001.\001.\001.\001.\001.\001.\001.yourdomain.com.
-alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always062521.\002.\002.\002.\002.\002.\002.\002.\002.\002.\002.yourdomain.com.
-alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always080183.\003.\003.\003.\003.\003.\003.\003.\003.\003.\003.yourdomain.com.
-alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always201747.\004.\004.\004.\004.\004.\004.\004.\004.\004.\004.yourdomain.com.
-alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always128481.\005.\005.\005.\005.\005.\005.\005.\005.\005.\005.yourdomain.com.
-alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always333431.\006.\006.\006.\006.\006.\006.\006.\006.\006.\006.yourdomain.com.
-alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always088697.\007.\007.\007.\007.\007.\007.\007.\007.\007.\007.yourdomain.com.
-alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always675636.\008.\008.\008.\008.\008.\008.\008.\008.\008.\008.yourdomain.com.
-alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always633879.\009.\009.\009.\009.\009.\009.\009.\009.\009.\009.yourdomain.com.
+alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always726970.\129.\209.i.S.}.3.\141.\202.\156.\179.yourdomain.com.
+alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always149899.K.N.\152.\170.\189.[.3.\178.8.e.yourdomain.com.
+alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always355378.3.7.X.\233.A.\131.b.\158.\220.\202.yourdomain.com.
+alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always721831.\205.\163.\137.\023.\021.\236.\240.\238.\146.w.yourdomain.com.
+alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always474210.\248.\032.\227.\167.6.\247.\183.\230.\203.\215.yourdomain.com.
+alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always308018.\238.i.\002.\150.5.\225.m.\165.\207.\238.yourdomain.com.
+alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always371175.\199.\133.B.V.\183.\214.\195.f.\171.\133.yourdomain.com.
+alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always331871.=.\254.s.\223.i.\254.:.\224.\151.\235.yourdomain.com.
+alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always495541.u.\190.U.\011.V.\167.R.\010.\192.\243.yourdomain.com.
+alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always986347.a.u.\144.p.W.l.\220.\220.\$.\030.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 1000
 
 -------------------------------------------------------------------------------------------
@@ -1066,28 +1067,28 @@ alias.10.nfz23.10.yourdomain.com. 60 IN	MX	0 always633879.\009.\009.\009.\009.\0
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz24.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 51038
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 41601
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz24.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always464660.yourdomain.com.
-alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always112823.yourdomain.com.
-alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always628555.yourdomain.com.
-alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always739501.yourdomain.com.
-alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always656526.yourdomain.com.
-alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always685341.yourdomain.com.
-alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always486589.yourdomain.com.
-alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always542493.yourdomain.com.
-alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always892943.yourdomain.com.
-alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always652911.yourdomain.com.
+alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 always559595.w.J.>.1.=.s.|.\(.M.1.yourdomain.com.
+alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 always800241.h.\011.\".K.9.\\.G.x.m.a.yourdomain.com.
+alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 always292171.e.P.x.o.m.\".N.u.{.R.yourdomain.com.
+alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 always677158./.Z.o.6.\@.\012.\@.&.c.7.yourdomain.com.
+alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 always036101.1.P.M.g.`.+.z.\).n.p.yourdomain.com.
+alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 always581546.m.#.4.3.F.5.C.k.'.\\.yourdomain.com.
+alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 always615455.K.D.W.U.=.9.,.X.r.7.yourdomain.com.
+alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 always892590.L.o.Q.#.Z.0.}.x.l.m.yourdomain.com.
+alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 always553381.'.-.7.=.-.r.\013.n.\010.8.yourdomain.com.
+alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 always667724.d.\".z.C.b.H.\012.E.\".C.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 900
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 1000
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz25.10.yourdomain.com @127.0.0.1
@@ -1095,28 +1096,28 @@ alias.10.nfz24.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\00
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz25.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37635
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 48927
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz25.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 \2008\250\023\006\139\(\227\015\$always483195.yourdomain.com.
-alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 \02901\156{^\236\000\199palways689629.yourdomain.com.
-alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 oZ\227J\152\011\228\021\194>always247816.yourdomain.com.
-alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 9\177\022tAA\200\137\145\224always020605.yourdomain.com.
-alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 {:Zj\215\032\1805\007,always697130.yourdomain.com.
-alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 \1351s^=w0\212\0005always323084.yourdomain.com.
-alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 5\201\208n\024fd\168wMalways968985.yourdomain.com.
-alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 \239\236\197M\155\217K\182\003\186always668975.yourdomain.com.
-alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 \019{/iE\007\022\183\239\225always944409.yourdomain.com.
-alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 OZ*\132\246\@\157\150?Valways467359.yourdomain.com.
+alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 always311270.r.6.h.y.h.j.s.i.3.b.yourdomain.com.
+alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 always033861.x.s.g.m.g.i.q.r.m.c.yourdomain.com.
+alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 always824650.u.w.h.g.8.2.7.m.r.3.yourdomain.com.
+alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 always102853.z.k.2.z.b.x.e.6.9.3.yourdomain.com.
+alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 always295527.h.w.x.t.g.r.l.d.2.t.yourdomain.com.
+alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 always673014.n.l.6.9.6.a.x.8.l.2.yourdomain.com.
+alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 always300694.f.5.l.t.g.z.n.y.5.y.yourdomain.com.
+alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 always314998.v.s.e.e.z.i.9.a.r.6.yourdomain.com.
+alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 always941885.p.n.d.c.2.2.3.h.d.d.yourdomain.com.
+alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 always797933.j.4.i.j.h.l.x.0.1.d.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 900
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 1000
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz26.10.yourdomain.com @127.0.0.1
@@ -1124,28 +1125,28 @@ alias.10.nfz25.10.yourdomain.com. 60 IN	MX	0 OZ*\132\246\@\157\150?Valways467359
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz26.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 45221
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 50760
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz26.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 aaaaaaaaaaalways001879.yourdomain.com.
-alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 \173\173\173\173\173\173\173\173\173\173always825144.yourdomain.com.
-alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 rrrrrrrrrralways145688.yourdomain.com.
-alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 \161\161\161\161\161\161\161\161\161\161always558687.yourdomain.com.
-alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 ==========always022030.yourdomain.com.
-alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 \014\014\014\014\014\014\014\014\014\014always981736.yourdomain.com.
-alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 3333333333always721674.yourdomain.com.
-alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 ooooooooooalways173603.yourdomain.com.
-alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 \199\199\199\199\199\199\199\199\199\199always153167.yourdomain.com.
-alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 1111111111always719636.yourdomain.com.
+alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 always521749.\000.\001.\002.\003.\004.\005.\006.\007.\008.\009.yourdomain.com.
+alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 always998072.\010.\011.\012.\013.\014.\015.\016.\017.\018.\019.yourdomain.com.
+alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 always408721.\020.\021.\022.\023.\024.\025.\026.\027.\028.\029.yourdomain.com.
+alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 always286235.\030.\031.\032.!.\".#.\$.%.&.'.yourdomain.com.
+alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 always174519.\(.\).*.+.,.-.\../.0.1.yourdomain.com.
+alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 always963495.2.3.4.5.6.7.8.9.:.\;.yourdomain.com.
+alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 always458390.<.=.>.?.\@.A.B.C.D.E.yourdomain.com.
+alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 always047740.F.G.H.I.J.K.L.M.N.O.yourdomain.com.
+alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 always300303.P.Q.R.S.T.U.V.W.X.Y.yourdomain.com.
+alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 always954772.Z.[.\\.].^._.`.a.b.c.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 900
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 1000
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz27.10.yourdomain.com @127.0.0.1
@@ -1153,28 +1154,28 @@ alias.10.nfz26.10.yourdomain.com. 60 IN	MX	0 1111111111always719636.yourdomain.c
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz27.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 54905
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 252
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz27.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 \000\001\002\003\004\005\006\007\008\009always592416.yourdomain.com.
-alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 \010\011\012\013\014\015\016\017\018\019always492923.yourdomain.com.
-alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 \020\021\022\023\024\025\026\027\028\029always094855.yourdomain.com.
-alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 \030\031\032!\"#\$%&'always097229.yourdomain.com.
-alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 \(\)*+,-\./01always725414.yourdomain.com.
-alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 23456789:\;always666440.yourdomain.com.
-alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 <=>?\@ABCDEalways297116.yourdomain.com.
-alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 FGHIJKLMNOalways963390.yourdomain.com.
-alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 PQRSTUVWXYalways803558.yourdomain.com.
-alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 Z[\\]^_`abcalways594508.yourdomain.com.
+alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 always269358.\000.\000.\000.\000.\000.\000.\000.\000.\000.\000.yourdomain.com.
+alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 always066417.\001.\001.\001.\001.\001.\001.\001.\001.\001.\001.yourdomain.com.
+alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 always139309.\002.\002.\002.\002.\002.\002.\002.\002.\002.\002.yourdomain.com.
+alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 always769193.\003.\003.\003.\003.\003.\003.\003.\003.\003.\003.yourdomain.com.
+alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 always511345.\004.\004.\004.\004.\004.\004.\004.\004.\004.\004.yourdomain.com.
+alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 always469763.\005.\005.\005.\005.\005.\005.\005.\005.\005.\005.yourdomain.com.
+alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 always792088.\006.\006.\006.\006.\006.\006.\006.\006.\006.\006.yourdomain.com.
+alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 always280850.\007.\007.\007.\007.\007.\007.\007.\007.\007.\007.yourdomain.com.
+alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 always020532.\008.\008.\008.\008.\008.\008.\008.\008.\008.\008.yourdomain.com.
+alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 always483824.\009.\009.\009.\009.\009.\009.\009.\009.\009.\009.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 900
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 1000
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz28.10.yourdomain.com @127.0.0.1
@@ -1182,27 +1183,27 @@ alias.10.nfz27.10.yourdomain.com. 60 IN	MX	0 Z[\\]^_`abcalways594508.yourdomain.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz28.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 52659
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21393
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz28.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always898676.yourdomain.com.
-alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \001\001\001\001\001\001\001\001\001\001always329605.yourdomain.com.
-alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \002\002\002\002\002\002\002\002\002\002always900899.yourdomain.com.
-alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \003\003\003\003\003\003\003\003\003\003always628244.yourdomain.com.
-alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \004\004\004\004\004\004\004\004\004\004always098815.yourdomain.com.
-alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \005\005\005\005\005\005\005\005\005\005always848708.yourdomain.com.
-alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \006\006\006\006\006\006\006\006\006\006always911676.yourdomain.com.
-alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \007\007\007\007\007\007\007\007\007\007always969528.yourdomain.com.
-alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \008\008\008\008\008\008\008\008\008\008always291224.yourdomain.com.
-alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \009\009\009\009\009\009\009\009\009\009always602279.yourdomain.com.
+alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always265307.yourdomain.com.
+alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always461261.yourdomain.com.
+alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always435895.yourdomain.com.
+alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always334807.yourdomain.com.
+alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always545495.yourdomain.com.
+alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always456664.yourdomain.com.
+alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always836291.yourdomain.com.
+alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always016440.yourdomain.com.
+alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always392590.yourdomain.com.
+alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always869845.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 900
 
 -------------------------------------------------------------------------------------------
@@ -1211,27 +1212,27 @@ alias.10.nfz28.10.yourdomain.com. 60 IN	MX	0 \009\009\009\009\009\009\009\009\00
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz29.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 18369
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 51581
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz29.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 always152901.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 always209108.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 always522117.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 always868141.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 always485757.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 always277246.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 always987615.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 always646305.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 always716179.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 always353725.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 S\229\202-\180e\026Ok\025always893549.yourdomain.com.
+alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 \245Y\252\203\242\139\012c\193\249always644450.yourdomain.com.
+alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 K\023v\135\217,J\007\158\213always741330.yourdomain.com.
+alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 \1541\185r\201An\178\000<always784993.yourdomain.com.
+alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 \214\203\223\143\223\179\013\225\161\198always831309.yourdomain.com.
+alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 \167\009:\190\011\133\246Yw\222always844916.yourdomain.com.
+alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 \131#y\015\136\248\188\240*]always172605.yourdomain.com.
+alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 \011\141\020\248\232\1840\022\159\;always662135.yourdomain.com.
+alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 \150b\148\184\129\133\.\203\247\147always661876.yourdomain.com.
+alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 \2377\021\027O\155CXl\032always434240.yourdomain.com.
 
-;; Query time: 0 msec
+;; Query time: 3 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 900
 
 -------------------------------------------------------------------------------------------
@@ -1240,27 +1241,27 @@ alias.10.nfz29.10.yourdomain.com. 60 IN	MX	0 always353725.yourdomain.com\000\000
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz30.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 47546
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 53363
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz30.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 always030118.yourdomain.com\174X\$\008\164\226V\243Rv.
-alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 always168964.yourdomain.com[C\168\164c\169\157\249Q\189.
-alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 always497715.yourdomain.comT\173\240\214/\019\148\159\129\193.
-alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 always676884.yourdomain.com\237\009\224\134\238\004\207X\176:.
-alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 always838044.yourdomain.com\189\204\;n\209\197\183eR\152.
-alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 always730235.yourdomain.com\009\008\142\243\031/\204\213\237\150.
-alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 always586999.yourdomain.com\204`\004:-\187\002\220\140\017.
-alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 always985019.yourdomain.com\233\139\"ddv\015\139\232+.
-alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 always369489.yourdomain.com\146_\214\009\233n_\207\183\128.
-alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 always858039.yourdomain.com\1706\255\$\150_x\240\168\218.
+alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 IIIIIIIIIIalways521982.yourdomain.com.
+alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 \185\185\185\185\185\185\185\185\185\185always158118.yourdomain.com.
+alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 \177\177\177\177\177\177\177\177\177\177always239896.yourdomain.com.
+alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 \127\127\127\127\127\127\127\127\127\127always226299.yourdomain.com.
+alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 \160\160\160\160\160\160\160\160\160\160always474536.yourdomain.com.
+alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 \183\183\183\183\183\183\183\183\183\183always092473.yourdomain.com.
+alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 \018\018\018\018\018\018\018\018\018\018always853991.yourdomain.com.
+alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 <<<<<<<<<<always253980.yourdomain.com.
+alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 \252\252\252\252\252\252\252\252\252\252always985766.yourdomain.com.
+alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 \201\201\201\201\201\201\201\201\201\201always202080.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 900
 
 -------------------------------------------------------------------------------------------
@@ -1269,27 +1270,27 @@ alias.10.nfz30.10.yourdomain.com. 60 IN	MX	0 always858039.yourdomain.com\1706\25
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz31.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 9084
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 1223
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz31.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 always715396.yourdomain.com\157\157\157\157\157\157\157\157\157\157.
-alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 always404216.yourdomain.com\151\151\151\151\151\151\151\151\151\151.
-alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 always073825.yourdomain.com**********.
-alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 always025100.yourdomain.com\249\249\249\249\249\249\249\249\249\249.
-alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 always820286.yourdomain.com\150\150\150\150\150\150\150\150\150\150.
-alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 always620536.yourdomain.comVVVVVVVVVV.
-alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 always348275.yourdomain.com4444444444.
-alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 always253947.yourdomain.com\014\014\014\014\014\014\014\014\014\014.
-alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 always082515.yourdomain.com\220\220\220\220\220\220\220\220\220\220.
-alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 always530100.yourdomain.com1111111111.
+alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 \000\001\002\003\004\005\006\007\008\009always030923.yourdomain.com.
+alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 \010\011\012\013\014\015\016\017\018\019always562672.yourdomain.com.
+alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 \020\021\022\023\024\025\026\027\028\029always844306.yourdomain.com.
+alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 \030\031\032!\"#\$%&'always217020.yourdomain.com.
+alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 \(\)*+,-\./01always400197.yourdomain.com.
+alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 23456789:\;always397970.yourdomain.com.
+alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 <=>?\@ABCDEalways803553.yourdomain.com.
+alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 FGHIJKLMNOalways743179.yourdomain.com.
+alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 PQRSTUVWXYalways618461.yourdomain.com.
+alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 Z[\\]^_`abcalways212032.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 900
 
 -------------------------------------------------------------------------------------------
@@ -1298,27 +1299,27 @@ alias.10.nfz31.10.yourdomain.com. 60 IN	MX	0 always530100.yourdomain.com11111111
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz32.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20437
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 13180
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz32.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 always539683.yourdomain.com\000\001\002\003\004\005\006\007\008\009.
-alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 always118424.yourdomain.com\010\011\012\013\014\015\016\017\018\019.
-alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 always472313.yourdomain.com\020\021\022\023\024\025\026\027\028\029.
-alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 always289837.yourdomain.com\030\031\032!\"#\$%&'.
-alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 always064799.yourdomain.com\(\)*+,-\./01.
-alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 always338450.yourdomain.com23456789:\;.
-alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 always194439.yourdomain.com<=>?\@ABCDE.
-alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 always837027.yourdomain.comFGHIJKLMNO.
-alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 always498198.yourdomain.comPQRSTUVWXY.
-alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 always998826.yourdomain.comZ[\\]^_`abc.
+alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 \000\000\000\000\000\000\000\000\000\000always138153.yourdomain.com.
+alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 \001\001\001\001\001\001\001\001\001\001always682804.yourdomain.com.
+alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 \002\002\002\002\002\002\002\002\002\002always488471.yourdomain.com.
+alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 \003\003\003\003\003\003\003\003\003\003always682527.yourdomain.com.
+alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 \004\004\004\004\004\004\004\004\004\004always910323.yourdomain.com.
+alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 \005\005\005\005\005\005\005\005\005\005always360362.yourdomain.com.
+alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 \006\006\006\006\006\006\006\006\006\006always761113.yourdomain.com.
+alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 \007\007\007\007\007\007\007\007\007\007always677566.yourdomain.com.
+alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 \008\008\008\008\008\008\008\008\008\008always362847.yourdomain.com.
+alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 \009\009\009\009\009\009\009\009\009\009always425390.yourdomain.com.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 900
 
 -------------------------------------------------------------------------------------------
@@ -1327,27 +1328,27 @@ alias.10.nfz32.10.yourdomain.com. 60 IN	MX	0 always998826.yourdomain.comZ[\\]^_`
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz33.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 57000
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7567
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz33.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always349121.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
-alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always018947.yourdomain.com\001\001\001\001\001\001\001\001\001\001.
-alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always949472.yourdomain.com\002\002\002\002\002\002\002\002\002\002.
-alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always037070.yourdomain.com\003\003\003\003\003\003\003\003\003\003.
-alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always824285.yourdomain.com\004\004\004\004\004\004\004\004\004\004.
-alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always035038.yourdomain.com\005\005\005\005\005\005\005\005\005\005.
-alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always507877.yourdomain.com\006\006\006\006\006\006\006\006\006\006.
-alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always036889.yourdomain.com\007\007\007\007\007\007\007\007\007\007.
-alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always696312.yourdomain.com\008\008\008\008\008\008\008\008\008\008.
-alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always784524.yourdomain.com\009\009\009\009\009\009\009\009\009\009.
+alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always856381.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always317587.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always482616.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always248066.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always838925.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always629152.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always028376.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always262932.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always282218.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always567997.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 900
 
 -------------------------------------------------------------------------------------------
@@ -1356,28 +1357,28 @@ alias.10.nfz33.10.yourdomain.com. 60 IN	MX	0 always784524.yourdomain.com\009\009
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz34.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 16201
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 11102
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz34.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 http://always927133.yourdomain.com/.
-alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 http://always312938.yourdomain.com/.
-alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 http://always144497.yourdomain.com/.
-alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 http://always419042.yourdomain.com/.
-alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 http://always703617.yourdomain.com/.
-alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 http://always950632.yourdomain.com/.
-alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 http://always799301.yourdomain.com/.
-alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 http://always572694.yourdomain.com/.
-alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 http://always342623.yourdomain.com/.
-alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 http://always003049.yourdomain.com/.
+alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 always555923.yourdomain.comWr\1955\002\195\138T_B.
+alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 always022237.yourdomain.com\022y\186\006\224[\029\224\231\236.
+alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 always075078.yourdomain.com4\164\182\219\;6\216\222\223\248.
+alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 always224366.yourdomain.com\171\(\185\210<GqW`k.
+alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 always017478.yourdomain.com\144\241\202\238x\183W&\165\252.
+alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 always282503.yourdomain.comRs[\001\202\151\221L\163~.
+alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 always900429.yourdomain.comZI\184\149\155\180\\ML`.
+alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 always031494.yourdomain.com\140\196F\223u\160\003\174\213\224.
+alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 always713129.yourdomain.com\219\009_2\028\010x}<\021.
+alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 always129110.yourdomain.com\153\005\023J8J\198\155\217*.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 880
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 900
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz35.10.yourdomain.com @127.0.0.1
@@ -1385,28 +1386,28 @@ alias.10.nfz34.10.yourdomain.com. 60 IN	MX	0 http://always003049.yourdomain.com/
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz35.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 54120
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 32696
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz35.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 http://always155262.yourdomain.com:80/.
-alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 http://always762798.yourdomain.com:80/.
-alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 http://always041256.yourdomain.com:80/.
-alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 http://always504722.yourdomain.com:80/.
-alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 http://always016564.yourdomain.com:80/.
-alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 http://always288797.yourdomain.com:80/.
-alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 http://always704068.yourdomain.com:80/.
-alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 http://always414499.yourdomain.com:80/.
-alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 http://always175069.yourdomain.com:80/.
-alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 http://always534007.yourdomain.com:80/.
+alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 always281025.yourdomain.com\250\250\250\250\250\250\250\250\250\250.
+alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 always479284.yourdomain.com]]]]]]]]]].
+alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 always270733.yourdomain.com\017\017\017\017\017\017\017\017\017\017.
+alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 always310376.yourdomain.com\248\248\248\248\248\248\248\248\248\248.
+alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 always725707.yourdomain.com\147\147\147\147\147\147\147\147\147\147.
+alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 always082209.yourdomain.com\137\137\137\137\137\137\137\137\137\137.
+alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 always894278.yourdomain.com\237\237\237\237\237\237\237\237\237\237.
+alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 always077687.yourdomain.com\187\187\187\187\187\187\187\187\187\187.
+alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 always352592.yourdomain.com\030\030\030\030\030\030\030\030\030\030.
+alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 always800417.yourdomain.com\233\233\233\233\233\233\233\233\233\233.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 910
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 900
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz36.10.yourdomain.com @127.0.0.1
@@ -1414,28 +1415,28 @@ alias.10.nfz35.10.yourdomain.com. 60 IN	MX	0 http://always534007.yourdomain.com:
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz36.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 56348
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21720
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz36.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 https://always665130.yourdomain.com/.
-alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 https://always966919.yourdomain.com/.
-alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 https://always547667.yourdomain.com/.
-alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 https://always479847.yourdomain.com/.
-alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 https://always870223.yourdomain.com/.
-alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 https://always780391.yourdomain.com/.
-alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 https://always487170.yourdomain.com/.
-alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 https://always795649.yourdomain.com/.
-alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 https://always289181.yourdomain.com/.
-alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 https://always938850.yourdomain.com/.
+alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 always607461.yourdomain.com\000\001\002\003\004\005\006\007\008\009.
+alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 always410144.yourdomain.com\010\011\012\013\014\015\016\017\018\019.
+alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 always977644.yourdomain.com\020\021\022\023\024\025\026\027\028\029.
+alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 always329522.yourdomain.com\030\031\032!\"#\$%&'.
+alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 always966580.yourdomain.com\(\)*+,-\./01.
+alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 always189804.yourdomain.com23456789:\;.
+alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 always291752.yourdomain.com<=>?\@ABCDE.
+alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 always509312.yourdomain.comFGHIJKLMNO.
+alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 always608320.yourdomain.comPQRSTUVWXY.
+alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 always340892.yourdomain.comZ[\\]^_`abc.
 
-;; Query time: 0 msec
+;; Query time: 3 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 890
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 900
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz37.10.yourdomain.com @127.0.0.1
@@ -1443,28 +1444,28 @@ alias.10.nfz36.10.yourdomain.com. 60 IN	MX	0 https://always938850.yourdomain.com
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz37.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 47889
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 34725
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz37.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 https://always019755.yourdomain.com:443/.
-alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 https://always699560.yourdomain.com:443/.
-alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 https://always049067.yourdomain.com:443/.
-alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 https://always520555.yourdomain.com:443/.
-alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 https://always588674.yourdomain.com:443/.
-alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 https://always287876.yourdomain.com:443/.
-alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 https://always118507.yourdomain.com:443/.
-alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 https://always529671.yourdomain.com:443/.
-alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 https://always013499.yourdomain.com:443/.
-alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 https://always537725.yourdomain.com:443/.
+alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 always477824.yourdomain.com\000\000\000\000\000\000\000\000\000\000.
+alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 always901234.yourdomain.com\001\001\001\001\001\001\001\001\001\001.
+alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 always782923.yourdomain.com\002\002\002\002\002\002\002\002\002\002.
+alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 always661052.yourdomain.com\003\003\003\003\003\003\003\003\003\003.
+alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 always146207.yourdomain.com\004\004\004\004\004\004\004\004\004\004.
+alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 always002125.yourdomain.com\005\005\005\005\005\005\005\005\005\005.
+alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 always259466.yourdomain.com\006\006\006\006\006\006\006\006\006\006.
+alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 always871271.yourdomain.com\007\007\007\007\007\007\007\007\007\007.
+alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 always743811.yourdomain.com\008\008\008\008\008\008\008\008\008\008.
+alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 always243218.yourdomain.com\009\009\009\009\009\009\009\009\009\009.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:23 +04 2024
-;; MSG SIZE  rcvd: 930
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 900
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz38.10.yourdomain.com @127.0.0.1
@@ -1472,27 +1473,27 @@ alias.10.nfz37.10.yourdomain.com. 60 IN	MX	0 https://always537725.yourdomain.com
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz38.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 57671
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 6632
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz38.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always024908.yourdomain.com:80.
-alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always991887.yourdomain.com:80.
-alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always448622.yourdomain.com:80.
-alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always227377.yourdomain.com:80.
-alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always523994.yourdomain.com:80.
-alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always558297.yourdomain.com:80.
-alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always097516.yourdomain.com:80.
-alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always033531.yourdomain.com:80.
-alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always533400.yourdomain.com:80.
-alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always367927.yourdomain.com:80.
+alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always004581.yourdomain.com:80.
+alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always620332.yourdomain.com:80.
+alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always833191.yourdomain.com:80.
+alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always334943.yourdomain.com:80.
+alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always852243.yourdomain.com:80.
+alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always890649.yourdomain.com:80.
+alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always863608.yourdomain.com:80.
+alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always489773.yourdomain.com:80.
+alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always024725.yourdomain.com:80.
+alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always128819.yourdomain.com:80.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:24 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 830
 
 -------------------------------------------------------------------------------------------
@@ -1501,27 +1502,27 @@ alias.10.nfz38.10.yourdomain.com. 60 IN	MX	0 always367927.yourdomain.com:80.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz39.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 38522
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 18241
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz39.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always598869.yourdomain.com:443.
-alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always979887.yourdomain.com:443.
-alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always971046.yourdomain.com:443.
-alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always160442.yourdomain.com:443.
-alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always037592.yourdomain.com:443.
-alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always002884.yourdomain.com:443.
-alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always499018.yourdomain.com:443.
-alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always410751.yourdomain.com:443.
-alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always833163.yourdomain.com:443.
-alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always076680.yourdomain.com:443.
+alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always607900.yourdomain.com:443.
+alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always738698.yourdomain.com:443.
+alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always311886.yourdomain.com:443.
+alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always523012.yourdomain.com:443.
+alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always874044.yourdomain.com:443.
+alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always689217.yourdomain.com:443.
+alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always087820.yourdomain.com:443.
+alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always715061.yourdomain.com:443.
+alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always665196.yourdomain.com:443.
+alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always934879.yourdomain.com:443.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:24 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
 ;; MSG SIZE  rcvd: 840
 
 -------------------------------------------------------------------------------------------
@@ -1530,28 +1531,28 @@ alias.10.nfz39.10.yourdomain.com. 60 IN	MX	0 always076680.yourdomain.com:443.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz40.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 1958
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 60723
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz40.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
-alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
-alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
-alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
-alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
-alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
-alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
-alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
-alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
-alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
+alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 http://always399833.yourdomain.com/.
+alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 http://always453649.yourdomain.com/.
+alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 http://always102888.yourdomain.com/.
+alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 http://always228703.yourdomain.com/.
+alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 http://always215762.yourdomain.com/.
+alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 http://always200251.yourdomain.com/.
+alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 http://always067908.yourdomain.com/.
+alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 http://always627667.yourdomain.com/.
+alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 http://always392659.yourdomain.com/.
+alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 http://always081657.yourdomain.com/.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:24 +04 2024
-;; MSG SIZE  rcvd: 600
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 880
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz41.10.yourdomain.com @127.0.0.1
@@ -1559,28 +1560,28 @@ alias.10.nfz40.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz41.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 14668
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 6640
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz41.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
-alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
-alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
-alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
-alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
-alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
-alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
-alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
-alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
-alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
+alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 http://always396822.yourdomain.com:80/.
+alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 http://always142593.yourdomain.com:80/.
+alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 http://always721367.yourdomain.com:80/.
+alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 http://always767400.yourdomain.com:80/.
+alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 http://always149434.yourdomain.com:80/.
+alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 http://always587145.yourdomain.com:80/.
+alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 http://always005461.yourdomain.com:80/.
+alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 http://always177389.yourdomain.com:80/.
+alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 http://always643335.yourdomain.com:80/.
+alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 http://always270310.yourdomain.com:80/.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:24 +04 2024
-;; MSG SIZE  rcvd: 630
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 910
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz42.10.yourdomain.com @127.0.0.1
@@ -1588,28 +1589,28 @@ alias.10.nfz41.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz42.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 48574
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 57231
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz42.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
-alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
-alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
-alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
-alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
-alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
-alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
-alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
-alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
-alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
+alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 https://always565117.yourdomain.com/.
+alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 https://always391293.yourdomain.com/.
+alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 https://always752066.yourdomain.com/.
+alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 https://always639729.yourdomain.com/.
+alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 https://always329244.yourdomain.com/.
+alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 https://always049400.yourdomain.com/.
+alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 https://always025722.yourdomain.com/.
+alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 https://always582802.yourdomain.com/.
+alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 https://always036505.yourdomain.com/.
+alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 https://always292396.yourdomain.com/.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:24 +04 2024
-;; MSG SIZE  rcvd: 600
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 890
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz43.10.yourdomain.com @127.0.0.1
@@ -1617,28 +1618,28 @@ alias.10.nfz42.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz43.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 30272
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64695
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz43.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
-alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
-alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
-alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
-alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
-alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
-alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
-alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
-alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
-alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
+alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 https://always109772.yourdomain.com:443/.
+alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 https://always851821.yourdomain.com:443/.
+alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 https://always831221.yourdomain.com:443/.
+alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 https://always089441.yourdomain.com:443/.
+alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 https://always022735.yourdomain.com:443/.
+alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 https://always232039.yourdomain.com:443/.
+alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 https://always190227.yourdomain.com:443/.
+alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 https://always472110.yourdomain.com:443/.
+alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 https://always097308.yourdomain.com:443/.
+alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 https://always056394.yourdomain.com:443/.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:24 +04 2024
-;; MSG SIZE  rcvd: 630
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 930
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz44.10.yourdomain.com @127.0.0.1
@@ -1646,28 +1647,28 @@ alias.10.nfz43.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz44.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 50025
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 59428
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz44.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
-alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
-alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
-alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
-alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
-alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
-alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
-alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
-alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
-alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
+alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
+alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
+alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
+alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
+alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
+alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
+alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
+alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
+alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
+alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 1.2.3.4.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:24 +04 2024
-;; MSG SIZE  rcvd: 620
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 600
 
 -------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz45.10.yourdomain.com @127.0.0.1
@@ -1675,30 +1676,145 @@ alias.10.nfz44.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz45.10.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 62178
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 35571
 ;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;alias.10.nfz45.10.yourdomain.com. IN	MX
 
 ;; ANSWER SECTION:
-alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
-alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
-alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
-alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
-alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
-alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
-alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
-alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
-alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
-alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
+alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
+alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
+alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
+alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
+alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
+alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
+alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
+alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
+alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
+alias.10.nfz45.10.yourdomain.com. 60 IN	MX	0 1.2.3.4:80.
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jun 04 15:07:24 +04 2024
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 630
+
+-------------------------------------------------------------------------------------------
+# dig MX alias.10.nfz46.10.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz46.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 27832
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.10.nfz46.10.yourdomain.com. IN	MX
+
+;; ANSWER SECTION:
+alias.10.nfz46.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
+alias.10.nfz46.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
+alias.10.nfz46.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
+alias.10.nfz46.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
+alias.10.nfz46.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
+alias.10.nfz46.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
+alias.10.nfz46.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
+alias.10.nfz46.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
+alias.10.nfz46.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
+alias.10.nfz46.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 600
+
+-------------------------------------------------------------------------------------------
+# dig MX alias.10.nfz47.10.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz47.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 39251
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.10.nfz47.10.yourdomain.com. IN	MX
+
+;; ANSWER SECTION:
+alias.10.nfz47.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
+alias.10.nfz47.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
+alias.10.nfz47.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
+alias.10.nfz47.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
+alias.10.nfz47.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
+alias.10.nfz47.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
+alias.10.nfz47.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
+alias.10.nfz47.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
+alias.10.nfz47.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
+alias.10.nfz47.10.yourdomain.com. 60 IN	MX	0 1\.2\.3\.4:80.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 630
+
+-------------------------------------------------------------------------------------------
+# dig MX alias.10.nfz48.10.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz48.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 63513
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.10.nfz48.10.yourdomain.com. IN	MX
+
+;; ANSWER SECTION:
+alias.10.nfz48.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
+alias.10.nfz48.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
+alias.10.nfz48.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
+alias.10.nfz48.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
+alias.10.nfz48.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
+alias.10.nfz48.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
+alias.10.nfz48.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
+alias.10.nfz48.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
+alias.10.nfz48.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
+alias.10.nfz48.10.yourdomain.com. 60 IN	MX	0 127.0.0.1.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Jul 04 00:22:41 +04 2024
+;; MSG SIZE  rcvd: 620
+
+-------------------------------------------------------------------------------------------
+# dig MX alias.10.nfz49.10.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz49.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 41635
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.10.nfz49.10.yourdomain.com. IN	MX
+
+;; ANSWER SECTION:
+alias.10.nfz49.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
+alias.10.nfz49.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
+alias.10.nfz49.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
+alias.10.nfz49.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
+alias.10.nfz49.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
+alias.10.nfz49.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
+alias.10.nfz49.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
+alias.10.nfz49.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
+alias.10.nfz49.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
+alias.10.nfz49.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Jul 04 00:22:42 +04 2024
 ;; MSG SIZE  rcvd: 650
 ```
 
 ##
 Go back to [menu](#polardns-catalogue---response-modifiers).
-

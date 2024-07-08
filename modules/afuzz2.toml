@@ -9,13 +9,13 @@ category = "General features"
 code = '''
 if req.first_subdomain.startswith("afuzz2"):
    # Send many A records with a slightly distorted name. In the end, provide the correct one also
-   # af<01>zz2.dnslabtest1.com   A   6.6.6.1
-   # af<02>zz2.dnslabtest1.com   A   6.6.6.2
-   # af<03>zz2.dnslabtest1.com   A   6.6.6.3
+   # af<01>zz2.yourdomain.com   A   6.6.6.1
+   # af<02>zz2.yourdomain.com   A   6.6.6.2
+   # af<03>zz2.yourdomain.com   A   6.6.6.3
    # ...
-   # af<fe>zz2.dnslabtest1.com   A   6.6.6.254
-   # af<ff>zz2.dnslabtest1.com   A   6.6.6.255
-   # afuzz2.dnslabtest1.com   A   1.2.3.4
+   # af<fe>zz2.yourdomain.com   A   6.6.6.254
+   # af<ff>zz2.yourdomain.com   A   6.6.6.255
+   # afuzz2.yourdomain.com   A   1.2.3.4
    answers = 1
    if req.subdomains[1].isnumeric():
       answers = int(req.subdomains[1])

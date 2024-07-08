@@ -21,25 +21,25 @@ if req.first_subdomain.startswith("cgena") or req.first_subdomain.startswith("ba
       count = int(req.subdomains[3])
    r = '{:06d}'.format(random.getrandbits(20) % 1000000)
    match variant:
-      case 2:  # cgena.2 - <BYTE>always123456.dnslabtest1.com
+      case 2:  # cgena.2 - <BYTE>always123456.yourdomain.com
          bindom  = struct.pack(">B", 6+count+6) + badbyte.to_bytes(1, 'big')*count
          bindom += b"always" + bytes(str(r), 'utf-8')
          bindom += convDom2Bin(req.sld_tld_domain)
          dom  = str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + "always" + str(r)
          dom += "." + req.sld_tld_domain
-      case 3:  # cgena.3 - always<BYTE>123456.dnslabtest1.com
+      case 3:  # cgena.3 - always<BYTE>123456.yourdomain.com
          bindom  = struct.pack(">B", 6+count+6) + b"always" + badbyte.to_bytes(1, 'big')*count
          bindom += bytes(str(r), 'utf-8')
          bindom += convDom2Bin(req.sld_tld_domain)
          dom  = "always" + str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + str(r)
          dom += "." + req.sld_tld_domain
-      case 4:  # cgena.4 - always123456<BYTE>.dnslabtest1.com
+      case 4:  # cgena.4 - always123456<BYTE>.yourdomain.com
          bindom  = struct.pack(">B", 6+count+6) + b"always" + bytes(str(r), 'utf-8')
          bindom += badbyte.to_bytes(1, 'big')*count
          bindom += convDom2Bin(req.sld_tld_domain)
          dom  = "always" + str(r) + str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
          dom += "." + req.sld_tld_domain
-      case 5:  # cgena.5 - always123456<BYTE>dnslabtest1.com
+      case 5:  # cgena.5 - always123456<BYTE>yourdomain.com
          fc = b"always" + bytes(str(r), 'utf-8') + badbyte.to_bytes(1, 'big')*count + bytes(req.sld, 'utf-8')
          bindom  = struct.pack(">B", len(fc))
          bindom += fc
@@ -48,7 +48,7 @@ if req.first_subdomain.startswith("cgena") or req.first_subdomain.startswith("ba
          bindom += b"\x00"
          dom  = "always" + str(r) + str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
          dom += req.sld_tld_domain
-      case 6:  # cgena.6 - always123456.dnslabtest1<BYTE>com
+      case 6:  # cgena.6 - always123456.yourdomain<BYTE>com
          bindom  = struct.pack(">B", 12)
          bindom += bytes("always" + str(r), 'utf-8')
          bindom += struct.pack(">B", len(req.sld + req.tld) + count)
@@ -58,28 +58,28 @@ if req.first_subdomain.startswith("cgena") or req.first_subdomain.startswith("ba
          bindom += b"\x00"
          dom  = "always" + str(r) + "." + req.sld
          dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + req.tld
-      case 7:  # cgena.7 - always123456.dnslabtest1.<BYTE>com
+      case 7:  # cgena.7 - always123456.yourdomain.<BYTE>com
          bindom  = struct.pack(">B", 12) + b"always" + bytes(str(r), 'utf-8')
          bindom += convData2Bin(req.sld)
          bindom += struct.pack(">B", count+len(req.tld)) + badbyte.to_bytes(1, 'big')*count
          bindom += bytes(req.tld, 'utf-8') + b"\x00"
          dom  = "always" + str(r) + "." + req.sld + "."
          dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>") + req.tld
-      case 8:  # cgena.8 - always123456.dnslabtest1.com<BYTE>
+      case 8:  # cgena.8 - always123456.yourdomain.com<BYTE>
          bindom  = struct.pack(">B", 12) + b"always" + bytes(str(r), 'utf-8')
          bindom += convData2Bin(req.sld)
          bindom += struct.pack(">B", count+len(req.tld)) + bytes(req.tld, 'utf-8')
          bindom += badbyte.to_bytes(1, 'big')*count + b"\x00"
          dom  = "always" + str(r) + "." + req.sld_tld_domain
          dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
-      case 9:    # cgena.9 - always123456.dnslabtest1.com.<BYTE>
+      case 9:    # cgena.9 - always123456.yourdomain.com.<BYTE>
          bindom  = struct.pack(">B", 12) + b"always" + bytes(str(r), 'utf-8')
          bindom += convData2Bin(req.sld_tld_domain)
          bindom += struct.pack(">B", count) + badbyte.to_bytes(1, 'big')*count
          bindom += b"\x00"
          dom  = "always" + str(r) + "." + req.sld_tld_domain + "." 
          dom += str(badbyte.to_bytes(1, 'big')*count).replace(".", "<DOT>")
-      case _:  # cgena.1 - <BYTE>.always123456.dnslabtest1.com
+      case _:  # cgena.1 - <BYTE>.always123456.yourdomain.com
          bindom  = struct.pack(">B", count) + badbyte.to_bytes(1, 'big')*count
          bindom += convData2Bin("always" + str(r))
          bindom += convDom2Bin(req.sld_tld_domain)
@@ -90,7 +90,8 @@ if req.first_subdomain.startswith("cgena") or req.first_subdomain.startswith("ba
    ### QUESTION SECTION ########
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("CNAME") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)          ## TTL
    buffer += struct.pack(">H", len(bindom))       ## Data length
    buffer += bindom                               ## CNAME

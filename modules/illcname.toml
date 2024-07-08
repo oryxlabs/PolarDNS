@@ -14,17 +14,17 @@ if req.first_subdomain.startswith("illcname"):
    if req.subdomains[1].isnumeric():
       variant = int(req.subdomains[1])
    match variant:
-      case 1:  # illcname.0 - http://always123456.dnslabtest1.com/
+      case 1:  # illcname.0 - http://always123456.yourdomain.com/
          dom = "http://always" + r + "." + req.sld_tld_domain + "/"
-      case 2:  # illcname.1 - http://always123456.dnslabtest1.com:80/
+      case 2:  # illcname.1 - http://always123456.yourdomain.com:80/
          dom = "http://always" + r + "." + req.sld_tld_domain + ":80/"
-      case 3:  # illcname.2 - https://always123456.dnslabtest1.com/
+      case 3:  # illcname.2 - https://always123456.yourdomain.com/
          dom = "https://always" + r + "." + req.sld_tld_domain + "/"
-      case 4:  # illcname.3 - https://always123456.dnslabtest1.com:443/
+      case 4:  # illcname.3 - https://always123456.yourdomain.com:443/
          dom = "https://always" + r + "." + req.sld_tld_domain + ":443/"
-      case 5:  # illcname.4 - always123456.dnslabtest1.com:80
+      case 5:  # illcname.4 - always123456.yourdomain.com:80
          dom = "always" + r + "." + req.sld_tld_domain + ":80"
-      case 6:  # illcname.5 - always123456.dnslabtest1.com:443
+      case 6:  # illcname.5 - always123456.yourdomain.com:443
          dom = "always" + r + "." + req.sld_tld_domain + ":443"
       case 7:  # illcname.6 - 1.2.3.4 (in DNS name notation as 4 labels)
          dom = "1.2.3.4"
@@ -46,7 +46,8 @@ if req.first_subdomain.startswith("illcname"):
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    bindom = convDom2Bin(dom)
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("CNAME") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)          ## TTL
    buffer += struct.pack(">H", len(bindom))       ## Data length
    buffer += bindom                               ## CNAME

@@ -18,7 +18,8 @@ code = '''
               # MX alias record
               bindom = convDom2Bin(new_domain_name)
               data_len = 2+len(bindom)                 # Priority (2 bytes) + Target domain
-              buffer += convDom2Bin(req.full_domain) + getTypeBin("MX") + getClassBin("IN")
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              buffer += getTypeBin("MX") + getClassBin("IN")
               buffer += struct.pack(">L", resp.TTL)    ## TTL
               buffer += struct.pack(">H", data_len)    ## Data length
               buffer += struct.pack(">H", 0)           ## Priority

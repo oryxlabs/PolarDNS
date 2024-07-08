@@ -11,7 +11,7 @@ if req.first_subdomain.startswith("loop"):
    # Do an alias loop in a CNAME/DNAME/HTTPS/SVCB/SRV/MX record type
    if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():
       # we are already in a loop, e.g.:
-      # loop.10.4.dnslabtest.com
+      # loop.10.4.yourdomain.com
       max = int(req.subdomains[1])
       cur = int(req.subdomains[2])
       if cur >= max:
@@ -24,7 +24,7 @@ if req.first_subdomain.startswith("loop"):
          new_domain_name += "." + req.subdomains[i+3]
    elif req.subdomains[1].isnumeric():
       # we are in beginning of a loop with a requested max value, e.g.:
-      # loop.10.dnslabtest.com
+      # loop.10.yourdomain.com
       max = int(req.subdomains[1])
       if max < 1:
          max = 1
@@ -43,14 +43,16 @@ if req.first_subdomain.startswith("loop"):
    match req.type_str:
       case "DNAME":
          type = "DNAME"
-         buffer += convDom2Bin(req.full_domain) + getTypeBin("DNAME") + getClassBin("IN")
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin("DNAME") + getClassBin("IN")
          buffer += struct.pack(">L", resp.TTL)     ## TTL
          buffer += struct.pack(">H", len(bindom))  ## Data length
          buffer += bindom                          ## DNAME value
       case "HTTPS":
          type = "HTTPS"
          data_len = 2+len(bindom)                  # SvcPriority (2 bytes) + the target name
-         buffer += convDom2Bin(req.full_domain) + getTypeBin("HTTPS") + getClassBin("IN")
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin("HTTPS") + getClassBin("IN")
          buffer += struct.pack(">L", resp.TTL)     ## TTL
          buffer += struct.pack(">H", data_len)     ## Data length
          buffer += struct.pack(">H", 0)            ## SvcPriority (0 means alias mode - RFC 9460)
@@ -58,7 +60,8 @@ if req.first_subdomain.startswith("loop"):
       case "SVCB":
          type = "SVCB"
          data_len = 2+len(bindom)                  # SvcPriority (2 bytes) + the target name
-         buffer += convDom2Bin(req.full_domain) + getTypeBin("SVCB") + getClassBin("IN")
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin("SVCB") + getClassBin("IN")
          buffer += struct.pack(">L", resp.TTL)     ## TTL
          buffer += struct.pack(">H", data_len)     ## Data length
          buffer += struct.pack(">H", 0)            ## SvcPriority (0 means alias mode - RFC 9460)
@@ -67,7 +70,8 @@ if req.first_subdomain.startswith("loop"):
          type = "SRV"
          port = random.getrandbits(16)
          data_len = 2+2+2+len(bindom)  # Priority (2 bytes) + Weight (2 bytes) + Port (2 bytes) + Target domain
-         buffer += convDom2Bin(req.full_domain) + getTypeBin("SRV") + getClassBin("IN")
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin("SRV") + getClassBin("IN")
          buffer += struct.pack(">L", resp.TTL)     ## TTL
          buffer += struct.pack(">H", data_len)     ## Data length
          buffer += struct.pack(">H", 0)            ## Priority
@@ -77,14 +81,16 @@ if req.first_subdomain.startswith("loop"):
       case "MX":
          type = "MX"
          data_len = 2+len(bindom)                  # Priority (2 bytes) + Target domain
-         buffer += convDom2Bin(req.full_domain) + getTypeBin("MX") + getClassBin("IN")
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin("MX") + getClassBin("IN")
          buffer += struct.pack(">L", resp.TTL)     ## TTL
          buffer += struct.pack(">H", data_len)     ## Data length
          buffer += struct.pack(">H", 0)            ## Priority
          buffer += bindom                          ## TargetName
       case _:
          type = "CNAME"
-         buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin("CNAME") + getClassBin("IN")
          buffer += struct.pack(">L", resp.TTL)     ## TTL
          buffer += struct.pack(">H", len(bindom))  ## Data length
          buffer += bindom                          ## DNAME value

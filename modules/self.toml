@@ -1,7 +1,7 @@
 [module]
 name = "self"
 type = "feature"
-info = "Client IP address"
+info = "What is my IP address"
 desc = "Respond with A and TXT records containing the IP address of the connecting client. The TXT record also contains the port information"
 author = "ivan.jedek@oryxlabs.com"
 category = "General features"
@@ -17,14 +17,16 @@ if req.first_subdomain.startswith("self") or req.first_subdomain.startswith("wha
    if req.type_str == "TXT":
       # TXT
       ipport = str(self.client_address[0]) + ":" + str(self.client_address[1])
-      buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("IN")
+      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+      buffer += getTypeBin("TXT") + getClassBin("IN")
       buffer += struct.pack(">L", resp.TTL)      ## TTL
       buffer += struct.pack(">H", len(ipport)+1) ## Data length
       buffer += struct.pack(">B", len(ipport))   ## TXT length
       buffer += bytes(ipport, "utf-8")
       # A
       ip = self.client_address[0]
-      buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+      buffer += getTypeBin("A") + getClassBin("IN")
       buffer += struct.pack(">L", resp.TTL)    ## TTL
       buffer += struct.pack(">H", 4)           ## Data length
       buffer += socket.inet_aton(ip)           ## IP
@@ -32,13 +34,15 @@ if req.first_subdomain.startswith("self") or req.first_subdomain.startswith("wha
    else:
       # A
       ip = self.client_address[0]
-      buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+      buffer += getTypeBin("A") + getClassBin("IN")
       buffer += struct.pack(">L", resp.TTL)    ## TTL
       buffer += struct.pack(">H", 4)           ## Data length
       buffer += socket.inet_aton(ip)           ## IP
       # TXT
       ipport = str(self.client_address[0]) + ":" + str(self.client_address[1])
-      buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("IN")
+      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+      buffer += getTypeBin("TXT") + getClassBin("IN")
       buffer += struct.pack(">L", resp.TTL)      ## TTL
       buffer += struct.pack(">H", len(ipport)+1) ## Data length
       buffer += struct.pack(">B", len(ipport))   ## TXT length

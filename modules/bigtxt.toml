@@ -24,7 +24,8 @@ if req.first_subdomain.startswith("bigtxt"):
    for i in range(size-1):
        data += '.' + ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(int(chunksize)))
    # TXT
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("TXT") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)            ## TTL
    buffer += struct.pack(">H", len(data)+1)         ## Data length
    buffer += convData2Bin(data)

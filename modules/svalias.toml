@@ -22,7 +22,8 @@ code = '''
                   dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
                   bindom = convDom2Bin(dom)
                   data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
-                  buffer += convDom2Bin(req.full_domain) + getTypeBin("SVCB") + getClassBin("IN")
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += getTypeBin("SVCB") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)    ## TTL
                   buffer += struct.pack(">H", data_len)    ## Data length
                   buffer += struct.pack(">H", 0)           ## SvcPriority (0 means alias mode - RFC 9460)
@@ -36,11 +37,11 @@ code = '''
               # Send multiple random SVCB aliases (RFC 9460) for any domain name with attribute leaves
               # (domains prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.svalias...'
               # BEWARE: This could result in multiplication
-              offset = 1      # _a.svalias.10.dnslabtest.com
+              offset = 1      # _a.svalias.10.yourdomain.com
               if req.subdomains_lc[2].startswith("svalias"):
-                 offset = 2   # _a._b.svalias.10.dnslabtest.com
+                 offset = 2   # _a._b.svalias.10.yourdomain.com
               elif req.subdomains_lc[3].startswith("svalias"):
-                 offset = 3   # _a._b._c.svalias.10.dnslabtest.com
+                 offset = 3   # _a._b._c.svalias.10.yourdomain.com
               answers = int(req.subdomains[offset+1]) if req.subdomains[offset+1].isnumeric() else 3
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
@@ -53,7 +54,8 @@ code = '''
                   dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
                   bindom = convDom2Bin(dom)
                   data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
-                  buffer += convDom2Bin(req.full_domain) + getTypeBin("SVCB") + getClassBin("IN")
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += getTypeBin("SVCB") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)    ## TTL
                   buffer += struct.pack(">H", data_len)    ## Data length
                   buffer += struct.pack(">H", 0)           ## SvcPriority (0 means alias mode - RFC 9460)

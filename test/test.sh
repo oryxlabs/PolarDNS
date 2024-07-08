@@ -6,6 +6,9 @@ timeout=1
 
 nofail=0
 
+SED="sed"
+if [ "`uname -s`" == "Darwin" ]; then SED="gsed"; fi
+
 ##################
 domain=""
 
@@ -32,18 +35,21 @@ rundig() {
   #tmpfile="/tmp/output.${d//[ +]/}.${target_ip}"
   dig ${d} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port} \
   | grep -v '^; <<>> DiG \| WHEN: \| Query time: ' \
-  | sed -e 's/, id: .*/, id: <ID>/;s/expected ID .*, got .*/expected ID <ID>, got <DIF>/' \
-  | sed -e 's/\x09\s*/ /g;s/\\000/<NUL>/g;s/\([^0-9]\)[0-9]\{6\}\([^0-9]\)/\1<RANDOM>\2/' \
-  | sed -e 's/rcvd: .*/rcvd: <SIZE>/;s/has [0-9]* extra bytes/has <NUM> extra bytes/g' \
-  | sed -e "s/${domain//\./\\.}/<OURDOM>/g;s/${domain%.*}/<OURDOM-NOTLD>/g" \
-  | sed -E 's/(SRV\s*0\s*0\s*)[0-9]*\s*(_.*sr|sr|)(loop|chain|alias)/\1 <PORT> \2\3/g' \
-  | sed -E 's/(CNAME|DNAME|HTTPS|SVCB|SRV|MX)(.*)(\s|cn|dn|ht|sv|sr|mx)alias[0-9]*\./\1\2\3alias<RANDOM>\./g' \
-  | sed -e "s/#${target_port}/#53/g" \
-  | sed -e "s/${target_ip}/127\.0\.0\.1/g" \
+  | ${SED} -e 's/, id: .*/, id: <ID>/;s/expected ID .*, got .*/expected ID <ID>, got <DIF>/' \
+  | ${SED} -e 's/\x09\s*/ /g;s/\\000/<NUL>/g;s/\([^0-9]\)[0-9]\{6\}\([^0-9]\)/\1<RANDOM>\2/' \
+  | ${SED} -e 's/rcvd: .*/rcvd: <SIZE>/;s/has [0-9]* extra bytes/has <NUM> extra bytes/g' \
+  | ${SED} -e "s/${domain//\./\\.}/<OURDOM>/g;s/${domain%.*}/<OURDOM-NOTLD>/g" \
+  | ${SED} -E 's/(SRV\s*0\s*0\s*)[0-9]*\s*(_.*sr|sr|)(loop|chain|alias)/\1 <PORT> \2\3/g' \
+  | ${SED} -E 's/(CNAME|DNAME|HTTPS|SVCB|SRV|MX)(.*)(\s|cn|dn|ht|sv|sr|mx)alias[0-9]*\./\1\2\3alias<RANDOM>\./g' \
+  | ${SED} -e '0,/^\([0-9a-f]\{2\} \)\{16\} /s/^\([0-9a-f]\{2\} \)\{2\}\(\([0-9a-f]\{2\} \)\{14\} *\)[^ ][^ ]/TX ID \2ID/1' \
+  | ${SED} -e "s/#${target_port}/#53/g;s/${target_ip}/127\.0\.0\.1/g;s/^\(size.*127\.0\.0\.\).*$/\1<RANDOM>/g" \
   | md5sum | awk '{print $1}'
   #> "${tmpfile}"
   #echo hello | md5sum | awk '{print $1}'
 }
+
+#  | ${SED} -e "s/#${target_port}/#53/g" \
+#  | ${SED} -e "s/${target_ip}/127\.0\.0\.1/g" \
 
 runddig() {
   d="$1"
@@ -53,14 +59,14 @@ runddig() {
   echo
   dig ${d} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port} \
   | grep -v '^; <<>> DiG \| WHEN: \| Query time: ' \
-  | sed -e 's/, id: .*/, id: <ID>/;s/expected ID .*, got .*/expected ID <ID>, got <DIF>/' \
-  | sed -e 's/\x09\s*/ /g;s/\\000/<NUL>/g;s/\([^0-9]\)[0-9]\{6\}\([^0-9]\)/\1<RANDOM>\2/' \
-  | sed -e 's/rcvd: .*/rcvd: <SIZE>/;s/has [0-9]* extra bytes/has <NUM> extra bytes/g' \
-  | sed -e "s/${domain//\./\\.}/<OURDOM>/g;s/${domain%.*}/<OURDOM-NOTLD>/g" \
-  | sed -E 's/(SRV\s*0\s*0\s*)[0-9]*\s*(_.*sr|sr|)(loop|chain|alias)/\1 <PORT> \2\3/g' \
-  | sed -E 's/(CNAME|DNAME|HTTPS|SVCB|SRV|MX)(.*)(\s|cn|dn|ht|sv|sr|mx)alias[0-9]*\./\1\2\3alias<RANDOM>\./g' \
-  | sed -e "s/#${target_port}/#53/g" \
-  | sed -e "s/${target_ip}/127\.0\.0\.1/g" \
+  | ${SED} -e 's/, id: .*/, id: <ID>/;s/expected ID .*, got .*/expected ID <ID>, got <DIF>/' \
+  | ${SED} -e 's/\x09\s*/ /g;s/\\000/<NUL>/g;s/\([^0-9]\)[0-9]\{6\}\([^0-9]\)/\1<RANDOM>\2/' \
+  | ${SED} -e 's/rcvd: .*/rcvd: <SIZE>/;s/has [0-9]* extra bytes/has <NUM> extra bytes/g' \
+  | ${SED} -e "s/${domain//\./\\.}/<OURDOM>/g;s/${domain%.*}/<OURDOM-NOTLD>/g" \
+  | ${SED} -E 's/(SRV\s*0\s*0\s*)[0-9]*\s*(_.*sr|sr|)(loop|chain|alias)/\1 <PORT> \2\3/g' \
+  | ${SED} -E 's/(CNAME|DNAME|HTTPS|SVCB|SRV|MX)(.*)(\s|cn|dn|ht|sv|sr|mx)alias[0-9]*\./\1\2\3alias<RANDOM>\./g' \
+  | ${SED} -e '0,/^\([0-9a-f]\{2\} \)\{16\} /s/^\([0-9a-f]\{2\} \)\{2\}\(\([0-9a-f]\{2\} \)\{14\} *\)[^ ][^ ]/TX ID \2ID/1' \
+  | ${SED} -e "s/#${target_port}/#53/g;s/${target_ip}/127\.0\.0\.1/g;s/^\(size.*127\.0\.0\.\).*$/\1<RANDOM>/g" \
   > "${tmpfile}"
   sum="`md5sum "${tmpfile}" | awk '{print $1}'`"
   cat "${tmpfile}"
@@ -115,6 +121,19 @@ fi
 
 #################################################################
 
+# size.toml
+runtest "size.512.fc.${domain}" "50098dd38cfb8761d83896d6502dae16"
+runtest "size.512.nc.${domain}" "f3d0fdca5f1dff0ce02b4cf57dea4871"
+runtest "size.512.tc.fc.${domain}" "ee8d916f05fad25b8f42b82b18d618a4"
+runtest "size.512.tc.nc.${domain}" "b1113d8320c7fda9ea19e2c6a77695b5"
+runtest "+tcp size.512.fc.${domain}" "a5da9bf289ddd4d8f9ceec461359c64a"
+runtest "+tcp size.512.nc.${domain}" "aebdf9d41d3344a4224ba93b2a4e6895"
+runtest "size.8192.fc.${domain}" "737ee4ba3d9f8fc5c519940108bfc32d"
+runtest "size.8192.nc.${domain}" "8138041dbafca83364d92f96ee33ef9e"
+runtest "size.8192.tc.fc.${domain}" "62a4d6930f3273b99bc6d41269f9706c"
+runtest "size.8192.tc.nc.${domain}" "f993050508db38a6bab53d01ee77fda3"
+runtest "+tcp size.8192.fc.${domain}" "5ade67f3add2834f15a270629bd33482"
+runtest "+tcp size.8192.nc.${domain}" "e61c7ce72d4106edea72963d9581558a"
 
 # chain.toml
 runtest "chain.${domain}" "b3ebf5cb6696ea175cd3659eda349a55"
@@ -429,6 +448,17 @@ runtest "DNAME alias.40.nfz45.20.${domain}" "e9bf3304b6728d362476059437627284"
 runtest "DNAME alias.40.nfz46.20.${domain}" "c4bd1c08d01ae7e23206e09a49f5d1dc"
 runtest "DNAME alias.40.nfz47.20.${domain}" "95afc81bb25340dffd9b458cbe7da1a4"
 
+# cut N bytes
+runtest "size.128.fc.cut.${domain}" "171958d9a027ce6c9d11c22a76680cb5"
+runtest "size.128.fc.cut00.${domain}" "9a0d0f2eeda7f748cfd0e76b4ae6499e"
+runtest "size.128.fc.cut16.${domain}" "2f06edc7d54959770d94b1331b93bdd5"
+runtest "size.128.fc.tc.cut.${domain}" "ea1e6e9cdb19728eb4a082fa12d61932"
+runtest "size.128.fc.tc.cut00.${domain}" "3b461baab3e480b062bcc1c3abe8227d"
+runtest "size.128.fc.tc.cut16.${domain}" "1a57f4350cd9f474b73f69e8ac2747da"
+runtest "+tcp size.128.fc.cut.${domain}" "c88223a21889afa9b6ddadbb98a9eefe"
+runtest "+tcp size.128.fc.cut00.${domain}" "95c5ef17c8e1bd55b6d57785d515778f"
+runtest "+tcp size.128.fc.cut16.${domain}" "4b48cbdf251de563f97af298ba5bfbc8"
+
 # other
 runtest "queryback2.${domain}" "8e7424518528278533bc12ecc7cbabff"
 runtest "cgena.1.${domain}" "8bee2a94ebe12cee620a8bfa18169b1d"
@@ -534,6 +564,10 @@ runtest "cutcnamebuf.10.tc.${domain}" "1a57f4350cd9f474b73f69e8ac2747da"
 runtest "+tcp cutcnamebuf.${domain}" "3391c415e63a1b364e01168cf9bcd888"
 runtest "+tcp cutcnamebuf.0.${domain}" "d97834bade1cb9417c8937627159b1d2"
 runtest "+tcp cutcnamebuf.10.${domain}" "4b48cbdf251de563f97af298ba5bfbc8"
+runtest "afuzz1.0.${domain}" "1b9eacfdd5d3369dacdf41bfe7e0cf06"
+runtest "afuzz1.255.${domain}" "83ae4fc80a1f49fc6231f82af9d9d1a6"
+runtest "afuzz2.256.${domain}" "99524469d286502fcd99f2a8c3a2f193"
+# # # #
 runtest "inj01.tc.${domain}" "a29cc934856dcc568da68bb883451fbc"
 runtest "inj02.tc.${domain}" "8dded217217ecd74d9c8afed1a9a1037"
 runtest "inj03.tc.${domain}" "e2577aada658eb27a78cfc2875302f53"
@@ -560,18 +594,32 @@ runtest "inj10.3rdparty.tc.${domain}" "22b93be23a94eb77862983b009f3c153"
 runtest "inj11.3rdparty.tc.${domain}" "53b6c2e48331358ab1b9891ec53d3329"
 runtest "inj12.3rdparty.tc.${domain}" "7d73225e018522ddf805a715b1e693fd"
 runtest "inj13.3rdparty.tc.${domain}" "b0a2dca9e5e845ab8bde4e713cb9af9b"
-runtest "inj01.qurr0.noq.tc.${domain}" "d9c8a1a3ccee8f0c92b0581ddf24a02d"
-runtest "inj02.qurr0.noq.tc.${domain}" "451eb6317f3d7d2d351ea0c0c2c0ba52"
-runtest "inj03.qurr0.noq.tc.${domain}" "e030f7107df780ea06e136b8e048eb4a"
-runtest "inj04.qurr0.noq.tc.${domain}" "06e19d90474a9eabbbe48e45732071ce"
-runtest "inj05.qurr0.noq.tc.${domain}" "aa9a58181537b32e5473e4838cbfd3f9"
-runtest "inj06.qurr0.noq.tc.${domain}" "e78f2dbd75da24341baa2ad00e521b04"
-runtest "inj07.qurr0.noq.tc.${domain}" "0a3aaa2f9c95b9e3f44e04b03f5f66e1"
-runtest "inj08.qurr0.noq.tc.${domain}" "f309caf7c79a05b8df3b467f91657b34"
-runtest "inj09.qurr0.noq.tc.${domain}" "f390d384f3d765e3ec2760464cd7a28d"
-runtest "inj11.qurr0.noq.tc.${domain}" "db9e8cff53a0a336229578502105be23"
-runtest "inj12.qurr0.noq.tc.${domain}" "ab6c7d1df67a85af42764ef297fbc42a"
-runtest "inj13.qurr0.noq.tc.${domain}" "9b01adf33a06759344dfed64c6a80536"
+# # # #
+runtest "inj01.qurr0.noq.tc.nc.${domain}" "6fed768669f36d592fbf2c242fbdf621"
+runtest "inj02.qurr0.noq.tc.nc.${domain}" "ac024fab4966618caa57da2824782902"
+runtest "inj03.qurr0.noq.tc.nc.${domain}" "1ea9eccb942f55b7bcf97463efd3a6bc"
+runtest "inj04.qurr0.noq.tc.nc.${domain}" "61606886466cadadd574a1c55c284f5c"
+runtest "inj05.qurr0.noq.tc.nc.${domain}" "7c9083464669fbe02dd43c51d4d53c7d"
+runtest "inj06.qurr0.noq.tc.nc.${domain}" "623638e8508800616d40be63adf1c3aa"
+runtest "inj07.qurr0.noq.tc.nc.${domain}" "0a3aaa2f9c95b9e3f44e04b03f5f66e1"
+runtest "inj08.qurr0.noq.tc.nc.${domain}" "f309caf7c79a05b8df3b467f91657b34"
+runtest "inj09.qurr0.noq.tc.nc.${domain}" "f390d384f3d765e3ec2760464cd7a28d"
+runtest "inj11.qurr0.noq.tc.nc.${domain}" "db9e8cff53a0a336229578502105be23"
+runtest "inj12.qurr0.noq.tc.nc.${domain}" "ab6c7d1df67a85af42764ef297fbc42a"
+runtest "inj13.qurr0.noq.tc.nc.${domain}" "8ab5daa230b7e0bb2770969fbbaa604c"
+runtest "inj01.qurr0.noq.tc.fc.${domain}" "0f3c5cd291dd23977a02fe626db8934f"
+runtest "inj02.qurr0.noq.tc.fc.${domain}" "7f58a7b4e802b79b405dec79136bf002"
+runtest "inj03.qurr0.noq.tc.fc.${domain}" "712abccafa3ec27d402d250bbc1ec79c"
+runtest "inj04.qurr0.noq.tc.fc.${domain}" "ff6f233f80c51ebaacc695d666c7fc29"
+runtest "inj05.qurr0.noq.tc.fc.${domain}" "62cb2ac55101b60d22033fd76aa7233b"
+runtest "inj06.qurr0.noq.tc.fc.${domain}" "c561be7967da0a9baccba59fa96d189e"
+runtest "inj07.qurr0.noq.tc.fc.${domain}" "0a3aaa2f9c95b9e3f44e04b03f5f66e1"
+runtest "inj08.qurr0.noq.tc.fc.${domain}" "f309caf7c79a05b8df3b467f91657b34"
+runtest "inj09.qurr0.noq.tc.fc.${domain}" "f390d384f3d765e3ec2760464cd7a28d"
+runtest "inj11.qurr0.noq.tc.fc.${domain}" "db9e8cff53a0a336229578502105be23"
+runtest "inj12.qurr0.noq.tc.fc.${domain}" "ab6c7d1df67a85af42764ef297fbc42a"
+runtest "inj13.qurr0.noq.tc.fc.${domain}" "56befe56a6299daea4ef503e148886c2"
+# # # #
 runtest "always123.anrr0.tc.${domain}" "c1c7e444332837238ff7d2d3db344529"
 runtest "always123.aurr0.tc.${domain}" "7e97fb63c9bd088434bd47fc3aac36f3"
 runtest "always123.adrr0.tc.${domain}" "dc23653983824427f7df9f5652e30bed"
@@ -581,9 +629,11 @@ runtest "always123.adrr3.tc.${domain}" "99212d7b97eab8c72655497118ad90cf"
 runtest "always123.ttl12345.tc.${domain}" "4107a0d099cae52754b44943bfd00aa4"
 runtest "always123.ttl9999999.tc.${domain}" "8b1e49e99419aeecf05774d113da3820"
 runtest "always123.tc.tc.${domain}" "060fa3509cdc905d3fa9b9871040432c"
-runtest "always123.noq.tc.${domain}" "256994002e33d16b131b6fa00e507058"
+runtest "always123.noq.tc.nc.${domain}" "0f49ff8926e81f6f3042e1c85138e693"
+runtest "always123.noq.tc.fc.${domain}" "c2e3374dd06bb58ada865a369c6ebcb0"
 runtest "always123.qurr0.tc.${domain}" "2356e3488a2471e1a09fa0078d6a03fa"
-runtest "always123.qurr0.noq.tc.${domain}" "26c96aed349acc5817b5b009a79cc221"
+runtest "always123.qurr0.noq.tc.nc.${domain}" "2768c5ae22fc39f8a9c8606375c521b5"
+runtest "always123.qurr0.noq.tc.fc.${domain}" "a25a62adb7da068fb27cbc34a224070a"
 runtest "always123.qurr3.tc.${domain}" "96eab67b98b8088d1988d500c9d6cc08"
 runtest "+tcp ${domain} NS" "224e91e1e6dc0c8e3e23d2cd29213431"
 runtest "+tcp ${domain} TXT" "f643f5aa8fdfa6ba99ad580a982f07c5"
@@ -617,18 +667,32 @@ runtest "+tcp inj10.3rdparty.${domain}" "084ae536e9d6616f458a7671fc31a4cc"
 runtest "+tcp inj11.3rdparty.${domain}" "62a80f3b7626790e88ffb8d66e614343"
 runtest "+tcp inj12.3rdparty.${domain}" "4d804e1cbbc067849fe1829d9ffa01e5"
 runtest "+tcp inj13.3rdparty.${domain}" "7ac254e9138f06bf83bf659d1f7a50d4"
-runtest "+tcp inj01.qurr0.noq.${domain}" "8debe9566621d0eac9f300e9913430b5"
-runtest "+tcp inj02.qurr0.noq.${domain}" "815468012a7fdcbf6e76da619e2f4412"
-runtest "+tcp inj03.qurr0.noq.${domain}" "b9adbaa61550c8cab8f63f40b3af693b"
-runtest "+tcp inj04.qurr0.noq.${domain}" "ef7f08bc2d79d5783916f80b6d15f7bc"
-runtest "+tcp inj05.qurr0.noq.${domain}" "92e64499a2bd10d8ea1fb02abfd58469"
-runtest "+tcp inj06.qurr0.noq.${domain}" "0cc3812119c1b593bb479b9593ebadb1"
-runtest "+tcp inj07.qurr0.noq.${domain}" "98e6bbeb073c26a341a15defa6bde1cd"
-runtest "+tcp inj08.qurr0.noq.${domain}" "5f85588fe30fdb6176f25fe650d6c91b"
-runtest "+tcp inj09.qurr0.noq.${domain}" "871ceb93b0c67fb363f79db0101d43f4"
-runtest "+tcp inj11.qurr0.noq.${domain}" "91897765b2e88857600566ff51e7d99a"
-runtest "+tcp inj12.qurr0.noq.${domain}" "a35a6acd73b4b42828f116e575d5f85d"
-runtest "+tcp inj13.qurr0.noq.${domain}" "6e74e4348755e5832d6dde8e682aec22"
+# # # #
+runtest "+tcp inj01.qurr0.noq.nc.${domain}" "1eebf5066aef36071b66ab969e4a5231"
+runtest "+tcp inj02.qurr0.noq.nc.${domain}" "2b7ef8e2cf2ca5cfa86f8cbb2d893620"
+runtest "+tcp inj03.qurr0.noq.nc.${domain}" "cb0170fb15130a8d1def2b92103a787c"
+runtest "+tcp inj04.qurr0.noq.nc.${domain}" "eaf59dc7ec7295e707891aae6d285b35"
+runtest "+tcp inj05.qurr0.noq.nc.${domain}" "4ca86de4a4e863bc57917ca2a6a2f176"
+runtest "+tcp inj06.qurr0.noq.nc.${domain}" "23796206804ab3cd23efe4958fea1055"
+runtest "+tcp inj07.qurr0.noq.nc.${domain}" "98e6bbeb073c26a341a15defa6bde1cd"
+runtest "+tcp inj08.qurr0.noq.nc.${domain}" "5f85588fe30fdb6176f25fe650d6c91b"
+runtest "+tcp inj09.qurr0.noq.nc.${domain}" "871ceb93b0c67fb363f79db0101d43f4"
+runtest "+tcp inj11.qurr0.noq.nc.${domain}" "91897765b2e88857600566ff51e7d99a"
+runtest "+tcp inj12.qurr0.noq.nc.${domain}" "a35a6acd73b4b42828f116e575d5f85d"
+runtest "+tcp inj13.qurr0.noq.nc.${domain}" "bfe6cfb104eb7d9204b6ace932ef1438"
+runtest "+tcp inj01.qurr0.noq.fc.${domain}" "226c0aa61d1b3ef573fdb8a0ba0366e2"
+runtest "+tcp inj02.qurr0.noq.fc.${domain}" "a602425dd5131951f1fb79ccc67267c1"
+runtest "+tcp inj03.qurr0.noq.fc.${domain}" "419bbce2bc4cb565e2d975d8c5a0f1b8"
+runtest "+tcp inj04.qurr0.noq.fc.${domain}" "f5122e395ffa0d0477d4c4c61f475a1c"
+runtest "+tcp inj05.qurr0.noq.fc.${domain}" "b7c7e2e6f2fb37873bd0e8ab57fbf283"
+runtest "+tcp inj06.qurr0.noq.fc.${domain}" "0143273ea9b82dd8ca0dc184be2d82b4"
+runtest "+tcp inj07.qurr0.noq.fc.${domain}" "98e6bbeb073c26a341a15defa6bde1cd"
+runtest "+tcp inj08.qurr0.noq.fc.${domain}" "5f85588fe30fdb6176f25fe650d6c91b"
+runtest "+tcp inj09.qurr0.noq.fc.${domain}" "871ceb93b0c67fb363f79db0101d43f4"
+runtest "+tcp inj11.qurr0.noq.fc.${domain}" "91897765b2e88857600566ff51e7d99a"
+runtest "+tcp inj12.qurr0.noq.fc.${domain}" "a35a6acd73b4b42828f116e575d5f85d"
+runtest "+tcp inj13.qurr0.noq.fc.${domain}" "bdf895bdbbf525e2a1313a86637ee5b7"
+# # # #
 runtest "+tcp always123.anrr0.${domain}" "915929e8021b1c7149df6a1155f0172c"
 runtest "+tcp always123.aurr0.${domain}" "2ee5ab659d501038f3e6350cc1e63672"
 runtest "+tcp always123.adrr0.${domain}" "c3aa0007485f8ad7b3590f16f1158dbe"
@@ -638,9 +702,11 @@ runtest "+tcp always123.adrr3.${domain}" "d28b88f1e8655a0373676dd5e4d487ea"
 runtest "+tcp always123.ttl12345.${domain}" "f628e256fee2ca5d6d9b7df9ce61fe29"
 runtest "+tcp always123.ttl9999999.${domain}" "c394c71bd97e37cdb1f015534880984f"
 runtest "+tcp always123.tc.${domain}" "63458d2a1a0eae1ec1d5e9a1868899fa"
-runtest "+tcp always123.noq.${domain}" "93f308e0452d91bb1d6f244b6ab5af41"
+runtest "+tcp always123.noq.nc.${domain}" "16ded54209ab43b1603ab9ce3639e9e9"
+runtest "+tcp always123.noq.fc.${domain}" "7c3e82930e3705dec134293b4c877134"
 runtest "+tcp always123.qurr0.${domain}" "9b38b6e234a9c00111931ac2ca9dc9c6"
-runtest "+tcp always123.qurr0.noq.${domain}" "0ae017c36585fc19e56b3d6ce2ac55b7"
+runtest "+tcp always123.qurr0.noq.nc.${domain}" "3ae0c3f9d05772825a8bb1707737f0d7"
+runtest "+tcp always123.qurr0.noq.fc.${domain}" "ff131325546ed21029a91e8fad2326a6"
 runtest "+tcp always123.qurr3.${domain}" "9266464bba77416ee71a9827733cc2ec"
 runtest "${domain} NS" "cbde4fca020a9345459731a0149cc5b1"
 runtest "${domain} TXT" "816d9b4b8d039df11b0d9b3414effff6"
@@ -672,18 +738,32 @@ runtest "inj10.3rdparty.${domain}" "bac92107dbbf578db8819846dc44aa49"
 runtest "inj11.3rdparty.${domain}" "78303af166dd327491b8c625fc10e12b"
 runtest "inj12.3rdparty.${domain}" "678d501b9e703bed8c3bc6367908d34a"
 runtest "inj13.3rdparty.${domain}" "f06cccdedfd1515fdf8842c0a8c945f3"
-runtest "inj01.qurr0.noq.${domain}" "320a2e69ff5f589b96f1f8c9e69ff4e4"
-runtest "inj02.qurr0.noq.${domain}" "b56ba3b199c2b0fe2d270b813421e3b2"
-runtest "inj03.qurr0.noq.${domain}" "f8e347dd6d51b19f957ea37ca325187b"
-runtest "inj04.qurr0.noq.${domain}" "cbefe876f734fc84f400634ee8ccfe39"
-runtest "inj05.qurr0.noq.${domain}" "3f1ffb6c5d890e05afa207b88f6eedb2"
-runtest "inj06.qurr0.noq.${domain}" "8a0ded4baae6d29ed342a3bfbbf8815d"
-runtest "inj07.qurr0.noq.${domain}" "d3027e9f2ca8cd3930e652d9271587e9"
-runtest "inj08.qurr0.noq.${domain}" "5ef5c48bedfb8d3c391acf87414af6c6"
-runtest "inj09.qurr0.noq.${domain}" "4e1128767bb94dfae344ed91c95ce106"
-runtest "inj11.qurr0.noq.${domain}" "84e2f24e1d4e724933d31762957e6738"
-runtest "inj12.qurr0.noq.${domain}" "c0ce1c2d42acfe4685827ffe6f8ca780"
-runtest "inj13.qurr0.noq.${domain}" "7b8239157b8d9603fb05171308f7c149"
+# # # #
+runtest "inj01.qurr0.noq.nc.${domain}" "7dae3b266019235d5c9484e02eb1d968"
+runtest "inj02.qurr0.noq.nc.${domain}" "058b33538d45378f440a23a3efe54af5"
+runtest "inj03.qurr0.noq.nc.${domain}" "409e1c66e332f0df03485ea7197cae9d"
+runtest "inj04.qurr0.noq.nc.${domain}" "bb46bf8b70a09e37df726b53c170cee1"
+runtest "inj05.qurr0.noq.nc.${domain}" "e9ac07a5d53eecbfc70a21f3e9bd84c4"
+runtest "inj06.qurr0.noq.nc.${domain}" "c971f8758eded87bbb7c7ba35b7770f3"
+runtest "inj07.qurr0.noq.nc.${domain}" "d3027e9f2ca8cd3930e652d9271587e9"
+runtest "inj08.qurr0.noq.nc.${domain}" "5ef5c48bedfb8d3c391acf87414af6c6"
+runtest "inj09.qurr0.noq.nc.${domain}" "4e1128767bb94dfae344ed91c95ce106"
+runtest "inj11.qurr0.noq.nc.${domain}" "84e2f24e1d4e724933d31762957e6738"
+runtest "inj12.qurr0.noq.nc.${domain}" "c0ce1c2d42acfe4685827ffe6f8ca780"
+runtest "inj13.qurr0.noq.nc.${domain}" "ec90b1cfacbee913a0ef4aaf2808242b"
+runtest "inj01.qurr0.noq.fc.${domain}" "226c0aa61d1b3ef573fdb8a0ba0366e2"
+runtest "inj02.qurr0.noq.fc.${domain}" "f75a9f8bc2f99a091a67debe2946165f"
+runtest "inj03.qurr0.noq.fc.${domain}" "419bbce2bc4cb565e2d975d8c5a0f1b8"
+runtest "inj04.qurr0.noq.fc.${domain}" "7baa099013f2acd9e8e32d54418560ff"
+runtest "inj05.qurr0.noq.fc.${domain}" "b7c7e2e6f2fb37873bd0e8ab57fbf283"
+runtest "inj06.qurr0.noq.fc.${domain}" "0143273ea9b82dd8ca0dc184be2d82b4"
+runtest "inj07.qurr0.noq.fc.${domain}" "d3027e9f2ca8cd3930e652d9271587e9"
+runtest "inj08.qurr0.noq.fc.${domain}" "5ef5c48bedfb8d3c391acf87414af6c6"
+runtest "inj09.qurr0.noq.fc.${domain}" "4e1128767bb94dfae344ed91c95ce106"
+runtest "inj11.qurr0.noq.fc.${domain}" "84e2f24e1d4e724933d31762957e6738"
+runtest "inj12.qurr0.noq.fc.${domain}" "c0ce1c2d42acfe4685827ffe6f8ca780"
+runtest "inj13.qurr0.noq.fc.${domain}" "bdf895bdbbf525e2a1313a86637ee5b7"
+# # # #
 runtest "always123.anrr0.${domain}" "6470758a399e59687d3e5039f00e10f8"
 runtest "always123.aurr0.${domain}" "6a6998d796be2261b69e822718151b90"
 runtest "always123.adrr0.${domain}" "bef379722872594dafb295a876a3faea"
@@ -693,9 +773,11 @@ runtest "always123.adrr3.${domain}" "b9604796e48567d0b66374512b207c52"
 runtest "always123.ttl12345.${domain}" "04496562e6fe0159d7a9af961736b8f5"
 runtest "always123.ttl9999999.${domain}" "f0d35809e65755f7c78091a8f8b59786"
 runtest "always123.tc.${domain}" "0bd1f149a63b6c7ebaa90fe954c5836d"
-runtest "always123.noq.${domain}" "0218131c8635ba393a74ebec112d9f8c"
+runtest "always123.noq.nc.${domain}" "ce15ab878cdb38fd0e7aeab8e1bc30f9"
+runtest "always123.noq.fc.${domain}" "7c3e82930e3705dec134293b4c877134"
 runtest "always123.qurr0.${domain}" "fd496813bed57eeee013bc859b6f32d8"
-runtest "always123.qurr0.noq.${domain}" "9f1491ebd4dbdda8cc0c6d71b679bc3b"
+runtest "always123.qurr0.noq.nc.${domain}" "5ecdbf46c0ac8ecba48e0ea42948c4c0"
+runtest "always123.qurr0.noq.fc.${domain}" "ff131325546ed21029a91e8fad2326a6"
 runtest "always123.qurr3.${domain}" "16477486e5f45f4db023d40f742206ea"
 runtest "always123.newid.${domain}" "fb41ffb8a1d54f86d65748bc0df1e135"
 runtest "inj01.addq.${domain}" "ad1c5ade6c80c4cd70afdc4ba58be6d2"
@@ -758,7 +840,6 @@ runtest "empty5.0.${domain}" "afad2d4f3a29e8c4b3f8d2bc0c5f93c2"
 runtest "empty5.10.${domain}" "ba9e8265f80bdb05878c8fa41ffa1ad9"
 runtest "empty6.${domain}" "19b5f56687b167e29c5056f89cfd7cb9"
 runtest "chunkedcnames.20.slp10.${domain}" "790d58da7fc632d5dfe0144e83e6c10a"
-
 
 echo
 echo "TESTS: ${testcount}"

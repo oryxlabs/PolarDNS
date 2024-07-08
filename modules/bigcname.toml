@@ -9,9 +9,9 @@ category = "CNAME fuzzing"
 code = '''
 if req.first_subdomain.startswith("bigcname"):
    # Send big CNAME record, for example:
-   # bigcname.10.5.10.dnslabtest1.com will generate CNAME of:
+   # bigcname.10.5.10.yourdomain.com will generate CNAME of:
    #            10       5       10
-   # always.7ogeechcv7.hlri6.5ljh1607ca.dnslabtest1.com
+   # always.7ogeechcv7.hlri6.5ljh1607ca.yourdomain.com
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
    ### QUESTION SECTION ########
@@ -23,7 +23,8 @@ if req.first_subdomain.startswith("bigcname"):
           dom += '.' + ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(int(lbl)))
    dom += '.' + req.sld_tld_domain
    # CNAME
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("CNAME") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)                ## TTL
    buffer += struct.pack(">H", len(dom)+2)              ## Data length
    buffer += convDom2Bin(dom)                           ## CNAME value

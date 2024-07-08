@@ -1,3 +1,21 @@
+08/Jul/2024
+- release version 1.4
+- added the `cut` modifier for cutting arbitrary number of bytes from the end of the packet
+- deprecated the `cutabuf` and `cutcnamebuf` features
+- added tests (total test count: 678)
+
+05/Jul/2024
+- added the `size` feature that responds with the maximum number of A records that can fit in the specified packet size
+- added support for DNS compression, configurable via config file
+- added the `nc` modifier to not use compression in a response
+- added the `fc` modifier to force compression in a response
+- added tests (total test count: 669)
+- various code optimizations
+
+04/Jul/2024
+- optimization in the startup routine to remove all debug messages if debug mode is disabled
+- added support for parsing the EDNS0 section, configurable via config file
+
 03/Jul/2024
 - added support for the Attrleaf naming pattern (underscored domain names) for the SRV and SVCB alias/chain/loop features
 - enhanced the `nfz` modifier, added 4 more variants, now it can produce 49 different domain name variants

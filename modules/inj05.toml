@@ -30,7 +30,8 @@ if req.first_subdomain.startswith("inj05"):
    buffer += addedquestions
    ### ANSWER SECTION ########
    # CNAME
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("CNAME") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)                 ## TTL
    buffer += struct.pack(">H", len(injdom)+2)            ## Data length
    buffer += convDom2Bin(injdom)                         ## CNAME value
@@ -41,7 +42,8 @@ if req.first_subdomain.startswith("inj05"):
    buffer += socket.inet_aton(injip)                     ## IP
    ### AUTHORITY SECTION ########
    # CNAME
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("CNAME") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)                 ## TTL
    buffer += struct.pack(">H", len(injdom)+2)            ## Data length
    buffer += convDom2Bin(injdom)                         ## CNAME value
@@ -52,7 +54,8 @@ if req.first_subdomain.startswith("inj05"):
    buffer += socket.inet_aton(injip)                     ## IP
    ### ADDITIONAL SECTION ########
    # CNAME
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("CNAME") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)                 ## TTL
    buffer += struct.pack(">H", len(injdom)+2)            ## Data length
    buffer += convDom2Bin(injdom)                         ## CNAME value

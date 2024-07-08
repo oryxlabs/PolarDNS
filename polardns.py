@@ -15,7 +15,7 @@ import glob
 import time
 import os
 
-polardns_version = "1.3"
+polardns_version = "1.4"
 
 ################################
 
@@ -35,8 +35,10 @@ for line in _config['main']['known_servers'].split('\n'):
 
 debug = config['debug']
 
-globalttl = int(config['ttl'])
-globalsleep = float(config['sleep'])
+config_ttl = int(config['ttl'])
+config_sleep = float(config['sleep'])
+config_compression = int(config['compression'])
+config_parse_edns0 = config['parse_edns0']
 
 # a domain which is a 3rd party which we don't control
 a3rdparty_domain = config['a3rdparty_domain']
@@ -212,12 +214,15 @@ def convDom2Bin(x):
         delattr(resp, 'DOM_ALREADY_CONVERTED')
         return x
     if x == "": return b"\x00"
-    buff = b""
+    parts = []
+    append = parts.append  # Local variable lookup is faster
     for y in x.split('.'):
         y = y.replace("<DOT>", ".")
-        buff += bytes.fromhex(f'{len(y):02x}')
-        buff += bytes(y, "utf-8")
-    return (buff + b"\x00")
+        length = bytes([len(y)])
+        append(length)
+        append(y.encode("utf-8"))
+    parts.append(b"\x00")
+    return b''.join(parts)
 
 ################################
 # Function to convert data string to the binary form
@@ -225,12 +230,14 @@ def convDom2Bin(x):
 # output       : \x08somedata\x09something
 
 def convData2Bin(x):
-    buff = b""
+    parts = []
+    append = parts.append  # Local variable lookup is faster
     for y in x.split('.'):
         y = y.replace("<DOT>", ".")
-        buff += bytes.fromhex(f'{len(y):02x}')
-        buff += bytes(y, "utf-8")
-    return (buff)
+        length = bytes([len(y)])
+        append(length)
+        append(y.encode("utf-8"))
+    return b''.join(parts)
 
 ################################
 # Name fuzzer function (nfz)
@@ -887,22 +894,28 @@ def send_buf(self, buffer, totallen = 0):
    print("  Orig length:", len(buffer)) if debug else True
    print("Custom length:", resp.len) if debug else True
    time.sleep(resp.sleep)
+
    # UDP mode
    if proto == "udp":
-     self.wfile.write(buffer)
-     self.wfile.flush()
-     return
-   # TCP mode - we have to add length (2 bytes) in the beginning
-   if totallen == 0:
-      tocalc = len(buffer) # calculate length
-   else:
-      tocalc = totallen # override length
-   if resp.len != 0:
-      tocalc = resp.len # override length by added '.lenXXX.' in the domain name
-   newbuf = struct.pack(">H", tocalc)
-   newbuf += buffer
+      # If '.cutXXX.' modifier specified, cut the buffer from the end
+      newlen = len(buffer) - getattr(resp, 'cut', 0)
+      self.wfile.write(buffer[:max(newlen, 0)])
+      self.wfile.flush()
+      return
+
+   # TCP mode
+
+   # In TCP mode, we need to prepend the packet with a 2-byte length field.
+   # The length can be determined by one of the following methods:
+   #  - Overridden length specified by the '.lenXXX.' modifier in the domain name
+   #  - Overridden length provided as a parameter to this function
+   #  - Calculated from the buffer length if neither of the above is provided
+   tocalc = resp.len or totallen or len(buffer)
+   newbuf = struct.pack(">H", tocalc) + buffer
    try:
-       self.request.sendall(newbuf)
+       # If '.cutXXX.' modifier specified, cut the buffer from the end
+       newlen = len(newbuf) - getattr(resp, 'cut', 0)
+       self.request.sendall(newbuf[:max(newlen, 0)])
    except:
        return(-1)
 
@@ -1052,10 +1065,9 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
 # Process DNS packet
 
 def process_DNS(self, req):
-        if debug:
-           req.HEX = binascii.b2a_hex(req.RAW)
-           print("Request (RAW):", proto, req.RAW)
-           print("Request (HEX):", proto, req.HEX)
+        req.HEX = binascii.b2a_hex(req.RAW) if debug else True
+        print("Request (RAW):", proto, req.RAW) if debug else True
+        print("Request (HEX):", proto, req.HEX) if debug else True
 
         ##################################
         # Make a nice client IP/name string for logging on the console
@@ -1078,15 +1090,15 @@ def process_DNS(self, req):
 
         req.ID    = req.RAW[0:2]
         req.FLAGS = req.RAW[2:4]
-        req.QURR  = int.from_bytes(req.RAW[4:6], "big")
-        req.ANRR  = int.from_bytes(req.RAW[6:8], "big")
-        req.AURR  = int.from_bytes(req.RAW[8:10], "big")
-        req.ADRR  = int.from_bytes(req.RAW[10:12], "big")
+        req.QURR  = int.from_bytes(req.RAW[4:6], 'big')
+        req.ANRR  = int.from_bytes(req.RAW[6:8], 'big')
+        req.AURR  = int.from_bytes(req.RAW[8:10], 'big')
+        req.ADRR  = int.from_bytes(req.RAW[10:12], 'big')
 
         # decode the domain name in the question
         req.subdomains = []    # sOMeThINg whaTEVeR ANytHinG cOM
         req.subdomains_lc = [] # something whatever anything com
-        req.full_domain = ""      # sOMeThINg.whaTEVeR.ANytHinG.cOM
+        req.full_domain = ""   # sOMeThINg.whaTEVeR.ANytHinG.cOM
         offset = 12
         try:
            while True:
@@ -1116,11 +1128,11 @@ def process_DNS(self, req):
             req.first_subdomain = ""
 
         try:
-            req.type_bin = req.RAW[int(offset):int(offset)+2]
+            req.type_bin = req.RAW[offset:offset+2]
             req.type_int = struct.unpack(">H", req.type_bin)[0]
             req.type_str = getTypeName(req.type_int)
 
-            req.class_bin = req.RAW[int(offset)+2:int(offset)+4]
+            req.class_bin = req.RAW[offset+2:offset+4]
             req.class_int = struct.unpack(">H", req.class_bin)[0]
             req.class_str = getClassName(req.class_int)
         except:
@@ -1131,7 +1143,48 @@ def process_DNS(self, req):
         print("Request from %s %s %s" % (req.info, req.type_str, req.full_domain)) if debug else True
 
         ###############################################
-        # 2. Extract SLD+TLD to see later if we are authoritative or not
+        # 2. Parse out also the EDNS0 and its OPT pseudo-section with dnssec flag and cookies
+
+        if config_parse_edns0 and req.ADRR == 1:
+            offset += 4
+            req.edns_opt_opt_client_cookie = b''
+            req.edns_opt_opt_server_cookie = b''
+            
+            # Extract EDNS0 fields
+            req.edns_opt_name  = int.from_bytes(req.RAW[offset:offset+1], 'big')    # 1 byte
+            req.edns_opt_type  = int.from_bytes(req.RAW[offset+1:offset+3], 'big')  # 2 bytes
+            req.edns_opt_size  = int.from_bytes(req.RAW[offset+3:offset+5], 'big')  # 2 bytes
+            req.edns_opt_rcode = int.from_bytes(req.RAW[offset+5:offset+6], 'big')  # 1 byte
+            req.edns_opt_ver   = int.from_bytes(req.RAW[offset+6:offset+7], 'big')  # 1 byte
+            req.edns_opt_z     = int.from_bytes(req.RAW[offset+7:offset+9], 'big')  # 2 bytes
+            req.edns_opt_len   = int.from_bytes(req.RAW[offset+9:offset+11], 'big') # 2 bytes
+            
+            # Ensure that there are enough bytes left for the next part of parsing
+            if len(req.RAW) < offset + 11 + req.edns_opt_len:
+                raise ValueError("Insufficient data in EDNS0 section")
+            
+            # Extract EDNS0 option fields
+            req.edns_opt_opt_code = int.from_bytes(req.RAW[offset+11:offset+13], 'big') # 2 bytes
+            req.edns_opt_opt_len  = int.from_bytes(req.RAW[offset+13:offset+15], 'big') # 2 bytes
+
+            req.edns_opt_z_do = req.edns_opt_z >> 15  # dnssec
+            
+            if req.edns_opt_opt_code == 10:  # Check for DNS COOKIE option code
+                if req.edns_opt_opt_len >= 8:  # Ensure the client cookie length is valid
+                    # 8 bytes for the client cookie
+                    req.edns_opt_opt_client_cookie = req.RAW[offset+15:offset+23]
+                    if req.edns_opt_opt_len > 8:
+                        # Remaining bytes for the server cookie
+                        req.edns_opt_opt_server_cookie = req.RAW[offset+23:offset+23+(req.edns_opt_opt_len-8)]
+                else:
+                    raise ValueError("Invalid client cookie length")
+
+            print("client cookie:", req.edns_opt_opt_client_cookie.hex()) if debug else True
+            print("server cookie:", req.edns_opt_opt_server_cookie.hex()) if debug else True
+            print("dnssec:", req.edns_opt_z_do) if debug else True
+
+        ###############################################
+        # 3. Extract SLD+TLD to see later if we are authoritative or not
 
         try:
             req.sld = req.subdomains_lc[int(len(req.subdomains_lc)-2)]  # anything
@@ -1158,17 +1211,21 @@ def process_DNS(self, req):
         #          (!not the DNS header!, see qurr below)
         #  tc    - in UDP mode respond with truncated bit set so that the
         #          client/server will retry with TCP
+        #  fc    - force compression
+        #  nc    - no compression
         #  flgs  - set custom flags, either in hex (0x????) or in decimal
         #          (0-65535) or rand to generate random, e.g.: .flgsrand.
         #  nfz   - enable name fuzzer which can generate various illegal
         #          and malformed domain names
+        #  cut   - cut N bytes from the end of the packet e.g.: .cut10.
         #  qurr  - set custom number of Questions in the DNS header
         #  anrr  - set custom number of Answer RRs in the DNS header
         #  aurr  - set custom number of Authority RRs in the DNS header
         #  adrr  - set custom number of Additional RRs in the DNS header
 
-        resp.sleep = globalsleep
-        resp.TTL = globalttl
+        resp.compress = config_compression
+        resp.sleep = config_sleep
+        resp.TTL = config_ttl
         resp.len = 0
         resp.noq = req.QURR # number of questions
         resp.QURR = req.QURR # number of questions
@@ -1256,6 +1313,19 @@ def process_DNS(self, req):
                      addcustomlog("NFZ:" + str(resp.nfz))
                   resp.nfz_byte_iterator = 0   # to make sure we keep track of values from \x00 to \xff
             #######################
+            elif label == "nc":                # no compression
+               resp.compress = 0
+               addcustomlog("NC")
+            #######################
+            elif label == "fc":                # force compression
+               resp.compress = 1
+               addcustomlog("FC")
+            #######################
+            elif label.startswith("cut"):      # cut N bytes from the end of the packet
+               if label[3:].isnumeric():
+                  resp.cut = int(label[3:])    # how many bytes to cut
+                  addcustomlog("CUT:" + str(resp.cut))
+            #######################
             # DO NOT REMOVE (additional modifiers)
             #######################
             elif label == "tc" and proto == "udp": # request truncation
@@ -1312,7 +1382,8 @@ def process_DNS(self, req):
               ### QUESTION SECTION ########
               if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
-              buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              buffer += req.type_bin + req.class_bin
               buffer += struct.pack(">L", resp.TTL)     ## TTL
               # # ################################### # #
               if req.type_str == "A":
@@ -1358,7 +1429,8 @@ def process_DNS(self, req):
               if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               # A
-              buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              buffer += getTypeBin("A") + getClassBin("IN")
               buffer += struct.pack(">L", resp.TTL)    ## TTL
               buffer += struct.pack(">H", 4)           ## Data length
               buffer += socket.inet_aton(ip)           ## IP
@@ -1375,7 +1447,8 @@ def process_DNS(self, req):
               if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               # A
-              buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("CH")
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              buffer += getTypeBin("TXT") + getClassBin("CH")
               buffer += struct.pack(">L", resp.TTL)         ## TTL
               buffer += struct.pack(">H", len(v)+1)         ## Data length
               buffer += convData2Bin(v.replace(".", "<DOT>"))
@@ -1425,11 +1498,23 @@ def add_modules_and_rerun():
                         # now, write each line of the module code with the correct indentation
                         if mod_indent > desired_indent:
                            torm = mod_indent-desired_indent
-                           indented_fixed_code = '\n'.join([line[torm:] for line in mod_lines])
+                           fixed_code = '\n'.join([line[torm:] for line in mod_lines])
                         else:
                            indent = desired_indent - mod_indent
-                           indented_fixed_code = '\n'.join([' ' * indent + line for line in mod_lines])
-                        new_file.write(indented_fixed_code + '\n')
+                           fixed_code = '\n'.join([' ' * indent + line for line in mod_lines])
+                        # optimize the printing of debug messages
+                        if fixed_code.strip().endswith(" if debug else True"):
+                            fixed_code = fixed_code.replace(" if debug else True", " # debug") # remove the debug conditions
+                            if not debug:
+                               indent = len(fixed_code) - len(fixed_code.lstrip())
+                               fixed_code = fixed_code[:indent] + "#" + fixed_code[indent:] # comment out the debug messages
+                        new_file.write(fixed_code + '\n')
+            # optimize the printing of debug messages
+            elif line.strip().endswith(" if debug else True"):
+                line = line.replace(" if debug else True", " # debug") # remove the debug conditions
+                if not debug:
+                   indent = len(line) - len(line.lstrip())
+                   line = line[:indent] + "#" + line[indent:] # comment out the debug messages
             new_file.write(line)
 
     # Replace the current process with the new script, passing all arguments

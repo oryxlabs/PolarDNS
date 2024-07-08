@@ -12,6 +12,12 @@ debug = 0
 # default TTL
 ttl = 60
 
+# use compression by default (0 or 1)
+compression = 1
+
+# parse the EDNS(0) and its OPT pseudo-record (0 or 1)
+parse_edns0 = 1
+
 # default latency (in ms)
 sleep = 0
 

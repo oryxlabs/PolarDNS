@@ -1,0 +1,37 @@
+[module]
+name = "size"
+type = "feature"
+info = "Max A records within size limit"
+desc = "Respond with as many A records as we can possibly fit into a desired maximum packet size limit"
+author = "ivan.jedek@oryxlabs.com"
+category = "General features"
+
+code = '''
+elif req.first_subdomain.startswith("size"):
+   # Send as many A records as we can possibly fit into a desired max size
+   desired_size = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 512
+   # compute how much space we have left after we add the necessities
+   req_name_len = len(convDom2Bin(req.full_domain))
+   space_left = desired_size - 16 - req_name_len
+   if proto == "tcp": space_left -= 2
+   if space_left < 0: space_left = 0
+   # compute how many answers we can fit
+   answers = int(space_left/16) if resp.compress else int(space_left/(14+req_name_len))
+   print("space left: %d, can fit: %d" % (space_left, answers)) if debug else True
+   ### DNS header ########
+   buffer = prep_dns_header(b'\x84\x00', resp.QURR, answers, 0, 0)
+   ### QUESTION SECTION ########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   ### ANSWER SECTION ########
+   # A
+   for i in range(answers):
+       buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+       buffer += getTypeBin("A") + getClassBin("IN")
+       buffer += struct.pack(">L", resp.TTL)    ## TTL
+       buffer += struct.pack(">H", 4)           ## Data length
+       buffer += b'\x7f\x00\x00' + random.getrandbits(8).to_bytes(1, 'big') ## 127.0.0.<RANDOM>
+   # log and send
+   log("%d A records in %d B packet size limit" % (answers, desired_size))
+   send_buf(self, buffer)
+   #####################################################################
+'''

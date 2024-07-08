@@ -11,7 +11,7 @@ if req.first_subdomain.startswith("cnloop"):
    # Do a CNAME loop
    if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():
       # we are already in a loop, e.g.:
-      # cnloop.10.4.dnslabtest.com
+      # cnloop.10.4.yourdomain.com
       max = int(req.subdomains[1])
       cur = int(req.subdomains[2])
       if cur >= max:
@@ -24,7 +24,7 @@ if req.first_subdomain.startswith("cnloop"):
          new_domain_name += "." + req.subdomains[i+3]
    elif req.subdomains[1].isnumeric():
       # we are in beginning of a loop with a requested max value, e.g.:
-      # cnloop.10.dnslabtest.com
+      # cnloop.10.yourdomain.com
       max = int(req.subdomains[1])
       if max < 1:
          max = 1
@@ -40,7 +40,8 @@ if req.first_subdomain.startswith("cnloop"):
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    # CNAME
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("CNAME") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)                    ## TTL
    buffer += struct.pack(">H", len(new_domain_name)+2)      ## Data length
    buffer += convDom2Bin(new_domain_name)                   ## CNAME value

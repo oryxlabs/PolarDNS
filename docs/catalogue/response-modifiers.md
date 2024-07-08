@@ -13,6 +13,9 @@
 	- [Set answer RRs in the header (anrr)](#set-answer-rrs-in-the-header-anrr)
 	- [Set authority RRs in the header (aurr)](#set-authority-rrs-in-the-header-aurr)
 	- [Set additional RRs in the header (adrr)](#set-additional-rrs-in-the-header-adrr)
+	- [Cut N bytes from the end of the packet (cut)](#cut-n-bytes-from-the-end-of-the-packet-cut)
+	- [Force compression (fc)](#force-compression-fc)
+	- [No compression (nc)](#no-compression-nc)
 	- [Name fuzzing generator (nfz)](#name-fuzzing-generator-nfz)
 1. [CNAME fuzzing](cname-fuzzing.md)
 1. [Bad compression](bad-compression.md)
@@ -348,6 +351,124 @@ always.adrr50.yourdomain.com. 60 IN	A	2.3.4.5
 ;; WHEN: Thu Nov 02 16:37:51 +04 2023
 ;; MSG SIZE  rcvd: 90
 ```
+### Cut N bytes from the end of the packet (cut)
+Cut arbitrary number of bytes from the end of the packet.
+
+<table>
+<tr><td>format:</td><td>anything.cut&lt;NUMBER>.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig always.cut00.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig always.cut10.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig size.128.cut00.fc.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig size.128.cut16.fc.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig size.128.cut16.fc.yourdomain.com @127.0.0.1
+;; Warning: Message parser reports malformed message packet.
+
+; <<>> DiG 9.18.10-2-Debian <<>> size.128.cut16.fc.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 19940
+;; flags: qr aa; QUERY: 1, ANSWER: 4, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.128.cut16.fc.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+size.128.cut16.fc.yourdomain.com. 60 IN	A	127.0.0.236
+size.128.cut16.fc.yourdomain.com. 60 IN	A	127.0.0.233
+size.128.cut16.fc.yourdomain.com. 60 IN	A	127.0.0.123
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Jul 08 15:41:00 +04 2024
+;; MSG SIZE  rcvd: 98
+
+```
+### Force compression (fc)
+Use DNS compression in the response, overriding any DNS compression settings specified in the configuration file.
+
+<table>
+<tr><td>format:</td><td>anything.fc.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig always.fc.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig size.300.fc.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig size.300.fc.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> size.300.fc.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 17029
+;; flags: qr aa; QUERY: 1, ANSWER: 16, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.300.fc.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.112
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.206
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.64
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.238
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.100
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.121
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.72
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.164
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.79
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.85
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.243
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.97
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.16
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.119
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.215
+size.300.fc.yourdomain.com. 60	IN	A	127.0.0.178
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Sun Jul 07 22:59:53 +04 2024
+;; MSG SIZE  rcvd: 300
+
+```
+### No compression (nc)
+Do not use DNS compression in the response, overriding any DNS compression settings specified in the configuration file.
+
+<table>
+<tr><td>format:</td><td>anything.nc.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig always.nc.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig size.300.nc.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig size.300.nc.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> size.300.nc.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20422
+;; flags: qr aa; QUERY: 1, ANSWER: 6, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.300.nc.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+size.300.nc.yourdomain.com. 60	IN	A	127.0.0.1
+size.300.nc.yourdomain.com. 60	IN	A	127.0.0.130
+size.300.nc.yourdomain.com. 60	IN	A	127.0.0.148
+size.300.nc.yourdomain.com. 60	IN	A	127.0.0.83
+size.300.nc.yourdomain.com. 60	IN	A	127.0.0.75
+size.300.nc.yourdomain.com. 60	IN	A	127.0.0.224
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Sun Jul 07 23:05:03 +04 2024
+;; MSG SIZE  rcvd: 296
+
+```
 ### Name fuzzing generator (nfz)
 Generate various illegal and malformed domain names based on the selected variant and size. This generator was primarily created for alias features (such as alias, cnalias, dnalias, etc.) to provide a unified mechanism for generating malformed domain names.
 
@@ -366,6 +487,7 @@ Generate various illegal and malformed domain names based on the selected varian
 
 Samples:
 ```
+-------------------------------------------------------------------------------------------
 # dig MX alias.10.nfz0.10.yourdomain.com @127.0.0.1
 
 ; <<>> DiG 9.18.10-2-Debian <<>> MX alias.10.nfz0.10.yourdomain.com @127.0.0.1
@@ -1814,7 +1936,9 @@ alias.10.nfz49.10.yourdomain.com. 60 IN	MX	0 127.0.0.1:80.
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; WHEN: Thu Jul 04 00:22:42 +04 2024
 ;; MSG SIZE  rcvd: 650
+
 ```
 
 ##
 Go back to [menu](#polardns-catalogue---response-modifiers).
+

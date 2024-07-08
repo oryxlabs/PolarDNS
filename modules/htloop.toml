@@ -11,7 +11,7 @@ if req.first_subdomain.startswith("htloop"):
    # Do an alias loop in a HTTPS record (SvcPriority 0)
    if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():
       # we are already in a loop, e.g.:
-      # htloop.10.4.dnslabtest.com
+      # htloop.10.4.yourdomain.com
       max = int(req.subdomains[1])
       cur = int(req.subdomains[2])
       if cur >= max:
@@ -24,7 +24,7 @@ if req.first_subdomain.startswith("htloop"):
          new_domain_name += "." + req.subdomains[i+3]
    elif req.subdomains[1].isnumeric():
       # we are in beginning of a loop with a requested max value, e.g.:
-      # htloop.10.dnslabtest.com
+      # htloop.10.yourdomain.com
       max = int(req.subdomains[1])
       if max < 1:
          max = 1
@@ -40,7 +40,8 @@ if req.first_subdomain.startswith("htloop"):
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    data_len = 2+len(convDom2Bin(new_domain_name)) # SvcPriority (2 bytes) + the target name
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("HTTPS") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("HTTPS") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)      ## TTL
    buffer += struct.pack(">H", data_len)      ## Data length
    buffer += struct.pack(">H", 0)             ## SvcPriority (0 means alias mode - RFC 9460)

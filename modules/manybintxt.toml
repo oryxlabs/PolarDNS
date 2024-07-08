@@ -22,7 +22,8 @@ if req.first_subdomain.startswith("manybintxt"):
    ### ANSWER SECTION ########
    for i in range(nans):
        data    = os.urandom(chunksize)
-       buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("IN")
+       buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+       buffer += getTypeBin("TXT") + getClassBin("IN")
        buffer += struct.pack(">L", resp.TTL)            ## TTL
        buffer += struct.pack(">H", len(data)+1)         ## Data length
        buffer += struct.pack(">B", len(data))           ## TXT length

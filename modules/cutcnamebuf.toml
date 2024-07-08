@@ -19,7 +19,8 @@ if req.first_subdomain.startswith("cutcnamebuf"):
    ### ANSWER SECTION ########
    # CNAME
    dom = "always" + str(random.getrandbits(20) % 900000 + 100000) + "." + req.sld_tld_domain
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("CNAME") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("CNAME") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)                ## TTL
    buffer += struct.pack(">H", len(dom)+2)              ## Data length
    buffer += convDom2Bin(dom)                           ## CNAME value

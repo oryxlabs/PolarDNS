@@ -1,7 +1,8 @@
 # PolarDNS catalogue - General features
 1. [General features](general-features.md)
 	- [Always resolve to IP (always)](#always-resolve-to-ip-always)
-	- [Client IP address (self / whatismyip)](#client-ip-address-self--whatismyip)
+	- [Max A records within size limit (size)](#max-a-records-within-size-limit-size)
+	- [What is my IP address (self / whatismyip)](#what-is-my-ip-address-self--whatismyip)
 	- [Chunked CNAME aliases (chunkedcnames)](#chunked-cname-aliases-chunkedcnames)
 	- [Cut A record from the end (cutabuf)](#cut-a-record-from-the-end-cutabuf)
 	- [Cut CNAME record from the end (cutcnamebuf)](#cut-cname-record-from-the-end-cutcnamebuf)
@@ -51,7 +52,68 @@ always.yourdomain.com.	60	IN	A	2.3.4.5
 ;; MSG SIZE  rcvd: 76
 
 ```
-### Client IP address (self / whatismyip)
+### Max A records within size limit (size)
+Respond with as many A records as we can possibly fit within the specified packet size limit. By default 512 bytes.
+
+<table>
+<tr><td>format:</td><td>size.&lt;BYTES>.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig size.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig size.100.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig size.1000.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig size.512.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig size.512.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> size.512.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 42906
+;; flags: qr aa; QUERY: 1, ANSWER: 29, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.512.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+size.512.yourdomain.com. 60	IN	A	127.0.0.197
+size.512.yourdomain.com. 60	IN	A	127.0.0.179
+size.512.yourdomain.com. 60	IN	A	127.0.0.174
+size.512.yourdomain.com. 60	IN	A	127.0.0.66
+size.512.yourdomain.com. 60	IN	A	127.0.0.146
+size.512.yourdomain.com. 60	IN	A	127.0.0.70
+size.512.yourdomain.com. 60	IN	A	127.0.0.245
+size.512.yourdomain.com. 60	IN	A	127.0.0.195
+size.512.yourdomain.com. 60	IN	A	127.0.0.82
+size.512.yourdomain.com. 60	IN	A	127.0.0.211
+size.512.yourdomain.com. 60	IN	A	127.0.0.195
+size.512.yourdomain.com. 60	IN	A	127.0.0.150
+size.512.yourdomain.com. 60	IN	A	127.0.0.171
+size.512.yourdomain.com. 60	IN	A	127.0.0.129
+size.512.yourdomain.com. 60	IN	A	127.0.0.214
+size.512.yourdomain.com. 60	IN	A	127.0.0.31
+size.512.yourdomain.com. 60	IN	A	127.0.0.3
+size.512.yourdomain.com. 60	IN	A	127.0.0.251
+size.512.yourdomain.com. 60	IN	A	127.0.0.64
+size.512.yourdomain.com. 60	IN	A	127.0.0.93
+size.512.yourdomain.com. 60	IN	A	127.0.0.96
+size.512.yourdomain.com. 60	IN	A	127.0.0.125
+size.512.yourdomain.com. 60	IN	A	127.0.0.51
+size.512.yourdomain.com. 60	IN	A	127.0.0.14
+size.512.yourdomain.com. 60	IN	A	127.0.0.81
+size.512.yourdomain.com. 60	IN	A	127.0.0.204
+size.512.yourdomain.com. 60	IN	A	127.0.0.1
+size.512.yourdomain.com. 60	IN	A	127.0.0.89
+size.512.yourdomain.com. 60	IN	A	127.0.0.175
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Sun Jul 07 22:59:53 +04 2024
+;; MSG SIZE  rcvd: 505
+
+```
+### What is my IP address (self / whatismyip)
 Respond with A and TXT records containing the IP address of the connecting client. The TXT record also contains the port information.
 
 <table>
@@ -130,7 +192,7 @@ chunkedcnames.12.slp150.yourdomain.com.	60 IN CNAME always63975.yourdomain.com.
 
 ```
 ### Cut A record from the end (cutabuf)
-Respond with legit A record, but cut arbitrary number of bytes from the end of the buffer.
+:exclamation:**DEPRECATED**:exclamation: Use the generic [cut](response-modifiers.md#cut-n-bytes-from-the-end-of-the-packet-cut) response modifier to cut any response.Respond with legit A record, but cut arbitrary number of bytes from the end of the buffer.
 
 <table>
 <tr><td>format:</td><td>cutabuf.&lt;BYTES-TO-CUT>.yourdomain.com</td></tr>
@@ -159,7 +221,7 @@ Sample:
 
 ```
 ### Cut CNAME record from the end (cutcnamebuf)
-Respond with legit CNAME record, but cut arbitrary number of bytes from the end of the buffer.
+:exclamation:**DEPRECATED**:exclamation: Use the generic [cut](response-modifiers.md#cut-n-bytes-from-the-end-of-the-packet-cut) response modifier to cut any response.Respond with legit CNAME record, but cut arbitrary number of bytes from the end of the buffer.
 
 <table>
 <tr><td>format:</td><td>cutcnamebuf.&lt;BYTES-TO-CUT>.yourdomain.com</td></tr>

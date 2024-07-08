@@ -32,7 +32,8 @@ if len(req.full_domain) == 253 and req.first_subdomain.startswith("long"):
              buffer += struct.pack(">H", 4)             ## Data length
              buffer += socket.inet_aton(randip)         ## IP
          # proper answer in the end
-         buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin("A") + getClassBin("IN")
          buffer += struct.pack(">L", resp.TTL)      ## TTL
          buffer += struct.pack(">H", 4)             ## Data length
          buffer += socket.inet_aton("6.6.6.6")      ## IP
@@ -48,7 +49,8 @@ if len(req.full_domain) == 253 and req.first_subdomain.startswith("long"):
              buffer += struct.pack(">H", 4)             ## Data length
              buffer += socket.inet_aton(randip)         ## IP
          # proper answer in the end
-         buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin("A") + getClassBin("IN")
          buffer += struct.pack(">L", resp.TTL)      ## TTL
          buffer += struct.pack(">H", 4)             ## Data length
          buffer += socket.inet_aton("6.6.6.5")      ## IP

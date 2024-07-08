@@ -36,7 +36,8 @@ if req.first_subdomain.startswith("inj04"):
    buffer += struct.pack(">H", 4)                         ## Data length
    buffer += socket.inet_aton(injip)                      ## IP
    # A
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("A") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("A") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)                  ## TTL
    buffer += struct.pack(">H", 4)                         ## Data length
    buffer += socket.inet_aton(ip)                         ## IP

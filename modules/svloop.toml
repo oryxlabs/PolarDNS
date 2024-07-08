@@ -11,7 +11,7 @@ if req.first_subdomain.startswith("svloop"):
    # Do an alias loop in a SVCB record (SvcPriority 0).
    if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():
       # we are already in a loop, e.g.:
-      # svloop.10.4.dnslabtest.com
+      # svloop.10.4.yourdomain.com
       max = int(req.subdomains[1])
       cur = int(req.subdomains[2])
       if cur >= max:
@@ -24,7 +24,7 @@ if req.first_subdomain.startswith("svloop"):
          new_domain_name += "." + req.subdomains[i+3]
    elif req.subdomains[1].isnumeric():
       # we are in beginning of a loop with a requested max value, e.g.:
-      # svloop.10.dnslabtest.com
+      # svloop.10.yourdomain.com
       max = int(req.subdomains[1])
       if max < 1:
          max = 1
@@ -40,7 +40,8 @@ if req.first_subdomain.startswith("svloop"):
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    data_len = 2+len(convDom2Bin(new_domain_name)) # SvcPriority (2 bytes) + the target name
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("SVCB") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("SVCB") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)      ## TTL
    buffer += struct.pack(">H", data_len)      ## Data length
    buffer += struct.pack(">H", 0)             ## SvcPriority (0 means alias mode - RFC 9460)
@@ -53,11 +54,11 @@ elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("svloop"
    # Do an alias loop in a SVCB record (SvcPriority 0) for any domain name with attribute leaves
    # (domains prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.svloop...'
 
-   offset=1        # _a.svloop.10.dnslabtest1.com
+   offset=1        # _a.svloop.10.yourdomain.com
    if req.subdomains_lc[2].startswith("svloop"):
-      offset = 2   # _a._b.svloop.10.dnslabtest1.com
+      offset = 2   # _a._b.svloop.10.yourdomain.com
    elif req.subdomains_lc[3].startswith("svloop"):
-      offset = 3   # _a._b._c.svloop.10.dnslabtest1.com
+      offset = 3   # _a._b._c.svloop.10.yourdomain.com
 
    new_domain_name = ""
    for i in range(offset+1):
@@ -65,7 +66,7 @@ elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("svloop"
 
    if req.subdomains[offset+1].isnumeric() and req.subdomains[offset+2].isnumeric():
       # we are already in a loop, e.g.:
-      # _abc.svloop.10.4.dnslabtest.com
+      # _abc.svloop.10.4.yourdomain.com
       max = int(req.subdomains[offset+1])
       cur = int(req.subdomains[offset+2])
       if cur >= max:
@@ -78,7 +79,7 @@ elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("svloop"
          new_domain_name += "." + req.subdomains[i+3+offset]
    elif req.subdomains[offset+1].isnumeric():
       # we are in the beginning of a loop with a requested max value, e.g.:
-      # _abc.svloop.10.dnslabtest.com
+      # _abc.svloop.10.yourdomain.com
       max = int(req.subdomains[offset+1])
       if max < 1:
          max = 1
@@ -95,7 +96,8 @@ elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("svloop"
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    data_len = 2+len(convDom2Bin(new_domain_name)) # SvcPriority (2 bytes) + the target name
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("SVCB") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("SVCB") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)      ## TTL
    buffer += struct.pack(">H", data_len)      ## Data length
    buffer += struct.pack(">H", 0)             ## SvcPriority (0 means alias mode - RFC 9460)

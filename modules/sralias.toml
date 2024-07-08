@@ -23,7 +23,8 @@ code = '''
                   port = random.getrandbits(16)
                   bindom = convDom2Bin(dom)
                   data_len = 2+2+2+len(bindom)  # Priority (2 bytes) + Weight (2 bytes) + Port (2 bytes) + Target domain
-                  buffer += convDom2Bin(req.full_domain) + getTypeBin("SRV") + getClassBin("IN")
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += getTypeBin("SRV") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)    ## TTL
                   buffer += struct.pack(">H", data_len)    ## Data length
                   buffer += struct.pack(">H", 0)           ## Priority
@@ -39,11 +40,11 @@ code = '''
               # Send multiple random SRV aliases (RFC 2782) for any domain name with attribute leaves 
               # (domains prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.sralias...'
               # BEWARE: This could result in multiplication
-              offset = 1      # _a.sralias.10.dnslabtest.com
+              offset = 1      # _a.sralias.10.yourdomain.com
               if req.subdomains_lc[2].startswith("sralias"):
-                 offset = 2   # _a._b.sralias.10.dnslabtest.com
+                 offset = 2   # _a._b.sralias.10.yourdomain.com
               elif req.subdomains_lc[3].startswith("sralias"):
-                 offset = 3   # _a._b._c.sralias.10.dnslabtest.com
+                 offset = 3   # _a._b._c.sralias.10.yourdomain.com
               answers = int(req.subdomains[offset+1]) if req.subdomains[offset+1].isnumeric() else 3
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
@@ -57,7 +58,8 @@ code = '''
                   port = random.getrandbits(16)
                   bindom = convDom2Bin(dom)
                   data_len = 2+2+2+len(bindom)  # Priority (2 bytes) + Weight (2 bytes) + Port (2 bytes) + Target domain
-                  buffer += convDom2Bin(req.full_domain) + getTypeBin("SRV") + getClassBin("IN")
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += getTypeBin("SRV") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)    ## TTL
                   buffer += struct.pack(">H", data_len)    ## Data length
                   buffer += struct.pack(">H", 0)           ## Priority

@@ -11,7 +11,7 @@ if req.first_subdomain.startswith("mxloop"):
    # Do an alias loop in a MX record
    if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():
       # we are already in a loop, e.g.:
-      # mxloop.10.4.dnslabtest.com
+      # mxloop.10.4.yourdomain.com
       max = int(req.subdomains[1])
       cur = int(req.subdomains[2])
       if cur >= max:
@@ -24,7 +24,7 @@ if req.first_subdomain.startswith("mxloop"):
          new_domain_name += "." + req.subdomains[i+3]
    elif req.subdomains[1].isnumeric():
       # we are in beginning of a loop with a requested max value, e.g.:
-      # mxloop.10.dnslabtest.com
+      # mxloop.10.yourdomain.com
       max = int(req.subdomains[1])
       if max < 1:
          max = 1
@@ -41,7 +41,8 @@ if req.first_subdomain.startswith("mxloop"):
    ### ANSWER SECTION ########
    bindom = convDom2Bin(new_domain_name)
    data_len = 2+len(bindom)                 # Priority (2 bytes) + Target domain
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("MX") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("MX") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)    ## TTL
    buffer += struct.pack(">H", data_len)    ## Data length
    buffer += struct.pack(">H", 0)           ## Priority

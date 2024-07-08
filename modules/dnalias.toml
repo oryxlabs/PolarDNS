@@ -21,7 +21,8 @@ code = '''
                   # DNAME
                   dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
                   bindom = convDom2Bin(dom)
-                  buffer += convDom2Bin(req.full_domain) + getTypeBin("DNAME") + getClassBin("IN")
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += getTypeBin("DNAME") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)      ## TTL
                   buffer += struct.pack(">H", len(bindom))   ## Data length
                   buffer += bindom                           ## DNAME value

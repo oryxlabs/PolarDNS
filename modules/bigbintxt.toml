@@ -24,7 +24,8 @@ if req.first_subdomain.startswith("bigbintxt"):
    for i in range(size-1):
        data += struct.pack(">B", chunksize) + os.urandom(chunksize)
    # TXT
-   buffer += convDom2Bin(req.full_domain) + getTypeBin("TXT") + getClassBin("IN")
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += getTypeBin("TXT") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)            ## TTL
    buffer += struct.pack(">H", len(data))           ## Data length
    buffer += data

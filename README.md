@@ -3,8 +3,6 @@ PolarDNS is a specialized authoritative DNS server written in Python 3.x, which 
 
 _
 
-**See the attached [BlackHat MEA 2023](docs/pptx/) presentations (including BONUS slides) for a detailed information.**
-
 PolarDNS can be used for testing of:
 
 - DNS resolvers (server-side)
@@ -152,13 +150,11 @@ For instance, how does it handle a situation when it obtains a malformed DNS res
 
 ## Adding new features
 
-Adding new features to PolarDNS is crucial for discovering truly novel DNS issues.
+Adding new features to PolarDNS is essential for discovering truly novel DNS issues. And with PolarDNS, you can do just that relatively easily.
 
-PolarDNS enables you to easily implement a new idea, test case, feature, or PoC without needing to build your own DNS server.
+PolarDNS allows you to quickly add a new feature, try out your ideas, or develop a PoC without having to build your own DNS server. All you need is ability to understand Python code and a curiosity to experiment with the DNS protocol.
 
-All you need is basic to intermediate Python knowledge and some understanding of the DNS protocol.
-
-For detailed, step-by-step instructions on adding new features, refer to the [CONTRIBUTING](CONTRIBUTING.md) page. There, you'll also find information on how to debug PolarDNS, submit bug reports, share ideas and more.
+There is a detailed, step-by-step [contribution guide](CONTRIBUTING.md) to get you started. There, you'll find not only how to add new features but also how to debug PolarDNS, submit issues, share ideas, and more.
 
 ## Links
 

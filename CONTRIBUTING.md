@@ -8,6 +8,7 @@
 	- [Where to add the code](#where-to-add-the-code)
 	- [The process_DNS() function](#the-process-dns-function)
 	- [Crafting DNS responses](#crafting-dns-responses)
+	- [Links](#links)
 - [Debugging PolarDNS](#debugging)
 - [Other ways to contribute](#other-ways-to-contribute)
 
@@ -56,7 +57,7 @@ Internally, the modularity of PolarDNS is implemented in such a way that, when y
 
 This has specific implications for debugging the PolarDNS server, which we'll cover later.
 
-:exclamation: Keep in mind not to make changes to the `polardns_real.py` file, as your changes might be overwritten :exclamation:
+:exclamation: Ensure you do NOT make changes to the `polardns_real.py` file, as your changes might be overwritten :exclamation:
 
 Now let's see where we can add our code.
 
@@ -104,7 +105,13 @@ Here's the actual code for the [`always`](docs/catalogue/general-features.md#alw
 
 And that should cover most of what you need to start experimenting and implementing your own ideas.
 
-:point_up: Remember to share your amazing new modules by submitting a PR! :point_up:
+:bulb: Don't forget to share your new amazing ideas and modules with the community by submitting a PR! :bulb:
+
+### <a name="links"></a>Links
+
+Here are some excellent technical resources about the DNS protocol that can aid you in your journey:
+- https://en.wikipedia.org/wiki/List_of_DNS_record_types
+- https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml
 
 ## <a name="debugging"></a>Debugging PolarDNS
 

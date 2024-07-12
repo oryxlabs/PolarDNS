@@ -1,0 +1,30 @@
+[module]
+name = "ptrloop1"
+type = "feature"
+info = "PTR loop 1"
+desc = "Respond with the same exact domain name (x.2.0.192.in-addr.arpa) in a PTR record, effectively creating an immediate loop."
+author = "ivan.jedek@oryxlabs.com"
+category = "Aliases, loops and chains"
+
+code = '''
+           elif req.full_domain.lower().endswith(".2.0.192.in-addr.arpa"):
+              # Asking for a reverse record for the IP address 192.0.2.x (x.2.0.192.in-addr.arpa PTR record).
+              # The 192.0.2.0/24 network range is TEST-NET-1 typically used for documentation/examples.
+              # Let's respond back with the same exact domain name, effectively creating an immediate loop.
+              bindom = b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              # PTR alias records
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              buffer += getTypeBin("PTR") + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += struct.pack(">H", len(bindom)) ## Data length
+              buffer += bindom                         ## TargetName
+              # log and send
+              log("PTR loop %s" % (req.full_domain))
+              send_buf(self, buffer)
+              #####################################################################
+'''

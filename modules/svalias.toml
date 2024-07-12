@@ -4,7 +4,7 @@ type = "feature"
 info = "SVCB random N aliases"
 desc = "Respond with N number of SVCB aliases containing random chain index (`svalias####.yourdomain.com`). BEWARE: This could result in multiplication."
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
            elif req.first_subdomain.startswith("svalias"):

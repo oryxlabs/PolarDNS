@@ -9,7 +9,7 @@ nofail=0
 SED="sed"
 if [ "`uname -s`" == "Darwin" ]; then SED="gsed"; fi
 
-##################
+#######################################
 domain=""
 
 # get the domain name from the config file
@@ -27,30 +27,29 @@ if [ "${domain}" == "" ]; then
   exit 1
 fi
 
-##################
+#######################################
 
-rundig() {
-  d="$1"
-  #tmpfile="/tmp/output.${d//[ +]/}.${target_ip}.$$${RANDOM}"
-  #tmpfile="/tmp/output.${d//[ +]/}.${target_ip}"
-  dig ${d} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port} \
-  | grep -v '^; <<>> DiG \| WHEN: \| Query time: ' \
+process_dig_output() {
+  grep -v '^; <<>> DiG \| WHEN: \| Query time: ' \
   | ${SED} -e 's/, id: .*/, id: <ID>/;s/expected ID .*, got .*/expected ID <ID>, got <DIF>/' \
   | ${SED} -e 's/\x09\s*/ /g;s/\\000/<NUL>/g;s/\([^0-9]\)[0-9]\{6\}\([^0-9]\)/\1<RANDOM>\2/' \
   | ${SED} -e 's/rcvd: .*/rcvd: <SIZE>/;s/has [0-9]* extra bytes/has <NUM> extra bytes/g' \
   | ${SED} -e "s/${domain//\./\\.}/<OURDOM>/g;s/${domain%.*}/<OURDOM-NOTLD>/g" \
   | ${SED} -E 's/(SRV\s*0\s*0\s*)[0-9]*\s*(_.*sr|sr|)(loop|chain|alias)/\1 <PORT> \2\3/g' \
-  | ${SED} -E 's/(CNAME|DNAME|HTTPS|SVCB|SRV|MX)(.*)(\s|cn|dn|ht|sv|sr|mx)alias[0-9]*\./\1\2\3alias<RANDOM>\./g' \
+  | ${SED} -E 's/(CNAME|DNAME|HTTPS|SVCB|SRV|MX|NS|TXT)(.*)(:|\s|cn|dn|ht|sv|sr|mx|ns|spf)alias[0-9]+\./\1\2\3alias<RANDOM>\./g' \
+  | ${SED} -e 's/alias[0-9]\+/alias<RANDOM>/g;s/\(\.10\.in-addr\.arpa\..*PTR\s*\)[0-9]\+\.[0-9]\+\./\1<RANDOM>.<RANDOM>./g' \
   | ${SED} -e '0,/^\([0-9a-f]\{2\} \)\{16\} /s/^\([0-9a-f]\{2\} \)\{2\}\(\([0-9a-f]\{2\} \)\{14\} *\)[^ ][^ ]/TX ID \2ID/1' \
-  | ${SED} -e "s/#${target_port}/#53/g;s/${target_ip}/127\.0\.0\.1/g;s/^\(size.*127\.0\.0\.\).*$/\1<RANDOM>/g" \
-  | md5sum | awk '{print $1}'
-  #> "${tmpfile}"
-  #echo hello | md5sum | awk '{print $1}'
+  | ${SED} -e "s/#${target_port}/#53/g;s/${target_ip}/127\.0\.0\.1/g;s/^\(size.*127\.0\.0\.\).*$/\1<RANDOM>/g"
 }
 
-#  | ${SED} -e "s/#${target_port}/#53/g" \
-#  | ${SED} -e "s/${target_ip}/127\.0\.0\.1/g" \
+# for real test
+rundig() {
+  d="$1"
+  dig ${d} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port} \
+  | process_dig_output | md5sum | awk '{print $1}'
+}
 
+# for debug purposes
 runddig() {
   d="$1"
   tmpfile="/tmp/output.${d//[ +]/}.${target_ip}.$$${RANDOM}"
@@ -58,24 +57,15 @@ runddig() {
   echo "# dig ${d} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port} "
   echo
   dig ${d} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port} \
-  | grep -v '^; <<>> DiG \| WHEN: \| Query time: ' \
-  | ${SED} -e 's/, id: .*/, id: <ID>/;s/expected ID .*, got .*/expected ID <ID>, got <DIF>/' \
-  | ${SED} -e 's/\x09\s*/ /g;s/\\000/<NUL>/g;s/\([^0-9]\)[0-9]\{6\}\([^0-9]\)/\1<RANDOM>\2/' \
-  | ${SED} -e 's/rcvd: .*/rcvd: <SIZE>/;s/has [0-9]* extra bytes/has <NUM> extra bytes/g' \
-  | ${SED} -e "s/${domain//\./\\.}/<OURDOM>/g;s/${domain%.*}/<OURDOM-NOTLD>/g" \
-  | ${SED} -E 's/(SRV\s*0\s*0\s*)[0-9]*\s*(_.*sr|sr|)(loop|chain|alias)/\1 <PORT> \2\3/g' \
-  | ${SED} -E 's/(CNAME|DNAME|HTTPS|SVCB|SRV|MX)(.*)(\s|cn|dn|ht|sv|sr|mx)alias[0-9]*\./\1\2\3alias<RANDOM>\./g' \
-  | ${SED} -e '0,/^\([0-9a-f]\{2\} \)\{16\} /s/^\([0-9a-f]\{2\} \)\{2\}\(\([0-9a-f]\{2\} \)\{14\} *\)[^ ][^ ]/TX ID \2ID/1' \
-  | ${SED} -e "s/#${target_port}/#53/g;s/${target_ip}/127\.0\.0\.1/g;s/^\(size.*127\.0\.0\.\).*$/\1<RANDOM>/g" \
-  > "${tmpfile}"
+  | process_dig_output > "${tmpfile}"
   sum="`md5sum "${tmpfile}" | awk '{print $1}'`"
   cat "${tmpfile}"
   echo "CHECKSUM: ${sum}"
   echo "  OUTPUT: ${tmpfile}"
-  #rm -f -- "${tmpfile}"
+  if [ $((debug)) -gt 2 ]; then rm -f -- "${tmpfile}"; fi
 }
 
-##################
+#######################################
 
 failcount=0
 passcount=0
@@ -85,7 +75,17 @@ runtest() {
   dom="$1"
   exp="$2"
 
-  if [ $((debug)) -eq 1 ]; then runddig "${dom}"; return; fi
+  if [ $((debug)) -ne 0 ]; then
+    tmpf="/tmp/test$$$RANDOM"
+    runddig "${dom}" | tee "${tmpf}"
+    res="`grep -m1 "^CHECKSUM: " "${tmpf}"`"
+    echo "------------------------------------------"
+    echo "EXPECTED: ${exp}"
+    if [ "${res#* }" == "${exp}" ]; then echo "  RESULT: PASS"; else echo "  RESULT: FAIL"; fi
+    rm -f -- "${tmpf}"
+    return
+  fi
+
   out="`rundig "${dom}"`"
   ((testcount++))
   fail=0
@@ -105,21 +105,71 @@ runtest() {
 }
 
 #######################################
+
+usage() {
+  cat <<EOF
+
+=== PolarDNS testing suite ===
+
+ You can run this either to:
+
+ (1) run all tests (most common usage):
+   # test/test.sh
+
+ (2) only see the transformed dig output:
+   # test/test.sh dig TXT alias.yourdomain.com @127.0.0.1
+
+ (3) run a particular test, see the transformed dig output:
+   # test/test.sh runtest "TXT alias.yourdomain.com" "8d5fed2a02748af42a23fc78a11705ba"
+
+ (4) run a particular test 10 times, see if the checksum is stable:
+   # test/test.sh runtest "TXT alias.yourdomain.com" "8d5fed2a02748af42a23fc78a11705ba" 10
+EOF
+}
+
+#######################################
 # main
 
-debug=0
-if [ ! -z "${1}" ]; then
-  debug=1
-  if [ "${1}" == "dig" ]; then
-    shift
-    arg="${*}"
-    arg="${arg//@${target_ip} +tries=1 +timeout=${timeout}/}"
-    runddig "${arg}"
-    exit 0
-  fi
+if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+  usage
+  exit 0
 fi
 
-#################################################################
+debug=0
+if [ "${1}" == "dig" ]; then
+  shift
+  debug=1
+  arg="${*}"
+  arg="${arg//@${target_ip} +tries=1 +timeout=${timeout}/}"
+  runddig "${arg}"
+  exit 0
+elif [ "${1}" == "runtest" ]; then
+  shift
+  dom="$1"
+  exp="$2"
+  if [ -z "${3}" ]; then
+    debug=2
+    runtest "${dom}" "${exp}"
+    exit 0
+  fi
+  # see if the checksum is stable
+  debug=3
+  n="${3:-10}"
+  tmpfl="/tmp/testn$$$RANDOM"
+  { runtest "${dom}" "${exp}" | head -n -4
+    for ((i=1; i<n; i++)) { runtest "${dom}" "${exp}" | grep CHECKSUM; }
+  } | tee "${tmpfl}"
+  grep "^CHECKSUM: " "${tmpfl}" | cut -d' ' -f2 | sort | uniq -c | grep -q "${n} ${exp}$"
+  result=$?
+  echo "------------------------------------------"
+  echo "EXPECTED: ${exp}"
+  if [ $((result)) -eq 0 ]; then echo "  RESULT: PASS"; else echo "  RESULT: FAIL"; fi
+  rm -f -- "${tmpfl}"
+  exit 0
+fi
+
+#######################################
+
 
 # size.toml
 runtest "size.512.fc.${domain}" "50098dd38cfb8761d83896d6502dae16"
@@ -150,6 +200,10 @@ runtest "SRV chain.${domain}" "5efe45b3ef175953772d6ff99420afd3"
 runtest "SRV chain99.${domain}" "d96d5a37b3053e4223c50ffa47962dba"
 runtest "MX chain.${domain}" "8850ccc66fb20e4f90c9a8f8008fec2c"
 runtest "MX chain99.${domain}" "e25699db287a8ee21aaf695f86505391"
+runtest "NS chain.${domain}" "cd6996258e44fe24433b83412a9f89f5"
+runtest "NS chain99.${domain}" "52bc52b270135e07f3e514d6bd03776d"
+runtest "TXT chain.${domain}" "02e31b6ab5075f04699529dd85f16679"
+runtest "TXT chain99.${domain}" "0aee55d513ec80310b908c0f1a5c456e"
 
 # alias.toml
 runtest "alias.${domain}" "e6813e79a8755929823c994fd0dbce18"
@@ -166,6 +220,10 @@ runtest "SRV alias.${domain}" "fb55586d8482f20bda81a0e87fb10469"
 runtest "SRV alias.100.${domain}" "958d1ee99ed5c0b6c91f3325fc680a62"
 runtest "MX alias.${domain}" "c9d618ec0ef1047b8414fa8b7ddac8e1"
 runtest "MX alias.100.${domain}" "939b6525db13ba439bf6c64d18d57610"
+runtest "NS alias.${domain}" "4b14a5df15d5b9e27c8da92acc9b306b"
+runtest "NS alias.100.${domain}" "a3d23af1371b8a386b4effeb2284c026"
+runtest "TXT alias.${domain}" "8d5fed2a02748af42a23fc78a11705ba"
+runtest "TXT alias.100.${domain}" "ad55c52f1e2dd702f05496a96d8d0eb8"
 
 # loop.toml
 runtest "loop.${domain}" "2cc3f7970c8aa4b40497bf360182070c"
@@ -196,6 +254,14 @@ runtest "MX loop.${domain}" "210807bd4794e98034acab1850a5a68d"
 runtest "MX loop.100.${domain}" "2938754de626476c77d23267074cc107"
 runtest "MX loop.100.98.${domain}" "52faccc0fe160ec63449ba5e07a09b98"
 runtest "MX loop.100.100.${domain}" "de8812604c8222dd78bc854bd8907334"
+runtest "NS loop.${domain}" "a6cf900d86764351a1893824dfba0846"
+runtest "NS loop.100.${domain}" "1b00cf93005604e5ccea878816a948f5"
+runtest "NS loop.100.98.${domain}" "c879962f4cdc9e9cb6af1733f27c61c5"
+runtest "NS loop.100.100.${domain}" "4e7148266bd992791cd3a6baba6df75b"
+runtest "TXT loop.${domain}" "718bc655090c7d82f00eb6938c02b791"
+runtest "TXT loop.100.${domain}" "ef673996a4442559eeaa7135cf37c1b4"
+runtest "TXT loop.100.98.${domain}" "22851a6869801319259402ddd3646169"
+runtest "TXT loop.100.100.${domain}" "4630dfdcb3dc4fcccc7122cd6dee1974"
 
 # cnloop.toml cnchain.toml cnalias.toml
 runtest "CNAME cnloop.${domain}" "1285e878b397b739acf2ca996e4e8e14"
@@ -322,6 +388,40 @@ runtest "mxchain.${domain}" "80818801a011930448d561d9a4fb29bf"
 runtest "mxchain56789.${domain}" "af61936feffe02bc166ab1851524bba7"
 runtest "mxalias.${domain}" "02abc16494f5454cc84a200d652aad1c"
 runtest "mxalias.100.${domain}" "da7e74c3c698711298048289db86f116"
+
+# nsloop.toml nschain.toml nsalias.toml
+runtest "NS nsloop.${domain}" "c924cead0bba6b377032ba85b115af60"
+runtest "nsloop.${domain}" "4cee8b6d1f0ac6a1db4344c4ff8a261a"
+runtest "nsloop.5.${domain}" "9b4215ac75d3ed0e39ff1fce3e086025"
+runtest "nsloop.5.4.${domain}" "344b742e7b1eafbc587c69b0e25f977e"
+runtest "nsloop.5.5.${domain}" "de294db4197f064bf8c2ef6b8774a00c"
+runtest "nschain.${domain}" "d88ea2d2d81f79bc7634840335201590"
+runtest "nschain34567.${domain}" "627fea482690fa20ec2158110200f40c"
+runtest "nsalias.${domain}" "1517024d6bbb3daa58357fb8b943b8b1"
+runtest "nsalias.100.${domain}" "56a825b622067378fc2adca48b624ec4"
+
+# spfloop.toml spfchain.toml spfalias1.toml spfalias2.toml
+runtest "TXT spfloop.${domain}" "990e9da258c0c6ad32112a756ca80b74"
+runtest "spfloop.${domain}" "0adf87daaade45e6ed016102cde56213"
+runtest "spfloop.5.${domain}" "62efb6b97e3f59374251c63ed9319fc9"
+runtest "spfloop.5.4.${domain}" "2aa8a364964b868b45331cbeed6c9b5c"
+runtest "spfloop.5.5.${domain}" "44cb2530d056240bc0439825620b2e29"
+runtest "spfchain.${domain}" "03f65bfa3c7523b3f358b915f686fecf"
+runtest "spfchain34567.${domain}" "ba919bef6f1e422e3c3266483b392a29"
+runtest "spfalias1.${domain}" "ad67838271de4d25e87f059b2e26e3e9"
+runtest "spfalias1.100.${domain}" "c1352747ced579e2c87d84e913360a08"
+runtest "spfalias2.${domain}" "b85951e3aa8b49ac7a80587b25a06c9c"
+runtest "spfalias2.100.${domain}" "507f72a0d217e44222d9b466199a0b66"
+
+# ptralias.toml ptrloop1.toml ptrloop2.toml
+runtest "-x 192.0.2.0" "caffad247ca2643ac9031adc42e0b50f"
+runtest "-x 192.0.2.100" "740190f8f3790f12340203a8e2010451"
+runtest "-x 198.51.100.0" "6d2c6412d4786a0ed111573d4acb0f94"
+runtest "-x 198.51.100.255" "db2d255697d7d9bb6c4a1ea89fc2aa5a"
+runtest "-x 10.255.0.0" "08e1216021f668f679b3465a3f167e75"
+runtest "-x 10.255.255.255" "69a465ae06caa4b05111559028395ae6"
+
+
 
 # nfz / name fuzzing
 runtest "alias.10.nfz0.10.${domain}" "6f99464921e173b6662ce68466f18cf9"

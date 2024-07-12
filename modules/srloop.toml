@@ -4,7 +4,7 @@ type = "feature"
 info = "SRV alias loop"
 desc = "Respond with an SRV record that creates an infinite loop with any number of elements."
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
 if req.first_subdomain.startswith("srloop"):

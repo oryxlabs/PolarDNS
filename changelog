@@ -1,3 +1,18 @@
+12/Jul/2024
+- added the `ptralias`, `ptrloop1` and `ptrloop2` features responding with PTR records
+- updated the catalogue documentation
+- added tests (total test count: 720)
+
+11/Jul/2024
+- added the `spfloop`, `spfchain`, `spfalias1` and `spfalias2` features responding with TXT SPF records
+- the `loop`, `chain` and `alias` features now also support the NS and SPF (TXT) record types
+- added tests (total test count: 714)
+
+10/Jul/2024
+- added the `nsloop`, `nschain` and `nsalias` features responding with NS records
+- enhanced the tests, `test/test.sh -h` will give usage info
+- added tests (total test count: 707)
+
 08/Jul/2024
 - release version 1.4
 - added the `cut` modifier for cutting arbitrary number of bytes from the end of the packet

@@ -2,13 +2,13 @@
 name = "alias"
 type = "feature"
 info = "random N aliases"
-desc = "Respond with N number of aliases containing random chain index (`alias####.yourdomain.com`). This feature supports CNAME/DNAME/HTTPS/SVCB/SRV/MX resource types. BEWARE: This could result in multiplication."
+desc = "Respond with N number of aliases containing random chain index (`alias####.yourdomain.com`). This feature supports CNAME/DNAME/HTTPS/SVCB/SRV/MX/NS/SPF(TXT) resource types. BEWARE: This could result in multiplication."
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
            elif req.first_subdomain.startswith("alias"):
-              # Send multiple random aliases in any of CNAME/DNAME/HTTPS/SVCB/SRV/MX record types
+              # Send multiple random aliases in any of CNAME/DNAME/HTTPS/SVCB/SRV/MX/NS/SPF(TXT) record types
               # BEWARE: This could result in multiplication
               answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 3
               ### DNS header ########
@@ -86,6 +86,29 @@ code = '''
                         buffer += struct.pack(">H", data_len)    ## Data length
                         buffer += struct.pack(">H", 0)           ## Priority
                         buffer += bindom                         ## TargetName
+                        doms.append(dom)
+                 case "NS":
+                    type = "NS"
+                    for i in range(answers):
+                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                        bindom = convDom2Bin(dom)
+                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                        buffer += getTypeBin("NS") + getClassBin("IN")
+                        buffer += struct.pack(">L", resp.TTL)      ## TTL
+                        buffer += struct.pack(">H", len(bindom))   ## Data length
+                        buffer += bindom                           ## NS value
+                        doms.append(dom)
+                 case "TXT":
+                    type = "SPF(TXT)"
+                    for i in range(answers):
+                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                        data = "v=spf1 include:" + dom + " ~all"
+                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                        buffer += getTypeBin("TXT") + getClassBin("IN")
+                        buffer += struct.pack(">L", resp.TTL)      ## TTL
+                        buffer += struct.pack(">H", len(data)+1)   ## Data length (2B)
+                        buffer += struct.pack(">B", len(data))     ## TXT length (1B)
+                        buffer += data.encode("utf-8")             ## TXT SPF value
                         doms.append(dom)
                  case _:
                     type = "CNAME"

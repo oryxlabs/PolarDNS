@@ -4,7 +4,7 @@ type = "feature"
 info = "MX alias chain"
 desc = "Respond with an incremented MX record. This creates an infinite alias chain."
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
            elif req.first_subdomain.startswith("mxchain"):

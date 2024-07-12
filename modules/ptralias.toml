@@ -1,0 +1,41 @@
+[module]
+name = "ptralias"
+type = "feature"
+info = "PTR random N aliases"
+desc = "Respond with N number of PTR records containing random subdomains under the same network range. BEWARE: This could result in multiplication."
+author = "ivan.jedek@oryxlabs.com"
+category = "Aliases, loops and chains"
+
+code = '''
+           elif req.full_domain.lower().endswith(".10.in-addr.arpa"):
+              # Asking for a reverse record for the IP address 10.x.y.z (z.y.x.10.in-arpa.addr PTR record).
+              # The 10.0.0.0/8 network range is a private network range for internal use only.
+              # Let's respond with x number of PTR records containing 10.x.<RANDOM>.<RANDOM>.in-addr.arpa
+              # domains (from the same range). This means that if the client/resolver will attempt to resolve
+              # any of them, it will again end up here, producing even more PTR records from the same range.
+              # BEWARE: This could result in multiplication
+              answers = int(req.subdomains[2]) if req.subdomains[2].isnumeric() else 1
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              doms = []
+              for i in range(answers):
+                  # PTR alias records
+                  r1 = str(random.getrandbits(8))
+                  r2 = str(random.getrandbits(8))
+                  #      z    .     y    .           x             .     10
+                  dom = r2 + "." + r1 + "." + req.subdomains[2] + "." + "10.in-addr.arpa"
+                  bindom = convDom2Bin(dom)
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += getTypeBin("PTR") + getClassBin("IN")
+                  buffer += struct.pack(">L", resp.TTL)           ## TTL
+                  buffer += struct.pack(">H", len(bindom))        ## Data length
+                  buffer += bindom                                ## TargetName
+                  doms.append(dom)
+              # log and send
+              log("%d PTR aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
+              send_buf(self, buffer)
+              #####################################################################
+'''

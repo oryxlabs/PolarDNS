@@ -4,7 +4,7 @@ type = "feature"
 info = "SRV random N aliases"
 desc = "Respond with N number of SRV aliases containing random chain index (`sralias####.yourdomain.com`). BEWARE: This could result in multiplication."
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
            elif req.first_subdomain.startswith("sralias"):

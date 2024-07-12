@@ -4,7 +4,7 @@ type = "feature"
 info = "SVCB alias loop"
 desc = "Respond with an SVCB record featuring an alias (SvcPriority 0) that creates an infinite loop with any number of elements."
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
 if req.first_subdomain.startswith("svloop"):

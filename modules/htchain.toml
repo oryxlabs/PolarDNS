@@ -4,7 +4,7 @@ type = "feature"
 info = "HTTPS alias chain"
 desc = "Respond with an incremented HTTPS record. This creates an infinite alias chain."
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
            elif req.first_subdomain.startswith("htchain"):

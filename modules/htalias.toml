@@ -4,7 +4,7 @@ type = "feature"
 info = "HTTPS random N aliases"
 desc = "Respond with N number of HTTPS aliases containing random chain index (`htalias####.yourdomain.com`). BEWARE: This could result in multiplication."
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
            elif req.first_subdomain.startswith("htalias"):

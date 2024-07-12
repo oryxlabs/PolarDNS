@@ -4,7 +4,7 @@ type = "feature"
 info = "CNAME alias loop"
 desc = "Respond with CNAME record forming an infinite loop consisting of any number of elements."
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
 if req.first_subdomain.startswith("cnloop"):

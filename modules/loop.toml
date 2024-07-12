@@ -2,13 +2,13 @@
 name = "loop"
 type = "feature"
 info = "alias loop"
-desc = "Respond with a record that creates an infinite loop with any number of elements. This feature supports CNAME/DNAME/HTTPS/SVCB/SRV/MX resource types"
+desc = "Respond with a record that creates an infinite loop with any number of elements. This feature supports CNAME/DNAME/HTTPS/SVCB/SRV/MX/NS/SPF(TXT) resource types"
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
 if req.first_subdomain.startswith("loop"):
-   # Do an alias loop in a CNAME/DNAME/HTTPS/SVCB/SRV/MX record type
+   # Do an alias loop in a CNAME/DNAME/HTTPS/SVCB/SRV/MX/NS/SPF(TXT) record type
    if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():
       # we are already in a loop, e.g.:
       # loop.10.4.yourdomain.com
@@ -87,6 +87,22 @@ if req.first_subdomain.startswith("loop"):
          buffer += struct.pack(">H", data_len)     ## Data length
          buffer += struct.pack(">H", 0)            ## Priority
          buffer += bindom                          ## TargetName
+      case "NS":
+         type = "NS"
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin("NS") + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)     ## TTL
+         buffer += struct.pack(">H", len(bindom))  ## Data length
+         buffer += bindom                          ## NS value
+      case "TXT":
+         type = "SPF(TXT)"
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         data = "v=spf1 include:" + new_domain_name + " ~all"
+         buffer += getTypeBin("TXT") + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)     ## TTL
+         buffer += struct.pack(">H", len(data)+1)  ## Data length (2B)
+         buffer += struct.pack(">B", len(data))    ## TXT length (1B)
+         buffer += data.encode("utf-8")            ## TXT SPF value
       case _:
          type = "CNAME"
          buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)

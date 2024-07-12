@@ -1,17 +1,17 @@
 [module]
-name = "dnloop"
+name = "spfloop"
 type = "feature"
-info = "DNAME alias loop"
-desc = "Respond with DNAME record forming an infinite loop consisting of any number of elements."
+info = "TXT SPF alias loop"
+desc = "Respond with SPF(TXT) record forming an infinite loop consisting of any number of elements."
 author = "ivan.jedek@oryxlabs.com"
 category = "Aliases, loops and chains"
 
 code = '''
-if req.first_subdomain.startswith("dnloop"):
-   # Do a DNAME loop
+if req.first_subdomain.startswith("spfloop"):
+   # Do a SPF(TXT) loop
    if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():
       # we are already in a loop, e.g.:
-      # dnloop.10.4.yourdomain.com
+      # spfloop.10.4.yourdomain.com
       max = int(req.subdomains[1])
       cur = int(req.subdomains[2])
       if cur >= max:
@@ -24,7 +24,7 @@ if req.first_subdomain.startswith("dnloop"):
          new_domain_name += "." + req.subdomains[i+3]
    elif req.subdomains[1].isnumeric():
       # we are in beginning of a loop with a requested max value, e.g.:
-      # dnloop.10.yourdomain.com
+      # spfloop.10.yourdomain.com
       max = int(req.subdomains[1])
       if max < 1:
          max = 1
@@ -39,14 +39,16 @@ if req.first_subdomain.startswith("dnloop"):
    ### QUESTION SECTION ########
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
-   # DNAME
+   # TXT SPF
    buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
-   buffer += getTypeBin("DNAME") + getClassBin("IN")
-   buffer += struct.pack(">L", resp.TTL)                    ## TTL
-   buffer += struct.pack(">H", len(new_domain_name)+2)      ## Data length
-   buffer += convDom2Bin(new_domain_name)                   ## DNAME value
+   data = "v=spf1 include:" + new_domain_name + " ~all"
+   buffer += getTypeBin("TXT") + getClassBin("IN")
+   buffer += struct.pack(">L", resp.TTL)         ## TTL
+   buffer += struct.pack(">H", len(data)+1)      ## Data length (2B)
+   buffer += struct.pack(">B", len(data))        ## TXT length (1B)
+   buffer += data.encode("utf-8")                ## TXT SPF value
    # log and send
-   log("DNAME LOOP %s" % (new_domain_name))
+   log("SPF(TXT) LOOP %s" % (new_domain_name))
    send_buf(self, buffer)
    #####################################################################
 '''

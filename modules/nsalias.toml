@@ -1,14 +1,14 @@
 [module]
-name = "cnalias"
+name = "nsalias"
 type = "feature"
-info = "CNAME random N aliases"
-desc = "Respond with N number of CNAME aliases containing random chain index (`cnalias####.yourdomain.com`). BEWARE: This could result in multiplication."
+info = "NS random N aliases"
+desc = "Respond with N number of NS aliases containing random chain index (`cnalias####.yourdomain.com`). BEWARE: This could result in multiplication."
 author = "ivan.jedek@oryxlabs.com"
 category = "Aliases, loops and chains"
 
 code = '''
-           elif req.first_subdomain.startswith("cnalias"):
-              # Send multiple random CNAME aliases
+           elif req.first_subdomain.startswith("nsalias"):
+              # Send multiple random NS aliases
               # BEWARE: This could result in multiplication
               answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 3
               ### DNS header ########
@@ -18,17 +18,17 @@ code = '''
               ### ANSWER SECTION ########
               doms = []
               for i in range(answers):
-                  # CNAME
+                  # NS
                   dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
                   bindom = convDom2Bin(dom)
                   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
-                  buffer += getTypeBin("CNAME") + getClassBin("IN")
+                  buffer += getTypeBin("NS") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)      ## TTL
                   buffer += struct.pack(">H", len(bindom))   ## Data length
-                  buffer += bindom                           ## CNAME value
+                  buffer += bindom                           ## NS value
                   doms.append(dom)
               # log and send
-              log("%d CNAME aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
+              log("%d NS aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
               send_buf(self, buffer)
               #####################################################################
 '''

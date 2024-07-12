@@ -1354,7 +1354,7 @@ def process_DNS(self, req):
            time.sleep(resp.sleep)
            close_conn(self)
         #####################################################################
-        elif req.sld_tld_domain not in OURDOMAINS:
+        elif req.sld_tld_domain not in OURDOMAINS and req.sld_tld_domain != "in-addr.arpa":
            # We are NOT authoritative, send Refused
            log("Refused")
            ### DNS header ########

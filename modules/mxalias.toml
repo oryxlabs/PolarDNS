@@ -4,7 +4,7 @@ type = "feature"
 info = "MX random N aliases"
 desc = "Respond with N number of MX records containing random chain index. BEWARE: This could result in multiplication."
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
            elif req.first_subdomain.startswith("mxalias"):

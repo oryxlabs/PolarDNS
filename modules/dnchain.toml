@@ -4,7 +4,7 @@ type = "feature"
 info = "DNAME alias chain"
 desc = "Respond with an incremented DNAME record. This creates an infinite alias chain."
 author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+category = "Aliases, loops and chains"
 
 code = '''
 if req.first_subdomain.startswith("dnchain"):

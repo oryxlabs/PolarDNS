@@ -895,28 +895,34 @@ def send_buf(self, buffer, totallen = 0):
    print("Custom length:", resp.len) if debug else True
    time.sleep(resp.sleep)
 
+   append = b''
+   if hasattr(resp, "addbyte"):
+      append = os.urandom(resp.addcount) if resp.addbyte == "r" else bytes([resp.addbyte] * resp.addcount)
+
+   newlen = len(buffer) - getattr(resp, 'cutcount', 0)
+   newbuffer = buffer[:max(newlen, 0)] + append
+
    # UDP mode
    if proto == "udp":
-      # If '.cutXXX.' modifier specified, cut the buffer from the end
-      newlen = len(buffer) - getattr(resp, 'cut', 0)
-      self.wfile.write(buffer[:max(newlen, 0)])
+      self.wfile.write(newbuffer)
       self.wfile.flush()
       return
 
    # TCP mode
-
    # In TCP mode, we need to prepend the packet with a 2-byte length field.
    # The length can be determined by one of the following methods:
    #  - Overridden length specified by the '.lenXXX.' modifier in the domain name
    #  - Overridden length provided as a parameter to this function
    #  - Calculated from the buffer length if neither of the above is provided
-   tocalc = resp.len or totallen or len(buffer)
-   newbuf = struct.pack(">H", tocalc) + buffer
+   buflen = resp.len or totallen or len(buffer)
+   if hasattr(resp, "cutcount"):
+      buflen -= resp.rl * resp.cutcount  # adjust the length
+   if hasattr(resp, "addbyte"):
+      buflen += resp.rl * resp.addcount  # adjust the length
    try:
-       # If '.cutXXX.' modifier specified, cut the buffer from the end
-       newlen = len(newbuf) - getattr(resp, 'cut', 0)
-       self.request.sendall(newbuf[:max(newlen, 0)])
-   except:
+      self.request.sendall(struct.pack(">H", buflen) + newbuffer)
+   except Exception as e:
+       print(f"Error sending buffer: {e}")
        return(-1)
 
 ################################
@@ -1218,6 +1224,8 @@ def process_DNS(self, req):
         #  nfz   - enable name fuzzer which can generate various illegal
         #          and malformed domain names
         #  cut   - cut N bytes from the end of the packet e.g.: .cut10.
+        #  add   - add N bytes to the end of the packet e.g.: .add10.byte.
+        #  rl    - recalculate length in TCP ('cut' and 'add' modifiers)
         #  qurr  - set custom number of Questions in the DNS header
         #  anrr  - set custom number of Answer RRs in the DNS header
         #  aurr  - set custom number of Authority RRs in the DNS header
@@ -1227,6 +1235,7 @@ def process_DNS(self, req):
         resp.sleep = config_sleep
         resp.TTL = config_ttl
         resp.len = 0
+        resp.rl = 0  # recalculate length in TCP (in case cut/add is used)
         resp.noq = req.QURR # number of questions
         resp.QURR = req.QURR # number of questions
 
@@ -1247,56 +1256,40 @@ def process_DNS(self, req):
             #######################
             elif label.startswith("len"):      # TCP length override
                if label[3:].isnumeric():
-                  n = int(label[3:])
-                  if n > 65535: n = 65535
-                  resp.len = n
+                  resp.len = min(int(label[3:]), 65535)
             #######################
             elif label == "newid":             # new random transaction ID
                resp.ID = struct.pack(">H", random.getrandbits(16))
                addcustomlog("NEWID")
             #######################
             elif label.startswith("flgs"):     # set custom flags in the DNS header
-               if label[4:].isnumeric():
-                  n = int(label[4:])
-                  if n > 65535: n = 65535
-                  resp.FLGS = struct.pack(">H", n)
-                  addcustomlog("FLGS:" + hex(n))
-               elif label[4:6] == "0x":
-                  n = int(label[6:], base=16)
-                  if n > 65535: n = 65535
-                  resp.FLGS = struct.pack(">H", n)
-                  addcustomlog("FLGS:" + hex(n))
-               elif label[4:8] == "rand":
-                  n = random.getrandbits(16)
-                  resp.FLGS = struct.pack(">H", n)
-                  addcustomlog("FLGS:" + hex(n))
+               flgs = label[4:]
+               if flgs.isnumeric():
+                  resp.FLGS = struct.pack(">H", min(int(flgs), 65535))
+               elif flgs[:2] == "0x":
+                  resp.FLGS = struct.pack(">H", min(int(flgs[2:], base=16), 65535))
+               elif flgs == "r":
+                  resp.FLGS = struct.pack(">H", random.getrandbits(16))
+               addcustomlog("FLGS:" + flgs)
             #######################
             elif label.startswith("qurr"):     # set custom number of questions in the DNS header
                if label[4:].isnumeric():
-                  n = int(label[4:])
-                  if n > 65535: n = 65535
-                  resp.QURR = n
+                  resp.QURR = min(int(label[4:]), 65535)
                   addcustomlog("QURR:" + str(resp.QURR))
             #######################
             elif label.startswith("anrr"):     # set custom number of answer RR in the DNS header
                if label[4:].isnumeric():
-                  n = int(label[4:])
-                  if n > 65535: n = 65535
-                  resp.ANRR = n
+                  resp.ANRR = min(int(label[4:]), 65535)
                   addcustomlog("ANRR:" + str(resp.ANRR))
             #######################
             elif label.startswith("aurr"):     # set custom number of authority RR in the DNS header
                if label[4:].isnumeric():
-                  n = int(label[4:])
-                  if n > 65535: n = 65535
-                  resp.AURR = n
+                  resp.AURR = min(int(label[4:]), 65535)
                   addcustomlog("AURR:" + str(resp.AURR))
             #######################
             elif label.startswith("adrr"):     # set custom number of additional RR in the DNS header
                if label[4:].isnumeric():
-                  n = int(label[4:])
-                  if n > 65535: n = 65535
-                  resp.ADRR = n
+                  resp.ADRR = min(int(label[4:]), 65535)
                   addcustomlog("ADRR:" + str(resp.ADRR))
             #######################
             elif label == "noq":               # remove the question from the response query section
@@ -1306,8 +1299,8 @@ def process_DNS(self, req):
             elif label.startswith("nfz"):      # enable name fuzzer
                if label[3:].isnumeric():
                   resp.nfz = int(label[3:])    # the variant
-                  if req.subdomains_lc[index+1].isnumeric():       # does the next subdomain contain only a number?
-                     resp.nfz_sv = int(req.subdomains_lc[index+1]) # if yes, then it is a sub-variant
+                  if req.subdomains[index+1].isnumeric():     # does the next subdomain contain only a number?
+                     resp.nfz_sv = int(req.subdomains[index+1])  # if yes, then it is a sub-variant
                      addcustomlog("NFZ:" + str(resp.nfz) + "." + str(resp.nfz_sv))
                   else:
                      addcustomlog("NFZ:" + str(resp.nfz))
@@ -1322,9 +1315,23 @@ def process_DNS(self, req):
                addcustomlog("FC")
             #######################
             elif label.startswith("cut"):      # cut N bytes from the end of the packet
-               if label[3:].isnumeric():
-                  resp.cut = int(label[3:])    # how many bytes to cut
-                  addcustomlog("CUT:" + str(resp.cut))
+               resp.cutcount = int(label[3:]) if label[3:].isnumeric() else 0
+               addcustomlog("CUT:" + str(resp.cutcount))
+            #######################
+            elif label.startswith("add"):  # add N bytes to the end of the packet
+               resp.addcount = int(label[3:]) if label[3:].isnumeric() else 0
+               next_subdom = req.subdomains[index+1]
+               if next_subdom.isnumeric():
+                  resp.addbyte = min(int(next_subdom), 255)
+               elif next_subdom.startswith("0x"):
+                  resp.addbyte = min(int(next_subdom[2:], 16), 255)
+               else:
+                  resp.addbyte = "r"
+               addcustomlog("ADD:" + str(resp.addcount) + "." + str(resp.addbyte))
+            #######################
+            elif label == "rl":                # recalculate length in TCP
+               resp.rl = 1                     # in case 'cut' or 'add' was used
+               addcustomlog("RL")
             #######################
             # DO NOT REMOVE (additional modifiers)
             #######################

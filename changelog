@@ -1,3 +1,10 @@
+15/Jul/2024
+- added the `add` modifier for appending arbitrary bytes to the end of the packet
+- added the `rl` modifier for recalculating the length in TCP in case `cut` or `add` modifiers were used during a request
+- updated the catalogue documentation
+- added tests (total test count: 746)
+- various minor optimizations
+
 12/Jul/2024
 - added the `ptralias`, `ptrloop1` and `ptrloop2` features responding with PTR records
 - updated the catalogue documentation

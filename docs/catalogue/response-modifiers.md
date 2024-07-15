@@ -14,6 +14,8 @@
 	- [Set authority RRs in the header (aurr)](#set-authority-rrs-in-the-header-aurr)
 	- [Set additional RRs in the header (adrr)](#set-additional-rrs-in-the-header-adrr)
 	- [Cut N bytes from the end of the packet (cut)](#cut-n-bytes-from-the-end-of-the-packet-cut)
+	- [Add N bytes to the end of the packet (add)](#add-n-bytes-to-the-end-of-the-packet-add)
+	- [Recalculate length in TCP (rl)](#recalculate-length-in-tcp-rl)
 	- [Force compression (fc)](#force-compression-fc)
 	- [No compression (nc)](#no-compression-nc)
 	- [Name fuzzing generator (nfz)](#name-fuzzing-generator-nfz)
@@ -203,33 +205,34 @@ Set custom flags in the DNS header, allowing to specify it as a decimal number, 
 <table>
 <tr><td>format:</td><td>anything.flgs&lt;NUMBER>.yourdomain.com</td></tr>
 <tr><td>format:</td><td>anything.flgs&lt;0xHEX>.yourdomain.com</td></tr>
-<tr><td>format:</td><td>anything.flgsrand.yourdomain.com</td></tr>
+<tr><td>format:</td><td>anything.flgsr.yourdomain.com</td></tr>
 <tr><td>remark:</td><td>Flags is 2 bytes long field, so max decimal number is 65535 or 0xffff in hexadecimal format</td></tr>
-<tr><td>example:</td><td><code>dig always.flgs0x8400.yourdomain.com @127.0.0.1</code></td></tr>
-<tr><td>example:</td><td><code>dig always.flgs33792.yourdomain.com @127.0.0.1</code></td></tr>
-<tr><td>example:</td><td><code>dig always.flgsrand.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig always.flgs0x8403.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig always.flgs33795.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig always.flgsr.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
 
 Sample:
 ```
-# dig always.flgs0x8400.yourdomain.com @127.0.0.1
+# dig always.flgs0x8403.yourdomain.com @127.0.0.1
 
-; <<>> DiG 9.18.10-2-Debian <<>> always.flgs0x8400.yourdomain.com @127.0.0.1
+; <<>> DiG 9.18.10-2-Debian <<>> always.flgs0x8403.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4241
+;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 63015
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-;always.flgs0x8400.yourdomain.com. IN	A
+;always.flgs0x8403.yourdomain.com. IN	A
 
 ;; ANSWER SECTION:
-always.flgs0x8400.yourdomain.com. 60 IN	A	2.3.4.5
+always.flgs0x8403.yourdomain.com. 60 IN	A	2.3.4.5
 
-;; Query time: 0 msec
+;; Query time: 4 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Thu Nov 02 16:37:51 +04 2023
-;; MSG SIZE  rcvd: 98
+;; WHEN: Mon Jul 15 11:00:45 +04 2024
+;; MSG SIZE  rcvd: 66
+
 ```
 ### Set question RRs in the header (qurr)
 Set arbitrary number of questions in the DNS header.
@@ -385,6 +388,86 @@ size.128.cut16.fc.yourdomain.com. 60 IN	A	127.0.0.123
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; WHEN: Mon Jul 08 15:41:00 +04 2024
 ;; MSG SIZE  rcvd: 98
+
+```
+### Add N bytes to the end of the packet (add)
+Append a specified number of arbitrary byte(s) to the end of the packet. The byte value can be defined as a decimal number, a hexadecimal number, or leave it random if omitted.
+
+<table>
+<tr><td>format:</td><td>anything.add&lt;NUMBER>.&lt;BYTE>.yourdomain.com</td></tr>
+<tr><td>format:</td><td>anything.add&lt;NUMBER>.&lt;0xHEX>.yourdomain.com</td></tr>
+<tr><td>format:</td><td>anything.add&lt;NUMBER>.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig always.add10.0.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig always.add50000.0xff.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig always.add50000.255.yourdomain.com @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig always.cut4.add4.yourdomain.com @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig always.add50000.255.yourdomain.com @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> always.add50000.255.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21676
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: Message has 50000 extra bytes at end
+
+;; QUESTION SECTION:
+;always.add50000.255.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+always.add50000.255.yourdomain.com. 60 IN A	2.3.4.5
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Jul 15 14:53:12 +04 2024
+;; MSG SIZE  rcvd: 50068
+
+```
+### Recalculate length in TCP (rl)
+If the [cut](#cut-n-bytes-from-the-end-of-the-packet-cut) or [add](#add-n-bytes-to-the-end-of-the-packet-add) modifiers were used during a request in TCP, also adjust the length at the beginning of the packet.
+
+<table>
+<tr><td>format:</td><td>anything.rl.yourdomain.com</td></tr>
+<tr><td>example:</td><td><code>dig always.adb10.yourdomain.com @127.0.0.1 +tcp</code></td></tr>
+<tr><td>example:</td><td><code>dig always.adb10.rl.yourdomain.com @127.0.0.1 +tcp</code></td></tr>
+<tr><td>example:</td><td><code>dig size.300.fc.cut00.rl.yourdomain.com @127.0.0.1 +tcp</code></td></tr>
+<tr><td>example:</td><td><code>dig size.300.fc.cut64.rl.yourdomain.com @127.0.0.1 +tcp</code></td></tr>
+</table>
+
+Sample:
+```
+# dig size.300.fc.cut64.rl.yourdomain.com @127.0.0.1 +tcp
+;; Warning: Message parser reports malformed message packet.
+
+; <<>> DiG 9.18.10-2-Debian <<>> size.300.fc.cut64.rl.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 27026
+;; flags: qr aa; QUERY: 1, ANSWER: 15, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.300.fc.cut64.rl.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+size.300.fc.cut64.rl.yourdomain.com. 60	IN A	127.0.0.150
+size.300.fc.cut64.rl.yourdomain.com. 60	IN A	127.0.0.35
+size.300.fc.cut64.rl.yourdomain.com. 60	IN A	127.0.0.49
+size.300.fc.cut64.rl.yourdomain.com. 60	IN A	127.0.0.252
+size.300.fc.cut64.rl.yourdomain.com. 60	IN A	127.0.0.154
+size.300.fc.cut64.rl.yourdomain.com. 60	IN A	127.0.0.191
+size.300.fc.cut64.rl.yourdomain.com. 60	IN A	127.0.0.164
+size.300.fc.cut64.rl.yourdomain.com. 60	IN A	127.0.0.179
+size.300.fc.cut64.rl.yourdomain.com. 60	IN A	127.0.0.54
+size.300.fc.cut64.rl.yourdomain.com. 60	IN A	127.0.0.147
+size.300.fc.cut64.rl.yourdomain.com. 60	IN A	127.0.0.254
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Mon Jul 15 11:01:01 +04 2024
+;; MSG SIZE  rcvd: 229
 
 ```
 ### Force compression (fc)

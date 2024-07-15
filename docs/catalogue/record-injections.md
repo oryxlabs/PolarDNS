@@ -28,9 +28,9 @@ These injection scenarios typically provide a legitimate answer as the response,
 Respond with legit CNAME (end.yourdomain.com) + injected A record (inj1poc.yourdomain.com -> 6.6.6.6).
 
 <table>
-<tr><td>format:</td><td>inj01.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with inj1poc.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for inj1poc.yourdomain.com in the response</td></tr>
+<tr><td>format:</td><td>inj01.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with inj1poc.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for inj1poc.yourdomain.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will do injection for 3rd party (whatever.com), rather than yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj01.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -61,9 +61,9 @@ injected01.yourdomain.com. 60	IN	A	6.6.6.1
 Respond with injected A record (inj2poc.yourdomain.com -> 6.6.6.6) + legit CNAME (end.yourdomain.com).
 
 <table>
-<tr><td>format:</td><td>inj02.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with inj2poc.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for inj2poc.yourdomain.com in the response</td></tr>
+<tr><td>format:</td><td>inj02.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with inj2poc.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for inj2poc.yourdomain.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will do injection for 3rd party (whatever.com), rather than yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj02.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -94,9 +94,9 @@ inj02.yourdomain.com.	60	IN	CNAME	end.yourdomain.com.
 Respond with legit A record (1.2.3.4) + injected A record (inj3poc.yourdomain.com -> 6.6.6.6).
 
 <table>
-<tr><td>format:</td><td>inj03.[replq].[addq].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with inj3poc.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for inj3poc.yourdomain.com in the response</td></tr>
+<tr><td>format:</td><td>inj03.[rpq].[adq].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with inj3poc.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for inj3poc.yourdomain.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will do injection for 3rd party (whatever.com), rather than yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj03.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -127,9 +127,9 @@ injected03.yourdomain.com. 60	IN	A	6.6.6.3
 Respond with injected A record (inj4poc.yourdomain.com -> 6.6.6.6) + legit A record (1.2.3.4).
 
 <table>
-<tr><td>format:</td><td>inj04.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with inj4poc.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for inj4poc.yourdomain.com in the response</td></tr>
+<tr><td>format:</td><td>inj04.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with inj4poc.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for inj4poc.yourdomain.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will do injection for 3rd party (whatever.com), rather than yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj04.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -160,9 +160,9 @@ inj04.yourdomain.com.	60	IN	A	1.2.3.4
 Respond with CNAME (inj05poc.yourdomain.com) in all sections + inject also A record of it (inj05poc.yourdomain.com -> 6.6.6.6) in all sections.
 
 <table>
-<tr><td>format:</td><td>inj05.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with inj05poc.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for inj05poc.yourdomain.com in the response</td></tr>
+<tr><td>format:</td><td>inj05.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with inj05poc.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for inj05poc.yourdomain.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will do injection for 3rd party (whatever.com), rather than yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj05.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -201,9 +201,9 @@ injected05.yourdomain.com. 60	IN	A	6.6.6.5
 Respond with CNAME (inj06poc.yourdomain.com) in all sections + inject also AAAA record of it (inj06poc.yourdomain.com -> 6666:6666:6666:6666:6666:6666:6666:6666) in all sections.
 
 <table>
-<tr><td>format:</td><td>inj06.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with inj06poc.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for inj06poc.yourdomain.com in the response</td></tr>
+<tr><td>format:</td><td>inj06.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with inj06poc.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for inj06poc.yourdomain.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will do injection for 3rd party (whatever.com), rather than yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj06.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -242,9 +242,9 @@ injected06.yourdomain.com. 60	IN	AAAA	6666:6666:6666:6666:6666:6666:6666:6666
 Respond only with injected A record (inj07poc.yourdomain.com -> 6.6.6.6).
 
 <table>
-<tr><td>format:</td><td>inj07.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with inj07poc.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for inj07poc.yourdomain.com in the response</td></tr>
+<tr><td>format:</td><td>inj07.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with inj07poc.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for inj07poc.yourdomain.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will do injection for 3rd party (whatever.com), rather than yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj07.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -274,9 +274,9 @@ injected07.yourdomain.com. 60	IN	A	6.6.6.7
 Respond only with injected A record (inj08poc.yourdomain.com -> 6.6.6.6) in all sections.
 
 <table>
-<tr><td>format:</td><td>inj08.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with inj08poc.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for inj108poc.yourdomain.com in the response</td></tr>
+<tr><td>format:</td><td>inj08.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with inj08poc.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for inj108poc.yourdomain.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will do injection for 3rd party (whatever.com), rather than yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj08.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -312,9 +312,9 @@ injected08.yourdomain.com. 60	IN	A	6.6.6.8
 Respond only with injected PTR record (6.6.6.6 -> inj09poc.yourdomain.com) in all sections.
 
 <table>
-<tr><td>format:</td><td>inj09.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with inj09poc.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for inj09poc.yourdomain.com in the response</td></tr>
+<tr><td>format:</td><td>inj09.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with inj09poc.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for inj09poc.yourdomain.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will do injection for 3rd party (whatever.com), rather than yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj09.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -350,9 +350,9 @@ Sample:
 Respond with empty answer, but include information in the AUTHORITY section that NS for yourdomain.com is ns1.whatever.com and in the ADDITIONAL section, provide our IP for the ns1.whatever.com.
 
 <table>
-<tr><td>format:</td><td>inj10.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with yourdomain.com/whatever.com (depending on the 3rdparty option)</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for yourdomain.com/whatever.com (depending on the 3rdparty option) in the response</td></tr>
+<tr><td>format:</td><td>inj10.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with yourdomain.com/whatever.com (depending on the 3rdparty option)</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for yourdomain.com/whatever.com (depending on the 3rdparty option) in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will include information in the AUTHORITY section that NS for whatever.com is ns1.yourdomain.com and in the ADDITIONAL section, provide our IP for the ns1.yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj10.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -385,9 +385,9 @@ ns1.whatever.com.	60	IN	A	44.196.212.212
 Respond with empty answer, but include information in the AUTHORITY section that NS for whatever.com is ns1.yourdomain.com.whatever.com and in the ADDITIONAL section, provide our IP for the ns1.yourdomain.com.whatever.com.
 
 <table>
-<tr><td>format:</td><td>inj11.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with whatever.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for whatever.com in the response</td></tr>
+<tr><td>format:</td><td>inj11.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with whatever.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for whatever.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will include information in the AUTHORITY section that NS for whatever.com is ns1.whatever.com.yourdomain.com and in the ADDITIONAL section, provide our IP for the ns1.whatever.com.yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj11.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -420,9 +420,9 @@ ns1.yourdomain.com.whatever.com. 60 IN	A	44.196.212.212
 Respond with empty answer, but include information in all sections that NS for yourdomain.com is ns1.whatever.com and also provide our IP for the ns1.whatever.com.
 
 <table>
-<tr><td>format:</td><td>inj12.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with yourdomain.com/whatever.com (depending on the 3rdparty option)</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for yourdomain.com/whatever.com (depending on the 3rdparty option) in the response</td></tr>
+<tr><td>format:</td><td>inj12.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with yourdomain.com/whatever.com (depending on the 3rdparty option)</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for yourdomain.com/whatever.com (depending on the 3rdparty option) in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will provide information in all sections that NS for whatever.com is ns1.yourdomain.com and also provide our IP for the ns1.yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj12.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -461,9 +461,9 @@ ns1.whatever.com.	60	IN	A	44.196.212.212
 Respond with a CNAME (inj13poc.whatever.com), but include information in all sections that NS for whatever.com is ns1.yourdomain.com and also provide our IP for the ns1.yourdomain.com.
 
 <table>
-<tr><td>format:</td><td>inj13.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with whatever.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for whatever.com in the response</td></tr>
+<tr><td>format:</td><td>inj13.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with whatever.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for whatever.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will respond with a CNAME (inj13poc.whatever.com), but include information in all sections that NS for whatever.com is ns1.whatever.com and also provide our IP for the ns1.whatever.com</td></tr>
 <tr><td>example:</td><td><code>dig inj13.yourdomain.com @127.0.0.1</code></td></tr>
 </table>
@@ -503,9 +503,9 @@ ns1.yourdomain.com.	60	IN	A	44.196.212.212
 Respond only with CNAME record of a 3rd party (inj14poc.yourdomain.com -> alwaysXXX.yourdomain.com) in all sections, to see if it will try to proactively resolve the alwaysXXX.
 
 <table>
-<tr><td>format:</td><td>inj14.[replq].[addq].[3rdparty].yourdomain.com</td></tr>
-<tr><td>remark:</td><td>replq (optional) - will replace the question in the response with inj14poc.yourdomain.com</td></tr>
-<tr><td>remark:</td><td>addq (optional) - will add additional question for inj14poc.yourdomain.com in the response</td></tr>
+<tr><td>format:</td><td>inj14.[rpq].[adq].[3rdparty].yourdomain.com</td></tr>
+<tr><td>remark:</td><td>rpq (optional) - will replace the question in the response with inj14poc.yourdomain.com</td></tr>
+<tr><td>remark:</td><td>adq (optional) - will add additional question for inj14poc.yourdomain.com in the response</td></tr>
 <tr><td>remark:</td><td>3rdparty (optional) - will do injection for 3rd party (whatever.com), rather than yourdomain.com</td></tr>
 <tr><td>example:</td><td><code>dig inj14.yourdomain.com @127.0.0.1</code></td></tr>
 </table>

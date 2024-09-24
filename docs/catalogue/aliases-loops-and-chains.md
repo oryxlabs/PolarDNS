@@ -42,7 +42,7 @@
 		- [PTR random N aliases (10.0.0.0/8)](#ptr-random-n-aliases-100008)
 		- [PTR alias loop 1 (192.0.2.0/24)](#ptr-alias-loop-1-19202024)
 		- [PTR alias loop 2 (198.51.100.0/24)](#ptr-alias-loop-2-19851100024)
-	- [NAPTR (Name Authority Pointer)](#naptr-pointer)
+	- [NAPTR (Name Authority Pointer)](#naptr-name-authority-pointer)
 		- [NAPTR ENUM random N aliases (1...e164.arpa)](#naptr-enum-random-n-aliases-1e164arpa)
 		- [NAPTR ENUM alias loop (2...e164.arpa)](#naptr-enum-alias-loop-2e164arpa)
 1. [Response modifiers](response-modifiers.md)

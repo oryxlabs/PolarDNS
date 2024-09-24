@@ -10,7 +10,7 @@ code = '''
            elif req.first_subdomain.startswith("sralias"):
               # Send multiple random SRV aliases (RFC 2782).
               # BEWARE: This could result in multiplication
-              answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 3
+              answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
@@ -36,7 +36,7 @@ code = '''
               log("%d SRV aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
               send_buf(self, buffer)
               #####################################################################
-           elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("sralias") or req.subdomains_lc[2].startswith("sralias") or req.subdomains_lc[3].startswith("sralias")):
+           elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("sralias") or req.subdomains_lc[2].startswith("sralias") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("sralias"))):
               # Send multiple random SRV aliases (RFC 2782) for any domain name with attribute leaves 
               # (domains prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.sralias...'
               # BEWARE: This could result in multiplication
@@ -45,7 +45,7 @@ code = '''
                  offset = 2   # _a._b.sralias.10.yourdomain.com
               elif req.subdomains_lc[3].startswith("sralias"):
                  offset = 3   # _a._b._c.sralias.10.yourdomain.com
-              answers = int(req.subdomains[offset+1]) if req.subdomains[offset+1].isnumeric() else 3
+              answers = int(req.subdomains[offset+1]) if req.subdomains[offset+1].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########

@@ -42,6 +42,9 @@
 		- [PTR random N aliases (10.0.0.0/8)](#ptr-random-n-aliases-100008)
 		- [PTR alias loop 1 (192.0.2.0/24)](#ptr-alias-loop-1-19202024)
 		- [PTR alias loop 2 (198.51.100.0/24)](#ptr-alias-loop-2-19851100024)
+	- [NAPTR (Name Authority Pointer)](#naptr-pointer)
+		- [NAPTR ENUM random N aliases (1...e164.arpa)](#naptr-enum-random-n-aliases-1e164arpa)
+		- [NAPTR ENUM alias loop (2...e164.arpa)](#naptr-enum-alias-loop-2e164arpa)
 1. [Response modifiers](response-modifiers.md)
 1. [CNAME fuzzing](cname-fuzzing.md)
 1. [Bad compression](bad-compression.md)
@@ -51,7 +54,7 @@
 ##
 # Generic
 ### Random N aliases (alias)
-Respond with multiple (3 by default) random aliases in the format `alias######.yourdomain.com`. This feature supports `CNAME`, `DNAME`, `HTTPS`, `SVCB`, `SRV`, `MX`, `NS` and `SPF` (`TXT`) resource types.:exclamation:**BEWARE**:exclamation:This can potentially lead to amplification effect (DoS).
+Respond with a randomly generated alias in the format `alias######.yourdomain.com` where `######` represents a random number. If the resolver/client chooses to resolve this further, it will result in the generation of yet another alias. This feature supports `CNAME`, `DNAME`, `HTTPS`, `SVCB`, `SRV`, `MX`, `NS` and `SPF` (`TXT`) resource types. Responding with multiple records (aliases) at once is also supported.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>alias.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -95,7 +98,7 @@ alias.5.yourdomain.com.	60	IN	CNAME	alias323773.5.yourdomain.com.
 
 ```
 ### Alias chain (chain)
-Respond with an incremented alias record, creating an infinite alias chain that continues to increment indefinitely. This feature supports `CNAME`, `DNAME`, `HTTPS`, `SVCB`, `SRV`, `MX`, `NS` and `SPF` (`TXT`) resource types.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with an incremented alias record, creating an infinite alias chain that continues to increment indefinitely. This feature supports `CNAME`, `DNAME`, `HTTPS`, `SVCB`, `SRV`, `MX`, `NS` and `SPF` (`TXT`) resource types.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>chain&lt;NUMBER>.yourdomain.com</td></tr>
@@ -134,7 +137,7 @@ chain100.yourdomain.com. 60	IN	CNAME	chain101.yourdomain.com.
 
 ```
 ### Alias loop (loop)
-Respond with the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. This feature supports `CNAME`, `DNAME`, `HTTPS`, `SVCB`, `SRV`, `MX`, `NS` and `SPF` (`TXT`) resource types.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. This feature supports `CNAME`, `DNAME`, `HTTPS`, `SVCB`, `SRV`, `MX`, `NS` and `SPF` (`TXT`) resource types.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>loop.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -174,7 +177,7 @@ loop.yourdomain.com.	60	IN	CNAME	loop.yourdomain.com.
 ```
 # CNAME (Canonical Name)
 ### CNAME random N aliases (cnalias)
-Respond with multiple (3 by default) random `CNAME` records in the format `cnalias######.yourdomain.com`. Note that this provides the same functionality as requesting the `CNAME` record for the generic `alias` feature.:exclamation:**BEWARE**:exclamation:This can potentially lead to amplification effect (DoS).
+Respond with a randomly generated `CNAME` record in the format `cnalias######.yourdomain.com` where `######` represents a random number. If the resolver/client chooses to resolve this further, it will result in the generation of yet another alias. Note that this provides the same functionality as requesting the `CNAME` record for the generic [alias](#random-n-aliases-alias) feature. Responding with multiple records (aliases) at once is also supported.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>cnalias.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -210,7 +213,7 @@ cnalias.5.yourdomain.com. 60	IN	CNAME	cnalias304807.5.yourdomain.com.
 
 ```
 ### CNAME alias chain (cnchain)
-Respond with an incremented `CNAME` record, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `CNAME` record for the generic `chain` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with an incremented `CNAME` record, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `CNAME` record for the generic `chain` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>cnchain&lt;NUMBER>.yourdomain.com</td></tr>
@@ -241,7 +244,7 @@ cnchain100.yourdomain.com. 60	IN	CNAME	cnchain101.yourdomain.com.
 
 ```
 ### CNAME alias loop (cnloop)
-Respond with a `CNAME` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `CNAME` record for the generic `loop` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with a `CNAME` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `CNAME` record for the generic `loop` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>cnloop.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -274,7 +277,7 @@ cnloop.yourdomain.com.	60	IN	CNAME	cnloop.yourdomain.com.
 ```
 # DNAME (Delegation Name)
 ### DNAME random N aliases (dnalias)
-Respond with multiple (3 by default) random `DNAME` records in the format `dnalias######.yourdomain.com`. Note that this provides the same functionality as requesting the `DNAME` record for the generic `alias` feature.:exclamation:**BEWARE**:exclamation:This can potentially lead to amplification effect (DoS).
+Respond with a randomly generated `DNAME` record in the format `dnalias######.yourdomain.com` where `######` represents a random number. If the resolver/client chooses to resolve this further, it will result in the generation of yet another alias. Note that this provides the same functionality as requesting the `DNAME` record for the generic [alias](#random-n-aliases-alias) feature. Responding with multiple records (aliases) at once is also supported.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>dnalias.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -310,7 +313,7 @@ dnalias.5.yourdomain.com. 60	IN	DNAME	dnalias753117.5.yourdomain.com.
 
 ```
 ### DNAME alias chain (dnchain)
-Respond with an incremented `DNAME` record, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `DNAME` record for the generic `chain` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with an incremented `DNAME` record, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `DNAME` record for the generic `chain` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>dnchain&lt;NUMBER>.yourdomain.com</td></tr>
@@ -341,7 +344,7 @@ dnchain100.yourdomain.com. 60	IN	DNAME	dnchain101.yourdomain.com.
 
 ```
 ### DNAME alias loop (dnloop)
-Respond with a `DNAME` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `DNAME` record for the generic `loop` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with a `DNAME` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `DNAME` record for the generic `loop` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>dnloop.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -374,7 +377,7 @@ dnloop.yourdomain.com.	60	IN	DNAME	dnloop.yourdomain.com.
 ```
 # HTTPS (HTTPS Binding)
 ### HTTPS random N aliases (htalias)
-Respond with multiple (3 by default) random `HTTPS` records in the format `htalias######.yourdomain.com`. Note that this provides the same functionality as requesting the `HTTPS` record for the generic `alias` feature.:exclamation:**BEWARE**:exclamation:This can potentially lead to amplification effect (DoS).
+Respond with a randomly generated `HTTPS` record in the format `htalias######.yourdomain.com` where `######` represents a random number. If the resolver/client chooses to resolve this further, it will result in the generation of yet another alias. Note that this provides the same functionality as requesting the `HTTPS` record for the generic [alias](#random-n-aliases-alias) feature. Responding with multiple records (aliases) at once is also supported.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>htalias.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -410,7 +413,7 @@ htalias.5.yourdomain.com. 60	IN	HTTPS	0 htalias939599.5.yourdomain.com.
 
 ```
 ### HTTPS alias chain (htchain)
-Respond with an incremented `HTTPS` alias record (SvcPriority 0), creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `HTTPS` record for the generic `chain` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with an incremented `HTTPS` alias record (SvcPriority 0), creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `HTTPS` record for the generic `chain` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>htchain&lt;NUMBER>.yourdomain.com</td></tr>
@@ -441,7 +444,7 @@ htchain100.yourdomain.com. 60	IN	HTTPS	0 htchain101.yourdomain.com.
 
 ```
 ### HTTPS alias loop (htloop)
-Respond with a `HTTPS` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `HTTPS` record for the generic `loop` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with a `HTTPS` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `HTTPS` record for the generic `loop` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>htloop.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -474,7 +477,7 @@ htloop.yourdomain.com.	60	IN	HTTPS	0 htloop.yourdomain.com.
 ```
 # SVCB (Service Binding)
 ### SVCB random N aliases (svalias)
-Respond with multiple (3 by default) random `SVCB` records in the format `svalias######.yourdomain.com`. Note that this provides the same functionality as requesting the `SVCB` record for the generic `alias` feature.:exclamation:**BEWARE**:exclamation:This can potentially lead to amplification effect (DoS).
+Respond with a randomly generated `SVCB` record in the format `svalias######.yourdomain.com` where `######` represents a random number. If the resolver/client chooses to resolve this further, it will result in the generation of yet another alias. Note that this provides the same functionality as requesting the `SVCB` record for the generic [alias](#random-n-aliases-alias) feature. Responding with multiple records (aliases) at once is also supported.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>svalias.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -514,7 +517,7 @@ svalias.5.yourdomain.com. 60	IN	SVCB	0 svalias123344.5.yourdomain.com.
 
 ```
 ### SVCB alias chain (svchain)
-Respond with an incremented `SVCB` alias record (SvcPriority 0), creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `SVCB` record for the generic `chain` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with an incremented `SVCB` alias record (SvcPriority 0), creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `SVCB` record for the generic `chain` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>svchain&lt;NUMBER>.yourdomain.com</td></tr>
@@ -549,7 +552,7 @@ svchain100.yourdomain.com. 60	IN	SVCB	0 svchain101.yourdomain.com.
 
 ```
 ### SVCB alias loop (svloop)
-Respond with a `SVCB` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `SVCB` record for the generic `loop` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with a `SVCB` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `SVCB` record for the generic `loop` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>svloop.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -586,7 +589,7 @@ svloop.yourdomain.com.	60	IN	SVCB	0 svloop.yourdomain.com.
 ```
 # SRV (Service Locator)
 ### SRV random N aliases (sralias)
-Respond with multiple (3 by default) random `SRV` records in the format `sralias######.yourdomain.com`. Note that this provides the same functionality as requesting the `SRV` record for the generic `alias` feature.:exclamation:**BEWARE**:exclamation:This can potentially lead to amplification effect (DoS).
+Respond with a randomly generated `SRV` record in the format `sralias######.yourdomain.com` where `######` represents a random number. If the resolver/client chooses to resolve this further, it will result in the generation of yet another alias. Note that this provides the same functionality as requesting the `SRV` record for the generic [alias](#random-n-aliases-alias) feature. Responding with multiple records (aliases) at once is also supported.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>sralias.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -626,7 +629,7 @@ sralias.5.yourdomain.com. 60	IN	SRV	0 0 60876 sralias37220.5.yourdomain.com.
 
 ```
 ### SRV alias chain (srchain)
-Respond with an incremented `SRV` record, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `SRV` record for the generic `chain` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with an incremented `SRV` record, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `SRV` record for the generic `chain` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>srchain&lt;NUMBER>.yourdomain.com</td></tr>
@@ -661,7 +664,7 @@ srchain100.yourdomain.com. 60	IN	SRV	0 0 25008 srchain101.yourdomain.com.
 
 ```
 ### SRV alias loop (srloop)
-Respond with a `SRV` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `SRV` record for the generic `loop` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with a `SRV` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `SRV` record for the generic `loop` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>srloop.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -698,7 +701,7 @@ srloop.yourdomain.com.	60	IN	SRV	0 0 38882 srloop.yourdomain.com.
 ```
 # MX (Mail Exchange)
 ### MX random N aliases (mxalias)
-Respond with multiple (3 by default) random `MX` records in the format `mxalias######.yourdomain.com`. Note that this provides the same functionality as requesting the `MX` record for the generic `alias` feature.:exclamation:**BEWARE**:exclamation:This can potentially lead to amplification effect (DoS).
+Respond with a randomly generated `MX` record in the format `mxalias######.yourdomain.com` where `######` represents a random number. If the resolver/client chooses to resolve this further, it will result in the generation of yet another alias. Note that this provides the same functionality as requesting the `MX` record for the generic [alias](#random-n-aliases-alias) feature. Responding with multiple records (aliases) at once is also supported.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>mxalias.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -734,7 +737,7 @@ mxalias.5.yourdomain.com. 60	IN	MX	0 mxalias861718.5.yourdomain.com.
 
 ```
 ### MX alias chain (mxchain)
-Respond with an incremented `MX` record, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `MX` record for the generic `chain` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with an incremented `MX` record, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `MX` record for the generic `chain` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>mxchain&lt;NUMBER>.yourdomain.com</td></tr>
@@ -765,7 +768,7 @@ mxchain100.yourdomain.com. 60	IN	MX	0 mxchain101.yourdomain.com.
 
 ```
 ### MX alias loop (mxloop)
-Respond with a `MXx` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `MX` record for the generic `loop` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with a `MXx` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `MX` record for the generic `loop` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>mxloop.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -798,7 +801,7 @@ mxloop.yourdomain.com.	60	IN	MX	0 mxloop.yourdomain.com.
 ```
 # NS (Name Server)
 ### NS random N aliases (nsalias)
-Respond with multiple (3 by default) random `NS` records in the format `nsalias######.yourdomain.com`. Note that this provides the same functionality as requesting the `NS` record for the generic `alias` feature.:exclamation:**BEWARE**:exclamation:This can potentially lead to amplification effect (DoS).
+Respond with a randomly generated `NS` record in the format `nsalias######.yourdomain.com` where `######` represents a random number. If the resolver/client chooses to resolve this further, it will result in the generation of yet another alias. Note that this provides the same functionality as requesting the `NS` record for the generic [alias](#random-n-aliases-alias) feature. Responding with multiple records (aliases) at once is also supported.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>nsalias.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -834,7 +837,7 @@ nsalias.5.yourdomain.com. 60	IN	NS	nsalias694309.5.yourdomain.com.
 
 ```
 ### NS alias chain (nschain)
-Respond with an incremented `NS` record, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `NS` record for the generic `chain` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with an incremented `NS` record, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `NS` record for the generic `chain` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>nschain&lt;NUMBER>.yourdomain.com</td></tr>
@@ -865,7 +868,7 @@ nschain100.yourdomain.com. 60	IN	NS	nschain101.yourdomain.com.
 
 ```
 ### NS alias loop (nsloop)
-Respond with a `NS` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `NS` record for the generic `loop` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with a `NS` record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `NS` record for the generic `loop` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>nsloop.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -898,7 +901,7 @@ nsloop.yourdomain.com.	60	IN	NS	nsloop.yourdomain.com.
 ```
 # SPF (Sender Policy Framework)
 ### SPF (TXT) random N aliases (spfalias1)
-Respond with multiple (3 by default) `SPF` (Sender Policy Framework) entries, with each entry in a separate `TXT` record. Each `SPF` entry contains a single `include:` parameter with a randomly generated alias/domain name in the format `spfalias1#####.yourdomain.com`. Note that this provides the same functionality as requesting the `TXT` record for the generic `alias` feature.:exclamation:**BEWARE**:exclamation:This can potentially lead to amplification effect (DoS).
+Respond with single or multiple `SPF` (Sender Policy Framework) entries, with each entry in a separate `TXT` record. Each `SPF` entry contains a single `include:` parameter with a randomly generated alias/domain name in the format `spfalias1#####.yourdomain.com` where `#####` represents a random number. If the resolver/client chooses to resolve this further, it will result in the generation of yet another alias. Note that this provides the same functionality as requesting the `TXT` record for the generic `alias` feature.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>spfalias1.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -934,7 +937,7 @@ spfalias1.5.yourdomain.com. 60	IN	TXT	"v=spf1 include:spfalias13328.5.yourdomain
 
 ```
 ### SPF (TXT) random N aliases (spfalias2)
-Respond with multiple (3 by default) `SPF` (Sender Policy Framework) entries within one or more `TXT` records. Each `SPF` record includes multiple `include:` parameters with randomly generated alias/domain names in the format `spfalias2#####.yourdomain.com`. The number of `SPF` aliases per `TXT` record is limited by the maximum `TXT` label size of 255 bytes. If the specified number of aliases cannot fit within a single `TXT` record, multiple `TXT` records will be produced to accomodate all aliases.:exclamation:**BEWARE**:exclamation:This can potentially lead to amplification effect (DoS).
+Respond with single or multiple `SPF` (Sender Policy Framework) entries within one or more `TXT` records. Each `SPF` record includes multiple `include:` parameters with randomly generated alias/domain names in the format `spfalias2#####.yourdomain.com` where `#####` represents a random number. If the resolver/client chooses to resolve this further, it will result in the generation of yet another alias. Note that the number of `SPF` aliases per `TXT` record is limited by the maximum `TXT` label size of 255 bytes. If the specified number of aliases cannot fit within a single `TXT` record, multiple `TXT` records will be produced to accomodate all aliases.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>spfalias2.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -969,7 +972,7 @@ spfalias2.11.yourdomain.com. 60	IN	TXT	"v=spf1 include:spfalias224904.11.yourdom
 
 ```
 ### SPF (TXT) alias chain (spfchain)
-Respond with a `TXT` record containing an `SPF` (Sender Policy Framework) record with an incremented index, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `TXT` record for the generic `chain` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with a `TXT` record containing an `SPF` (Sender Policy Framework) record with an incremented index, creating an infinite alias chain that continues to increment indefinitely. Note that this provides the same functionality as requesting the `TXT` record for the generic `chain` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>spfchain&lt;NUMBER>.yourdomain.com</td></tr>
@@ -1000,7 +1003,7 @@ spfchain100.yourdomain.com. 60	IN	TXT	"v=spf1 include:spfchain101.yourdomain.com
 
 ```
 ### SPF (TXT) alias loop (spfloop)
-Respond with a `TXT` record with an `SPF` (Sender Policy Framework) record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `TXT` record for the generic `loop` feature.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Respond with a `TXT` record with an `SPF` (Sender Policy Framework) record containing the exact same domain name as in the query, effectively creating a direct infinite loop. Optionally, respond with a domain name that leads to an infinite loop with an arbitrary number of elements. Note that this provides the same functionality as requesting the `TXT` record for the generic `loop` feature.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>spfloop.&lt;NUMBER>.yourdomain.com</td></tr>
@@ -1033,7 +1036,7 @@ spfloop.yourdomain.com.	60	IN	TXT	"v=spf1 include:spfloop.yourdomain.com ~all"
 ```
 # PTR (Pointer)
 ### PTR random N aliases (10.0.0.0/8)
-Requesting a reverse DNS record for any IP address within the `10.0.0.0/8` network range (e.g., a PTR record for `z.y.x.10.in-addr.arpa`). The `10.0.0.0/8` range is a private network range used exclusively for internal purposes. We will respond with `x` number of `PTR` records containing domains in the format `10.x.*.*.in-addr.arpa` (within the same range). This implies that if the client/resolver attempts to resolve any of these records, it will loop back to this process, generating even more `PTR` records from the same range.:exclamation:**BEWARE**:exclamation:This can potentially lead to amplification effect (DoS).
+Requesting a reverse DNS record for any IP address within the `10.0.0.0/8` network range (e.g., a PTR record for `z.y.x.10.in-addr.arpa`). The `10.0.0.0/8` range is a private network range used exclusively for internal purposes. We will respond with `x` number of `PTR` records containing domains in the format `10.x.*.*.in-addr.arpa` (within the same range). This implies that if the client/resolver attempts to resolve any of these records, it will loop back to this process, generating even more `PTR` records from the same range.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>&lt;0-255>.&lt;0-255>.&lt;0-255>.10.in-addr.arpa</td></tr>
@@ -1074,7 +1077,7 @@ Sample:
 
 ```
 ### PTR alias loop 1 (192.0.2.0/24)
-Requesting a reverse DNS record for any IP address within the `192.0.2.0/24` network range (e.g., a `PTR` record for `x.2.0.192.in-addr.arpa`). The `192.0.2.0/24` range, known as TEST-NET-1, is typically used for documentation and examples. We will respond with the same exact domain name, effectively creating an immediate loop.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Requesting a reverse DNS record for any IP address within the `192.0.2.0/24` network range (e.g., a `PTR` record for `x.2.0.192.in-addr.arpa`). The `192.0.2.0/24` range, known as TEST-NET-1, is typically used for documentation and examples. We will respond with the same exact domain name, effectively creating an immediate loop.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>&lt;0-255>.2.0.192.in-addr.arpa</td></tr>
@@ -1108,7 +1111,7 @@ Sample:
 
 ```
 ### PTR alias loop 2 (198.51.100.0/24)
-Requesting a reverse DNS record for any IP address within the `198.51.100.0/24` network range (e.g., a `PTR` record for `x.100.51.198.in-addr.arpa`). The `198.51.100.0/24` range, known as TEST-NET-2, is typically used for documentation and examples. We will respond with incremented domain name, cycling through addresses from `198.51.100.0` to `198.51.100.255` indefinitely, effectively creating a loop.:exclamation:**BEWARE**:exclamation:This could potentially lead to a domain lock-up (DoS).
+Requesting a reverse DNS record for any IP address within the `198.51.100.0/24` network range (e.g., a `PTR` record for `x.100.51.198.in-addr.arpa`). The `198.51.100.0/24` range, known as TEST-NET-2, is typically used for documentation and examples. We will respond with incremented domain name, cycling through addresses from `198.51.100.0` to `198.51.100.255` indefinitely, effectively creating a loop.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
 
 <table>
 <tr><td>format:</td><td>&lt;0-255>.100.51.198.in-addr.arpa</td></tr>
@@ -1139,6 +1142,75 @@ Sample:
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; WHEN: Fri Jul 12 10:58:36 +04 2024
 ;; MSG SIZE  rcvd: 86
+
+```
+# NAPTR (Name Authority Pointer)
+### NAPTR ENUM random N aliases (1...e164.arpa)
+Requesting to translate an `E.164` telephone number ending with the digit `1` (e.g., a `NAPTR` record for `1.2.3.4.5.6.7.8.e164.arpa` in reverse). The response will be a `SIP` service `URI` pointing to another random `E.164` telephone number, also ending with the digit `1`. If the resolver/client chooses to resolve this further, it will result in the generation of yet another alias. While `NAPTR` `ENUM` records do not contain aliases like `CNAME` records, this could achieve similar results by prompting the client to perform consecutive queries to resolve it. Responding with multiple records (aliases) at once is also supported.:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
+
+<table>
+<tr><td>format:</td><td>1.&lt;NUMBER>.*.e164.arpa</td></tr>
+<tr><td>example:</td><td><code>dig NAPTR 1.e164.arpa @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig NAPTR 1.1.2.3.4.5.e164.arpa @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig NAPTR 1.5.2.3.4.5.6.7.8.e164.arpa @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig NAPTR 1.5.2.3.4.5.6.7.8.e164.arpa @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> NAPTR 1.5.2.3.4.5.6.7.8.e164.arpa @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 29740
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;1.5.2.3.4.5.6.7.8.e164.arpa.	IN	NAPTR
+
+;; ANSWER SECTION:
+1.5.2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 "U" "E2U+sip" "!^.*$!1.5.4.1.4.8.0.0.4.7.1.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 "U" "E2U+sip" "!^.*$!1.5.9.8.1.3.1.8.9.5.2.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 "U" "E2U+sip" "!^.*$!1.5.5.0.3.7.6.0.3.4.3.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 "U" "E2U+sip" "!^.*$!1.5.9.7.9.1.4.1.0.3.5.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 "U" "E2U+sip" "!^.*$!1.5.3.0.9.4.3.3.9.5.9.e164.arpa!" .
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Sep 24 10:24:56 +04 2024
+;; MSG SIZE  rcvd: 375
+
+```
+### NAPTR ENUM alias loop (2...e164.arpa)
+Requesting to translate an `E.164` telephone number ending with the digit `2` (e.g., a `NAPTR` record for `2.3.4.5.6.7.8.9.e164.arpa` in reverse). The response will be a `SIP` service `URI` pointing to the same exact `E.164` telephone number, effectively creating a direct loop. While `NAPTR` `ENUM` records do not contain aliases like `CNAME` records, this could achieve similar results by prompting the client to perform consecutive queries to resolve it.:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
+
+<table>
+<tr><td>format:</td><td>2.*.e164.arpa</td></tr>
+<tr><td>example:</td><td><code>dig NAPTR 2.e164.arpa @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig NAPTR 2.1.2.3.4.5.e164.arpa @127.0.0.1</code></td></tr>
+<tr><td>example:</td><td><code>dig NAPTR 2.5.2.3.4.5.6.7.8.e164.arpa @127.0.0.1</code></td></tr>
+</table>
+
+Sample:
+```
+# dig NAPTR 2.5.2.3.4.5.6.7.8.e164.arpa @127.0.0.1
+
+; <<>> DiG 9.18.10-2-Debian <<>> NAPTR 2.5.2.3.4.5.6.7.8.e164.arpa @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 169
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;2.5.2.3.4.5.6.7.8.e164.arpa.	IN	NAPTR
+
+;; ANSWER SECTION:
+2.5.2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 "U" "E2U+sip" "!^.*$!2.5.2.3.4.5.6.7.8.e164.arpa!" .
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Sep 24 10:24:56 +04 2024
+;; MSG SIZE  rcvd: 107
 
 ```
 

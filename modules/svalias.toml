@@ -10,7 +10,7 @@ code = '''
            elif req.first_subdomain.startswith("svalias"):
               # Send multiple random SVCB aliases (RFC 9460).
               # BEWARE: This could result in multiplication
-              answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 3
+              answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
@@ -33,7 +33,7 @@ code = '''
               log("%d SVCB aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
               send_buf(self, buffer)
               #####################################################################
-           elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("svalias") or req.subdomains_lc[2].startswith("svalias") or req.subdomains_lc[3].startswith("svalias")):
+           elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("svalias") or req.subdomains_lc[2].startswith("svalias") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("svalias"))):
               # Send multiple random SVCB aliases (RFC 9460) for any domain name with attribute leaves
               # (domains prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.svalias...'
               # BEWARE: This could result in multiplication
@@ -42,7 +42,7 @@ code = '''
                  offset = 2   # _a._b.svalias.10.yourdomain.com
               elif req.subdomains_lc[3].startswith("svalias"):
                  offset = 3   # _a._b._c.svalias.10.yourdomain.com
-              answers = int(req.subdomains[offset+1]) if req.subdomains[offset+1].isnumeric() else 3
+              answers = int(req.subdomains[offset+1]) if req.subdomains[offset+1].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########

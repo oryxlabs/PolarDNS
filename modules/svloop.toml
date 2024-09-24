@@ -50,7 +50,7 @@ if req.first_subdomain.startswith("svloop"):
    log("SVCB LOOP %s" % (new_domain_name))
    send_buf(self, buffer)
    #####################################################################
-elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("svloop") or req.subdomains_lc[2].startswith("svloop") or req.subdomains_lc[3].startswith("svloop")):
+elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("svloop") or req.subdomains_lc[2].startswith("svloop") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("svloop"))):
    # Do an alias loop in a SVCB record (SvcPriority 0) for any domain name with attribute leaves
    # (domains prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.svloop...'
 

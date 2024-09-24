@@ -1,0 +1,65 @@
+[module]
+name = "nptenumalias"
+type = "feature"
+info = "NAPTR ENUM random N aliases"
+desc = "Respond with N number of NAPTR ENUM records containing random E.164 phone numbers (aliases) in SIP service URI. BEWARE: This could result in multiplication."
+author = "ivan.jedek@oryxlabs.com"
+category = "Aliases, loops and chains"
+
+code = '''
+           elif req.first_subdomain == "1" and req.full_domain.endswith(".e164.arpa"):
+              # Requesting to translate an E.164 telephone number ending with the digit 1 (e.g., a NAPTR
+              # record for 1.<anything>.e164.arpa in reverse). The response will be a SIP service URI
+              # pointing to another random E.164 telephone number also ending with the digit 1 (leading
+              # here again, producing another alias). While NAPTR ENUM records do not contain aliases
+              # like CNAME records, this could achieve similar results by prompting the client to
+              # perform consecutive queries to resolve it.
+              # BEWARE: This could result in multiplication
+
+              answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 1
+
+              # figure out the ending part of the domain which is not a number any more
+              # in order to preserve the parameters if any
+              for i, part in enumerate(req.subdomains):
+                  if not part.isnumeric():
+                     dom_end = '.' + '.'.join(req.subdomains[i:])
+                     break
+              else:
+                  dom_end = req.full_domain
+
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              doms = []
+              for i in range(answers):
+                  random_number = random.getrandbits(30) % 1000000000
+                  new_dom     = '1.' + str(answers) + '.' + '.'.join(str(random_number)) + dom_end
+                  order       = 0
+                  pref        = 0
+                  flags       = b'U'          # Flags = "U" (URI)
+                  service     = b'E2U+sip'    # Service = SIP
+                  regex       = bytes("!^.*$!" + new_dom + "!", "utf-8")
+                  replacement = b'\x00'
+
+                  data_len = 2+2+1+len(flags)+1+len(service)+1+len(regex)+len(replacement)
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)  ## Name
+                  buffer += getTypeBin("NAPTR") + getClassBin("IN")
+                  buffer += struct.pack(">L", resp.TTL)     ## TTL
+                  buffer += struct.pack(">H", data_len)     ## Data length (2B)
+                  buffer += struct.pack(">H", order)        ## Order (2B)
+                  buffer += struct.pack(">H", pref)         ## Preference (2B)
+                  buffer += struct.pack(">B", len(flags))   ## Flags Length (1B)
+                  buffer += flags                           ## Flags
+                  buffer += struct.pack(">B", len(service)) ## Service Length (1B)
+                  buffer += service                         ## Service
+                  buffer += struct.pack(">B", len(regex))   ## Regex Length (1B)
+                  buffer += regex                           ## Regex
+                  buffer += replacement                     ## Replacement
+                  doms.append(new_dom)
+              # log and send
+              log("%d NAPTR ENUM aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
+              send_buf(self, buffer)
+              #####################################################################
+'''

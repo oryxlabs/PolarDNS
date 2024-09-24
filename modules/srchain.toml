@@ -31,7 +31,7 @@ code = '''
               log("SRV %s" % (new_domain_name))
               send_buf(self, buffer)
               #####################################################################
-           elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("srchain") or req.subdomains_lc[2].startswith("srchain") or req.subdomains_lc[3].startswith("srchain")):
+           elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("srchain") or req.subdomains_lc[2].startswith("srchain") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("srchain"))):
               # Send incremented SRV alias record for any domain name with attribute leaves (domains
               # prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.srchain...'
               new_domain_name = increment_chain(req.full_domain)

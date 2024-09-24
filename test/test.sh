@@ -39,7 +39,8 @@ process_dig_output() {
   | ${SED} -E 's/(CNAME|DNAME|HTTPS|SVCB|SRV|MX|NS|TXT)(.*)(:|\s|cn|dn|ht|sv|sr|mx|ns|spf)alias[0-9]+\./\1\2\3alias<RANDOM>\./g' \
   | ${SED} -e 's/alias[0-9]\+/alias<RANDOM>/g;s/\(\.10\.in-addr\.arpa\..*PTR\s*\)[0-9]\+\.[0-9]\+\./\1<RANDOM>.<RANDOM>./g' \
   | ${SED} -e '0,/^\([0-9a-f]\{2\} \)\{16\} /s/^\([0-9a-f]\{2\} \)\{2\}\(\([0-9a-f]\{2\} \)\{14\} *\)[^ ][^ ]/TX ID \2ID/1' \
-  | ${SED} -e "s/#${target_port}/#53/g;s/${target_ip}/127\.0\.0\.1/g;s/^\(size.*127\.0\.0\.\).*$/\1<RANDOM>/g"
+  | ${SED} -e "s/#${target_port}/#53/g;s/${target_ip}/127\.0\.0\.1/g;s/^\(size.*127\.0\.0\.\).*$/\1<RANDOM>/g" \
+  | ${SED} -e 's/!1\.\([0-9]\+\.\)\+\(e164\.arpa!" \.\)/!1.<RANDOM>.\2/'
 }
 
 # for real test
@@ -239,23 +240,23 @@ runtest "TXT chain.${domain}" "02e31b6ab5075f04699529dd85f16679"
 runtest "TXT chain99.${domain}" "0aee55d513ec80310b908c0f1a5c456e"
 
 # alias.toml
-runtest "alias.${domain}" "e6813e79a8755929823c994fd0dbce18"
+runtest "alias.${domain}" "ce7bd619257e138c7db137c41d752555"
 runtest "alias.100.${domain}" "84fdc516a13d5121b58a1aa2b1875243"
-runtest "CNAME alias.${domain}" "3bfc75f1a4f4e01f9b5efc7ba21be69c"
+runtest "CNAME alias.${domain}" "244b9ebc758ea3da0a633764e976c01a"
 runtest "CNAME alias.100.${domain}" "9dec29c7af977b8aa7e51aefe2826885"
-runtest "DNAME alias.${domain}" "6ff1547c0171229499057ba8ea2a16bf"
+runtest "DNAME alias.${domain}" "bb8bc62273a7e51da884cb327c0efb74"
 runtest "DNAME alias.100.${domain}" "b284a5cfa1562b3ad60fe5b9301594be"
-runtest "HTTPS alias.${domain}" "981ddd84d1f4132181c36423639b3a4f"
+runtest "HTTPS alias.${domain}" "a639c1510f12544a9ea423fde1a3613b"
 runtest "HTTPS alias.100.${domain}" "93215ba787d46339d81fd0d38435127b"
-runtest "SVCB alias.${domain}" "b3f364c2c0a2fff6d846325497686444"
+runtest "SVCB alias.${domain}" "b21510baee880f9b76cff861c3a1b662"
 runtest "SVCB alias.100.${domain}" "d352bdd680eb114fbc6bfc92417b0c05"
-runtest "SRV alias.${domain}" "fb55586d8482f20bda81a0e87fb10469"
+runtest "SRV alias.${domain}" "431cff9e1a47a6148a91c847d798cbbe"
 runtest "SRV alias.100.${domain}" "958d1ee99ed5c0b6c91f3325fc680a62"
-runtest "MX alias.${domain}" "c9d618ec0ef1047b8414fa8b7ddac8e1"
+runtest "MX alias.${domain}" "4bcf12f0bd3e8ec54ae905e24bc53ecd"
 runtest "MX alias.100.${domain}" "939b6525db13ba439bf6c64d18d57610"
-runtest "NS alias.${domain}" "4b14a5df15d5b9e27c8da92acc9b306b"
+runtest "NS alias.${domain}" "902541423f84c2e194f0d33e837c89da"
 runtest "NS alias.100.${domain}" "a3d23af1371b8a386b4effeb2284c026"
-runtest "TXT alias.${domain}" "8d5fed2a02748af42a23fc78a11705ba"
+runtest "TXT alias.${domain}" "b4f64b343f06957da8093ca075405445"
 runtest "TXT alias.100.${domain}" "ad55c52f1e2dd702f05496a96d8d0eb8"
 
 # loop.toml
@@ -304,7 +305,7 @@ runtest "cnloop.5.4.${domain}" "7401177fbf72e37829034425f752d141"
 runtest "cnloop.5.5.${domain}" "dfb44f138a4cccdb51dfec17aa38c21e"
 runtest "cnchain.${domain}" "a67063e1cec9c2fa48b9c439fa015ac3"
 runtest "cnchain12345.${domain}" "7d30f47ee21d908939aad5246184b33d"
-runtest "cnalias.${domain}" "0aea760e904c554542b08946d1969e72"
+runtest "cnalias.${domain}" "3b39b37468a6b2d7286301365daa3fd0"
 runtest "cnalias.100.${domain}" "cb72505d4254bb863429883ba298f706"
 
 # dnloop.toml dnchain.toml dnalias.toml
@@ -315,7 +316,7 @@ runtest "dnloop.5.4.${domain}" "32615500d606432cc2454c36f6e6476e"
 runtest "dnloop.5.5.${domain}" "d25102897d7d927d64ddafd627be9c49"
 runtest "dnchain.${domain}" "19728a07b463d333e41154c61b530ff7"
 runtest "dnchain23456.${domain}" "57dbf716f171cb662624150542b53313"
-runtest "dnalias.${domain}" "4746af085d58556288ff9571f858bf20"
+runtest "dnalias.${domain}" "042d069e412da44da5232edd893171e8"
 runtest "dnalias.100.${domain}" "4fc1f84afa0cb02001a4a1ec963dd215"
 
 # htloop.toml htchain.toml htalias.toml
@@ -326,7 +327,7 @@ runtest "htloop.5.4.${domain}" "1eb2a692fa4d4ad48b0c7e232ce3f11d"
 runtest "htloop.5.5.${domain}" "0fb16c5e7d911a156cb3d9117e3e5c68"
 runtest "htchain.${domain}" "eb4622c19fc31bf5b436f862231804b4"
 runtest "htchain34567.${domain}" "7057a745fde8ee97ec683c1d43333053"
-runtest "htalias.${domain}" "68e8c08ccf0c8aae21532b1b6eb22b8f"
+runtest "htalias.${domain}" "2564e324a72791e6c321e8f352767176"
 runtest "htalias.100.${domain}" "2989369ad8480e66a5ee8b37ce958b20"
 
 # svloop.toml svchain.toml svalias.toml
@@ -337,7 +338,7 @@ runtest "svloop.5.4.${domain}" "d0d2eb5ffa7b0b41390b3be3a9c93b50"
 runtest "svloop.5.5.${domain}" "e9cf80e9fb6e61b12aa3d3dcc6b81556"
 runtest "svchain.${domain}" "96981176645f2d8e6adc4330737f4729"
 runtest "svchain45678.${domain}" "87d3415f8b05bc9b442ae3cbb04be122"
-runtest "svalias.${domain}" "7ae73a334724d43b93c383f5eae99fee"
+runtest "svalias.${domain}" "1ec7efcf94522ad411d3952766181a33"
 runtest "svalias.100.${domain}" "a2ad917c064ecd540855c4ac5d7bc3a2"
 # # # # 
 runtest "SVCB _sip.svloop.${domain}" "28ef4b4e5ec82b1dce46c3b4dd5079c7"
@@ -347,7 +348,7 @@ runtest "_sip.svloop.5.4.${domain}" "91042dfcfa2de9e15f3d90a7937a68c4"
 runtest "_sip.svloop.5.5.${domain}" "02128847b193f29b2ea9cb6603b3e58a"
 runtest "_sip.svchain.${domain}" "d8214ee893abbb2e8510b8425b845ffe"
 runtest "_sip.svchain45678.${domain}" "6f337b44ceb344bbf8179474e5857e0d"
-runtest "_sip.svalias.${domain}" "ad5c75042ad9a7e2ab4e919391a56a65"
+runtest "_sip.svalias.${domain}" "8b7ffd37f36d25d5485af996fa5ec0d6"
 runtest "_sip.svalias.100.${domain}" "190195c401d1e326fb3113253fc6d1a7"
 # # # # 
 runtest "SVCB _sip._udp.svloop.${domain}" "5653516a466f7716068fdbeb3bffe7bd"
@@ -357,7 +358,7 @@ runtest "_sip._udp.svloop.5.4.${domain}" "58b2a0ff1a4afad715f3e961384efb97"
 runtest "_sip._udp.svloop.5.5.${domain}" "3772bce5c88a24f135082cdc461cb77f"
 runtest "_sip._udp.svchain.${domain}" "3a2340cbec3cb6e1d7e44f9c702e5fa8"
 runtest "_sip._udp.svchain45678.${domain}" "a2a2213995fe5566822a1fafe1b9401c"
-runtest "_sip._udp.svalias.${domain}" "473e6c2d9284ca6fc0831bea4ccf61a5"
+runtest "_sip._udp.svalias.${domain}" "4a13d943cd622801bff9d0ab3ecd75ca"
 runtest "_sip._udp.svalias.100.${domain}" "8f5a60fe2ea5443b6e5ccd65828850e4"
 # # # # 
 runtest "SVCB _mobile._http._tcp.svloop.${domain}" "e2d6367eba9e6b4c59e64114b5d6117e"
@@ -367,7 +368,7 @@ runtest "_mobile._http._tcp.svloop.5.4.${domain}" "458c88b17880a59478d892e80ebf2
 runtest "_mobile._http._tcp.svloop.5.5.${domain}" "96fbe151500f66fe1da4a900e7da9310"
 runtest "_mobile._http._tcp.svchain.${domain}" "392a41e1a0a21b7f13f90a887539bfbe"
 runtest "_mobile._http._tcp.svchain45678.${domain}" "dc46e3e527f498ca0aee732d73e94e05"
-runtest "_mobile._http._tcp.svalias.${domain}" "14313d52b3e169fabcfcfbec82798549"
+runtest "_mobile._http._tcp.svalias.${domain}" "3ead2ee0d30870d8b4c0a34e7ccb7e52"
 runtest "_mobile._http._tcp.svalias.100.${domain}" "86794ff95c461c36152d46fee859bfdd"
 
 # srloop.toml srchain.toml sralias.toml
@@ -378,7 +379,7 @@ runtest "srloop.5.4.${domain}" "52dcc5eefeae27b732f0e27063718257"
 runtest "srloop.5.5.${domain}" "83f252ac340011ca3da1d3b68a51f615"
 runtest "srchain.${domain}" "3fac8c78adced121567111311a293542"
 runtest "srchain67890.${domain}" "efbcd4e366a86dc8351b365783da235d"
-runtest "sralias.${domain}" "4b2fcd25edfc1377833c9d8022bffd09"
+runtest "sralias.${domain}" "78a5dfa97ac8deeb325d162b40ac21aa"
 runtest "sralias.100.${domain}" "525259d72ec2ec4a94ecc7f38ba30911"
 # # # #
 runtest "SRV _sip.srloop.${domain}" "61467329b769a077ac36292d0af3ced9"
@@ -388,7 +389,7 @@ runtest "_sip.srloop.5.4.${domain}" "d56ad01f86efc693c5d6f8b25d8c9d12"
 runtest "_sip.srloop.5.5.${domain}" "9e6285b4f21b7c49a6c9fd7622934c88"
 runtest "_sip.srchain.${domain}" "921fe0e3007d88881f54057bc38c9160"
 runtest "_sip.srchain67890.${domain}" "98da3d5a14e2b63f18f7f9c0fd48f3ec"
-runtest "_sip.sralias.${domain}" "83f705669834773be7ce9d2e6c7d89bc"
+runtest "_sip.sralias.${domain}" "c648dc4ff03a758351530c195c4019bc"
 runtest "_sip.sralias.100.${domain}" "3b849d4d384f46657505d3fde35b4cef"
 # # # #
 runtest "SRV _sip._udp.srloop.${domain}" "8c366530c61fae8a1c46d25b9ccdb902"
@@ -398,7 +399,7 @@ runtest "_sip._udp.srloop.5.4.${domain}" "44e8d63291b760482138684e3b4ca171"
 runtest "_sip._udp.srloop.5.5.${domain}" "7f65950fde5a26985cef4536dde7558f"
 runtest "_sip._udp.srchain.${domain}" "a29cc4ca6056d58ca0ce976fae86d95f"
 runtest "_sip._udp.srchain67890.${domain}" "ed856762ff74ca70eea1ce6c7549d5a4"
-runtest "_sip._udp.sralias.${domain}" "0f3afa46c6142247be37075547b2e009"
+runtest "_sip._udp.sralias.${domain}" "d638a81c3b79feb79ebc11fa57db9daa"
 runtest "_sip._udp.sralias.100.${domain}" "84358986791be3869540f32e9f0b37c4"
 # # # #
 runtest "SRV _mobile._http._tcp.srloop.${domain}" "655f848c5e445671df7ac5ddf13feecb"
@@ -408,7 +409,7 @@ runtest "_mobile._http._tcp.srloop.5.4.${domain}" "95451482997b675a80e9d822e0c6c
 runtest "_mobile._http._tcp.srloop.5.5.${domain}" "37e58d4392988dec253407c85b46c853"
 runtest "_mobile._http._tcp.srchain.${domain}" "6f3f5e9eb0ad265f497e8413cce23dd8"
 runtest "_mobile._http._tcp.srchain67890.${domain}" "fece124637e8c5d58d62057e9765f52e"
-runtest "_mobile._http._tcp.sralias.${domain}" "b7a5db15eae3cd6f8ff043beb665d4d9"
+runtest "_mobile._http._tcp.sralias.${domain}" "854070cbd3ba3a0a2f7780e49a716aa5"
 runtest "_mobile._http._tcp.sralias.100.${domain}" "aeee2daec33c16c2323b72eb30a239d8"
 
 # mxloop.toml mxchain.toml mxalias.toml
@@ -419,7 +420,7 @@ runtest "mxloop.5.4.${domain}" "e604bee5f98e961b0f055a4e0a22e719"
 runtest "mxloop.5.5.${domain}" "5384133511afc17e0fae06b613737e72"
 runtest "mxchain.${domain}" "80818801a011930448d561d9a4fb29bf"
 runtest "mxchain56789.${domain}" "af61936feffe02bc166ab1851524bba7"
-runtest "mxalias.${domain}" "02abc16494f5454cc84a200d652aad1c"
+runtest "mxalias.${domain}" "70b8fa6e2f4c3652d77e595e5b4836bf"
 runtest "mxalias.100.${domain}" "da7e74c3c698711298048289db86f116"
 
 # nsloop.toml nschain.toml nsalias.toml
@@ -430,7 +431,7 @@ runtest "nsloop.5.4.${domain}" "344b742e7b1eafbc587c69b0e25f977e"
 runtest "nsloop.5.5.${domain}" "de294db4197f064bf8c2ef6b8774a00c"
 runtest "nschain.${domain}" "d88ea2d2d81f79bc7634840335201590"
 runtest "nschain34567.${domain}" "627fea482690fa20ec2158110200f40c"
-runtest "nsalias.${domain}" "1517024d6bbb3daa58357fb8b943b8b1"
+runtest "nsalias.${domain}" "2c4703fefb70ce8cde84f8f586592045"
 runtest "nsalias.100.${domain}" "56a825b622067378fc2adca48b624ec4"
 
 # spfloop.toml spfchain.toml spfalias1.toml spfalias2.toml
@@ -441,9 +442,9 @@ runtest "spfloop.5.4.${domain}" "2aa8a364964b868b45331cbeed6c9b5c"
 runtest "spfloop.5.5.${domain}" "44cb2530d056240bc0439825620b2e29"
 runtest "spfchain.${domain}" "03f65bfa3c7523b3f358b915f686fecf"
 runtest "spfchain34567.${domain}" "ba919bef6f1e422e3c3266483b392a29"
-runtest "spfalias1.${domain}" "ad67838271de4d25e87f059b2e26e3e9"
+runtest "spfalias1.${domain}" "da474718810e7f431481d7a1527a0dda"
 runtest "spfalias1.100.${domain}" "c1352747ced579e2c87d84e913360a08"
-runtest "spfalias2.${domain}" "b85951e3aa8b49ac7a80587b25a06c9c"
+runtest "spfalias2.${domain}" "da474718810e7f431481d7a1527a0dda"
 runtest "spfalias2.100.${domain}" "507f72a0d217e44222d9b466199a0b66"
 
 # ptralias.toml ptrloop1.toml ptrloop2.toml
@@ -454,7 +455,11 @@ runtest "-x 198.51.100.255" "db2d255697d7d9bb6c4a1ea89fc2aa5a"
 runtest "-x 10.255.0.0" "08e1216021f668f679b3465a3f167e75"
 runtest "-x 10.255.255.255" "69a465ae06caa4b05111559028395ae6"
 
-
+# nptenumalias.toml nptenumloop.toml
+runtest "NAPTR 1.e164.arpa" "a87010ccacf827d8f25baa25e500324c"
+runtest "NAPTR 1.5.2.3.4.5.6.7.8.e164.arpa" "8a4be74c0c43bed7650b9816f36ad3e8"
+runtest "NAPTR 2.e164.arpa" "189bc66bc91938ed3c762efedea9db32"
+runtest "NAPTR 2.5.2.3.4.5.6.7.8.e164.arpa" "d215ffabcbe3f63088601914c5cbf7fc"
 
 # nfz / name fuzzing
 runtest "alias.10.nfz0.10.${domain}" "6f99464921e173b6662ce68466f18cf9"

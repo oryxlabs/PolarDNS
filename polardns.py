@@ -15,7 +15,7 @@ import glob
 import time
 import os
 
-polardns_version = "1.4"
+polardns_version = "1.5.0"
 
 ################################
 
@@ -1361,7 +1361,7 @@ def process_DNS(self, req):
            time.sleep(resp.sleep)
            close_conn(self)
         #####################################################################
-        elif req.sld_tld_domain not in OURDOMAINS and req.sld_tld_domain != "in-addr.arpa":
+        elif req.sld_tld_domain not in OURDOMAINS and req.tld != "arpa":
            # We are NOT authoritative, send Refused
            log("Refused")
            ### DNS header ########

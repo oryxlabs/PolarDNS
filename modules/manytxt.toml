@@ -1,12 +1,53 @@
 [module]
 name = "manytxt"
 type = "feature"
-info = "Many TXT records with random text"
-desc = "Send arbitrary number of TXT records of arbitrary size. The contents of the TXT records will be a random ASCII text."
-author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+info = "Many TXT Records with Random Text"
+short = "Many TXT records with random text"
+category = "Fuzzing"
+records = "TXT"
+desc = '''
+This module is designed to respond with arbitrary number of TXT records, each containing data of arbitrary size.
 
-code = '''
+Typically, a TXT record consists of one or more labels, and each label can be up to 255 bytes in size. If the required data size exceeds this limit, multiple labels are used within the same TXT record to accommodate the data.
+
+This flexibility allows for generating very large DNS responses, up to the maximum allowable DNS packet size of 65535 bytes.
+
+In this variant, the labels are composed of **random ASCII text**.
+'''
+rfc = "rfc1035, rfc1464"
+format = '''
+**`manytxt.<RECORDS>.<SIZE>.yourdomain.com`**
+
+Where:
+
+- The **`<RECORDS>`** parameter specifies the number of TXT records to be included in the answer.
+
+- The **`<SIZE>`** parameter specifies the size of each TXT record. As mentioned in the description, a TXT record consists of one or more labels, and the maximum size of a single TXT label is 255 bytes. If the specified size exceeds this limit, multiple labels will be dynamically generated to accommodate the specified size.
+'''
+seealso = "bigtxt, bigbintxt, manytxt, manybintxt"
+
+[[module.example]]
+description = "In this example, we request to produce 10 TXT records, each containing 30 random ASCII characters. As we can see, these 30 characters fit easily within a single label:"
+command = "dig manytxt.10.30.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to produce 10 TXT records, each containing 300 random ASCII characters. As we can see, these 300 characters must be split into 2 labels, as the maximum size for a single label is 255 bytes:"
+command = "dig manytxt.10.300.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to produce a single TXT record containing 50,000 random ASCII characters. As we can see, this will be split into many labels:"
+command = "dig manytxt.1.50000.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to produce 300 TXT records, each containing 100 random ASCII characters:"
+command = "dig manytxt.300.100.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig manytxt${RANDOM}.10.30.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("manytxt"):
    # Send many random TXT records
    nans = 10  # number of TXT records to send
@@ -21,7 +62,13 @@ if req.first_subdomain.startswith("manytxt"):
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    for i in range(nans):
-       data    = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(chunksize))
+       # max label size is 255 bytes, so chunk it
+       parts = []
+       for i in range(0, chunksize, 255):
+          part = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(min(255, chunksize - i)))
+          parts.append(part)
+       data = '.'.join(parts)
+
        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
        buffer += getTypeBin("TXT") + getClassBin("IN")
        buffer += struct.pack(">L", resp.TTL)            ## TTL

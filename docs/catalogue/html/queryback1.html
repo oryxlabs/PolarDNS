@@ -1,0 +1,102 @@
+---
+layout: default
+title: "QueryBack1 - Query Reflection"
+parent: "Empty responses"
+---
+
+<!DOCTYPE html>
+<head>
+<title>QueryBack1 - Query Reflection</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>QueryBack1 - Query Reflection</h1>
+<p>Instead of returning a DNS response, this module sends back the original query exactly as it was received.</p>
+<p>This behavior is likely to result in unexpected errors, especially when targetting resolvers.</p><p><strong>Category:</strong> <a href='../empty-responses.html'>Empty responses</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>queryback1.yourdomain.com</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>In this example, we see the effects of receiving a query instead of a response. The client (dig) struggles to interpret the response, which lacks any actual response data. We see two different warnings and no answer:</p>
+<div><pre class='output-block'><strong># dig queryback1.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; queryback1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 48190
+;; flags: rd ad; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 1
+;; <span style="background-color: yellow;">WARNING</span>: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: 869618c70fe0979b (echoed)
+;; QUESTION SECTION:
+;queryback1.yourdomain.com.	IN	A
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Oct 29 16:05:21 +04 2024
+;; MSG SIZE  rcvd: 66
+</pre></div><p><a href='../outputs/queryback1/dig_queryback1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In TCP mode, the results are the same as in the previous example in UDP mode, leading to multiple warnings with no answer:</p>
+<div><pre class='output-block'><strong># dig queryback1.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; queryback1.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 61158
+;; flags: rd ad; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 1
+;; <span style="background-color: yellow;">WARNING</span>: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: b9eb7f1c05b1f8a5 (echoed)
+;; QUESTION SECTION:
+;queryback1.yourdomain.com.	IN	A
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Tue Oct 29 16:05:22 +04 2024
+;; MSG SIZE  rcvd: 66
+</pre></div><p><a href='../outputs/queryback1/dig_queryback1.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we also request to generate a new Transaction ID in the response (using the <a href="newid.html">newid</a> modifier). This could potentially cause further confusion for a resolver receiving such a response:</p>
+<div><pre class='output-block'><strong># dig queryback1.newid.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 22611, got 46426
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 22611, got 13720
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 22611, got 41617
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; queryback1.newid.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/queryback1/dig_queryback1.newid.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="close.html">Close - Close the Connection</a></li>
+<li><a href="empty1.html">Empty1 - Empty Packet</a></li>
+<li><a href="empty2.html">Empty2 - Only NULL Bytes</a></li>
+<li><a href="empty3.html">Empty3 - Only NULL Bytes (Suitable for TCP)</a></li>
+<li><a href="empty4.html">Empty4 - Only Transaction ID and NULL Bytes</a></li>
+<li><a href="empty5.html">Empty5 - Only DNS Header and NULL Bytes</a></li>
+<li><a href="empty6.html">Empty6 - ANSWER Section Missing</a></li>
+<li><a href="empty7.html">Empty7 - ANSWER Section Is NULL Bytes</a></li>
+<li><a href="queryback2.html">QueryBack2 - Query Reflection (Stripped)</a></li>
+<li><a href="queryback3.html">QueryBack3 - Query Reflection (To Port 53)</a></li>
+<li><a href="queryback4.html">QueryBack4 - Query Reflection (Random, to Port 53)</a></li>
+<li><a href="timeout.html">Timeout - Do Not Respond</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

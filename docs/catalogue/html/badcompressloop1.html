@@ -1,0 +1,59 @@
+---
+layout: default
+title: "BadCompressLoop1 - Pointer Loop in Name Field (Variant 1)"
+parent: "Bad compression"
+---
+
+<!DOCTYPE html>
+<head>
+<title>BadCompressLoop1 - Pointer Loop in Name Field (Variant 1)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>BadCompressLoop1 - Pointer Loop in Name Field (Variant 1)</h1>
+<p>The DNS protocol supports compressing domain names to save space by reducing redundancy for repeated domain names within DNS messages. This compression scheme can be applied to various record (resource) types, such as <strong>A</strong>, <strong>CNAME</strong>, <strong>MX</strong>, or <strong>PTR</strong> records.</p>
+<p>This particular module is designed to respond with a single answer containing a <strong>CNAME record</strong> (alias) where the <strong>Name field</strong> is compressed.</p>
+<p>The compression pointer in the <strong>Name field</strong> points to <strong>itself</strong>, forming a <strong>direct loop</strong>.</p><p><strong>Category:</strong> <a href='../bad-compression.html'>Bad compression</a></p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>badcompressloop1.yourdomain.com</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>In this example, we can see that the client (dig) is unable to process the response because of the compression loop:</p>
+<div><pre class='output-block'><strong># dig badcompressloop1.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Got bad packet</span>: bad compression pointer
+89 bytes
+92 be 84 00 00 01 00 01 00 00 00 00 10 62 61 64          .............bad
+63 6f 6d 70 72 65 73 73 6c 6f 6f 70 31 0a 79 6f          compressloop1.yo
+75 72 64 6f 6d 61 69 6e 03 63 6f 6d 00 00 01 00          urdomain.com....
+01 c0 31 00 05 00 01 00 00 00 3c 00 1c 0b 61 6c          ..1.......&lt;...al
+77 61 79 73 39 37 32 30 34 0a 79 6f 75 72 64 6f          ways97204.yourdo
+6d 61 69 6e 03 63 6f 6d 00                               main.com.</pre></div><p><a href='../outputs/badcompressloop1/dig_badcompressloop1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>By examining the PCAP file in Wireshark, we can see that it detects the loop and displays the error message <code class='code-block'>&lt;Name contains a pointer that loops&gt;</code> while parsing the field. However, different DNS resolvers and clients may handle such malformed responses in vastly different ways, making this an intriguing use case for testing.</p></p><br>
+<p>Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:</p>
+<div><pre class='output-block'><strong># dig badcompressloop1${RANDOM}.yourdomain.com @10.211.55.2</strong>
+
+;; <span style="background-color: yellow;">Got bad packet</span>: bad compression pointer
+94 bytes
+2b ae 84 00 00 01 00 01 00 00 00 00 15 62 61 64          +............bad
+63 6f 6d 70 72 65 73 73 6c 6f 6f 70 31 31 36 33          compressloop1163
+39 30 0a 79 6f 75 72 64 6f 6d 61 69 6e 03 63 6f          90.yourdomain.co
+6d 00 00 01 00 01 c0 36 00 05 00 01 00 00 00 3c          m......6.......&lt;
+00 1c 0b 61 6c 77 61 79 73 31 39 32 37 37 0a 79          ...always19277.y
+6f 75 72 64 6f 6d 61 69 6e 03 63 6f 6d 00                ourdomain.com.</pre></div><p><a href='../outputs/badcompressloop1/dig_badcompressloop1__RANDOM_.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="badcompress1.html">BadCompress1 - Custom Offset in Name Field</a></li>
+<li><a href="badcompress2.html">BadCompress2 - Custom Offset in CNAME Field</a></li>
+<li><a href="badcompressfwptr1.html">BadCompressFwPtr1 - Forward and Double Pointer in Name Field (Variant 1)</a></li>
+<li><a href="badcompressfwptr2.html">BadCompressFwPtr2 - Forward and Double Pointer in Name Field (Variant 2)</a></li>
+<li><a href="badcompressloop2.html">BadCompressLoop2 - Pointer Loop in Name Field (Variant 2)</a></li>
+<li><a href="badcompressloop3.html">BadCompressLoop3 - Double Pointer Loop</a></li>
+<li><a href="badcompressloop4.html">BadCompressLoop4 - Pointer Loop in CNAME Field (Variant 1)</a></li>
+<li><a href="badcompressloop5.html">BadCompressLoop5 - Pointer Loop in CNAME Field (Variant 2)</a></li>
+<li><a href="badcompressmid1.html">BadCompressMid1 - Compression in the Middle of CNAME</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

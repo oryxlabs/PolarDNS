@@ -1,0 +1,72 @@
+---
+layout: default
+title: "QueryBack3 - Query Reflection (To Port 53)"
+parent: "Empty responses"
+---
+
+<!DOCTYPE html>
+<head>
+<title>QueryBack3 - Query Reflection (To Port 53)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>QueryBack3 - Query Reflection (To Port 53)</h1>
+<p>Instead of sending a DNS response with an answer, this module resends the original query back to the sender on UDP port 53, exactly as it was received. The original query is never actually answered; the connection is simply abandoned, resulting a timeout.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji> This behavior is intentionally designed to <strong>create a loop</strong> between the client/resolver and the PolarDNS server. For instance, if the client is a recursive resolver using the <strong>same IP address</strong> for both receiving queries and sending queries during resolution, it could result in an <strong>infinite loop</strong> of queries being sent back and forth indefinitely.</p>
+<p>This could potentially lead to a Denial of Service (DoS) situation.</p>
+<p>This is one of the main reasons why a recursive resolver should always use separate IP addresses for receiving queries and for sending out queries to other DNS servers (during resolution), to prevent potential infinite loops and other security risks.</p><p><strong>Category:</strong> <a href='../empty-responses.html'>Empty responses</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>queryback3.yourdomain.com</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>In this example, we run the query directly against PolarDNS server. We see that the client (dig) does not actually receive any response, and the query results in a timeout three times in a row:</p>
+<div><pre class='output-block'><strong># dig queryback3.yourdomain.com @10.211.55.2</strong>
+
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; queryback3.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p>However, in the PCAP file below, we can see that the original query was sent back to us (reflected) to UDP port 53. This is exactly what PolarDNS sent to our UDP port 53:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 48235
+;; flags: rd ad; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;queryback3.yourdomain.com.     IN      A
+
+;; ADDITIONAL SECTION:
+;; OPT PSEUDOSECTION
+; EDNS: version: 0, flags: ; udp: 1232
+; EDNS: code: 10; data: 1b5ad7fdde444be4</pre><p><a href='../outputs/queryback3/dig_queryback3.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>We can see that it is the exact same query that we originally sent. It was sent back to our UDP port 53. Since we do not run any DNS server on our system, nothing significant happened. However, if the initial query had been run through a recursive resolver (instead of directly to PolarDNS), it would be sent back (reflected) to the recursive resolver, potentially resulting in an infinite loop.</p></p><br>
+<p>In the following example, we also use the <a href="newid.html">newid</a> modifier, which generates a new Transaction ID for each response. The query once again results in a timeout three times in a row:</p>
+<div><pre class='output-block'><strong># dig queryback3.newid.yourdomain.com @10.211.55.2</strong>
+
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; queryback3.newid.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/queryback3/dig_queryback3.newid.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>In the PCAP file, we can see again that the original query was sent back to us (reflected) to UDP port 53. The only difference is that the Transaction ID varies each time. This could potentially increase the likelihood of ending up in an infinite loop compared to the previous example.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="close.html">Close - Close the Connection</a></li>
+<li><a href="empty1.html">Empty1 - Empty Packet</a></li>
+<li><a href="empty2.html">Empty2 - Only NULL Bytes</a></li>
+<li><a href="empty3.html">Empty3 - Only NULL Bytes (Suitable for TCP)</a></li>
+<li><a href="empty4.html">Empty4 - Only Transaction ID and NULL Bytes</a></li>
+<li><a href="empty5.html">Empty5 - Only DNS Header and NULL Bytes</a></li>
+<li><a href="empty6.html">Empty6 - ANSWER Section Missing</a></li>
+<li><a href="empty7.html">Empty7 - ANSWER Section Is NULL Bytes</a></li>
+<li><a href="queryback1.html">QueryBack1 - Query Reflection</a></li>
+<li><a href="queryback2.html">QueryBack2 - Query Reflection (Stripped)</a></li>
+<li><a href="queryback4.html">QueryBack4 - Query Reflection (Random, to Port 53)</a></li>
+<li><a href="timeout.html">Timeout - Do Not Respond</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

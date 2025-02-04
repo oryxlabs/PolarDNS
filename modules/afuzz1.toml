@@ -1,12 +1,38 @@
 [module]
 name = "afuzz1"
 type = "feature"
-info = "Single A record with arbitrary byte"
-desc = "Respond with A record containing arbitrary byte in the middle of the name in the ANSWER section, essentially giving an incorrect answer."
-author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+info = "Single A Record with Arbitrary Byte"
+short = "Inject arbitrary byte in the hostname in the A record"
+category = "Fuzzing"
+records = "A"
+desc = '''
+This module is designed to respond with an **A record** containing an arbitrary byte injected into the middle of the hostname in the ANSWER section.
 
-code = '''
+In essence, this results in an incorrect response that differs only by the injected byte. Some resolvers or DNS clients may ignore the injected byte, potentially revealing broader issues with how they handle such malformed responses.
+'''
+format = '''
+**`afuzz1.<BYTE>.yourdomain.com`**
+
+Where:
+
+- The **`<BYTE>`** parameter specifies the byte value in decimal (0 - 255) to be injected into the hostname.
+'''
+seealso = "afuzz1, afuzz2"
+
+[[module.example]]
+description = "In this example, we specify the injection of a NULL byte (`\\000`) into the hostname:"
+command = "dig afuzz1.0.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we specify the injection of the 0xff (`\\255)` character into the hostname:"
+command = "dig afuzz1.255.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig afuzz1${RANDOM}.255.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("afuzz1"):
    # todo: Send A record with a slightly distorted name.
    byte = 65

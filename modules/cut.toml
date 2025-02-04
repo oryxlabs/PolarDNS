@@ -1,0 +1,51 @@
+[module]
+name = "cut"
+type = "modifier"
+info = "Cut N Bytes from the End of the Packet"
+short = "Cut any number of bytes from the end of the DNS response packet"
+category = "Packet manipulation"
+desc = '''
+This modifier allows cutting (removing) an arbitrary number of bytes from the end of the DNS response packet.
+
+In TCP mode, ensure the DNS packet length is recalculated by using the [rl] modifier.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+'''
+format = '''
+**`*.cut<NUMBER>.*`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies the number of bytes to be removed from the response. If the specified number exceeds the packet size, an empty packet will be sent.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = '''
+All the examples below use the basic [always] feature which always resolves to an IP address.
+
+In this example, we request 16 bytes to be removed from the response. This effectively removes the answer (which is exactly 16 bytes long) from the DNS response body. As a result, we see a warning about malformed packet and a missing answer:
+'''
+command = "dig always.cut16.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Similar to the previous example, but in this case, we request 100 bytes to be removed from the response. Since this exceeds the size of the DNS response, this results in obtaining an empty packet. The client makes three attempts to resolve the error:"
+command = "dig always.cut100.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we combine the operation with the [add] modifier to replace the original IP address in the response. First, we remove the last 4 bytes from the response (which correspond to the IP address in the A record), and then we add 4 bytes with the value 0xff (255 in decimal). This effectively replaces the IP address in the answer with 255.255.255.255:"
+command = "dig always.cut4.add4.0xff.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = '''In TCP mode, we must combine this with the [rl] modifier to recalculate the DNS packet length.
+
+In this example, we use TCP mode without recalculating the length. As a result, the parser assumes an error occured during transmission and makes three attempts to resolve the issue:
+'''
+command = "dig always.cut16.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "After adding the [rl] modifier to recalculate the length, the parser successfully parses the packet and identifies that the packet was likely cut (resulting in the warning about malformed packet), similar to the behavior in the very first example using UDP mode:"
+command = "dig always.cut16.rl.yourdomain.com @127.0.0.1 +tcp"
+
+[module.code]
+# The code is located in the polardns.py file.

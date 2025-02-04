@@ -1,0 +1,18 @@
+<pre class='output-block'><strong># dig spfloop.5.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; spfloop.5.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 39048
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfloop.5.5.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+spfloop.5.5.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfloop.5.1.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Nov 06 13:56:30 +04 2024
+;; MSG SIZE  rcvd: 103</pre>

@@ -1,12 +1,64 @@
 [module]
 name = "badcompress2"
 type = "feature"
-info = "Custom offset in CNAME field"
-desc = "Respond with CNAME (abc.badcompress2.yourdomain.com), where you can specify an arbitrary offset in the answer CNAME field compression pointer."
-author = "ivan.jedek@oryxlabs.com"
+info = "Custom Offset in CNAME Field"
+short = "Set custom compression pointer offset in the CNAME field"
 category = "Bad compression"
+records = "CNAME"
+rfc = "RFC1035"
+desc = '''
+The DNS protocol supports compressing domain names to save space by reducing redundancy for repeated domain names within DNS messages. This compression scheme can be applied to various record (resource) types, such as **A**, **CNAME**, **MX**, or **PTR** records.
 
-code = '''
+DNS compression works by using pointers to refer back to previously specified domain names within the DNS message. Here are the key aspects of the compression scheme:
+
+- **Pointers**: The compression scheme uses **2-byte pointers** that refer to previous occurrences of the same domain name (or a part of the domain name) within the DNS message.
+- **Format**: The pointer mechanism is encoded with the first two bits set to 11, followed by a **14-bit offset** indicating the location of the domain name in the message.
+- **Offset**: The offset specifies the location of the domain name relative to the beginning of the DNS packet, allowing the pointer to reference where the domain name can be found.
+
+This particular module is designed to respond with a single answer containing a compressed **CNAME record** (alias) pointing to the `abc.badcompress2.yourdomain.com` domain. This domain is constructed as follows:
+
+- `abc.` + compression pointer to the original domain name in the QUERY section (`badcompress2.yourdomain.com`).
+
+Typically, the compression pointer points to the **offset 12**, where the original domain name is located in the **QUERY section**. This is a common and fixed location in many standard DNS responses, represented by the typical **0xc00c** byte value used instead of the domain name.
+
+However, this module allows the compression pointer to point to **any location** within the DNS message by specifying an **arbitrary offset**.
+
+By specifying various offsets, this will inevitably lead to parsing errors.
+'''
+format = '''
+**`badcompress2.<OFFSET>.yourdomain.com`**
+
+Where:
+
+- The **`<OFFSET>`** parameter specifies the offset location relative to the beginning of the DNS packet.
+
+Note that an offset of 12 is the typical location where the original domain name is located in the QUERY section.
+'''
+seealso = "badcompress1, badcompress2, badcompressfwptr1, badcompressfwptr2, badcompressloop1, badcompressloop2, badcompressloop3, badcompressloop4, badcompressloop5, badcompressmid1"
+
+[[module.example]]
+description = "In this example, we set the pointer to offset 0, which is the beginning of the DNS packet. This location typically contains the Transaction ID (a random number), which is not a domain name. As a result, the parser is unable to interpret this response correctly:"
+command = "dig badcompress2.0.yourdomain.com @127.0.0.1"
+append = "Note that this may result in a different outcome each time you try it, as the Transaction ID is a random number."
+
+[[module.example]]
+description = "In this example, we set the pointer to offset 3, which is the 4th byte of the DNS packet. This location typically contains the Flags field, and in our case, it contains a NULL byte (\\000). Although a NULL byte is not a typical domain name, it represents the ROOT domain (the top of the DNS hierarchy). This is why we only see the `abc.` domain as the resulting alias in the ANSWER section:"
+command = "dig badcompress2.3.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Here, we request the pointer to point to the offset 12 which is the typical location where the original domain name is located in the QUERY section. This results in a completely valid and correct answer:"
+command = "dig badcompress2.12.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we set the pointer to offset 100, which is outside the bounds of the DNS packet in this case (the size of this response is only 67 bytes). As a result, the parser detects that the compression pointer is referencing an invalid location and fails to interpret the response entirely:"
+command = "dig badcompress2.100.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig badcompress2${RANDOM}.3.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("badcompress2"):
    # Send answer with arbitrary compression pointer in the ANSWER section in the CNAME name
    offset = 12  # default offset is 12, which points to the domain name in the question

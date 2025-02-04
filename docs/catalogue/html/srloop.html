@@ -1,0 +1,145 @@
+---
+layout: default
+title: "SrLoop - SRV Alias Loops"
+parent: "Alias loops"
+---
+
+<!DOCTYPE html>
+<head>
+<title>SrLoop - SRV Alias Loops</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>SrLoop - SRV Alias Loops</h1>
+<p>This module implements <strong>alias loops</strong> using <strong>SRV (Service Locator)</strong> records. The loops can be a <strong>direct loop</strong>, where the alias points back to the <strong>same domain name</strong> as in the original query, or they can include <strong>multiple elements</strong>, cycling through a specified number of domains.</p>
+<p>The idea is that if the client/resolver decides to resolve this further, it will enter an <strong>infinite loop</strong>. In practice, however, most modern resolvers detect such loops and terminate the resolution.</p>
+<p>The SRV records include fields for Priority, Weight, and Port number. In this module, both the Priority and Weight are set to 0, while the Port number is randomly assigned.</p>
+<p>Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, &quot;service labels&quot;, or &quot;underscore labels&quot;.</p>
+<p>Note that this feature provides the same functionality as requesting a SRV record for the generic <a href="loop.html">loop</a> feature.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to a domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../alias-loops.html'>Alias loops</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc2782/" target="_blank">RFC2782</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>srloop.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter specifies the number of elements the loop should contain.</li>
+</ul>
+<h2>Examples</h2>
+<p>In this example, we can see a direct loop formed by requesting an SRV record containing the exact same domain name:</p>
+<div><pre class='output-block'><strong># dig srloop.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; srloop.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 21547
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;srloop.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+srloop.yourdomain.com.	60	IN	SRV	0 0 20298 srloop.yourdomain.com.
+
+;; Query time: 7 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Nov 05 15:43:39 +04 2024
+;; MSG SIZE  rcvd: 80</pre></div><p><a href='../outputs/srloop/dig_srloop.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request a SRV alias loop consisting of 5 elements:</p>
+<div><pre class='output-block'><strong># dig srloop.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; srloop.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 2719
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;srloop.5.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+srloop.5.yourdomain.com. 60	IN	SRV	0 0 4209 srloop.5.1.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Nov 05 15:43:40 +04 2024
+;; MSG SIZE  rcvd: 86</pre></div><p><a href='../outputs/srloop/dig_srloop.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>The resulting domain name <code class='code-block'>srloop.5.1.yourdomain.com</code> represents the 1st element of the loop.</p></p><br>
+<p>By resolving the 1st element, we are pointed to the 2nd element of the loop:</p>
+<div><pre class='output-block'><strong># dig srloop.5.1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; srloop.5.1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 2700
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;srloop.5.1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+srloop.5.1.yourdomain.com. 60	IN	SRV	0 0 40516 srloop.5.2.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Nov 05 15:43:41 +04 2024
+;; MSG SIZE  rcvd: 88</pre></div><p><a href='../outputs/srloop/dig_srloop.5.1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>This continues up to the 5th and final element &mdash; <code class='code-block'>srloop.5.5.yourdomain.com</code>.</p></p><br>
+<p>By resolving the final element of the loop, we are directed back to the 1st element again:</p>
+<div><pre class='output-block'><strong># dig srloop.5.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; srloop.5.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 49154
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;srloop.5.5.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+srloop.5.5.yourdomain.com. 60	IN	SRV	0 0 27585 srloop.5.1.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Nov 05 15:43:42 +04 2024
+;; MSG SIZE  rcvd: 88</pre></div><p><a href='../outputs/srloop/dig_srloop.5.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that we are indeed pointed back to the 1st element again, effectively forming a loop.</p></p><br>
+<p>As mentioned in the description, this module also supports DNS queries for locating different services using the underscore (_) prefix notation. This example demonstrates such usage, where we search for an HTTP service specifically designed for mobile devices and running over TCP. In this case, we request a loop of 10 elements:</p>
+<div><pre class='output-block'><strong># dig _mobile._http._tcp.srloop.10.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; _mobile._http._tcp.srloop.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 7676
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_mobile._http._tcp.srloop.10.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+_mobile._http._tcp.srloop.10.yourdomain.com. 60	IN SRV 0 0 17568 _mobile._http._tcp.srloop.10.1.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Nov 05 15:26:27 +04 2024
+;; MSG SIZE  rcvd: 126</pre></div><p><a href='../outputs/srloop/dig__mobile._http._tcp.srloop.10.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>The resulting domain name <code class='code-block'>_mobile._http._tcp.srloop.10.1.yourdomain.com</code> represents the 1st element of the loop.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="cnloop.html">CnLoop - CNAME Alias Loops</a></li>
+<li><a href="dnloop.html">DnLoop - DNAME Alias Loops</a></li>
+<li><a href="htloop.html">HtLoop - HTTPS Alias Loops</a></li>
+<li><a href="loop.html">Loop - Alias Loops</a></li>
+<li><a href="mxloop.html">MxLoop - MX Alias Loops</a></li>
+<li><a href="nptenumloop.html">NptEnumLoop - NAPTR ENUM Alias Loops</a></li>
+<li><a href="nsloop.html">NsLoop - NS Alias Loops</a></li>
+<li><a href="ptrloop1.html">PtrLoop1 - PTR Alias Loops (Variant 1)</a></li>
+<li><a href="ptrloop2.html">PtrLoop2 - PTR Alias Loops (Variant 2)</a></li>
+<li><a href="spfloop.html">SpfLoop - SPF (TXT) Alias Loops</a></li>
+<li><a href="svloop.html">SvLoop - SVCB Alias Loops</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="sralias.html">SrAlias - Random SRV Aliases</a></li>
+<li><a href="srchain.html">SrChain - SRV Alias Chains</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

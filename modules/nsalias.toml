@@ -1,12 +1,46 @@
 [module]
 name = "nsalias"
 type = "feature"
-info = "NS random N aliases"
-desc = "Respond with N number of NS aliases containing random chain index (`cnalias####.yourdomain.com`). BEWARE: This could result in multiplication."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "Random NS Aliases"
+short = "NS random alias generator"
+category = "Aliases"
+records = "NS"
+tags = "Amplification, Domain Lock-Up, Denial of Service"
+rfc = "RFC1035"
+desc = '''
+This module is designed to return one or more **random aliases** using **NS (Name Server)** records.
 
-code = '''
+It specifically generates a random NS alias record in the format `nsalias######.yourdomain.com`, where `######` represents a random number.
+
+The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.
+
+Note that this feature provides the same functionality as requesting the NS record for the generic [alias] feature. Responding with multiple records (aliases) in a single response is also supported.
+
+:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
+'''
+format = '''
+**`nsalias.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many aliases should be generated in the response.
+'''
+seealso = "nsloop, nschain, alias, cnalias, dnalias, htalias, mxalias, nptenumalias, nsalias, ptralias, spfalias1, spfalias2, sralias, svalias"
+
+[[module.example]]
+description = "By default, it returns a single NS alias:"
+command = "dig nsalias.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Same example as above, but this time we explicitly specify that we want to receive a single NS record:"
+command = "dig nsalias.1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we specify that we want to receive five NS aliases:"
+command = "dig nsalias.5.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
            elif req.first_subdomain.startswith("nsalias"):
               # Send multiple random NS aliases
               # BEWARE: This could result in multiplication

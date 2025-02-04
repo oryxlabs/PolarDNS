@@ -1,12 +1,38 @@
 [module]
 name = "queryback2"
 type = "feature"
-info = "Query reflection, stripped"
-desc = "Send back the same query, stripped. Send back only the same question, without any additional sections (e.g. the OPT / EDNS0)."
-author = "ivan.jedek@oryxlabs.com"
+info = "Query Reflection (Stripped)"
+short = "Query reflection back to sender (query stripped)"
 category = "Empty responses"
+desc = '''
+Instead of returning a DNS response, this module sends back the original query, stripped of any additional sections.
 
-code = '''
+In essence, it reflects only the query (same question), without any additional sections (such as OPT / EDNS0).
+
+This behavior is likely to result in unexpected errors, especially when targetting resolvers.
+'''
+format = '''
+**`queryback2.yourdomain.com`**
+
+This module has no parameters.
+'''
+seealso = "close, timeout, empty1, empty2, empty3, empty4, empty5, empty6, empty7, queryback1, queryback3, queryback4"
+
+[[module.example]]
+description = "In this example, we see the effects of receiving a query instead of a response. The client (dig) struggles to interpret the response, which lacks any actual response data. We see two different warnings and no answer:"
+command = "dig queryback2.yourdomain.com @127.0.0.1"
+append = "The difference from the [queryback1] variant is that, in this case, only the Transaction ID, the Flags field and the Question is reflected, and nothing else is included."
+
+[[module.example]]
+description = "In TCP mode, the results are the same as in the previous example in UDP mode, leading to multiple warnings with no answer:"
+command = "dig queryback2.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "In this example, we also request to generate a new Transaction ID in the response (using the [newid] modifier). This could potentially cause further confusion for a resolver receiving such a response:"
+command = "dig queryback2.newid.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("queryback2"):
    # Domain starts with "queryback2", let's send back the same query - stripped, with only
    # the question without any additional sections (like e.g. the OPT / EDNS0)

@@ -1,0 +1,217 @@
+---
+layout: default
+title: "SrAlias - Random SRV Aliases"
+parent: "Aliases"
+---
+
+<!DOCTYPE html>
+<head>
+<title>SrAlias - Random SRV Aliases</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>SrAlias - Random SRV Aliases</h1>
+<p>This module is designed to return one or more <strong>random aliases</strong> using <strong>SRV (Service Locator)</strong> records.</p>
+<p>It specifically generates a random SRV alias record in the format <code class='code-block'>sralias######.yourdomain.com</code>, where <code class='code-block'>######</code> represents a random number.</p>
+<p>The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.</p>
+<p>The SRV records include fields for Priority, Weight, and Port number. In this module, both the Priority and Weight are set to 0, while the Port number is randomly assigned for each record.</p>
+<p>Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, &quot;service labels&quot;, or &quot;underscore labels&quot;. It also supports returning multiple records in a single response.</p>
+<p>Note that this feature provides the same functionality as requesting the SRV record for the generic <a href="alias.html">alias</a> feature.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../aliases.html'>Aliases</a></p><p><strong>Tags:</strong> Amplification, Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc2782/" target="_blank">RFC2782</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>sralias.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines how many aliases should be generated in the response.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, the module generates a single SRV alias record response:</p>
+<div><pre class='output-block'><strong># dig sralias.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; sralias.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 55148
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;sralias.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+sralias.yourdomain.com.	60	IN	SRV	0 0 12785 sralias237013.yourdomain.com.
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:25:50 +04 2024
+;; MSG SIZE  rcvd: 88</pre></div><p><a href='../outputs/sralias/dig_sralias.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Same example as above, but this time we explicitly specify that we want to receive a single SRV record:</p>
+<div><pre class='output-block'><strong># dig sralias.1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; sralias.1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 3876
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;sralias.1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+sralias.1.yourdomain.com. 60	IN	SRV	0 0 65279 sralias559423.1.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:25:51 +04 2024
+;; MSG SIZE  rcvd: 92</pre></div><p><a href='../outputs/sralias/dig_sralias.1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this case, we specify that we want to receive 5 (five) SRV alias records:</p>
+<div><pre class='output-block'><strong># dig sralias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; sralias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 463
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;sralias.5.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+sralias.5.yourdomain.com. 60	IN	SRV	0 0 34653 sralias372165.5.yourdomain.com.
+sralias.5.yourdomain.com. 60	IN	SRV	0 0 4052 sralias522984.5.yourdomain.com.
+sralias.5.yourdomain.com. 60	IN	SRV	0 0 3146 sralias946479.5.yourdomain.com.
+sralias.5.yourdomain.com. 60	IN	SRV	0 0 7766 sralias980568.5.yourdomain.com.
+sralias.5.yourdomain.com. 60	IN	SRV	0 0 61131 sralias874557.5.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:25:52 +04 2024
+;; MSG SIZE  rcvd: 292</pre></div><p><a href='../outputs/sralias/dig_sralias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>As mentioned in the description, this module also supports DNS queries for locating different services using the underscore (_) prefix notation. In this example, we search for SIP (Session Initiation Protocol) service. We request to receive a single SRV alias record:</p>
+<div><pre class='output-block'><strong># dig _sip.sralias.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; _sip.sralias.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 10019
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_sip.sralias.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+_sip.sralias.yourdomain.com. 60	IN	SRV	0 0 28717 _sip.sralias171721.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:25:53 +04 2024
+;; MSG SIZE  rcvd: 98</pre></div><p><a href='../outputs/sralias/dig__sip.sralias.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Here, we search for SIP service running over UDP, and we want to receive 2 (two) SRV alias records:</p>
+<div><pre class='output-block'><strong># dig _sip._udp.sralias.2.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; _sip._udp.sralias.2.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 8670
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_sip._udp.sralias.2.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+_sip._udp.sralias.2.yourdomain.com. 60 IN SRV	0 0 43511 _sip._udp.sralias9688.2.yourdomain.com.
+_sip._udp.sralias.2.yourdomain.com. 60 IN SRV	0 0 20036 _sip._udp.sralias665035.2.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:25:55 +04 2024
+;; MSG SIZE  rcvd: 170</pre></div><p><a href='../outputs/sralias/dig__sip._udp.sralias.2.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Here, we search for HTTP service running over TCP, and we request to receive 10 (ten) SRV alias records:</p>
+<div><pre class='output-block'><strong># dig _http._tcp.sralias.10.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; _http._tcp.sralias.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 49092
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_http._tcp.sralias.10.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+_http._tcp.sralias.10.yourdomain.com. 60 IN SRV	0 0 23984 _http._tcp.sralias689810.10.yourdomain.com.
+_http._tcp.sralias.10.yourdomain.com. 60 IN SRV	0 0 39813 _http._tcp.sralias81361.10.yourdomain.com.
+_http._tcp.sralias.10.yourdomain.com. 60 IN SRV	0 0 20733 _http._tcp.sralias111805.10.yourdomain.com.
+_http._tcp.sralias.10.yourdomain.com. 60 IN SRV	0 0 25411 _http._tcp.sralias47729.10.yourdomain.com.
+_http._tcp.sralias.10.yourdomain.com. 60 IN SRV	0 0 63569 _http._tcp.sralias897908.10.yourdomain.com.
+_http._tcp.sralias.10.yourdomain.com. 60 IN SRV	0 0 26123 _http._tcp.sralias504775.10.yourdomain.com.
+_http._tcp.sralias.10.yourdomain.com. 60 IN SRV	0 0 41679 _http._tcp.sralias304112.10.yourdomain.com.
+_http._tcp.sralias.10.yourdomain.com. 60 IN SRV	0 0 43984 _http._tcp.sralias485224.10.yourdomain.com.
+_http._tcp.sralias.10.yourdomain.com. 60 IN SRV	0 0 6175 _http._tcp.sralias861822.10.yourdomain.com.
+_http._tcp.sralias.10.yourdomain.com. 60 IN SRV	0 0 53547 _http._tcp.sralias464711.10.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:26:11 +04 2024
+;; MSG SIZE  rcvd: 672</pre></div><p><a href='../outputs/sralias/dig__http._tcp.sralias.10.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Here, we search for HTTP service specifically designed for mobile devices, running over TCP. We request to receive 20 (twenty) SRV alias records in the response:</p>
+<div><pre class='output-block'><strong># dig _mobile._http._tcp.sralias.20.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; _mobile._http._tcp.sralias.20.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 27498
+;; flags: qr aa; QUERY: 1, ANSWER: 20, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_mobile._http._tcp.sralias.20.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 29908 _mobile._http._tcp.sralias237924.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 9189 _mobile._http._tcp.sralias511437.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 20000 _mobile._http._tcp.sralias174573.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 31015 _mobile._http._tcp.sralias19560.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 59681 _mobile._http._tcp.sralias780263.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 59820 _mobile._http._tcp.sralias95541.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 27968 _mobile._http._tcp.sralias573896.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 28448 _mobile._http._tcp.sralias134844.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 54512 _mobile._http._tcp.sralias874006.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 25068 _mobile._http._tcp.sralias310237.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 47832 _mobile._http._tcp.sralias857360.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 24026 _mobile._http._tcp.sralias441198.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 17 _mobile._http._tcp.sralias522016.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 37208 _mobile._http._tcp.sralias300003.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 55777 _mobile._http._tcp.sralias157189.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 14640 _mobile._http._tcp.sralias488501.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 16731 _mobile._http._tcp.sralias498508.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 19746 _mobile._http._tcp.sralias422135.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 14496 _mobile._http._tcp.sralias814941.20.yourdomain.com.
+_mobile._http._tcp.sralias.20.yourdomain.com. 60 IN SRV	0 0 52586 _mobile._http._tcp.sralias681808.20.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:25:57 +04 2024
+;; MSG SIZE  rcvd: 1460</pre></div><p><a href='../outputs/sralias/dig__mobile._http._tcp.sralias.20.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="alias.html">Alias - Random Aliases</a></li>
+<li><a href="cnalias.html">CnAlias - Random CNAME Aliases</a></li>
+<li><a href="dnalias.html">DnAlias - Random DNAME Aliases</a></li>
+<li><a href="htalias.html">HtAlias - Random HTTPS Aliases</a></li>
+<li><a href="mxalias.html">MxAlias - Random MX Aliases</a></li>
+<li><a href="nptenumalias.html">NptEnumAlias - Random NAPTR ENUM Aliases</a></li>
+<li><a href="nsalias.html">NsAlias - Random NS Aliases</a></li>
+<li><a href="ptralias.html">PtrAlias - Random PTR Aliases</a></li>
+<li><a href="spfalias1.html">SpfAlias1 - Random SPF (TXT) Aliases (Variant 1)</a></li>
+<li><a href="spfalias2.html">SpfAlias2 - Random SPF (TXT) Aliases (Variant 2)</a></li>
+<li><a href="svalias.html">SvAlias - Random SVCB Aliases</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="srloop.html">SrLoop - SRV Alias Loops</a></li>
+<li><a href="srchain.html">SrChain - SRV Alias Chains</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

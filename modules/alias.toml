@@ -1,12 +1,84 @@
 [module]
 name = "alias"
 type = "feature"
-info = "random N aliases"
-desc = "Respond with N number of aliases containing random chain index (`alias####.yourdomain.com`). This feature supports CNAME/DNAME/HTTPS/SVCB/SRV/MX/NS/SPF(TXT) resource types. BEWARE: This could result in multiplication."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "Random Aliases"
+short = "Random alias generator supporting multiple record types"
+category = "Aliases"
+records = "NS, MX, SRV, TXT, SPF, SVCB, HTTPS, CNAME, DNAME"
+tags = "Amplification, Domain Lock-Up, Denial of Service"
+desc = '''
+This module implements **random aliases** in DNS using variety of different record (resource) types. It supports the following record types:
 
-code = '''
+- CNAME (Canonical Name)
+- DNAME (Delegation Name)
+- HTTPS (HyperText Transfer Protocol Secure)
+- SVCB (Service Binding)
+- SPF (Sender Policy Framework)
+- SRV (Service Locator)
+- MX (Mail Exchange)
+- NS (Name Server)
+
+The module generates a random alias record in the format `alias######.yourdomain.com`, where `######` represents a random number.
+
+The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.
+
+Additionally, the module can respond with multiple alias records. The specific number of records created is based on the numerical value added to the domain name.
+
+:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
+'''
+format = '''
+**`alias.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many aliases should be generated in the response.
+'''
+seealso = "loop, chain, alias, cnalias, dnalias, htalias, mxalias, nptenumalias, nsalias, ptralias, spfalias1, spfalias2, sralias, svalias"
+rfc = "RFC1034, RFC1035, RFC2672, RFC2782, RFC2915, RFC3761, RFC4408, RFC6672, RFC7208, RFC9460"
+
+[[module.example]]
+description = "By default, the module generates a single CNAME alias:"
+command = "dig alias.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig alias${RANDOM}.yourdomain.com @10.211.55.2"
+
+[[module.example]]
+description = "In this example, we explicitly request five CNAME alias records:"
+command = "dig CNAME alias.5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request five DNAME alias records:"
+command = "dig DNAME alias.5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request five HTTPS alias records. Note that HTTPS records include SvcPriority field which is set to 0 for every record:"
+command = "dig HTTPS alias.5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request five SVCB alias records. Note that SVCB records include SvcPriority field which is set to 0 for every record:"
+command = "dig SVCB alias.5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request five SRV alias records. Note that SRV records include fields for Priority, Weight, and Port number. In this module, both the Priority and Weight are set to 0, while the Port number is randomly assigned for each record:"
+command = "dig SRV alias.5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request five SPF alias records. Note that each SPF record is contained within a single TXT record in this case:"
+command = "dig TXT alias.5.yourdomain.com @127.0.0.1"
+append = "There is also a designated [spfalias2] module which can fit multiple SPF aliases within a single TXT record."
+
+[[module.example]]
+description = "In this example, we request five MX alias records. Note that MX records include Preference field which is set to 0 for every record:"
+command = "dig MX alias.5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request five NS alias records:"
+command = "dig NS alias.5.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
            elif req.first_subdomain.startswith("alias"):
               # Send multiple random aliases in any of CNAME/DNAME/HTTPS/SVCB/SRV/MX/NS/SPF(TXT) record types
               # BEWARE: This could result in multiplication

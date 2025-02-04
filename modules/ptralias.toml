@@ -1,12 +1,60 @@
 [module]
 name = "ptralias"
 type = "feature"
-info = "PTR random N aliases"
-desc = "Respond with N number of PTR records containing random subdomains under the same network range. BEWARE: This could result in multiplication."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "Random PTR Aliases"
+short = "PTR random alias generator"
+category = "Aliases"
+records = "PTR"
+tags = "Amplification, Domain Lock-Up, Denial of Service"
+rfc = "RFC1035"
+desc = '''
+This module is designed to return one or more **random aliases** using **reverse DNS lookups (PTR records)**, which map IP addresses back to domain names.
 
-code = '''
+It specifically handles reverse DNS queries for any IP address within the private `10.0.0.0/8` network range, which is reserved for internal use only.
+
+When this module receives a reverse DNS lookup query for an IP address such as `10.x.y.z` (this means searching for the PTR record for `z.y.x.10.in-addr.arpa` domain), it responds with a PTR record that contains a randomly generated `in-addr.arpa` domain from within the same `10.0.0.0/8` range.
+
+The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases.
+
+Additionally, this module can respond with multiple PTR records. The number of records generated is determined by the second octet of the IP address. For example, a query for the IP address `10.5.0.0` will generate five PTR records.
+
+:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
+'''
+format = '''
+**`*.*.<NUMBER>.10.in-addr.arpa`**
+
+or
+
+**`10.<NUMBER>.*.*`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many aliases should be generated in the response.
+'''
+seealso = "ptrloop1, ptrloop2, alias, cnalias, dnalias, htalias, mxalias, nptenumalias, nsalias, ptralias, spfalias1, spfalias2, sralias, svalias"
+
+[[module.example]]
+description = "The most basic example to generate a single PTR alias record:"
+command = "dig -x 10.1.0.0 @127.0.0.1"
+
+[[module.example]]
+description = "Same as above, written in ARPA domain format:"
+command = "dig PTR 0.0.1.10.in-addr.arpa @127.0.0.1"
+
+[[module.example]]
+description = "Here we request to generate ten PTR alias records:"
+command = "dig -x 10.10.123.123 @127.0.0.1"
+
+[[module.example]]
+description = "Same as above, written in ARPA domain format:"
+command = "dig PTR 123.123.10.10.in-addr.arpa @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request a thousand PTR alias records. While this is extremely unusual and bizzare, it still works:"
+command = "dig -x 10.1000.0.0 @127.0.0.1"
+
+[module.code]
+python = '''
            elif req.full_domain.lower().endswith(".10.in-addr.arpa"):
               # Asking for a reverse record for the IP address 10.x.y.z (z.y.x.10.in-arpa.addr PTR record).
               # The 10.0.0.0/8 network range is a private network range for internal use only.

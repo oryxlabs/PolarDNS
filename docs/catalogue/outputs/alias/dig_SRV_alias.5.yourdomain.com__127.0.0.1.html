@@ -1,0 +1,23 @@
+<pre class='output-block'><strong># dig SRV alias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; SRV alias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 61727
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.yourdomain.com.		IN	SRV
+
+;; ANSWER SECTION:
+alias.5.yourdomain.com.	60	IN	SRV	0 0 31514 alias192640.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SRV	0 0 5419 alias26044.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SRV	0 0 24657 alias650070.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SRV	0 0 53105 alias385473.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SRV	0 0 14553 alias921545.5.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 11:39:40 +04 2024
+;; MSG SIZE  rcvd: 279
+</pre>

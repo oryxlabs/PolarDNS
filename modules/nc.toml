@@ -1,0 +1,40 @@
+[module]
+name = "nc"
+type = "modifier"
+info = "No Compression"
+short = "No DNS compression"
+category = "Packet manipulation"
+desc = '''
+This modifier disables DNS compression in the response, overriding any DNS compression settings specified in the configuration file.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+'''
+format = '''
+**`*.nc.*`**
+
+This module has no parameters.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = "In this example, we use the basic [always] feature which always resolves to an IP address. Additionally, we request to disable DNS compression for the response:"
+command = "dig always.nc.yourdomain.com @127.0.0.1"
+append = "We can see that with compression disabled, the response is 82 bytes long."
+
+[[module.example]]
+description = "Similar to the previous example, but in this case we request to enable DNS compression for the response using the [fc] modifier:"
+command = "dig always.fc.yourdomain.com @127.0.0.1"
+append = "We can see that with compression enabled, the response is 58 bytes long."
+
+[[module.example]]
+description = "In this example, we use the [size] feature to fit as many A records as possible within 300-byte size limit. Additionally, we request to disable DNS compression for the response:"
+command = "dig size.300.nc.yourdomain.com @127.0.0.1"
+append = "With compression disabled, we can only fit six (6) A records within the 300-byte limit."
+
+[[module.example]]
+description = "Similar to the previous example, but in this case we request to enable DNS compression for the response:"
+command = "dig size.300.fc.yourdomain.com @127.0.0.1"
+append = "With compression enabled, we can fit sixteen (16) A records within the same 300-byte limit."
+
+[module.code]
+# The code is located in the polardns.py file.

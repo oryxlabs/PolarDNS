@@ -1,0 +1,154 @@
+---
+layout: default
+title: "Rl - Recalculate Length in TCP"
+parent: "Packet manipulation"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Rl - Recalculate Length in TCP</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Rl - Recalculate Length in TCP</h1>
+<p>In TCP mode, this modifier recalculates the DNS packet length if it was adjusted using the <a href="cut.html">cut</a> or <a href="add.html">add</a> modifiers.</p>
+<p>It is important to note that this functionality is specific to TCP mode only, because only in TCP the DNS packets contain a length field at the beginning. DNS packets sent over UDP do not have length defined at the beginning.</p>
+<p>This modifier is compatible with and can be combined with any other existing feature or modifier, as long as the communication is happening over TCP.</p><p><strong>Category:</strong> <a href='../packet-manipulation.html'>Packet manipulation</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.rl.*</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>The following examples illustrate why recalculating the DNS packet length is essential in TCP mode.</p>
+<p>In this example, we use the basic <a href="always.html">always</a> feature, which always resolves to an IP address. Additionally, we operate in TCP mode and append 10 random bytes to the end of the packet without recalculating the length. As a result, the parser completely ignores the appended data, since the length was not recalculated:</p>
+<div><pre class='output-block'><strong># dig always.add10.yourdomain.com @127.0.0.1 +tcp</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.add10.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 27779
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.add10.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.add10.yourdomain.com. 60	IN	A	2.3.4.5
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Thu Oct 24 11:05:35 +04 2024
+;; MSG SIZE  rcvd: 61
+</pre></div><p><a href='../outputs/rl/dig_always.add10.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>After adding the <a href="rl.html">rl</a> modifier to recalculate the length, the parser can now see the entire packet and consequently displays a warning about 10 extra bytes at the end:</p>
+<div><pre class='output-block'><strong># dig always.add10.rl.yourdomain.com @127.0.0.1 +tcp</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.add10.rl.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 44231
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 10 extra bytes at end
+
+;; QUESTION SECTION:
+;always.add10.rl.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.add10.rl.yourdomain.com.	60 IN	A	2.3.4.5
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Thu Oct 24 11:05:36 +04 2024
+;; MSG SIZE  rcvd: 74
+</pre></div><p><a href='../outputs/rl/dig_always.add10.rl.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>In the next example, we use the <a href="size.html">size</a> feature, which returns multiple answers up to a specified size limit. In this case, we set the packet size limit to 200 bytes. As a result, 9 answers can fit within the response:</p>
+<div><pre class='output-block'><strong># dig size.200.yourdomain.com @127.0.0.1 +tcp</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; size.200.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 23401
+;; flags: qr aa; QUERY: 1, ANSWER: 9, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.200.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+size.200.yourdomain.com. 60	IN	A	127.0.0.209
+size.200.yourdomain.com. 60	IN	A	127.0.0.26
+size.200.yourdomain.com. 60	IN	A	127.0.0.149
+size.200.yourdomain.com. 60	IN	A	127.0.0.73
+size.200.yourdomain.com. 60	IN	A	127.0.0.99
+size.200.yourdomain.com. 60	IN	A	127.0.0.49
+size.200.yourdomain.com. 60	IN	A	127.0.0.93
+size.200.yourdomain.com. 60	IN	A	127.0.0.217
+size.200.yourdomain.com. 60	IN	A	127.0.0.123
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Thu Oct 24 11:05:38 +04 2024
+;; MSG SIZE  rcvd: 185
+</pre></div><p><a href='../outputs/rl/dig_size.200.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>Now, we request 64 bytes to be removed from the response by using the <a href="cut.html">cut</a> modifier. This effectively removes the last <strong>4 answers</strong> from the response body (each <strong>A record</strong> is exactly <strong>16 bytes</strong>, so <strong>64 / 16 = 4</strong>). Since the length was not recalculated, the parser assumes an error occured during transmission, as the packet is shorter than what is specified in the header:</p>
+<div><pre class='output-block'><strong># dig size.200.cut64.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; size.200.cut64.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/rl/dig_size.200.cut64.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>By adding the <a href="rl.html">rl</a> modifier to recalculate the length, the parser is now able to see the entire packet correctly. It identifies that the response is malformed. We can see only 5 answers in the response body instead of 9 because 4 of them were removed using the <a href="cut.html">cut</a> modifier:</p>
+<div><pre class='output-block'><strong># dig size.200.cut64.rl.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; size.200.cut64.rl.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 35973
+;; flags: qr aa; QUERY: 1, ANSWER: 9, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.200.cut64.rl.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+size.200.cut64.rl.yourdomain.com. 60 IN	A	127.0.0.172
+size.200.cut64.rl.yourdomain.com. 60 IN	A	127.0.0.32
+size.200.cut64.rl.yourdomain.com. 60 IN	A	127.0.0.109
+size.200.cut64.rl.yourdomain.com. 60 IN	A	127.0.0.73
+size.200.cut64.rl.yourdomain.com. 60 IN	A	127.0.0.145
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Thu Oct 24 11:05:40 +04 2024
+;; MSG SIZE  rcvd: 130
+</pre></div><p><a href='../outputs/rl/dig_size.200.cut64.rl.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="add.html">Add - Add N Bytes to the End of the Packet</a></li>
+<li><a href="cnk.html">Cnk - Send Response in Chunks (TCP only)</a></li>
+<li><a href="cut.html">Cut - Cut N Bytes from the End of the Packet</a></li>
+<li><a href="fc.html">Fc - Force Compression</a></li>
+<li><a href="len.html">Len - Set Custom Length in TCP</a></li>
+<li><a href="nc.html">Nc - No Compression</a></li>
+<li><a href="noq.html">Noq - Remove the Query Section</a></li>
+<li><a href="slp.html">Slp - Add a Delay (Latency)</a></li>
+<li><a href="tc.html">Tc - Set Truncated Flag (Force TCP Mode)</a></li>
+<li><a href="ttl.html">Ttl - Set Custom TTL Value</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="newid.html">NewId - Set Random Transaction ID</a></li>
+<li><a href="flgs.html">Flgs - Set Custom Flags in the Header</a></li>
+<li><a href="qurr.html">Qurr - Set Question RRs in the Header</a></li>
+<li><a href="anrr.html">Anrr - Set Answer RRs in the Header</a></li>
+<li><a href="aurr.html">Aurr - Set Authority RRs in the Header</a></li>
+<li><a href="adrr.html">Adrr - Set Additional RRs in the Header</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

@@ -1,0 +1,79 @@
+---
+layout: default
+title: "QueryBack4 - Query Reflection (Random, to Port 53)"
+parent: "Empty responses"
+---
+
+<!DOCTYPE html>
+<head>
+<title>QueryBack4 - Query Reflection (Random, to Port 53)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>QueryBack4 - Query Reflection (Random, to Port 53)</h1>
+<p>This module is an enhanced variant of the <a href="queryback3.html">queryback3</a> module.</p>
+<p>Similar to the <a href="queryback3.html">queryback3</a> module, instead of sending a DNS response with an answer, this module resends the original query back to the sender on UDP port 53. The original query is never actually answered; the connection is simply abandoned, resulting in a timeout.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji> This behavior is intentionally designed to <strong>create a loop</strong> between the client/resolver and the PolarDNS server. For instance, if the client is a recursive resolver using the <strong>same IP address</strong> for both receiving queries and sending queries during resolution, it could result in an <strong>infinite loop</strong> of queries being sent back and forth indefinitely.</p>
+<p>The difference from the <a href="queryback3.html">queryback3</a> module is that a random number is appended to the query (to the “queryback4” feature name). This is to avoid receiving cached responses from the target recursive resolver.</p>
+<p>This could potentially increase the likelihood of ending up in a loop, leading to a Denial of Service (DoS) situation.</p><p><strong>Category:</strong> <a href='../empty-responses.html'>Empty responses</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>queryback4.yourdomain.com</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>In this example, we run the query directly against PolarDNS server. We see that the client (dig) does not actually receive any response, and the query results in a timeout three times in a row:</p>
+<div><pre class='output-block'><strong># dig queryback4.yourdomain.com @10.211.55.2</strong>
+
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; queryback4.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p>In the PCAP file below, we can see that the original query was sent back to us (reflected) to UDP port 53, each time with a random number appended to the query. As mentioned in the description above, this is an enhancement to circumvent caching. Here is an example of a query that PolarDNS sent back to us:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 921
+;; flags: rd ad; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;queryback455521668906494812114.yourdomain.com. IN      A</pre><p><a href='../outputs/queryback4/dig_queryback4.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>Keep in mind that this query was sent back to us, to our UDP port 53. Since we do not run any DNS server on our system, nothing significant occured. However, if the initial query had been run through a recursive resolver (instead of directly to PolarDNS), it would be sent back (reflected) to the recursive resolver, potentially resulting in an infinite loop.</p></p><br>
+<p>In the following example, we also use the <a href="newid.html">newid</a> modifier, which generates a new Transaction ID for each response. The query once again results in a timeout three times in a row:</p>
+<div><pre class='output-block'><strong># dig queryback4.newid.yourdomain.com @10.211.55.2</strong>
+
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; queryback4.newid.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/queryback4/dig_queryback4.newid.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>In the PCAP file, we can see again that the original query was sent back to us (reflected) to UDP port 53, each time with a random number appended to it. However, the <a href="newid.html">newid</a> modifier also causes the Transaction ID to vary each time, which could potentially increase the likelihood of ending up in a loop compared to the previous example.</p></p><br>
+<p>In the last example, we append a random number to the feature name. This still maintains the same functionality, as any string or text can be appended after the feature name to avoid receiving cached records. Using a random number from the start should further increase the chances of creating a loop on the target recursive resolver:</p>
+<div><pre class='output-block'><strong># dig queryback4${RANDOM}.newid.yourdomain.com @10.211.55.2</strong>
+
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; queryback416131.newid.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/queryback4/dig_queryback4__RANDOM_.newid.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>Using this form should maximize the chances of creating a loop on the target recursive resolver, as everything is unique &mdash; the original domain name (with a random number), the subsequent domain names (with random numbers), and the Transaction IDs. The target resolver is unlikely to have any cached records for these.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="close.html">Close - Close the Connection</a></li>
+<li><a href="empty1.html">Empty1 - Empty Packet</a></li>
+<li><a href="empty2.html">Empty2 - Only NULL Bytes</a></li>
+<li><a href="empty3.html">Empty3 - Only NULL Bytes (Suitable for TCP)</a></li>
+<li><a href="empty4.html">Empty4 - Only Transaction ID and NULL Bytes</a></li>
+<li><a href="empty5.html">Empty5 - Only DNS Header and NULL Bytes</a></li>
+<li><a href="empty6.html">Empty6 - ANSWER Section Missing</a></li>
+<li><a href="empty7.html">Empty7 - ANSWER Section Is NULL Bytes</a></li>
+<li><a href="queryback1.html">QueryBack1 - Query Reflection</a></li>
+<li><a href="queryback2.html">QueryBack2 - Query Reflection (Stripped)</a></li>
+<li><a href="queryback3.html">QueryBack3 - Query Reflection (To Port 53)</a></li>
+<li><a href="timeout.html">Timeout - Do Not Respond</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

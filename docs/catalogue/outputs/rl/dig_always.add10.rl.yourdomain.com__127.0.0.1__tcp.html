@@ -1,0 +1,20 @@
+<pre class='output-block'><strong># dig always.add10.rl.yourdomain.com @127.0.0.1 +tcp</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.add10.rl.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 44231
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 10 extra bytes at end
+
+;; QUESTION SECTION:
+;always.add10.rl.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.add10.rl.yourdomain.com.	60 IN	A	2.3.4.5
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Thu Oct 24 11:05:36 +04 2024
+;; MSG SIZE  rcvd: 74
+</pre>

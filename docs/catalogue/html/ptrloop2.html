@@ -1,0 +1,82 @@
+---
+layout: default
+title: "PtrLoop2 - PTR Alias Loops (Variant 2)"
+parent: "Alias loops"
+---
+
+<!DOCTYPE html>
+<head>
+<title>PtrLoop2 - PTR Alias Loops (Variant 2)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>PtrLoop2 - PTR Alias Loops (Variant 2)</h1>
+<p>This module implements <strong>alias loops</strong> using <strong>reverse DNS lookups (PTR records)</strong>, which map IP addresses back to domain names.</p>
+<p>It specifically handles reverse DNS queries for any IP address within the private <code class='code-block'>198.51.100.0/24</code> network range, known as TEST-NET-2, which is typically used for documentation and examples.</p>
+<p>When this module receives a reverse DNS lookup query for an IP address such as <code class='code-block'>198.51.100.x</code> (this means searching for the PTR record for <code class='code-block'>x.100.51.198.in-addr.arpa</code> domain), it responds with a PTR record with incremented domain name, cycling through addresses from <code class='code-block'>198.51.100.0</code> to <code class='code-block'>198.51.100.255</code> indefinitely, effectively creating a <strong>loop</strong>.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This could potentially lead to a domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../alias-loops.html'>Alias loops</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.100.51.198.in-addr.arpa</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>In this example, we perform a reverse lookup for the IP address <code class='code-block'>198.51.100.0</code>, which is the 1st element of the loop. The result is an incremented IP address (<code class='code-block'>192.51.100.1</code>) in in-addr.arpa format:</p>
+<div><pre class='output-block'><strong># dig -x 198.51.100.0 @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 198.51.100.0 @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 40912
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;0.100.51.198.in-addr.arpa.	IN	PTR
+
+;; ANSWER SECTION:
+0.100.51.198.in-addr.arpa. 60	IN	PTR	1.100.51.198.in-addr.arpa.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Nov 06 15:52:10 +04 2024
+;; MSG SIZE  rcvd: 82</pre></div><p><a href='../outputs/ptrloop2/dig__x_198.51.100.0__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>This incrementation continues up to the last IP address (the final element) &mdash; <code class='code-block'>192.51.100.255</code> (or <code class='code-block'>255.100.51.198.in-addr.arpa</code> in in-addr.arpa format).</p></p><br>
+<p>By resolving the final element of the loop, we are directed back to the 1st element again:</p>
+<div><pre class='output-block'><strong># dig -x 198.51.100.255 @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 198.51.100.255 @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 21002
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;255.100.51.198.in-addr.arpa.	IN	PTR
+
+;; ANSWER SECTION:
+255.100.51.198.in-addr.arpa. 60	IN	PTR	0.100.51.198.in-addr.arpa.
+
+;; Query time: 36 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Nov 07 00:15:41 +04 2024
+;; MSG SIZE  rcvd: 84</pre></div><p><a href='../outputs/ptrloop2/dig__x_198.51.100.255__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>This setup effectively creates a loop.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="cnloop.html">CnLoop - CNAME Alias Loops</a></li>
+<li><a href="dnloop.html">DnLoop - DNAME Alias Loops</a></li>
+<li><a href="htloop.html">HtLoop - HTTPS Alias Loops</a></li>
+<li><a href="loop.html">Loop - Alias Loops</a></li>
+<li><a href="mxloop.html">MxLoop - MX Alias Loops</a></li>
+<li><a href="nptenumloop.html">NptEnumLoop - NAPTR ENUM Alias Loops</a></li>
+<li><a href="nsloop.html">NsLoop - NS Alias Loops</a></li>
+<li><a href="ptrloop1.html">PtrLoop1 - PTR Alias Loops (Variant 1)</a></li>
+<li><a href="spfloop.html">SpfLoop - SPF (TXT) Alias Loops</a></li>
+<li><a href="srloop.html">SrLoop - SRV Alias Loops</a></li>
+<li><a href="svloop.html">SvLoop - SVCB Alias Loops</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="ptralias.html">PtrAlias - Random PTR Aliases</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

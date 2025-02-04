@@ -1,3 +1,66 @@
+04/Feb/2025
+- release version 1.6.0
+
+03/Feb/2025
+- new catalog documentation using GitHub Pages, providing detailed explanations, examples, and PCAP files for each example
+- major rework of all modules to align with the new documentation format, including examples and in-depth explanations
+- added tests (total test count: 2407)
+
+28/Jan/2025
+- deprecated the `bigcname` feature, succeeded by the `nfz` modifier
+- deprecated the `cgena` feature, succeeded by the `nfz` modifier
+- deprecated the `cgenb` feature, succeeded by the `nfz` modifier
+- deprecated the `cnamefuzz1` feature, succeeded by the `nfz` modifier
+- deprecated the `cnamefuzz2` feature, succeeded by the `nfz` modifier
+- deprecated the `dotcname` feature, succeeded by the `nfz` modifier
+- deprecated the `illcname` feature, succeeded by the `nfz` modifier
+- deprecated the `manycnames` feature, succeeded by the `nfz` modifier
+- deprecated the `manylabels` feature, succeeded by the `nfz` modifier
+- deprecated the `cutabuf` feature, succeeded by the `cut` modifier
+- deprecated the `cutcnamebuf` feature, succeeded by the `cut` modifier
+- deprecated the `chunkedcnames` feature, succeeded by the `cnk` modifier
+
+27/Jan/2025
+- deprecated the `inj01` feature, succeeded by the `inja` feature
+- deprecated the `inj02` feature, succeeded by the `inja` feature
+- deprecated the `inj03` feature, succeeded by the `inja` feature
+- deprecated the `inj04` feature, succeeded by the `inja` feature
+- deprecated the `inj05` feature, succeeded by the `inja` feature
+- deprecated the `inj06` feature, succeeded by the `injaaaa` feature
+- deprecated the `inj07` feature, succeeded by the `inja` feature
+- deprecated the `inj08` feature, succeeded by the `inja` feature
+- deprecated the `inj09` feature, succeeded by the `injptr` feature
+- deprecated the `inj10` feature, succeeded by the `injns` feature
+- deprecated the `inj11` feature, succeeded by the `injns` feature
+- deprecated the `inj12` feature, succeeded by the `injns` feature
+- deprecated the `inj13` feature, succeeded by the `injns` feature
+- deprecated the `inj14` feature, succeeded by the `injcname` feature
+
+26/Jan/2025
+- major consolidation of all cache poisoning (record injection) modules, introducing new injection features
+- added the `inja` feature for injecting unsolicited A records
+- added the `injns` feature for injecting unsolicited NS records
+- added the `injaaaa` feature for injecting unsolicited AAAA records
+- added the `injcname` feature for injecting unsolicited CNAME records
+- added the `injdname` feature for injecting unsolicited DNAME records
+- added the `injmx` feature for injecting unsolicited MX records
+
+19/Jan/2025
+- overhaul of the `nfz` name fuzzing generator, now supporting variable, parameterized, and customizable malformations
+- enhanced the `always` feature feature to support generating a variable number of A or AAAA records
+
+15/Dec/2024
+- enhanced the `size` feature to support both A and AAAA records
+- enhanced the `self` feature to return both the client's IP address and source port
+
+11/Dec/2024
+- added the `cnk` modifier enabling transmission of DNS responses in variable sized chunks
+- added the `len` modifier allowing adjusting the DNS packet length (size) in TCP
+
+28/Oct/2024
+- added the `queryback4` feature
+- added self-DoS protection in the `queryback3` feature
+
 24/Sep/2024
 - release version 1.5.0
 - adopting the semantic versioning (SemVer)

@@ -1,12 +1,45 @@
 [module]
 name = "self"
 type = "feature"
-info = "What is my IP address"
-desc = "Respond with A and TXT records containing the IP address of the connecting client. The TXT record also contains the port information"
-author = "ivan.jedek@oryxlabs.com"
+info = "What Is My IP Address"
+short = "Reveal source address and port (aka. \"What is my IP address\")"
 category = "General features"
+records = "A, TXT"
+desc = '''
+This module generates a DNS response containing the **source IP address** and the **source port** information of the connecting client/resolver.
 
-code = '''
+This is useful for identifying our **external IP address** as it appears on the internet. However, when querying through a **recursive resolver**, this module allows us to see the **source IP address** that the resolver uses for its queries. Typically, a DNS resolver receives queries on one network interface and performs DNS resolutions from another.
+
+Technically, this module generates a DNS response that includes **2 answers** - an **A record** and a **TXT record**. Both records contain the source IP address and the source port information. Since the A record is limited to containing only a single IP address, the TTL value of the A record is used to carry the source port information.
+
+However, be aware that many resolvers may modify the TTL value, so it is recommended to rely on the TXT record for accurate source port information.
+'''
+format = '''
+**`self.yourdomain.com`**
+
+or
+
+**`whatismyip.yourdomain.com`**
+'''
+
+[[module.example]]
+description = "By default, this module returns an A record containing the source IP address, with its TTL value representing the source port. Additionally, the module provides a TXT record in the Additional section containing the same information:"
+command = "dig self.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "If a TXT record is requested, it will appear first in the response order:"
+command = "dig TXT self.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Alternatively, the `whatismyip` feature name can also be used:"
+command = "dig TXT whatismyip.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Like other features, we can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig self${RANDOM}.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("self") or req.first_subdomain.startswith("whatismyip"):
    # Respond with the client's IP address in A record and in TXT record (IP:port)
    ### DNS header ########
@@ -27,7 +60,7 @@ if req.first_subdomain.startswith("self") or req.first_subdomain.startswith("wha
       ip = self.client_address[0]
       buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
       buffer += getTypeBin("A") + getClassBin("IN")
-      buffer += struct.pack(">L", resp.TTL)    ## TTL
+      buffer += struct.pack(">L", self.client_address[1])    ## TTL (the port number)
       buffer += struct.pack(">H", 4)           ## Data length
       buffer += socket.inet_aton(ip)           ## IP
       log("TXT + A with the client address")
@@ -36,7 +69,7 @@ if req.first_subdomain.startswith("self") or req.first_subdomain.startswith("wha
       ip = self.client_address[0]
       buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
       buffer += getTypeBin("A") + getClassBin("IN")
-      buffer += struct.pack(">L", resp.TTL)    ## TTL
+      buffer += struct.pack(">L", self.client_address[1])    ## TTL (the port number)
       buffer += struct.pack(">H", 4)           ## Data length
       buffer += socket.inet_aton(ip)           ## IP
       # TXT

@@ -1,0 +1,132 @@
+---
+layout: default
+title: "SpfAlias2 - Random SPF (TXT) Aliases (Variant 2)"
+parent: "Aliases"
+---
+
+<!DOCTYPE html>
+<head>
+<title>SpfAlias2 - Random SPF (TXT) Aliases (Variant 2)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>SpfAlias2 - Random SPF (TXT) Aliases (Variant 2)</h1>
+<p>This module is designed to generate DNS responses with <strong>SPF (Sender Policy Framework)</strong> records that contain <strong>random aliases</strong>. The SPF protocol is used for authorizing domains during email communication.</p>
+<p>This variant can produce multiple SPF entries contained within one or more TXT records. In this case, each SPF entry contains multiple <code class='code-block'>include:</code> parameters with randomly generated domain names (aliases). These aliases are in the format <code class='code-block'>spfalias2#####.yourdomain.com</code> where <code class='code-block'>#####</code> represents a random number.</p>
+<p>The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../aliases.html'>Aliases</a></p><p><strong>Tags:</strong> Amplification, Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc4408/" target="_blank">RFC4408</a>, <a href="https://datatracker.ietf.org/doc/rfc7208/" target="_blank">RFC7208</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>spfalias2.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines how many aliases should be generated in the response. Note that the number of aliases is limited by the maximum TXT label size of 255 bytes. If the specified number of aliases cannot fit within a single TXT record, multiple TXT records will be dynamically produced to accomodate all aliases.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, the module returns a single SPF alias:</p>
+<div><pre class='output-block'><strong># dig spfalias2.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; spfalias2.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 40902
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfalias2.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+spfalias2.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfalias221021.yourdomain.com ~all&quot;
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 16 15:04:10 +04 2024
+;; MSG SIZE  rcvd: 104
+</pre></div><p><a href='../outputs/spfalias2/dig_spfalias2.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Same example as above, but this time we explicitly specify that we want to receive a single SPF record:</p>
+<div><pre class='output-block'><strong># dig spfalias2.1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; spfalias2.1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 50568
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfalias2.1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+spfalias2.1.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfalias26976.1.yourdomain.com ~all&quot;
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 16 15:04:11 +04 2024
+;; MSG SIZE  rcvd: 107
+</pre></div><p><a href='../outputs/spfalias2/dig_spfalias2.1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this case, we specify that we want to receive 11 (eleven) SPF aliases. These aliases will be fitted within the necessary number of TXT records as required:</p>
+<div><pre class='output-block'><strong># dig spfalias2.11.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; spfalias2.11.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 43201
+;; flags: qr aa; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfalias2.11.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+spfalias2.11.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfalias240144.11.yourdomain.com include:spfalias265182.11.yourdomain.com include:spfalias245219.11.yourdomain.com include:spfalias247661.11.yourdomain.com include:spfalias243649.11.yourdomain.com ~all&quot;
+spfalias2.11.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfalias265611.11.yourdomain.com include:spfalias260064.11.yourdomain.com include:spfalias294134.11.yourdomain.com include:spfalias243027.11.yourdomain.com include:spfalias227584.11.yourdomain.com ~all&quot;
+spfalias2.11.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfalias271689.11.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 16 15:04:13 +04 2024
+;; MSG SIZE  rcvd: 568
+</pre></div><p><a href='../outputs/spfalias2/dig_spfalias2.11.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that those 11 SPF aliases fit into 3 TXT records.</p></p><br>
+<p>Here we can see that resolving any of the generated aliases leads to more aliases, potentially causing an infinite recursion:</p>
+<div><pre class='output-block'><strong># dig spfalias23456.11.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; spfalias23456.11.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 30113
+;; flags: qr aa; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfalias23456.11.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+spfalias23456.11.yourdomain.com. 60 IN	TXT	&quot;v=spf1 include:spfalias252660.11.yourdomain.com include:spfalias295653.11.yourdomain.com include:spfalias285139.11.yourdomain.com include:spfalias298979.11.yourdomain.com include:spfalias23210.11.yourdomain.com ~all&quot;
+spfalias23456.11.yourdomain.com. 60 IN	TXT	&quot;v=spf1 include:spfalias219008.11.yourdomain.com include:spfalias240717.11.yourdomain.com include:spfalias284035.11.yourdomain.com include:spfalias270037.11.yourdomain.com include:spfalias242255.11.yourdomain.com ~all&quot;
+spfalias23456.11.yourdomain.com. 60 IN	TXT	&quot;v=spf1 include:spfalias224682.11.yourdomain.com ~all&quot;
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 16 15:57:37 +04 2024
+;; MSG SIZE  rcvd: 571
+</pre></div><p><a href='../outputs/spfalias2/dig_spfalias23456.11.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="alias.html">Alias - Random Aliases</a></li>
+<li><a href="cnalias.html">CnAlias - Random CNAME Aliases</a></li>
+<li><a href="dnalias.html">DnAlias - Random DNAME Aliases</a></li>
+<li><a href="htalias.html">HtAlias - Random HTTPS Aliases</a></li>
+<li><a href="mxalias.html">MxAlias - Random MX Aliases</a></li>
+<li><a href="nptenumalias.html">NptEnumAlias - Random NAPTR ENUM Aliases</a></li>
+<li><a href="nsalias.html">NsAlias - Random NS Aliases</a></li>
+<li><a href="ptralias.html">PtrAlias - Random PTR Aliases</a></li>
+<li><a href="spfalias1.html">SpfAlias1 - Random SPF (TXT) Aliases (Variant 1)</a></li>
+<li><a href="sralias.html">SrAlias - Random SRV Aliases</a></li>
+<li><a href="svalias.html">SvAlias - Random SVCB Aliases</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="spfloop.html">SpfLoop - SPF (TXT) Alias Loops</a></li>
+<li><a href="spfchain.html">SpfChain - SPF (TXT) Alias Chains</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

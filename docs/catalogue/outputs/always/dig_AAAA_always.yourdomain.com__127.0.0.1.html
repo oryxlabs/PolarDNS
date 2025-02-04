@@ -1,0 +1,18 @@
+<pre class='output-block'><strong># dig AAAA always.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; AAAA always.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 20202
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.yourdomain.com.		IN	AAAA
+
+;; ANSWER SECTION:
+always.yourdomain.com.	60	IN	AAAA	1111:2222:3333:4444:5555:6666:7777:8888
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 15 00:57:34 +04 2025
+;; MSG SIZE  rcvd: 67</pre>

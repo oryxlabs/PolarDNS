@@ -1,12 +1,35 @@
 [module]
 name = "timeout"
 type = "feature"
-info = "Don't respond"
-desc = "Don't respond, just let the connection timeout."
-author = "ivan.jedek@oryxlabs.com"
+info = "Do Not Respond"
+short = "No response - Do nothing"
 category = "Empty responses"
+desc = '''
+The module is designed to prevent any response from being sent, effectively leading to a **connection timeout**.
 
-code = '''
+In both UDP and TCP modes, the client/resolver will receive nothing at all.
+'''
+seealso = "close, empty1, empty2, empty3, empty4, empty5, empty6, empty7, queryback1, queryback2, queryback3, queryback4"
+format = '''
+**`timeout.yourdomain.com`**
+
+This module has no parameters.
+'''
+
+[[module.example]]
+description = "In the default (UDP) mode, we can see that the client is unable to receive any response, resulting in a timeout. The client makes three attempts:"
+command = "dig timeout.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In TCP mode, the behavior is identical. The client is unable to receive any response. Once again, the client makes three attempts to resolve the timeout:"
+command = "dig timeout.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig timeout${RANDOM}.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("timeout"):
    # Timeout the connection
    log("sending nothing (timeout)")

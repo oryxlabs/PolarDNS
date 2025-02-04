@@ -1,12 +1,37 @@
 [module]
 name = "nptenumloop"
 type = "feature"
-info = "NAPTR ENUM alias loop"
-desc = "Respond with N number of NAPTR ENUM records containing random E.164 phone numbers (aliases) in SIP service URI. BEWARE: This could result in multiplication."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "NAPTR ENUM Alias Loops"
+short = "NAPTR ENUM loop alias generator"
+category = "Alias loops"
+records = "NAPTR"
+tags = "Domain Lock-Up, Denial of Service"
+rfc = "RFC2915, RFC3761"
+desc = '''
+This module implements **alias loops** using **NAPTR (Naming Authority Pointer) ENUM** records, which are used to map identifiers like telephone numbers to a variety of service URIs, including SIP addresses, voicemail systems, and web or email addresses.
 
-code = '''
+This module is specifically designed to handle DNS queries that translate telephone numbers into SIP service URIs using the E.164 format. In this format, a phone number such as `1234567890` is transformed into the reversed sequence `0.9.8.7.6.5.4.3.2.1.e164.arpa`. This domain is then queried in DNS to identify the corresponding designated SIP service address.
+
+When this module receives a NAPTR DNS query for translating a telephone number ending with the digit `2`, it will generate a response with a SIP service URI. This URI will point to the **same domain name** as in the original query, effectively creating a **direct loop**.
+
+While NAPTR ENUM records do not contain aliases like CNAME records, this could achieve similar results by prompting the client to perform consecutive queries to resolve it.
+
+:warning:**BEWARE**:warning:This can potentially lead to a domain lock-up (DoS).
+'''
+format = '''
+**`2.*.e164.arpa`**
+
+This module has no parameters.
+'''
+seealso = "nptenumalias, cnloop, dnloop, htloop, loop, mxloop, nptenumloop, nsloop, ptrloop1, ptrloop2, spfloop, srloop, svloop"
+
+[[module.example]]
+description = "In this example, we look up the telephone number `8765432`. As a result, we receive a response containing a SIP URI pointing to the exact same phone number, formatted as an E.164 address:"
+command = "dig NAPTR 2.3.4.5.6.7.8.e164.arpa @127.0.0.1"
+append = "This effectively creates a direct loop if the client attempts to resolve it further."
+
+[module.code]
+python = '''
            elif req.first_subdomain == "2" and req.full_domain.endswith(".e164.arpa"):
               # Requesting to translate an E.164 telephone number ending with the digit 2 (e.g., a NAPTR
               # record for 2.<anything>.e164.arpa in reverse). The response will be a SIP service URI

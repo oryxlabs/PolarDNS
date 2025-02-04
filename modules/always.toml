@@ -1,0 +1,38 @@
+[module]
+name = "always"
+type = "feature"
+info = "Always Resolve to IP Address"
+short = "Most basic function which always resolves to an IP address"
+category = "General features"
+records = "A, AAAA"
+desc = '''
+This is the most basic functionality, always resolving to an IP address. It responds with an A record pointing to the IPv4 address `2.3.4.5`.
+
+If an AAAA record is requested, the module responds with an AAAA record pointing to the IPv6 address `1111:2222:3333:4444:5555:6666:7777:8888`.
+'''
+format = '''
+**`always.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many A/AAAA records should be generated in the response.
+'''
+
+[[module.example]]
+description = "The most basic example:"
+command = "dig always.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we query for the AAAA record. As a result, an IPv6 address is returned:"
+command = "dig AAAA always.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to generate 10 A records:"
+command = "dig always.10.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig always${RANDOM}.10.yourdomain.com @10.211.55.2"
+
+[module.code]
+# The code is located in the polardns.py file.

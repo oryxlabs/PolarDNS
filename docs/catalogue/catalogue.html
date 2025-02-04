@@ -1,0 +1,589 @@
+---
+layout: default
+title: Catalogue
+nav_order: 10
+has_children: true
+has_toc: false
+---
+
+<!DOCTYPE html>
+<head>
+<title>PolarDNS Catalogue</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>PolarDNS Catalogue</h1>
+
+<p>This is PolarDNS catalogue:</p>
+
+<div id="catalogue">
+  <input class="search" placeholder="Search"/>
+  <table>
+    <thead>
+      <tr>
+        <th><button class="sort" data-sort="name">Name</button></th>
+        <th><button class="sort" data-sort="type">Type</button></th>
+        <th><button class="sort" data-sort="info">Info</button></th>
+        <th><button class="sort" data-sort="catg">Category</button></th>
+        <th><button class="sort" data-sort="tags">Tags</button></th>
+      </tr>
+    </thead>
+    <!-- IMPORTANT, class="list" have to be at tbody -->
+    <tbody class="list">
+      <tr>
+        <td class="name"><a href="html/add.html"><strong>add</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Append any number of bytes to the end of the DNS response packet</td>
+        <td class="catg">Packet manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/adrr.html"><strong>adrr</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Modify the number of Additional records (RRs) in the DNS response header</td>
+        <td class="catg">Header manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/afuzz1.html"><strong>afuzz1</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Inject arbitrary byte in the hostname in the A record</td>
+        <td class="catg">Fuzzing</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/afuzz2.html"><strong>afuzz2</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Send multiple A records with injected byte in the hostname</td>
+        <td class="catg">Fuzzing</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/alias.html"><strong>alias</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Random alias generator supporting multiple record types</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/always.html"><strong>always</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Most basic function which always resolves to an IP address</td>
+        <td class="catg">General features</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/anrr.html"><strong>anrr</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Modify the number of Answers (RRs) in the DNS response header</td>
+        <td class="catg">Header manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/aurr.html"><strong>aurr</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Modify the number of Authority records (RRs) in the DNS response header</td>
+        <td class="catg">Header manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/badcompress1.html"><strong>badcompress1</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Set custom compression pointer offset in the Name field</td>
+        <td class="catg">Bad compression</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/badcompress2.html"><strong>badcompress2</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Set custom compression pointer offset in the CNAME field</td>
+        <td class="catg">Bad compression</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/badcompressfwptr1.html"><strong>badcompressfwptr1</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Forward and double compression pointers in the Name field (variant 1)</td>
+        <td class="catg">Bad compression</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/badcompressfwptr2.html"><strong>badcompressfwptr2</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Forward and double compression pointers in the Name field (variant 2)</td>
+        <td class="catg">Bad compression</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/badcompressloop1.html"><strong>badcompressloop1</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Compression pointer loop in the Name field (variant 1)</td>
+        <td class="catg">Bad compression</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/badcompressloop2.html"><strong>badcompressloop2</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Compression pointer loop in the Name field (variant 2)</td>
+        <td class="catg">Bad compression</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/badcompressloop3.html"><strong>badcompressloop3</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Double compression pointer loop in the Name field</td>
+        <td class="catg">Bad compression</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/badcompressloop4.html"><strong>badcompressloop4</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Compression pointer loop in the CNAME field (variant 1)</td>
+        <td class="catg">Bad compression</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/badcompressloop5.html"><strong>badcompressloop5</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Compression pointer loop in the CNAME field (variant 2)</td>
+        <td class="catg">Bad compression</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/badcompressmid1.html"><strong>badcompressmid1</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Compression used in the middle of CNAME field</td>
+        <td class="catg">Bad compression</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/bigbintxt.html"><strong>bigbintxt</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">TXT record with multiple binary strings</td>
+        <td class="catg">Fuzzing</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/bigtxt.html"><strong>bigtxt</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">TXT record with multiple text strings</td>
+        <td class="catg">Fuzzing</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/chain.html"><strong>chain</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Chain alias generator supporting multiple record types</td>
+        <td class="catg">Alias chains</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/close.html"><strong>close</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Close the connection</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/cnalias.html"><strong>cnalias</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">CNAME random alias generator</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/cnchain.html"><strong>cnchain</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">CNAME chain alias generator</td>
+        <td class="catg">Alias chains</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/cnk.html"><strong>cnk</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Send response in chunks (TCP only)</td>
+        <td class="catg">Packet manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/cnloop.html"><strong>cnloop</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">CNAME loop alias generator</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/cut.html"><strong>cut</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Cut any number of bytes from the end of the DNS response packet</td>
+        <td class="catg">Packet manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/dnalias.html"><strong>dnalias</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">DNAME random alias generator</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/dnchain.html"><strong>dnchain</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">DNAME chain alias generator</td>
+        <td class="catg">Alias chains</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/dnloop.html"><strong>dnloop</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">DNAME loop alias generator</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/empty1.html"><strong>empty1</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Send an empty packet</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/empty2.html"><strong>empty2</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Send only NULL bytes</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/empty3.html"><strong>empty3</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Send only NULL bytes (suitable for TCP)</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/empty4.html"><strong>empty4</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Send only Transaction ID and NULL bytes</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/empty5.html"><strong>empty5</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Send only DNS header and NULL bytes</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/empty6.html"><strong>empty6</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">ANSWER section missing</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/empty7.html"><strong>empty7</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">ANSWER section replaced with NULL bytes</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/fc.html"><strong>fc</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Force DNS compression</td>
+        <td class="catg">Packet manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/flgs.html"><strong>flgs</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Set custom flags in the DNS response header</td>
+        <td class="catg">Header manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/htalias.html"><strong>htalias</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">HTTPS random alias generator</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/htchain.html"><strong>htchain</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">HTTPS chain alias generator</td>
+        <td class="catg">Alias chains</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/htloop.html"><strong>htloop</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">HTTPS loop alias generator</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/inja.html"><strong>inja</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Record injection - Send unsolicited A records</td>
+        <td class="catg">Cache poisoning</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/injaaaa.html"><strong>injaaaa</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Record injection - Send unsolicited AAAA records</td>
+        <td class="catg">Cache poisoning</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/injcname.html"><strong>injcname</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Record injection - Send unsolicited CNAME records</td>
+        <td class="catg">Cache poisoning</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/injdname.html"><strong>injdname</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Record injection - Send unsolicited DNAME records</td>
+        <td class="catg">Cache poisoning</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/injmx.html"><strong>injmx</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Record injection - Send unsolicited MX records</td>
+        <td class="catg">Cache poisoning</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/injns.html"><strong>injns</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Record injection - Send unsolicited NS records</td>
+        <td class="catg">Cache poisoning</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/injptr.html"><strong>injptr</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Record injection - Send unsolicited PTR records</td>
+        <td class="catg">Cache poisoning</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/len.html"><strong>len</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Set custom DNS packet length in TCP</td>
+        <td class="catg">Packet manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/loop.html"><strong>loop</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Alias loop generator supporting multiple record types</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/manybintxt.html"><strong>manybintxt</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Many TXT records with binary data</td>
+        <td class="catg">Fuzzing</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/manytxt.html"><strong>manytxt</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Many TXT records with random text</td>
+        <td class="catg">Fuzzing</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/mxalias.html"><strong>mxalias</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">MX random alias generator</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/mxchain.html"><strong>mxchain</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">MX chain alias generator</td>
+        <td class="catg">Alias chains</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/mxloop.html"><strong>mxloop</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">MX loop alias generator</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/nc.html"><strong>nc</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">No DNS compression</td>
+        <td class="catg">Packet manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/newid.html"><strong>newid</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Set random Transaction ID in the DNS response</td>
+        <td class="catg">Header manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/nfz.html"><strong>nfz</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Powerful name fuzzing generator</td>
+        <td class="catg">Fuzzing</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/noq.html"><strong>noq</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Remove the Query section from the DNS response body</td>
+        <td class="catg">Packet manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/nptenumalias.html"><strong>nptenumalias</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">NAPTR ENUM random alias generator</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/nptenumloop.html"><strong>nptenumloop</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">NAPTR ENUM loop alias generator</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/nsalias.html"><strong>nsalias</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">NS random alias generator</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/nschain.html"><strong>nschain</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">NS chain alias generator</td>
+        <td class="catg">Alias chains</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/nsloop.html"><strong>nsloop</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">NS loop alias generator</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/ptralias.html"><strong>ptralias</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">PTR random alias generator</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/ptrloop1.html"><strong>ptrloop1</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">PTR loop alias generator (variant 1)</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/ptrloop2.html"><strong>ptrloop2</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">PTR loop alias generator (variant 2)</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/queryback1.html"><strong>queryback1</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Query reflection back to sender</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/queryback2.html"><strong>queryback2</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Query reflection back to sender (query stripped)</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/queryback3.html"><strong>queryback3</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Query reflection back to sender to port 53</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/queryback4.html"><strong>queryback4</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Query reflection back to sender to port 53 (unique query)</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/qurr.html"><strong>qurr</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Modify the number of Questions (RRs) in the DNS response header</td>
+        <td class="catg">Header manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/rl.html"><strong>rl</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Recalculate DNS packet length in TCP (used in combination with cut/add)</td>
+        <td class="catg">Packet manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/self.html"><strong>self</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Reveal source address and port (aka. "What is my IP address")</td>
+        <td class="catg">General features</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/size.html"><strong>size</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">Send maximum number of A or AAAA records within size limit</td>
+        <td class="catg">General features</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/slp.html"><strong>slp</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Sleep before sending (add delay to DNS response)</td>
+        <td class="catg">Packet manipulation</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/spfalias1.html"><strong>spfalias1</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">SPF (TXT) random alias generator (variant 1)</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/spfalias2.html"><strong>spfalias2</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">SPF (TXT) random alias generator (variant 2)</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/spfchain.html"><strong>spfchain</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">SPF (TXT) chain alias generator</td>
+        <td class="catg">Alias chains</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/spfloop.html"><strong>spfloop</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">SPF (TXT) loop alias generator</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/sralias.html"><strong>sralias</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">SRV random alias generator</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/srchain.html"><strong>srchain</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">SRV chain alias generator</td>
+        <td class="catg">Alias chains</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/srloop.html"><strong>srloop</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">SRV loop alias generator</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/svalias.html"><strong>svalias</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">SVCB random alias generator</td>
+        <td class="catg">Aliases</td>
+        <td class="tags">Amplification, Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/svchain.html"><strong>svchain</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">SVCB chain alias generator</td>
+        <td class="catg">Alias chains</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/svloop.html"><strong>svloop</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">SVCB loop alias generator</td>
+        <td class="catg">Alias loops</td>
+        <td class="tags">Domain Lock-Up, Denial of Service</td>
+      </tr>      <tr>
+        <td class="name"><a href="html/tc.html"><strong>tc</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Force TCP mode by setting Truncated (TC) flag</td>
+        <td class="catg">Packet manipulation</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/timeout.html"><strong>timeout</strong></a></td>
+        <td class="type">feature</td>
+        <td class="info">No response - Do nothing</td>
+        <td class="catg">Empty responses</td>
+        <td class="tags"></td>
+      </tr>      <tr>
+        <td class="name"><a href="html/ttl.html"><strong>ttl</strong></a></td>
+        <td class="type">modifier</td>
+        <td class="info">Set custom TTL value</td>
+        <td class="catg">Packet manipulation</td>
+        <td class="tags"></td>
+      </tr>
+    </tbody>
+  </table>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+<script>
+var options = {
+  valueNames: [ 'name', 'type', 'info', 'catg', 'tags' ]
+};
+
+var modList = new List('catalogue', options);
+</script>
+
+</div>
+</body>
+</html>

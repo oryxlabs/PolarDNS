@@ -1,0 +1,290 @@
+---
+layout: default
+title: "Alias - Random Aliases"
+parent: "Aliases"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Alias - Random Aliases</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Alias - Random Aliases</h1>
+<p>This module implements <strong>random aliases</strong> in DNS using variety of different record (resource) types. It supports the following record types:</p>
+<ul>
+<li>CNAME (Canonical Name)</li>
+<li>DNAME (Delegation Name)</li>
+<li>HTTPS (HyperText Transfer Protocol Secure)</li>
+<li>SVCB (Service Binding)</li>
+<li>SPF (Sender Policy Framework)</li>
+<li>SRV (Service Locator)</li>
+<li>MX (Mail Exchange)</li>
+<li>NS (Name Server)</li>
+</ul>
+<p>The module generates a random alias record in the format <code class='code-block'>alias######.yourdomain.com</code>, where <code class='code-block'>######</code> represents a random number.</p>
+<p>The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.</p>
+<p>Additionally, the module can respond with multiple alias records. The specific number of records created is based on the numerical value added to the domain name.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../aliases.html'>Aliases</a></p><p><strong>Tags:</strong> Amplification, Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1034/" target="_blank">RFC1034</a>, <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a>, <a href="https://datatracker.ietf.org/doc/rfc2672/" target="_blank">RFC2672</a>, <a href="https://datatracker.ietf.org/doc/rfc2782/" target="_blank">RFC2782</a>, <a href="https://datatracker.ietf.org/doc/rfc2915/" target="_blank">RFC2915</a>, <a href="https://datatracker.ietf.org/doc/rfc3761/" target="_blank">RFC3761</a>, <a href="https://datatracker.ietf.org/doc/rfc4408/" target="_blank">RFC4408</a>, <a href="https://datatracker.ietf.org/doc/rfc6672/" target="_blank">RFC6672</a>, <a href="https://datatracker.ietf.org/doc/rfc7208/" target="_blank">RFC7208</a>, <a href="https://datatracker.ietf.org/doc/rfc9460/" target="_blank">RFC9460</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>alias.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines how many aliases should be generated in the response.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, the module generates a single CNAME alias:</p>
+<div><pre class='output-block'><strong># dig alias.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 37338
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+alias.yourdomain.com.	60	IN	CNAME	alias54752.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 11:39:31 +04 2024
+;; MSG SIZE  rcvd: 77
+</pre></div><p><a href='../outputs/alias/dig_alias.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:</p>
+<div><pre class='output-block'><strong># dig alias${RANDOM}.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias1467.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 27306
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias1467.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+alias1467.yourdomain.com. 60	IN	CNAME	alias304698.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Fri Nov 01 11:20:39 +04 2024
+;; MSG SIZE  rcvd: 82</pre></div><p><a href='../outputs/alias/dig_alias__RANDOM_.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we explicitly request five CNAME alias records:</p>
+<div><pre class='output-block'><strong># dig CNAME alias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; CNAME alias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 49874
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.yourdomain.com.		IN	CNAME
+
+;; ANSWER SECTION:
+alias.5.yourdomain.com.	60	IN	CNAME	alias272095.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	CNAME	alias450748.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	CNAME	alias968735.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	CNAME	alias509.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	CNAME	alias705353.5.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 11:39:35 +04 2024
+;; MSG SIZE  rcvd: 247
+</pre></div><p><a href='../outputs/alias/dig_CNAME_alias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request five DNAME alias records:</p>
+<div><pre class='output-block'><strong># dig DNAME alias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; DNAME alias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 57507
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.yourdomain.com.		IN	DNAME
+
+;; ANSWER SECTION:
+alias.5.yourdomain.com.	60	IN	DNAME	alias6171.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	DNAME	alias332639.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	DNAME	alias826490.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	DNAME	alias794293.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	DNAME	alias924157.5.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 11:39:37 +04 2024
+;; MSG SIZE  rcvd: 248
+</pre></div><p><a href='../outputs/alias/dig_DNAME_alias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request five HTTPS alias records. Note that HTTPS records include SvcPriority field which is set to 0 for every record:</p>
+<div><pre class='output-block'><strong># dig HTTPS alias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; HTTPS alias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 47393
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.yourdomain.com.		IN	HTTPS
+
+;; ANSWER SECTION:
+alias.5.yourdomain.com.	60	IN	HTTPS	0 alias732626.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	HTTPS	0 alias55279.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	HTTPS	0 alias64468.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	HTTPS	0 alias107380.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	HTTPS	0 alias48323.5.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 11:39:38 +04 2024
+;; MSG SIZE  rcvd: 257
+</pre></div><p><a href='../outputs/alias/dig_HTTPS_alias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request five SVCB alias records. Note that SVCB records include SvcPriority field which is set to 0 for every record:</p>
+<div><pre class='output-block'><strong># dig SVCB alias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; SVCB alias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 13676
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.yourdomain.com.		IN	SVCB
+
+;; ANSWER SECTION:
+alias.5.yourdomain.com.	60	IN	SVCB	0 alias249629.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SVCB	0 alias935916.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SVCB	0 alias45911.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SVCB	0 alias439073.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SVCB	0 alias936.5.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 11:39:39 +04 2024
+;; MSG SIZE  rcvd: 256
+</pre></div><p><a href='../outputs/alias/dig_SVCB_alias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request five SRV alias records. Note that SRV records include fields for Priority, Weight, and Port number. In this module, both the Priority and Weight are set to 0, while the Port number is randomly assigned for each record:</p>
+<div><pre class='output-block'><strong># dig SRV alias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; SRV alias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 61727
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.yourdomain.com.		IN	SRV
+
+;; ANSWER SECTION:
+alias.5.yourdomain.com.	60	IN	SRV	0 0 31514 alias192640.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SRV	0 0 5419 alias26044.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SRV	0 0 24657 alias650070.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SRV	0 0 53105 alias385473.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	SRV	0 0 14553 alias921545.5.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 11:39:40 +04 2024
+;; MSG SIZE  rcvd: 279
+</pre></div><p><a href='../outputs/alias/dig_SRV_alias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request five SPF alias records. Note that each SPF record is contained within a single TXT record in this case:</p>
+<div><pre class='output-block'><strong># dig TXT alias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; TXT alias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 50138
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.yourdomain.com.		IN	TXT
+
+;; ANSWER SECTION:
+alias.5.yourdomain.com.	60	IN	TXT	&quot;v=spf1 include:alias96317.5.yourdomain.com ~all&quot;
+alias.5.yourdomain.com.	60	IN	TXT	&quot;v=spf1 include:alias845874.5.yourdomain.com ~all&quot;
+alias.5.yourdomain.com.	60	IN	TXT	&quot;v=spf1 include:alias912078.5.yourdomain.com ~all&quot;
+alias.5.yourdomain.com.	60	IN	TXT	&quot;v=spf1 include:alias771043.5.yourdomain.com ~all&quot;
+alias.5.yourdomain.com.	60	IN	TXT	&quot;v=spf1 include:alias161094.5.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 11:39:42 +04 2024
+;; MSG SIZE  rcvd: 344
+</pre></div><p><a href='../outputs/alias/dig_TXT_alias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>There is also a designated <a href="spfalias2.html">spfalias2</a> module which can fit multiple SPF aliases within a single TXT record.</p></p><br>
+<p>In this example, we request five MX alias records. Note that MX records include Preference field which is set to 0 for every record:</p>
+<div><pre class='output-block'><strong># dig MX alias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; MX alias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 4834
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.yourdomain.com.		IN	MX
+
+;; ANSWER SECTION:
+alias.5.yourdomain.com.	60	IN	MX	0 alias497465.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	MX	0 alias734659.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	MX	0 alias722603.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	MX	0 alias328306.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	MX	0 alias28466.5.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 11:39:43 +04 2024
+;; MSG SIZE  rcvd: 259
+</pre></div><p><a href='../outputs/alias/dig_MX_alias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request five NS alias records:</p>
+<div><pre class='output-block'><strong># dig NS alias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; NS alias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 59022
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.yourdomain.com.		IN	NS
+
+;; ANSWER SECTION:
+alias.5.yourdomain.com.	60	IN	NS	alias262604.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	NS	alias703293.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	NS	alias579565.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	NS	alias99588.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	NS	alias205106.5.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 11:39:44 +04 2024
+;; MSG SIZE  rcvd: 249
+</pre></div><p><a href='../outputs/alias/dig_NS_alias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="cnalias.html">CnAlias - Random CNAME Aliases</a></li>
+<li><a href="dnalias.html">DnAlias - Random DNAME Aliases</a></li>
+<li><a href="htalias.html">HtAlias - Random HTTPS Aliases</a></li>
+<li><a href="mxalias.html">MxAlias - Random MX Aliases</a></li>
+<li><a href="nptenumalias.html">NptEnumAlias - Random NAPTR ENUM Aliases</a></li>
+<li><a href="nsalias.html">NsAlias - Random NS Aliases</a></li>
+<li><a href="ptralias.html">PtrAlias - Random PTR Aliases</a></li>
+<li><a href="spfalias1.html">SpfAlias1 - Random SPF (TXT) Aliases (Variant 1)</a></li>
+<li><a href="spfalias2.html">SpfAlias2 - Random SPF (TXT) Aliases (Variant 2)</a></li>
+<li><a href="sralias.html">SrAlias - Random SRV Aliases</a></li>
+<li><a href="svalias.html">SvAlias - Random SVCB Aliases</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="loop.html">Loop - Alias Loops</a></li>
+<li><a href="chain.html">Chain - Alias Chains</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

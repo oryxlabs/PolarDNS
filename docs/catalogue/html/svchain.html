@@ -1,0 +1,144 @@
+---
+layout: default
+title: "SvChain - SVCB Alias Chains"
+parent: "Alias chains"
+---
+
+<!DOCTYPE html>
+<head>
+<title>SvChain - SVCB Alias Chains</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>SvChain - SVCB Alias Chains</h1>
+<p>This module implements <strong>incremental alias chains</strong> using <strong>SVCB (Service Binding)</strong> records. It returns an alias record with an incremented domain name index, forming a chain that continues to increment indefinitely.</p>
+<p>Specifically, this module generates an SVCB alias record in the format <code class='code-block'>svchain###.yourdomain.com</code>, where <code class='code-block'>###</code> represents the incremented index.</p>
+<p>The concept is that if the client/resolver attempts to resolve this alias further, it will generate yet another incremented alias, causing the process to continue indefinitely and potentially keeping the resolver occupied.</p>
+<p>However, in practice, most modern resolvers detect such chains and terminate the resolution after encountering a certain number of consecutive aliases (e.g., 20 aliases) or upon reaching a specified time limit for the resolution (e.g., 30 seconds).</p>
+<p>The SVCB records include a priority field called SvcPriority. In this module, SvcPriority is set to 0 for every record.</p>
+<p>Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, &quot;service labels&quot;, or &quot;underscore labels&quot;.</p>
+<p>Note that this feature provides the same functionality as requesting an SVCB record for the generic <a href="chain.html">chain</a> feature.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This could potentially lead to a <strong>domain lock-up (DoS)</strong>.</p><p><strong>Category:</strong> <a href='../alias-chains.html'>Alias chains</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc9460/" target="_blank">RFC9460</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>svchain&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter specifies an arbitrary number that will be incremented in the response.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, the module generates an SVCB alias record with the index of 1:</p>
+<div><pre class='output-block'><strong># dig svchain.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; svchain.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 25410
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;svchain.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+svchain.yourdomain.com.	60	IN	SVCB	0 svchain1.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:24:07 +04 2024
+;; MSG SIZE  rcvd: 79</pre></div><p><a href='../outputs/svchain/dig_svchain.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>If we attempt to resolve the resulting domain name (<code class='code-block'>svchain1.yourdomain.com</code>), we receive an incremented alias record:</p>
+<div><pre class='output-block'><strong># dig svchain1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; svchain1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 18104
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;svchain1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+svchain1.yourdomain.com. 60	IN	SVCB	0 svchain2.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:24:08 +04 2024
+;; MSG SIZE  rcvd: 80</pre></div><p><a href='../outputs/svchain/dig_svchain1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>If we continue to resolve the next domain name (<code class='code-block'>svchain2.yourdomain.com</code>), we again receive an incremented alias record:</p>
+<div><pre class='output-block'><strong># dig svchain2.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; svchain2.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 12427
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;svchain2.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+svchain2.yourdomain.com. 60	IN	SVCB	0 svchain3.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:24:10 +04 2024
+;; MSG SIZE  rcvd: 80</pre></div><p><a href='../outputs/svchain/dig_svchain2.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>This resolution process can continue indefinitely, as there are no limits on the size of the index number. Each resolution yields another incremented alias record:</p>
+<div><pre class='output-block'><strong># dig svchain9999999999999999999999999.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; svchain9999999999999999999999999.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 36324
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;svchain9999999999999999999999999.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+svchain9999999999999999999999999.yourdomain.com. 60 IN SVCB 0 svchain10000000000000000000000000.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:24:11 +04 2024
+;; MSG SIZE  rcvd: 129</pre></div><p><a href='../outputs/svchain/dig_svchain9999999999999999999999999.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>The domain name will never be fully resolved as the incremental process continues indefinitely.</p></p><br>
+<p>As mentioned in the description, this module also supports DNS queries for locating different services using the underscore (_) prefix notation. This example demonstrates such usage, where we search for an HTTP service specifically designed for mobile devices and running over TCP. We receive an incremented SVCB alias record as expected:</p>
+<div><pre class='output-block'><strong># dig _mobile._http._tcp.svchain100.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; _mobile._http._tcp.svchain100.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 3128
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_mobile._http._tcp.svchain100.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+_mobile._http._tcp.svchain100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svchain101.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:24:12 +04 2024
+;; MSG SIZE  rcvd: 122</pre></div><p><a href='../outputs/svchain/dig__mobile._http._tcp.svchain100.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="chain.html">Chain - Alias Chains</a></li>
+<li><a href="cnchain.html">CnChain - CNAME Alias Chains</a></li>
+<li><a href="dnchain.html">DnChain - DNAME Alias Chains</a></li>
+<li><a href="htchain.html">HtChain - HTTPS Alias Chains</a></li>
+<li><a href="mxchain.html">MxChain - MX Alias Chains</a></li>
+<li><a href="nschain.html">NsChain - NS Alias Chains</a></li>
+<li><a href="spfchain.html">SpfChain - SPF (TXT) Alias Chains</a></li>
+<li><a href="srchain.html">SrChain - SRV Alias Chains</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="svalias.html">SvAlias - Random SVCB Aliases</a></li>
+<li><a href="svloop.html">SvLoop - SVCB Alias Loops</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

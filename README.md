@@ -1,4 +1,4 @@
-<img width="800" alt="PolarDNS logo" src="assets/polardns-logo-for-white-bg.png">
+<img width="800" alt="PolarDNS logo" src="docs/assets/polardns-logo-for-white-bg.png">
 PolarDNS is a specialized authoritative DNS server written in Python 3.x, which allows the operator to produce fully custom DNS responses, suitable for DNS protocol testing purposes.
 
 _
@@ -62,7 +62,7 @@ dig always.yourdomain.com @127.0.0.1 +tcp
 
 You should receive an ``A`` record with the ``2.3.4.5`` IP address, similarly like in this screenshot:
 
-<img width="700" alt="PolarDNS example usage" src="assets/polardns-example-usage.jpg">
+<img width="700" alt="PolarDNS example usage" src="docs/assets/polardns-example-usage.jpg">
 
 This indicates that the server is working properly.
 
@@ -77,9 +77,9 @@ dig always.ttl2000000000.slp1500.yourdomain.com @127.0.0.1
 
 You should receive an ``A`` record with the ``2.3.4.5`` IP address again, but this time with a TTL value of 2,000,000,000 (63.4 years) and after a delay of 1.5 seconds:
 
-<img width="700" alt="PolarDNS custom TTL and latency" src="assets/polardns-custom-ttl-and-latency.jpg">
+<img width="700" alt="PolarDNS custom TTL and latency" src="docs/assets/polardns-custom-ttl-and-latency.jpg">
 
-In the above example, we have used the [`always`](docs/catalogue/general-features.md#always-resolve-to-ip-always) basic feature (which always resolves to something), and combined it with the [`ttl`](docs/catalogue/response-modifiers.md#set-custom-ttl-value-ttl) modifier to adjust the TTL value and the [`slp`](docs/catalogue/response-modifiers.md#add-a-delay--latency-slp) modifier to wait before sending the response out.
+In the above example, we have used the [`always`](https://oryxlabs.github.io/PolarDNS/catalogue/html/always.html) basic feature (which always resolves to something), and combined it with the [`ttl`](https://oryxlabs.github.io/PolarDNS/catalogue/html/ttl.html) modifier to adjust the TTL value and the [`slp`](https://oryxlabs.github.io/PolarDNS/catalogue/html/slp.html) modifier to wait before sending the response out.
 
 ## Main functionalities (features and response modifiers)
 
@@ -89,7 +89,7 @@ PolarDNS has the following main functionalities:
 
 There are around 60 different features and 11 response modifiers currently implemented. By using different features and combining them together with different response modifiers, it is possible to produce countless variants of given response.
 
-See the included **[catalogue](docs/catalogue/)** of all implemented **features** and **response modifiers**.
+See the included **[catalogue](https://oryxlabs.github.io/PolarDNS/catalogue/catalogue.html)** of all implemented **features** and **response modifiers**.
 
 This gives PolarDNS capacity to produce highly unusual, abnormal, and even malformed DNS responses, allowing the operator to see how the receiving side handles such situations and whether the receiving side is technically robust and mature.
 

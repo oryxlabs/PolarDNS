@@ -1,0 +1,125 @@
+---
+layout: default
+title: "NptEnumAlias - Random NAPTR ENUM Aliases"
+parent: "Aliases"
+---
+
+<!DOCTYPE html>
+<head>
+<title>NptEnumAlias - Random NAPTR ENUM Aliases</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>NptEnumAlias - Random NAPTR ENUM Aliases</h1>
+<p>This module implements <strong>random aliases</strong> using <strong>NAPTR (Naming Authority Pointer) ENUM</strong> records, which are used to map identifiers like telephone numbers to a variety of service URIs, including SIP addresses, voicemail systems, and web or email addresses.</p>
+<p>This module is specifically designed to handle DNS queries that translate telephone numbers into SIP service URIs using the E.164 format. In this format, a phone number such as <code class='code-block'>1234567890</code> is transformed into the reversed sequence <code class='code-block'>0.9.8.7.6.5.4.3.2.1.e164.arpa</code>. This domain is then queried in DNS to identify the corresponding designated SIP service address.</p>
+<p>When this module receives a NAPTR DNS query for translating a telephone number ending with the digit <code class='code-block'>1</code>, it will generate a response with a SIP service URI. This URI will point to another (random) phone number, also formatted in the E.164 standard and ending with the digit <code class='code-block'>1</code>.</p>
+<p>The idea is that if the resolver/client decides to resolve this E.164 address, it will result in the generation of yet another alias, potentially creating an infinite chain of random aliases. Although NAPTR ENUM records do not function as direct aliases like CNAME records, this setup could theoretically produce similar effect by compelling the client to perform consecutive queries to resolve it.</p>
+<p>Additionally, this module can respond with multiple NAPTR records. The number of records generated is determined by the second digit of the phone number address. For example, a query for the phone number such as <code class='code-block'>1234567891</code> (converted to <code class='code-block'>1.9.8.7.6.5.4.3.2.1.e164.arpa</code> in the E.164 format) will generate nine PTR records.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../aliases.html'>Aliases</a></p><p><strong>Tags:</strong> Amplification, Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc2915/" target="_blank">RFC2915</a>, <a href="https://datatracker.ietf.org/doc/rfc3761/" target="_blank">RFC3761</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>1.&lt;NUMBER&gt;.*.e164.arpa</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines how many aliases should be generated in the response.</li>
+</ul>
+<h2>Examples</h2>
+<p>In this example, when we look up the telephone number <code class='code-block'>3211</code>, we receive a response containing a SIP URI. This URI includes a randomly generated phone number, formatted as an E.164 address. If this address is subsequently looked up, it will lead to the generation of another random E.164 address:</p>
+<div><pre class='output-block'><strong># dig NAPTR 1.1.2.3.e164.arpa @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; NAPTR 1.1.2.3.e164.arpa @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 8001
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;1.1.2.3.e164.arpa.		IN	NAPTR
+
+;; ANSWER SECTION:
+1.1.2.3.e164.arpa.	60	IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.1.8.4.6.2.3.8.0.1.5.e164.arpa!&quot; .
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 00:10:32 +04 2024
+;; MSG SIZE  rcvd: 101
+</pre></div><p><a href='../outputs/nptenumalias/dig_NAPTR_1.1.2.3.e164.arpa__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, when we look up the telephone number <code class='code-block'>1234567891</code>, we receive a response containing nine SIP URIs. Each URI includes a randomly generated phone number, formatted as an E.164 address:</p>
+<div><pre class='output-block'><strong># dig NAPTR 1.9.8.7.6.5.4.3.2.1.e164.arpa @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; NAPTR 1.9.8.7.6.5.4.3.2.1.e164.arpa @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 2704
+;; flags: qr aa; QUERY: 1, ANSWER: 9, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;1.9.8.7.6.5.4.3.2.1.e164.arpa.	IN	NAPTR
+
+;; ANSWER SECTION:
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.8.1.4.6.1.8.1.8.4.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.8.3.0.0.4.4.3.9.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.3.4.0.6.9.5.5.0.0.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.7.7.4.9.0.3.3.4.1.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.6.6.2.6.7.4.5.4.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.8.9.4.6.7.1.0.2.6.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.1.0.7.0.2.3.2.2.6.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.5.6.8.3.1.3.4.0.4.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.4.4.0.6.5.9.7.7.7.e164.arpa!&quot; .
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 00:10:33 +04 2024
+;; MSG SIZE  rcvd: 637
+</pre></div><p><a href='../outputs/nptenumalias/dig_NAPTR_1.9.8.7.6.5.4.3.2.1.e164.arpa__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we use the A record type to look up the telephone number <code class='code-block'>1234567891</code>. We receive the same response as in the previous example. This demonstrates that it is not necessary to explicitly request NAPTR record types to use this module:</p>
+<div><pre class='output-block'><strong># dig 1.9.8.7.6.5.4.3.2.1.e164.arpa @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; 1.9.8.7.6.5.4.3.2.1.e164.arpa @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 30794
+;; flags: qr aa; QUERY: 1, ANSWER: 9, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;1.9.8.7.6.5.4.3.2.1.e164.arpa.	IN	A
+
+;; ANSWER SECTION:
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.7.3.5.2.9.6.4.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.4.8.9.3.9.2.3.0.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.3.8.3.2.5.8.3.2.6.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.6.9.6.8.3.2.3.3.4.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.1.5.5.8.8.4.5.4.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.1.7.1.8.7.4.9.3.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.3.7.4.0.9.5.2.1.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.6.1.3.1.0.9.0.9.6.e164.arpa!&quot; .
+1.9.8.7.6.5.4.3.2.1.e164.arpa. 60 IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!1.9.8.8.4.0.5.6.5.6.1.e164.arpa!&quot; .
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 00:16:12 +04 2024
+;; MSG SIZE  rcvd: 629
+</pre></div><p><a href='../outputs/nptenumalias/dig_1.9.8.7.6.5.4.3.2.1.e164.arpa__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="alias.html">Alias - Random Aliases</a></li>
+<li><a href="cnalias.html">CnAlias - Random CNAME Aliases</a></li>
+<li><a href="dnalias.html">DnAlias - Random DNAME Aliases</a></li>
+<li><a href="htalias.html">HtAlias - Random HTTPS Aliases</a></li>
+<li><a href="mxalias.html">MxAlias - Random MX Aliases</a></li>
+<li><a href="nsalias.html">NsAlias - Random NS Aliases</a></li>
+<li><a href="ptralias.html">PtrAlias - Random PTR Aliases</a></li>
+<li><a href="spfalias1.html">SpfAlias1 - Random SPF (TXT) Aliases (Variant 1)</a></li>
+<li><a href="spfalias2.html">SpfAlias2 - Random SPF (TXT) Aliases (Variant 2)</a></li>
+<li><a href="sralias.html">SrAlias - Random SRV Aliases</a></li>
+<li><a href="svalias.html">SvAlias - Random SVCB Aliases</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="nptenumloop.html">NptEnumLoop - NAPTR ENUM Alias Loops</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

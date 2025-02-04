@@ -1,0 +1,28 @@
+<pre class='output-block'><strong># dig afuzz2${RANDOM}.10.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; afuzz214283.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 59435
+;; flags: qr aa; QUERY: 1, ANSWER: 11, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;afuzz214283.10.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+af\000zz214283.10.yourdomain.com. 60 IN	A	6.6.6.0
+af\001zz214283.10.yourdomain.com. 60 IN	A	6.6.6.1
+af\002zz214283.10.yourdomain.com. 60 IN	A	6.6.6.2
+af\003zz214283.10.yourdomain.com. 60 IN	A	6.6.6.3
+af\004zz214283.10.yourdomain.com. 60 IN	A	6.6.6.4
+af\005zz214283.10.yourdomain.com. 60 IN	A	6.6.6.5
+af\006zz214283.10.yourdomain.com. 60 IN	A	6.6.6.6
+af\007zz214283.10.yourdomain.com. 60 IN	A	6.6.6.7
+af\008zz214283.10.yourdomain.com. 60 IN	A	6.6.6.8
+af\009zz214283.10.yourdomain.com. 60 IN	A	6.6.6.9
+afuzz214283.10.yourdomain.com. 60 IN	A	2.3.4.5
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Jan 03 16:53:41 +04 2025
+;; MSG SIZE  rcvd: 542</pre>

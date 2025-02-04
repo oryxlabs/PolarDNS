@@ -1,0 +1,125 @@
+---
+layout: default
+title: "Len - Set Custom Length in TCP"
+parent: "Packet manipulation"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Len - Set Custom Length in TCP</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Len - Set Custom Length in TCP</h1>
+<p>This modifier allows adjusting the DNS packet length (size), which is defined as a 2-byte field at the beginning of the packet in TCP mode.</p>
+<p>It is important to note that this functionality is specific to TCP mode only, because only in TCP the DNS packets contain a length field at the beginning. DNS packets sent over UDP do not have length defined at the beginning.</p>
+<p>This modifier is compatible with and can be combined with any other existing feature or modifier, as long as the communication is happening over TCP.</p><p><strong>Category:</strong> <a href='../packet-manipulation.html'>Packet manipulation</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.len&lt;NUMBER&gt;.*</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines the length of the DNS response in bytes. Note that the maximum possible size of a DNS packet is 65535, as it is a 2-byte field.</li>
+</ul>
+<h2>Examples</h2>
+<p>All the examples below use the basic <a href="always.html">always</a> feature which always resolves to an IP address. Additionally, TCP mode is selected as the communication protocol for all examples.</p>
+<p>In this example, we specify the DNS response length as 0 bytes. As a result, the parser is completely unable to interpret the packet, despite the entire DNS response being transmitted in full:</p>
+<div><pre class='output-block'><strong># dig always.len0.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; <span style="background-color: yellow;">ERROR</span>: short (&lt; header size) message
+</pre></div><p><a href='../outputs/len/dig_always.len0.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>In this case, we specify the packet length as 20 bytes. This once again prevents the parser to parse the packet correctly. The parser can only see the DNS header (12 bytes) and the first 8 bytes from the Question section which is only a small fragment of it:</p>
+<div><pre class='output-block'><strong># dig always.len20.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.len20.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 2987
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 8 extra bytes at end
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Tue Oct 22 15:43:31 +04 2024
+;; MSG SIZE  rcvd: 20
+</pre>
+</div><p><a href='../outputs/len/dig_always.len20.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>In this case, we specify the packet length as 45 bytes. This happens to exactly match the end of the Question section. As a result, the parser can only process the Question section, omitting any subsequent sections. This creates a discrepancy between the indicated number of Answer RRs (<code class='code-block'>ANSWER: 1</code>) in the DNS header and the actual answers in the body, which the parser cannot access. Consequently, a warning about malformed packet is displayed:</p>
+<div><pre class='output-block'><strong># dig always.len45.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.len45.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 19644
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.len45.yourdomain.com.	IN	A
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Tue Oct 22 15:52:43 +04 2024
+;; MSG SIZE  rcvd: 45
+</pre>
+</div><p><a href='../outputs/len/dig_always.len45.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>In this case, we specify the packet length as 61 bytes, which happens to exactly match the length of the entire packet. As a result, the packet is fully parsed without errors, producing a valid and correct answer:</p>
+<div><pre class='output-block'><strong># dig always.len61.yourdomain.com @127.0.0.1 +tcp</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.len61.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 9494
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.len61.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.len61.yourdomain.com. 60	IN	A	2.3.4.5
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Tue Oct 22 15:42:48 +04 2024
+;; MSG SIZE  rcvd: 61
+</pre></div><p><a href='../outputs/len/dig_always.len61.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>In this case, we specify the packet length as 100 bytes, which exceeds the actual size of the entire packet. As a result, the parser assumes the packet was not transmitted properly and attempts to retry again. Since it never receives a response of actual 100 bytes in size, the process ultimately fails:</p>
+<div><pre class='output-block'><strong># dig always.len100.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.len100.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/len/dig_always.len100.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="add.html">Add - Add N Bytes to the End of the Packet</a></li>
+<li><a href="cnk.html">Cnk - Send Response in Chunks (TCP only)</a></li>
+<li><a href="cut.html">Cut - Cut N Bytes from the End of the Packet</a></li>
+<li><a href="fc.html">Fc - Force Compression</a></li>
+<li><a href="nc.html">Nc - No Compression</a></li>
+<li><a href="noq.html">Noq - Remove the Query Section</a></li>
+<li><a href="rl.html">Rl - Recalculate Length in TCP</a></li>
+<li><a href="slp.html">Slp - Add a Delay (Latency)</a></li>
+<li><a href="tc.html">Tc - Set Truncated Flag (Force TCP Mode)</a></li>
+<li><a href="ttl.html">Ttl - Set Custom TTL Value</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="newid.html">NewId - Set Random Transaction ID</a></li>
+<li><a href="flgs.html">Flgs - Set Custom Flags in the Header</a></li>
+<li><a href="qurr.html">Qurr - Set Question RRs in the Header</a></li>
+<li><a href="anrr.html">Anrr - Set Answer RRs in the Header</a></li>
+<li><a href="aurr.html">Aurr - Set Authority RRs in the Header</a></li>
+<li><a href="adrr.html">Adrr - Set Additional RRs in the Header</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

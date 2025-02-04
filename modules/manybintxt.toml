@@ -1,12 +1,53 @@
 [module]
 name = "manybintxt"
 type = "feature"
-info = "Many TXT records with binary data"
-desc = "Send arbitrary number of TXT records of arbitrary size. The contents of the TXT records will be a random binary data."
-author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+info = "Many TXT Records with Binary Data"
+short = "Many TXT records with binary data"
+category = "Fuzzing"
+records = "TXT"
+desc = '''
+This module is designed to respond with arbitrary number of TXT records, each containing data of arbitrary size.
 
-code = '''
+Typically, a TXT record consists of one or more labels, and each label can be up to 255 bytes in size. If the required data size exceeds this limit, multiple labels are used within the same TXT record to accommodate the data.
+
+This flexibility allows for generating very large DNS responses, up to the maximum allowable DNS packet size of 65535 bytes.
+
+In this variant, the labels are composed of **random binary data**.
+'''
+rfc = "rfc1035, rfc1464"
+format = '''
+**`manybintxt.<RECORDS>.<SIZE>.yourdomain.com`**
+
+Where:
+
+- The **`<RECORDS>`** parameter specifies the number of TXT records to be included in the answer.
+
+- The **`<SIZE>`** parameter specifies the size of each TXT record. As mentioned in the description, a TXT record consists of one or more labels, and the maximum size of a single TXT label is 255 bytes. If the specified size exceeds this limit, multiple labels will be dynamically generated to accommodate the specified size.
+'''
+seealso = "bigtxt, bigbintxt, manytxt, manybintxt"
+
+[[module.example]]
+description = "In this example, we request to produce 10 TXT records, each containing 30 random bytes. As we can see, these 30 bytes fit easily within a single label:"
+command = "dig manybintxt.10.30.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to produce 10 TXT records, each containing 300 random bytes. As we can see, these 300 bytes must be split into 2 labels, as the maximum size for a single label is 255 bytes:"
+command = "dig manybintxt.10.300.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to produce a single TXT record containing 50,000 random bytes. As we can see, this will be split into many labels:"
+command = "dig manybintxt.1.50000.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to produce 300 TXT records, each containing 100 random bytes:"
+command = "dig manybintxt.300.100.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig manybintxt${RANDOM}.10.30.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("manybintxt"):
    # Send many random binary TXT records
    nans = 10  # number of TXT records to send
@@ -21,12 +62,19 @@ if req.first_subdomain.startswith("manybintxt"):
    if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    for i in range(nans):
-       data    = os.urandom(chunksize)
+       # max label size is 255 bytes, so chunk it
+       parts = []
+       for i in range(0, chunksize, 255):
+          size = min(255, chunksize - i)
+          part = struct.pack(">B", size)
+          part += os.urandom(size)
+          parts.append(part)
+       data = b''.join(parts)
+
        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
        buffer += getTypeBin("TXT") + getClassBin("IN")
-       buffer += struct.pack(">L", resp.TTL)            ## TTL
-       buffer += struct.pack(">H", len(data)+1)         ## Data length
-       buffer += struct.pack(">B", len(data))           ## TXT length
+       buffer += struct.pack(">L", resp.TTL)           ## TTL
+       buffer += struct.pack(">H", len(data))          ## Data length
        buffer += data
    # log and send
    log("%d binary TXT records of %d B (total: %d B)" % (nans, chunksize, len(buffer)))

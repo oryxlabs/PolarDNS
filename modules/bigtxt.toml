@@ -1,12 +1,60 @@
 [module]
 name = "bigtxt"
 type = "feature"
-info = "TXT record with multiple text strings"
-desc = "Send a big TXT record with arbitrary number of labels of arbitrary size. The labels will contain a random ASCII text."
-author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+info = "TXT Record with Multiple Text Strings"
+short = "TXT record with multiple text strings"
+category = "Fuzzing"
+records = "TXT"
+desc = '''
+This module is designed to respond with a single TXT record containing any number of labels, each with an arbitrary size.
 
-code = '''
+This flexibility allows for generating very large DNS responses, up to the maximum allowable DNS packet size of 65535 bytes.
+
+In this variant, the labels are composed of **random ASCII text**.
+'''
+rfc = "rfc1035, rfc1464"
+format = '''
+**`bigtxt.<LABELS>.<SIZE>.yourdomain.com`**
+
+Where:
+
+- The **`<LABELS>`** parameter specifies the number of labels to be included in the TXT record.
+
+- The **`<SIZE>`** parameter specifies the number of bytes in each label. Note that the maximum possible size for a TXT label is 255 bytes as per DNS implementation.
+'''
+seealso = "bigtxt, bigbintxt, manytxt, manybintxt"
+
+[[module.example]]
+description = "In this example, we request to produce a TXT record containing a single label consisting of 50 random ASCII characters:"
+command = "dig bigtxt.1.50.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to produce a TXT record containing a single label consisting of 255 random ASCII characters, which is the maximum allowable size for a TXT label:"
+command = "dig bigtxt.1.255.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to produce a TXT record with 255 labels, each containing a single random ASCII character:"
+command = "dig bigtxt.255.1.yourdomain.com @127.0.0.1"
+append = "Note that there is no limit on the number of labels. The only restriction is the maximum DNS packet size of 65535 bytes."
+
+[[module.example]]
+description = "In this example, we request to produce a TXT record with 10000 labels, each containing a single random ASCII character:"
+command = "dig bigtxt.10000.1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to produce a TXT record with 10 labels, each containing 20 random ASCII characters:"
+command = "dig bigtxt.10.20.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to produce a TXT record with 255 labels, each containing 255 random ASCII characters. This results in a DNS response that almost reaches the maximum allowable DNS packet size of 65535 bytes:"
+command = "dig bigtxt.255.255.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig bigtxt${RANDOM}.255.255.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("bigtxt"):
    # Send big TXT record
    size = 10  # number of chunks
@@ -14,7 +62,7 @@ if req.first_subdomain.startswith("bigtxt"):
       size = int(req.subdomains[1])
    chunksize = 255  # chunk size
    if req.subdomains[2].isnumeric():
-      chunksize = int(req.subdomains[2])
+      chunksize = min(int(req.subdomains[2]), 255)
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
    ### QUESTION SECTION ########

@@ -1,12 +1,51 @@
 [module]
 name = "nsloop"
 type = "feature"
-info = "NS alias loop"
-desc = "Respond with NS record forming an infinite loop consisting of any number of elements."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "NS Alias Loops"
+short = "NS loop alias generator"
+category = "Alias loops"
+records = "NS"
+tags = "Domain Lock-Up, Denial of Service"
+rfc = "RFC1035"
+desc = '''
+This module implements **alias loops** using **NS (Name Server)** records. The loops can be a **direct loop**, where the alias points back to the **same domain name** as in the original query, or they can include **multiple elements**, cycling through a specified number of domains.
 
-code = '''
+The idea is that if the client/resolver decides to resolve this further, it will enter an **infinite loop**. In practice, however, most modern resolvers detect such loops and terminate the resolution.
+
+Note that this feature provides the same functionality as requesting a NS record for the generic [loop] feature.
+
+:warning:**BEWARE**:warning:This can potentially lead to a domain lock-up (DoS).
+'''
+format = '''
+**`nsloop.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies the number of elements the loop should contain.
+'''
+seealso = "nsalias, nschain, cnloop, dnloop, htloop, loop, mxloop, nptenumloop, nsloop, ptrloop1, ptrloop2, spfloop, srloop, svloop"
+
+[[module.example]]
+description = "In this example, we see a direct loop formed by sending a query that results in a NS record containing the exact same domain name as the one in the query:"
+command = "dig nsloop.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request a NS alias loop consisting of 5 elements:"
+command = "dig nsloop.5.yourdomain.com @127.0.0.1"
+append = "The resulting domain name `nsloop.5.1.yourdomain.com` represents the 1st element of the loop."
+
+[[module.example]]
+description = "By resolving the 1st element, we are pointed to the 2nd element of the loop:"
+command = "dig nsloop.5.1.yourdomain.com @127.0.0.1"
+append = "This continues up to the 5th and final element - `nsloop.5.5.yourdomain.com`."
+
+[[module.example]]
+description = "By resolving the final element of the loop, we are directed back to the 1st element again:"
+command = "dig nsloop.5.5.yourdomain.com @127.0.0.1"
+append = "We can see that we are indeed pointed back to the 1st element again, forming a loop."
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("nsloop"):
    # Do a NS loop
    if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():

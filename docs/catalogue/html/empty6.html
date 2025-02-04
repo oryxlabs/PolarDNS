@@ -1,0 +1,95 @@
+---
+layout: default
+title: "Empty6 - ANSWER Section Missing"
+parent: "Empty responses"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Empty6 - ANSWER Section Missing</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Empty6 - ANSWER Section Missing</h1>
+<p>This module is designed to respond with a standard-looking DNS response that, according to the DNS header, contains a single Answer. However, the actual Answer is intentionally ommited. The entire ANSWER section is removed from the body.</p>
+<p>This is likely to result in unexpected errors.</p><p><strong>Category:</strong> <a href='../empty-responses.html'>Empty responses</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>empty6.yourdomain.com</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>In this example, we can see that we receive a DNS response with the entire ANSWER section missing from the body. The parser cannot interpret this response properly and identifies it as malformed:</p>
+<div><pre class='output-block'><strong># dig empty6.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty6.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 10659
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;empty6.yourdomain.com.		IN	A
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Oct 29 01:15:09 +04 2024
+;; MSG SIZE  rcvd: 39
+</pre></div><p><a href='../outputs/empty6/dig_empty6.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In TCP mode, the results are the same as in the previous example in UDP mode. The entire ANSWER section is missing from the body and we see a warning about malformed packet:</p>
+<div><pre class='output-block'><strong># dig empty6.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty6.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 22731
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;empty6.yourdomain.com.		IN	A
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Tue Oct 29 11:29:13 +04 2024
+;; MSG SIZE  rcvd: 39
+</pre></div><p><a href='../outputs/empty6/dig_empty6.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>Like other features, we can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:</p>
+<div><pre class='output-block'><strong># dig empty6${RANDOM}.yourdomain.com @10.211.55.2</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty624929.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 2777
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;empty624929.yourdomain.com.	IN	A
+
+;; Query time: 0 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Fri Nov 01 11:20:45 +04 2024
+;; MSG SIZE  rcvd: 44</pre></div><p><a href='../outputs/empty6/dig_empty6__RANDOM_.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="close.html">Close - Close the Connection</a></li>
+<li><a href="empty1.html">Empty1 - Empty Packet</a></li>
+<li><a href="empty2.html">Empty2 - Only NULL Bytes</a></li>
+<li><a href="empty3.html">Empty3 - Only NULL Bytes (Suitable for TCP)</a></li>
+<li><a href="empty4.html">Empty4 - Only Transaction ID and NULL Bytes</a></li>
+<li><a href="empty5.html">Empty5 - Only DNS Header and NULL Bytes</a></li>
+<li><a href="empty7.html">Empty7 - ANSWER Section Is NULL Bytes</a></li>
+<li><a href="queryback1.html">QueryBack1 - Query Reflection</a></li>
+<li><a href="queryback2.html">QueryBack2 - Query Reflection (Stripped)</a></li>
+<li><a href="queryback3.html">QueryBack3 - Query Reflection (To Port 53)</a></li>
+<li><a href="queryback4.html">QueryBack4 - Query Reflection (Random, to Port 53)</a></li>
+<li><a href="timeout.html">Timeout - Do Not Respond</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

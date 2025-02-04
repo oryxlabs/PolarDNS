@@ -1,0 +1,123 @@
+---
+layout: default
+title: "MxChain - MX Alias Chains"
+parent: "Alias chains"
+---
+
+<!DOCTYPE html>
+<head>
+<title>MxChain - MX Alias Chains</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>MxChain - MX Alias Chains</h1>
+<p>This module implements <strong>incremental alias chains</strong> using <strong>MX (Mail Exchange)</strong> records. It returns an alias record with an incremented domain name index, forming a chain that continues to increment indefinitely.</p>
+<p>Specifically, this module generates a MX alias record in the format <code class='code-block'>mxchain###.yourdomain.com</code>, where <code class='code-block'>###</code> represents the incremented index.</p>
+<p>The concept is that if the client/resolver attempts to resolve this alias further, it will generate yet another incremented alias, causing the process to continue indefinitely and potentially keeping the resolver occupied.</p>
+<p>However, in practice, most modern resolvers detect such chains and terminate the resolution after encountering a certain number of consecutive aliases (e.g., 20 aliases) or upon reaching a specified time limit for the resolution (e.g., 30 seconds).</p>
+<p>Note that this feature provides the same functionality as requesting a MX record for the generic <a href="chain.html">chain</a> feature.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This could potentially lead to a <strong>domain lock-up (DoS)</strong>.</p><p><strong>Category:</strong> <a href='../alias-chains.html'>Alias chains</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>mxchain&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter specifies an arbitrary number that will be incremented in the response.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, the module generates an MX alias record with the index of 1:</p>
+<div><pre class='output-block'><strong># dig mxchain.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; mxchain.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 37516
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;mxchain.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+mxchain.yourdomain.com.	60	IN	MX	0 mxchain1.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:23:57 +04 2024
+;; MSG SIZE  rcvd: 79</pre></div><p><a href='../outputs/mxchain/dig_mxchain.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>If we attempt to resolve the resulting domain name (<code class='code-block'>mxchain1.yourdomain.com</code>), we receive an incremented alias record:</p>
+<div><pre class='output-block'><strong># dig mxchain1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; mxchain1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 2794
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;mxchain1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+mxchain1.yourdomain.com. 60	IN	MX	0 mxchain2.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:23:58 +04 2024
+;; MSG SIZE  rcvd: 80</pre></div><p><a href='../outputs/mxchain/dig_mxchain1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>If we continue to resolve the next domain name (<code class='code-block'>mxchain2.yourdomain.com</code>), we again receive an incremented alias record:</p>
+<div><pre class='output-block'><strong># dig mxchain2.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; mxchain2.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 61093
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;mxchain2.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+mxchain2.yourdomain.com. 60	IN	MX	0 mxchain3.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:23:59 +04 2024
+;; MSG SIZE  rcvd: 80</pre></div><p><a href='../outputs/mxchain/dig_mxchain2.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>This resolution process can continue indefinitely, as there are no limits on the size of the index number. Each resolution yields another incremented alias record:</p>
+<div><pre class='output-block'><strong># dig mxchain9999999999999999999999999.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; mxchain9999999999999999999999999.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 55071
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;mxchain9999999999999999999999999.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+mxchain9999999999999999999999999.yourdomain.com. 60 IN MX 0 mxchain10000000000000000000000000.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:24:01 +04 2024
+;; MSG SIZE  rcvd: 129</pre></div><p><a href='../outputs/mxchain/dig_mxchain9999999999999999999999999.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>The domain name will never be fully resolved as the incremental process continues indefinitely.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="chain.html">Chain - Alias Chains</a></li>
+<li><a href="cnchain.html">CnChain - CNAME Alias Chains</a></li>
+<li><a href="dnchain.html">DnChain - DNAME Alias Chains</a></li>
+<li><a href="htchain.html">HtChain - HTTPS Alias Chains</a></li>
+<li><a href="nschain.html">NsChain - NS Alias Chains</a></li>
+<li><a href="spfchain.html">SpfChain - SPF (TXT) Alias Chains</a></li>
+<li><a href="srchain.html">SrChain - SRV Alias Chains</a></li>
+<li><a href="svchain.html">SvChain - SVCB Alias Chains</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="mxalias.html">MxAlias - Random MX Aliases</a></li>
+<li><a href="mxloop.html">MxLoop - MX Alias Loops</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<pre class='output-block'><strong># dig -x 10.1.0.0 @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 10.1.0.0 @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 42782
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;0.0.1.10.in-addr.arpa.		IN	PTR
+
+;; ANSWER SECTION:
+0.0.1.10.in-addr.arpa.	60	IN	PTR	181.93.1.10.in-addr.arpa.
+
+;; Query time: 15 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Oct 17 14:47:42 +04 2024
+;; MSG SIZE  rcvd: 77
+</pre>

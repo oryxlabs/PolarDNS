@@ -1,0 +1,30 @@
+[module]
+name = "newid"
+type = "modifier"
+info = "Set Random Transaction ID"
+short = "Set random Transaction ID in the DNS response"
+category = "Header manipulation"
+desc = '''
+This modifier generates a new Transaction ID (TXID) for the DNS response, causing a mismatch with the Transaction ID that was sent in the query.
+
+The Transaction ID is a 2-byte field located at the beginning of the DNS packet. In standard DNS communication, the Transaction ID in the response must precisely match the Transaction ID in the query. If they do not match, it indicates that the response is unrelated to the original query.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+'''
+format = '''
+**`*.newid.*`**
+
+This module has no parameters.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = "In this example, we use the [basic] always feature which always resolves to an IP address. We request to generate a new Transaction ID for the DNS response. As a result, the client is unable to associate the response with the original query:"
+command = "dig always.newid.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we use the [size] feature which returns multiple anwers at once. Once again we request to generate a new Transaction ID for the DNS response. As a result, the client is unable to associate the response with the original query:"
+command = "dig size.newid.yourdomain.com @127.0.0.1"
+
+[module.code]
+# The code is located in the polardns.py file.

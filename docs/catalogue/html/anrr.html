@@ -1,0 +1,135 @@
+---
+layout: default
+title: "Anrr - Set Answer RRs in the Header"
+parent: "Header manipulation"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Anrr - Set Answer RRs in the Header</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Anrr - Set Answer RRs in the Header</h1>
+<p>This modifier allows to modify the number of Answers (RRs) in the DNS response header.</p>
+<p>It&#x27;s important to note that this does not change the actual Answer section in the DNS response body in any way.</p>
+<p>This modifier is compatible with and can be combined with any other existing feature or modifier.</p><p><strong>Category:</strong> <a href='../header-manipulation.html'>Header manipulation</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.anrr&lt;NUMBER&gt;.*</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter specifies the number of Answers in the DNS response header. Note that the maximum number of Answers that can be set is 65535, as it is a 2-byte field.</li>
+</ul>
+<h2>Examples</h2>
+<p>In this example, we use the basic <a href="always.html">always</a> feature which always resolves to an IP address. Additionally, we set the number of answer RRs in the DNS header to 0. This arrangement leads to a warning message about 16 extra bytes at the end because the parser is not expecting any answer in the body since the DNS header indicates there are no answers (<code class='code-block'>ANSWER: 0</code>):</p>
+<div><pre class='output-block'><strong># dig always.anrr0.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.anrr0.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 4357
+;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 16 extra bytes at end
+
+;; QUESTION SECTION:
+;always.anrr0.yourdomain.com.	IN	A
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Oct 22 13:19:27 +04 2024
+;; MSG SIZE  rcvd: 61
+</pre>
+</div><p><a href='../outputs/anrr/dig_always.anrr0.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Similar to the previous example, but in this case, we set the number of Answer RRs in the DNS header to 1. This adjustment actually accurately reflects the actual content of the DNS response body, resulting in a completely valid and correct answer:</p>
+<div><pre class='output-block'><strong># dig always.anrr1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.anrr1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 60294
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.anrr1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.anrr1.yourdomain.com. 60	IN	A	2.3.4.5
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Oct 22 13:19:28 +04 2024
+;; MSG SIZE  rcvd: 61
+</pre></div><p><a href='../outputs/anrr/dig_always.anrr1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Similar to the previous examples, but in this case, we set the number of Answer RRs in the DNS header to 2. This arrangement leads to a warning message about malformed packet because there is only one answer in the body while the parser is expecting two answers (<code class='code-block'>ANSWER: 2</code>):</p>
+<div><pre class='output-block'><strong># dig always.anrr2.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.anrr2.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 63569
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.anrr2.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.anrr2.yourdomain.com. 60	IN	A	2.3.4.5
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Oct 22 13:19:29 +04 2024
+;; MSG SIZE  rcvd: 61
+</pre>
+</div><p><a href='../outputs/anrr/dig_always.anrr2.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Similar to the previous example, but in this case, we set the number of Answer RRs in the DNS header to 100. This arrangement leads to a warning message about malformed packet again because there is only one answer in the body while the parser is expecting a hundred answers (<code class='code-block'>ANSWER: 100</code>):</p>
+<div><pre class='output-block'><strong># dig always.anrr100.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.anrr100.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 39457
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.anrr100.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.anrr100.yourdomain.com. 60 IN	A	2.3.4.5
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Oct 22 13:19:30 +04 2024
+;; MSG SIZE  rcvd: 63
+</pre>
+</div><p><a href='../outputs/anrr/dig_always.anrr100.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="adrr.html">Adrr - Set Additional RRs in the Header</a></li>
+<li><a href="aurr.html">Aurr - Set Authority RRs in the Header</a></li>
+<li><a href="flgs.html">Flgs - Set Custom Flags in the Header</a></li>
+<li><a href="newid.html">NewId - Set Random Transaction ID</a></li>
+<li><a href="qurr.html">Qurr - Set Question RRs in the Header</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="tc.html">Tc - Set Truncated Flag (Force TCP Mode)</a></li>
+<li><a href="noq.html">Noq - Remove the Query Section</a></li>
+<li><a href="slp.html">Slp - Add a Delay (Latency)</a></li>
+<li><a href="ttl.html">Ttl - Set Custom TTL Value</a></li>
+<li><a href="len.html">Len - Set Custom Length in TCP</a></li>
+<li><a href="cnk.html">Cnk - Send Response in Chunks (TCP only)</a></li>
+<li><a href="cut.html">Cut - Cut N Bytes from the End of the Packet</a></li>
+<li><a href="add.html">Add - Add N Bytes to the End of the Packet</a></li>
+<li><a href="rl.html">Rl - Recalculate Length in TCP</a></li>
+<li><a href="fc.html">Fc - Force Compression</a></li>
+<li><a href="nc.html">Nc - No Compression</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

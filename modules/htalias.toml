@@ -1,12 +1,46 @@
 [module]
 name = "htalias"
 type = "feature"
-info = "HTTPS random N aliases"
-desc = "Respond with N number of HTTPS aliases containing random chain index (`htalias####.yourdomain.com`). BEWARE: This could result in multiplication."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "Random HTTPS Aliases"
+short = "HTTPS random alias generator"
+category = "Aliases"
+records = "HTTPS"
+tags = "Amplification, Domain Lock-Up, Denial of Service"
+rfc = "RFC9460"
+desc = '''
+This module is designed to return one or more **random aliases** using **HTTPS (HyperText Transfer Protocol Secure)** records.
 
-code = '''
+It specifically generates a random HTTPS alias record in the format `htalias######.yourdomain.com`, where `######` represents a random number.
+
+The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.
+
+Note that this feature provides the same functionality as requesting the HTTPS record for the generic [alias] feature. Responding with multiple records (aliases) in a single response is also supported.
+
+:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
+'''
+format = '''
+**`htalias.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many aliases should be generated in the response.
+'''
+seealso = "htloop, htchain, alias, cnalias, dnalias, htalias, mxalias, nptenumalias, nsalias, ptralias, spfalias1, spfalias2, sralias, svalias"
+
+[[module.example]]
+description = "By default, it returns a single HTTPS alias:"
+command = "dig htalias.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Same example as above, but this time we explicitly specify that we want to receive a single HTTPS record:"
+command = "dig htalias.1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we specify that we want to receive five HTTPS aliases:"
+command = "dig htalias.5.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
            elif req.first_subdomain.startswith("htalias"):
               # Send multiple random HTTPS aliases (RFC 9460).
               # BEWARE: This could result in multiplication

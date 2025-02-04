@@ -1,0 +1,123 @@
+---
+layout: default
+title: "Empty4 - Only Transaction ID and NULL Bytes"
+parent: "Empty responses"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Empty4 - Only Transaction ID and NULL Bytes</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Empty4 - Only Transaction ID and NULL Bytes</h1>
+<p>Every DNS packet contains the following parts:</p>
+<ul>
+<li><strong>Header:</strong><ul>
+<li><strong>Length field</strong> (TCP only, 2 bytes)</li>
+<li><strong>Transaction ID</strong> (2 bytes)</li>
+<li><strong>Flags field</strong> (2 bytes)</li>
+<li><strong>Number of Questions</strong> (2 bytes)</li>
+<li><strong>Number of Answer RRs</strong> (2 bytes)</li>
+<li><strong>Number of Authority RRs</strong> (2 bytes)</li>
+<li><strong>Number of Additional RRs</strong> (2 bytes)</li>
+</ul>
+</li>
+<li><strong>Body</strong>:<ul>
+<li><strong>Queries Section</strong>: Contains <strong>QNAME</strong>, <strong>QTYPE</strong>, and <strong>QCLASS</strong> for each query.</li>
+<li><strong>Answer Section</strong>: Contains answer RRs (if any).</li>
+<li><strong>Authority Section</strong>: Contains authoritative RRs (if any).</li>
+<li><strong>Additional Section</strong>: Contains additional RRs (if any).</li>
+</ul>
+</li>
+</ul>
+<p>This module is designed to respond with an incomplete DNS response containing only the <strong>Transaction ID</strong>, followed by an arbitrary number of NULL bytes (<code class='code-block'>\000</code>).</p>
+<p>This is likely to result in unexpected errors.</p>
+<p>Note that DNS packets in TCP mode must include a <strong>Length field</strong> at the beginning. This module ensures that the Length field is correctly set when operating in TCP mode.</p><p><strong>Category:</strong> <a href='../empty-responses.html'>Empty responses</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>empty4.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines how many NULL bytes should be generated in the response. By default, a single NULL byte is generated.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, the module generates a single NULL byte as the response. Although the response contains a valid Transaction ID, it includes nothing beyond the single NULL byte. This is insufficient for a valid DNS response, causing the client to make three attempts to resolve the error:</p>
+<div><pre class='output-block'><strong># dig empty4.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty4.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/empty4/dig_empty4.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request 100 NULL bytes as the response. As a result, the parser only partially processes the packet. It interprets the response as a standard query (due to Flags field being <code class='code-block'>\000\000</code>) and finds that the number of questions, answers, authority, and additional records are all zero. Consequently, the parser identifies 90 extra bytes at the end of the packet:</p>
+<div><pre class='output-block'><strong># dig empty4.100.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty4.100.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 8244
+;; flags:; QUERY: 0, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 90 extra bytes at end
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Oct 28 10:50:22 +04 2024
+;; MSG SIZE  rcvd: 102
+</pre></div><p><a href='../outputs/empty4/dig_empty4.100.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In TCP mode, the results are the same as in the previous example in UDP mode, resulting in significant malformations shown:</p>
+<div><pre class='output-block'><strong># dig empty4.100.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty4.100.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 50867
+;; flags:; QUERY: 0, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 90 extra bytes at end
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Mon Oct 28 10:50:24 +04 2024
+;; MSG SIZE  rcvd: 102
+</pre></div><p><a href='../outputs/empty4/dig_empty4.100.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>In this example, the DNS response is sent in TCP mode (using the <a href="tc.html">tc</a> modifier) with the length field indicating that it is a 200-byte long packet (using the <a href="len.html">len</a> modifier). However, the response body contains no data. There is only the Transaction ID and nothing else (zero NULLs bytes). As a result, the parser becomes confused and makes three attempts to resolve the error:</p>
+<div><pre class='output-block'><strong># dig empty4.0.len200.tc.yourdomain.com @127.0.0.1</strong>
+
+;; Truncated, retrying in TCP mode.
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty4.0.len200.tc.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/empty4/dig_empty4.0.len200.tc.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="close.html">Close - Close the Connection</a></li>
+<li><a href="empty1.html">Empty1 - Empty Packet</a></li>
+<li><a href="empty2.html">Empty2 - Only NULL Bytes</a></li>
+<li><a href="empty3.html">Empty3 - Only NULL Bytes (Suitable for TCP)</a></li>
+<li><a href="empty5.html">Empty5 - Only DNS Header and NULL Bytes</a></li>
+<li><a href="empty6.html">Empty6 - ANSWER Section Missing</a></li>
+<li><a href="empty7.html">Empty7 - ANSWER Section Is NULL Bytes</a></li>
+<li><a href="queryback1.html">QueryBack1 - Query Reflection</a></li>
+<li><a href="queryback2.html">QueryBack2 - Query Reflection (Stripped)</a></li>
+<li><a href="queryback3.html">QueryBack3 - Query Reflection (To Port 53)</a></li>
+<li><a href="queryback4.html">QueryBack4 - Query Reflection (Random, to Port 53)</a></li>
+<li><a href="timeout.html">Timeout - Do Not Respond</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

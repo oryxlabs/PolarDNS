@@ -1,0 +1,136 @@
+---
+layout: default
+title: "Slp - Add a Delay (Latency)"
+parent: "Packet manipulation"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Slp - Add a Delay (Latency)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Slp - Add a Delay (Latency)</h1>
+<p>This modifier adds an arbitrary delay to DNS responses, allowing users to set a specified delay (sleep) in milliseconds before the response is sent.</p>
+<p>This can be useful for testing DNS resolvers by causing them to wait for a specified period before receiving a response from the PolarDNS server.</p>
+<p>Such approach can occupy a resolution worker/thread on the target DNS resolver for a specified period of time. Sending numerous such requests simultaneously can potentially lead to a Denial of Service (DoS) situation on the resolver.</p>
+<p>This modifier is compatible with and can be combined with any other existing feature or modifier.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../packet-manipulation.html'>Packet manipulation</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.slp&lt;MILISECONDS&gt;.*</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;MILLISECONDS&gt;</code></strong> parameter specifies the duration (in milliseconds) to sleep before the response is sent. Note that 1,000 milliseconds equals to 1 second.</li>
+</ul>
+<h2>Examples</h2>
+<p>In this example, we use the basic <a href="always.html">always</a> feature, which always resolves to an IP address. Additionally, we introduce a delay of 1 second before sending the response:</p>
+<div><pre class='output-block'><strong># dig always.slp1000.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.slp1000.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 16856
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.slp1000.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.slp1000.yourdomain.com. 60 IN	A	2.3.4.5
+
+;; Query time: <span style="background-color: yellow;">1007 msec</span>
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 15:58:51 +04 2024
+;; MSG SIZE  rcvd: 63</pre></div><p><a href='../outputs/slp/dig_always.slp1000.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we introduce a delay of 3 seconds before sending the response:</p>
+<div><pre class='output-block'><strong># dig always.slp3000.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.slp3000.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 26180
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.slp3000.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.slp3000.yourdomain.com. 60 IN	A	2.3.4.5
+
+;; Query time: <span style="background-color: yellow;">3011 msec</span>
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 15:58:55 +04 2024
+;; MSG SIZE  rcvd: 63</pre></div><p><a href='../outputs/slp/dig_always.slp3000.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we use the <a href="alias.html">alias</a> feature for generating alias records. We request to generate 5 (five) CNAME alias records and add a 2-second delay before sending the response:</p>
+<div><pre class='output-block'><strong># dig alias.5.slp2000.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.5.slp2000.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 39421
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.slp2000.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+alias.5.slp2000.yourdomain.com.	60 IN	CNAME	alias980082.5.slp2000.yourdomain.com.
+alias.5.slp2000.yourdomain.com.	60 IN	CNAME	alias20811.5.slp2000.yourdomain.com.
+alias.5.slp2000.yourdomain.com.	60 IN	CNAME	alias3815.5.slp2000.yourdomain.com.
+alias.5.slp2000.yourdomain.com.	60 IN	CNAME	alias851856.5.slp2000.yourdomain.com.
+alias.5.slp2000.yourdomain.com.	60 IN	CNAME	alias927533.5.slp2000.yourdomain.com.
+
+;; Query time: <span style="background-color: yellow;">2007 msec</span>
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 15:58:59 +04 2024
+;; MSG SIZE  rcvd: 295</pre></div><p><a href='../outputs/slp/dig_alias.5.slp2000.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request to generate 5 (five) NS alias records and add a 2-second delay before sending the response. Additionally, we append a random number to the feature name, which helps prevent receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers:</p>
+<div><pre class='output-block'><strong># dig NS alias${RANDOM}.5.slp2000.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; NS alias25431.5.slp2000.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 26689
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias25431.5.slp2000.yourdomain.com. IN	NS
+
+;; ANSWER SECTION:
+alias25431.5.slp2000.yourdomain.com. 60	IN NS	alias163440.5.slp2000.yourdomain.com.
+alias25431.5.slp2000.yourdomain.com. 60	IN NS	alias804798.5.slp2000.yourdomain.com.
+alias25431.5.slp2000.yourdomain.com. 60	IN NS	alias706069.5.slp2000.yourdomain.com.
+alias25431.5.slp2000.yourdomain.com. 60	IN NS	alias75550.5.slp2000.yourdomain.com.
+alias25431.5.slp2000.yourdomain.com. 60	IN NS	alias325809.5.slp2000.yourdomain.com.
+
+;; Query time: <span style="background-color: yellow;">2007 msec</span>
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Mon Nov 04 15:59:02 +04 2024
+;; MSG SIZE  rcvd: 302</pre></div><p><a href='../outputs/slp/dig_NS_alias__RANDOM_.5.slp2000.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="add.html">Add - Add N Bytes to the End of the Packet</a></li>
+<li><a href="cnk.html">Cnk - Send Response in Chunks (TCP only)</a></li>
+<li><a href="cut.html">Cut - Cut N Bytes from the End of the Packet</a></li>
+<li><a href="fc.html">Fc - Force Compression</a></li>
+<li><a href="len.html">Len - Set Custom Length in TCP</a></li>
+<li><a href="nc.html">Nc - No Compression</a></li>
+<li><a href="noq.html">Noq - Remove the Query Section</a></li>
+<li><a href="rl.html">Rl - Recalculate Length in TCP</a></li>
+<li><a href="tc.html">Tc - Set Truncated Flag (Force TCP Mode)</a></li>
+<li><a href="ttl.html">Ttl - Set Custom TTL Value</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="newid.html">NewId - Set Random Transaction ID</a></li>
+<li><a href="flgs.html">Flgs - Set Custom Flags in the Header</a></li>
+<li><a href="qurr.html">Qurr - Set Question RRs in the Header</a></li>
+<li><a href="anrr.html">Anrr - Set Answer RRs in the Header</a></li>
+<li><a href="aurr.html">Aurr - Set Authority RRs in the Header</a></li>
+<li><a href="adrr.html">Adrr - Set Additional RRs in the Header</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

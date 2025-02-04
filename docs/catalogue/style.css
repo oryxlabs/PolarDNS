@@ -1,0 +1,111 @@
+
+body {
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+	font-size: var(--body-font-size, 14px);
+	line-height: 1.5;
+	color: var(--fgColor-default, var(--color-fg-default));
+	background-color: var(--bgColor-default, var(--color-canvas-default));
+}
+
+pre.output-block {
+	background-color: #f6f8fa;
+	overflow-x: auto;
+	white-space: pre;
+	font-family: 'Courier New', monospace;
+	padding: 10px;
+	border-radius: 4px;
+}
+
+code.code-block {
+	background-color: #f0f1f3;
+	padding: .2em .4em;
+	margin: 0;
+	font-size: 85%;
+	white-space: break-spaces;
+	border-radius: 6px;
+}
+
+g-emoji {
+	display: inline-block;
+	min-width: 1ch;
+	font-family: "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+	font-size: 1em;
+	font-style: normal !important;
+	font-weight: var(--base-text-weight-normal, 400);
+	line-height: 1;
+	vertical-align: -0.075em;
+}
+
+.list {
+  font-family:sans-serif;
+}
+td {
+  padding:10px; 
+  border:solid 1px #eee;
+}
+
+input {
+  border:solid 1px #ccc;
+  border-radius: 5px;
+  padding:7px 14px;
+  margin-bottom:10px
+}
+input:focus {
+  outline:none;
+  border-color:#aaa;
+}
+.sort {
+  width: 100%;
+  padding:8px 10px;
+  border-radius: 4px;
+  border:none;
+  display:inline-block;
+  color:#fff;
+  text-align: left;
+  font-weight: bold;
+  text-decoration: none;
+  background-color: #585858;
+}
+.sort:hover {
+  text-decoration: none;
+  background-color:#1b8aba;
+}
+.sort:focus {
+  outline:none;
+}
+.sort:after {
+  display:inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  content:"";
+  position: relative;
+  top:-10px;
+  right:-5px;
+}
+.sort.asc:after {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #fff;
+  content:"";
+  position: relative;
+  top:4px;
+  right:-5px;
+}
+.sort.desc:after {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #fff;
+  content:"";
+  position: relative;
+  top:-4px;
+  right:-5px;
+}
+
+

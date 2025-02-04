@@ -1,0 +1,42 @@
+[module]
+name = "cnk"
+type = "modifier"
+info = "Send Response in Chunks (TCP only)"
+short = "Send response in chunks (TCP only)"
+category = "Packet manipulation"
+desc = '''
+This modifier allows dividing the DNS response packet into multiple chunks of a specified size, which are then sent sequentially, one after another.
+
+It is recommended to use this in combination with the [slp] modifier to introduce a delay between sending each chunk.
+
+Such approach can delay the complete reception of the response and occupy a resolution worker/thread on the target DNS resolver for a prolonged period of time. Sending numerous such requests simultaneously can potentially lead to a Denial of Service (DoS) situation on the resolver.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+
+:warning:**BEWARE**:warning:This can potentially lead to domain lock-up (DoS).
+'''
+format = '''
+**`*.cnk<BYTES>.*`**
+
+Where:
+
+- The **`<BYTES>`** parameter specifies the size of each chunk for dividing the DNS response packet. If the specified size exceeds the total packet size, the entire packet will be sent as a single chunk.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = "In this example, we use the basic [always] feature to request 10 A records in TCP mode. Additionally, we request the response to be divided into 20-byte chunks with a 150-millisecond delay between sending each chunk:"
+command = "dig always.10.cnk20.slp150.yourdomain.com @127.0.0.1 +tcp"
+append = "We can see that this setup effectively extended the time required to receive the full response to approximately 1.85 seconds."
+
+[[module.example]]
+description = "Similar to the previous example, but in this case, we request the response to be divided into 10-byte chunks. This configuration effectively doubles the time required to receive the full response. Additionally, we use the [tc] modifier to force the resolver to communicate with the PolarDNS server in TCP mode:"
+command = "dig always.10.cnk10.slp150.tc.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we use the [spfalias1] feature to request 10 SPF (TXT) records and forcing TCP mode by using the [tc] modifier. Additionally, we request the response to be divided into 10-byte chunks with a 100-millisecond delay between sending each chunk:"
+command = "dig spfalias1.10.tc.cnk10.slp100.yourdomain.com @127.0.0.1"
+append = "Given the resulting packet size of 867 bytes, this setup effectively extended the time required to receive the full response to slightly over 9 seconds."
+
+[module.code]
+# The code is located in the polardns.py file.

@@ -1,0 +1,45 @@
+[module]
+name = "slp"
+type = "modifier"
+info = "Add a Delay (Latency)"
+short = "Sleep before sending (add delay to DNS response)"
+category = "Packet manipulation"
+desc = '''
+This modifier adds an arbitrary delay to DNS responses, allowing users to set a specified delay (sleep) in milliseconds before the response is sent.
+
+This can be useful for testing DNS resolvers by causing them to wait for a specified period before receiving a response from the PolarDNS server.
+
+Such approach can occupy a resolution worker/thread on the target DNS resolver for a specified period of time. Sending numerous such requests simultaneously can potentially lead to a Denial of Service (DoS) situation on the resolver.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+
+:warning:**BEWARE**:warning:This can potentially lead to domain lock-up (DoS).
+'''
+tags = "Domain Lock-Up, Denial of Service"
+format = '''
+**`*.slp<MILISECONDS>.*`**
+
+Where:
+
+- The **`<MILLISECONDS>`** parameter specifies the duration (in milliseconds) to sleep before the response is sent. Note that 1,000 milliseconds equals to 1 second.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = "In this example, we use the basic [always] feature, which always resolves to an IP address. Additionally, we introduce a delay of 1 second before sending the response:"
+command = "dig always.slp1000.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we introduce a delay of 3 seconds before sending the response:"
+command = "dig always.slp3000.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we use the [alias] feature for generating alias records. We request to generate 5 (five) CNAME alias records and add a 2-second delay before sending the response:"
+command = "dig alias.5.slp2000.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to generate 5 (five) NS alias records and add a 2-second delay before sending the response. Additionally, we append a random number to the feature name, which helps prevent receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers:"
+command = "dig NS alias${RANDOM}.5.slp2000.yourdomain.com @10.211.55.2"
+
+[module.code]
+# The code is located in the polardns.py file.

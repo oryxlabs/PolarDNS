@@ -1,12 +1,60 @@
 [module]
 name = "svloop"
 type = "feature"
-info = "SVCB alias loop"
-desc = "Respond with an SVCB record featuring an alias (SvcPriority 0) that creates an infinite loop with any number of elements."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "SVCB Alias Loops"
+short = "SVCB loop alias generator"
+category = "Alias loops"
+records = "SVCB"
+tags = "Domain Lock-Up, Denial of Service"
+rfc = "RFC9460"
+desc = '''
+This module implements **alias loops** using **SVCB (Service Binding)** records. The loops can be a **direct loop**, where the alias points back to the **same domain name** as in the original query, or they can include **multiple elements**, cycling through a specified number of domains.
 
-code = '''
+The idea is that if the client/resolver decides to resolve this further, it will enter an **infinite loop**. In practice, however, most modern resolvers detect such loops and terminate the resolution.
+
+The SVCB records include a SvcPriority field. In this module, the field always set to 0.
+
+Additionally, the module supports queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, "service labels", or "underscore labels".
+
+Note that this feature provides the same functionality as requesting a SVCB record for the generic [loop] feature.
+
+:warning:**BEWARE**:warning:This can potentially lead to a domain lock-up (DoS).
+'''
+format = '''
+**`svloop.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies the number of elements the loop should contain.
+'''
+seealso = "svalias, svchain, cnloop, dnloop, htloop, loop, mxloop, nptenumloop, nsloop, ptrloop1, ptrloop2, spfloop, srloop, svloop"
+
+[[module.example]]
+description = "In this example, we can see a direct loop formed by requesting an SVCB record containing the exact same domain name:"
+command = "dig svloop.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request a SVCB alias loop consisting of 5 elements:"
+command = "dig svloop.5.yourdomain.com @127.0.0.1"
+append = "The resulting domain name `svloop.5.1.yourdomain.com` represents the 1st element of the loop."
+
+[[module.example]]
+description = "By resolving the 1st element, we are pointed to the 2nd element of the loop:"
+command = "dig svloop.5.1.yourdomain.com @127.0.0.1"
+append = "This continues up to the 5th and final element - `svloop.5.5.yourdomain.com`."
+
+[[module.example]]
+description = "By resolving the final element of the loop, we are directed back to the 1st element again:"
+command = "dig svloop.5.5.yourdomain.com @127.0.0.1"
+append = "We can see that we are indeed pointed back to the 1st element again, effectively forming a loop."
+
+[[module.example]]
+description = "As mentioned in the description, this module also supports DNS queries for locating different services using the underscore (_) prefix notation. This example demonstrates such usage, where we search for an HTTP service specifically designed for mobile devices and running over TCP. In this case, we request a loop of 10 elements:"
+command = "dig _mobile._http._tcp.svloop.10.yourdomain.com @127.0.0.1"
+append = "The resulting domain name `_mobile._http._tcp.svloop.10.1.yourdomain.com` represents the 1st element of the loop."
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("svloop"):
    # Do an alias loop in a SVCB record (SvcPriority 0).
    if req.subdomains[1].isnumeric() and req.subdomains[2].isnumeric():

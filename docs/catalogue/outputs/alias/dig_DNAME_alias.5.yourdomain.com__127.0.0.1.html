@@ -1,0 +1,23 @@
+<pre class='output-block'><strong># dig DNAME alias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; DNAME alias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 57507
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.yourdomain.com.		IN	DNAME
+
+;; ANSWER SECTION:
+alias.5.yourdomain.com.	60	IN	DNAME	alias6171.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	DNAME	alias332639.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	DNAME	alias826490.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	DNAME	alias794293.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	DNAME	alias924157.5.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Oct 18 11:39:37 +04 2024
+;; MSG SIZE  rcvd: 248
+</pre>

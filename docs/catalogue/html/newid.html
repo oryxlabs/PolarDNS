@@ -1,0 +1,75 @@
+---
+layout: default
+title: "NewId - Set Random Transaction ID"
+parent: "Header manipulation"
+---
+
+<!DOCTYPE html>
+<head>
+<title>NewId - Set Random Transaction ID</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>NewId - Set Random Transaction ID</h1>
+<p>This modifier generates a new Transaction ID (TXID) for the DNS response, causing a mismatch with the Transaction ID that was sent in the query.</p>
+<p>The Transaction ID is a 2-byte field located at the beginning of the DNS packet. In standard DNS communication, the Transaction ID in the response must precisely match the Transaction ID in the query. If they do not match, it indicates that the response is unrelated to the original query.</p>
+<p>This modifier is compatible with and can be combined with any other existing feature or modifier.</p><p><strong>Category:</strong> <a href='../header-manipulation.html'>Header manipulation</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.newid.*</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>In this example, we use the <a href="basic.html">basic</a> always feature which always resolves to an IP address. We request to generate a new Transaction ID for the DNS response. As a result, the client is unable to associate the response with the original query:</p>
+<div><pre class='output-block'><strong># dig always.newid.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 52149, got 37106
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 52149, got 20468
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 52149, got 51986
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.newid.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/newid/dig_always.newid.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we use the <a href="size.html">size</a> feature which returns multiple anwers at once. Once again we request to generate a new Transaction ID for the DNS response. As a result, the client is unable to associate the response with the original query:</p>
+<div><pre class='output-block'><strong># dig size.newid.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 19139, got 38099
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 19139, got 30848
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 19139, got 24385
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; size.newid.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/newid/dig_size.newid.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="adrr.html">Adrr - Set Additional RRs in the Header</a></li>
+<li><a href="anrr.html">Anrr - Set Answer RRs in the Header</a></li>
+<li><a href="aurr.html">Aurr - Set Authority RRs in the Header</a></li>
+<li><a href="flgs.html">Flgs - Set Custom Flags in the Header</a></li>
+<li><a href="qurr.html">Qurr - Set Question RRs in the Header</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="tc.html">Tc - Set Truncated Flag (Force TCP Mode)</a></li>
+<li><a href="noq.html">Noq - Remove the Query Section</a></li>
+<li><a href="slp.html">Slp - Add a Delay (Latency)</a></li>
+<li><a href="ttl.html">Ttl - Set Custom TTL Value</a></li>
+<li><a href="len.html">Len - Set Custom Length in TCP</a></li>
+<li><a href="cnk.html">Cnk - Send Response in Chunks (TCP only)</a></li>
+<li><a href="cut.html">Cut - Cut N Bytes from the End of the Packet</a></li>
+<li><a href="add.html">Add - Add N Bytes to the End of the Packet</a></li>
+<li><a href="rl.html">Rl - Recalculate Length in TCP</a></li>
+<li><a href="fc.html">Fc - Force Compression</a></li>
+<li><a href="nc.html">Nc - No Compression</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

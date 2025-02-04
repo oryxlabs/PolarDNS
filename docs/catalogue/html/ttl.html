@@ -1,0 +1,119 @@
+---
+layout: default
+title: "Ttl - Set Custom TTL Value"
+parent: "Packet manipulation"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Ttl - Set Custom TTL Value</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Ttl - Set Custom TTL Value</h1>
+<p>This modifier allows to modify the Time-to-Live (TTL) values in the DNS response, overriding any TTL settings specified in the configuration file.</p>
+<p>When applied, it modifies the TTL value for each answer included in the DNS response body.</p>
+<p>TTL is a field in a DNS packet that defines how long (in seconds) the data can be stored in cache by resolvers or clients. Once the TTL expires, the cached data becomes outdated, and a new query is required to refresh the information.</p>
+<p>This modifier is compatible with and can be combined with any other existing feature or modifier.</p><p><strong>Category:</strong> <a href='../packet-manipulation.html'>Packet manipulation</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.ttl&lt;NUMBER&gt;.*</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter specifies the TTL value to be applied to each answer (record) in the response. Note that the maximum TTL value is 2,147,483,648 seconds (approximately 68.09 years), as the TTL field is 31 bits long.</li>
+</ul>
+<h2>Examples</h2>
+<p>In this example, we use the basic <a href="always.html">always</a> feature which always resolves to an IP address. We specify the TTL value to be <code class='code-block'>12345678</code> in the DNS response:</p>
+<div><pre class='output-block'><strong># dig always.ttl12345678.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.ttl12345678.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 31255
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.ttl12345678.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+always.ttl12345678.yourdomain.com. 12345678 IN A 2.3.4.5
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 23 11:55:57 +04 2024
+;; MSG SIZE  rcvd: 67
+</pre></div><p><a href='../outputs/ttl/dig_always.ttl12345678.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that the answer has a TTL value of <code class='code-block'>12345678</code>.</p></p><br>
+<p>In this example, we use the <a href="size.html">size</a> feature which returns multiple anwers at once. We specify the TTL value to be <code class='code-block'>99999</code> for each answer:</p>
+<div><pre class='output-block'><strong># dig size.ttl99999.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; size.ttl99999.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 39947
+;; flags: qr aa; QUERY: 1, ANSWER: 29, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.ttl99999.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.164
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.172
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.32
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.86
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.87
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.47
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.166
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.132
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.120
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.208
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.172
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.15
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.17
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.181
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.56
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.248
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.169
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.108
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.83
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.132
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.16
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.229
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.80
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.81
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.142
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.19
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.190
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.91
+size.ttl99999.yourdomain.com. 99999 IN	A	127.0.0.130
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 23 13:01:26 +04 2024
+;; MSG SIZE  rcvd: 510
+</pre></div><p><a href='../outputs/ttl/dig_size.ttl99999.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that each record has a TTL value of <code class='code-block'>99999</code>.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="add.html">Add - Add N Bytes to the End of the Packet</a></li>
+<li><a href="cnk.html">Cnk - Send Response in Chunks (TCP only)</a></li>
+<li><a href="cut.html">Cut - Cut N Bytes from the End of the Packet</a></li>
+<li><a href="fc.html">Fc - Force Compression</a></li>
+<li><a href="len.html">Len - Set Custom Length in TCP</a></li>
+<li><a href="nc.html">Nc - No Compression</a></li>
+<li><a href="noq.html">Noq - Remove the Query Section</a></li>
+<li><a href="rl.html">Rl - Recalculate Length in TCP</a></li>
+<li><a href="slp.html">Slp - Add a Delay (Latency)</a></li>
+<li><a href="tc.html">Tc - Set Truncated Flag (Force TCP Mode)</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="newid.html">NewId - Set Random Transaction ID</a></li>
+<li><a href="flgs.html">Flgs - Set Custom Flags in the Header</a></li>
+<li><a href="qurr.html">Qurr - Set Question RRs in the Header</a></li>
+<li><a href="anrr.html">Anrr - Set Answer RRs in the Header</a></li>
+<li><a href="aurr.html">Aurr - Set Authority RRs in the Header</a></li>
+<li><a href="adrr.html">Adrr - Set Additional RRs in the Header</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

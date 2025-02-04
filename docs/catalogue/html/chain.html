@@ -1,0 +1,190 @@
+---
+layout: default
+title: "Chain - Alias Chains"
+parent: "Alias chains"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Chain - Alias Chains</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Chain - Alias Chains</h1>
+<p>This module implements <strong>incremental alias chains</strong> in DNS using variety of different record (resource) types. It supports the following record types:</p>
+<ul>
+<li>CNAME (Canonical Name)</li>
+<li>DNAME (Delegation Name)</li>
+<li>HTTPS (HyperText Transfer Protocol Secure)</li>
+<li>SVCB (Service Binding)</li>
+<li>SPF (Sender Policy Framework)</li>
+<li>SRV (Service Locator)</li>
+<li>MX (Mail Exchange)</li>
+<li>NS (Name Server)</li>
+</ul>
+<p>The module returns an alias record with an incremented domain name index, forming a chain that continues to increment indefinitely.</p>
+<p>Specifically, this module generates an alias record in the format <code class='code-block'>chain###.yourdomain.com</code>, where <code class='code-block'>###</code> represents the incremented index.</p>
+<p>The concept is that if the client/resolver attempts to resolve this alias further, it will generate yet another incremented alias, causing the process to continue indefinitely and potentially keeping the resolver occupied.</p>
+<p>However, in practice, most modern resolvers detect such chains and terminate the resolution after encountering a certain number of consecutive aliases (e.g., 20 aliases) or upon reaching a specified time limit for the resolution (e.g., 30 seconds).</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This could potentially lead to a <strong>domain lock-up (DoS)</strong>.</p><p><strong>Category:</strong> <a href='../alias-chains.html'>Alias chains</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1034/" target="_blank">RFC1034</a>, <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a>, <a href="https://datatracker.ietf.org/doc/rfc2672/" target="_blank">RFC2672</a>, <a href="https://datatracker.ietf.org/doc/rfc2782/" target="_blank">RFC2782</a>, <a href="https://datatracker.ietf.org/doc/rfc2915/" target="_blank">RFC2915</a>, <a href="https://datatracker.ietf.org/doc/rfc3761/" target="_blank">RFC3761</a>, <a href="https://datatracker.ietf.org/doc/rfc4408/" target="_blank">RFC4408</a>, <a href="https://datatracker.ietf.org/doc/rfc6672/" target="_blank">RFC6672</a>, <a href="https://datatracker.ietf.org/doc/rfc7208/" target="_blank">RFC7208</a>, <a href="https://datatracker.ietf.org/doc/rfc9460/" target="_blank">RFC9460</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>chain&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter specifies an arbitrary number that will be incremented in the response.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, the module generates a CNAME alias with the index of 1:</p>
+<div><pre class='output-block'><strong># dig chain.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; chain.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 64247
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;chain.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+chain.yourdomain.com.	60	IN	CNAME	chain1.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:23:31 +04 2024
+;; MSG SIZE  rcvd: 73</pre></div><p><a href='../outputs/chain/dig_chain.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>If we attempt to resolve the resulting domain name (<code class='code-block'>chain1.yourdomain.com</code>), we receive an incremented alias record:</p>
+<div><pre class='output-block'><strong># dig chain1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; chain1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 56389
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;chain1.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+chain1.yourdomain.com.	60	IN	CNAME	chain2.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:23:32 +04 2024
+;; MSG SIZE  rcvd: 74</pre></div><p><a href='../outputs/chain/dig_chain1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>If we continue to resolve the next domain name (<code class='code-block'>chain2.yourdomain.com</code>), we again receive an incremented alias record:</p>
+<div><pre class='output-block'><strong># dig chain2.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; chain2.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 21790
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;chain2.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+chain2.yourdomain.com.	60	IN	CNAME	chain3.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:23:33 +04 2024
+;; MSG SIZE  rcvd: 74</pre></div><p><a href='../outputs/chain/dig_chain2.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>This resolution process can continue indefinitely, as there are no limits on the size of the index number. Each resolution yields another incremented alias record:</p>
+<div><pre class='output-block'><strong># dig chain9999999999999999999999999.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; chain9999999999999999999999999.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 36288
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;chain9999999999999999999999999.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+chain9999999999999999999999999.yourdomain.com. 60 IN CNAME chain10000000000000000000000000.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:23:34 +04 2024
+;; MSG SIZE  rcvd: 123</pre></div><p><a href='../outputs/chain/dig_chain9999999999999999999999999.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>The domain name will never be fully resolved as the incremental process continues indefinitely.</p></p><br>
+<p>In this example, we ask for a different record type. Specifically, we request a DNAME alias record with an index of 100:</p>
+<div><pre class='output-block'><strong># dig DNAME chain100.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; DNAME chain100.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 56380
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;chain100.yourdomain.com.	IN	DNAME
+
+;; ANSWER SECTION:
+chain100.yourdomain.com. 60	IN	DNAME	chain101.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:23:36 +04 2024
+;; MSG SIZE  rcvd: 78</pre></div><p><a href='../outputs/chain/dig_DNAME_chain100.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that we received an incremented DNAME alias record.</p></p><br>
+<p>In this example, we request an MX record with an index of 1,000:</p>
+<div><pre class='output-block'><strong># dig MX chain1000.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; MX chain1000.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 61690
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;chain1000.yourdomain.com.	IN	MX
+
+;; ANSWER SECTION:
+chain1000.yourdomain.com. 60	IN	MX	0 chain1001.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:23:37 +04 2024
+;; MSG SIZE  rcvd: 82</pre></div><p><a href='../outputs/chain/dig_MX_chain1000.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that we received an incremented MX alias record.</p></p><br>
+<p>In this example, we request an SPF record with an index of 10,000. Since SPF records are published within TXT records in DNS, we request a TXT record in this case:</p>
+<div><pre class='output-block'><strong># dig TXT chain10000.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; TXT chain10000.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 63066
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;chain10000.yourdomain.com.	IN	TXT
+
+;; ANSWER SECTION:
+chain10000.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:chain10001.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:23:38 +04 2024
+;; MSG SIZE  rcvd: 101</pre></div><p><a href='../outputs/chain/dig_TXT_chain10000.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>Again, we received an incremented SPF alias record as the answer. The domain name will never be fully resolved as the incremental process continues indefinitely.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="cnchain.html">CnChain - CNAME Alias Chains</a></li>
+<li><a href="dnchain.html">DnChain - DNAME Alias Chains</a></li>
+<li><a href="htchain.html">HtChain - HTTPS Alias Chains</a></li>
+<li><a href="mxchain.html">MxChain - MX Alias Chains</a></li>
+<li><a href="nschain.html">NsChain - NS Alias Chains</a></li>
+<li><a href="spfchain.html">SpfChain - SPF (TXT) Alias Chains</a></li>
+<li><a href="srchain.html">SrChain - SRV Alias Chains</a></li>
+<li><a href="svchain.html">SvChain - SVCB Alias Chains</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="alias.html">Alias - Random Aliases</a></li>
+<li><a href="loop.html">Loop - Alias Loops</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

@@ -1,12 +1,43 @@
 [module]
 name = "empty3"
 type = "feature"
-info = "Only NULL bytes, suitable for TCP"
-desc = "Like empty2, but in TCP mode make sure the length is properly provided in the beginning, so just sending 1 NULL will be x00x01x00 in TCP."
-author = "ivan.jedek@oryxlabs.com"
+info = "Only NULL Bytes (Suitable for TCP)"
+short = "Send only NULL bytes (suitable for TCP)"
 category = "Empty responses"
+desc = '''
+This module is designed to respond with an empty answer consisting solely of an arbitrary number of NULL bytes (`\\000`).
 
-code = '''
+Note that DNS packets in TCP mode include a length field at the beginning.
+
+This module correctly provides the length information at the beginning of the packet in TCP mode. For a variant that does not provide the length information in TCP mode, refer to the [empty2] module.
+'''
+format = '''
+**`empty3.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many NULL bytes should be generated in the response. By default, a single NULL byte is generated.
+'''
+seealso = "close, timeout, empty1, empty2, empty4, empty5, empty6, empty7, queryback1, queryback2, queryback3, queryback4"
+
+[[module.example]]
+description = "By default, the module generates a single NULL byte as the response. This is insufficient for a valid DNS response, causing the client to make three attempts to resolve the error:"
+command = "dig empty3.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request 100 NULL bytes as the response. In this case, the parser interprets the Transaction ID in the response as 0 (`\\000\\000`) which does not match the Transaction ID from the original query. As a result, the client again makes three attempts to resolve the error:"
+command = "dig empty3.100.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we switch to TCP mode and request 100 NULL bytes as the response. In this module, the length is correctly provided at the beginning of the packet, allowing the parser to proceeds with parsing the Transaction ID. It interprets the Transaction ID in the response as 0 (`\\000\\000`) which does not match the Transaction ID from the original query. In TCP mode, the client does not make any further attempts to resolve the error:"
+command = "dig empty3.100.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig empty3${RANDOM}.100.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("empty3"):
    # Send arbitrary number of NULLs with consideration for TCP mode.
    # In TCP there is length field in the beginning (2 bytes), so we must

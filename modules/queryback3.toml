@@ -1,21 +1,51 @@
 [module]
 name = "queryback3"
 type = "feature"
-info = "Query reflection, to port 53"
-desc = "Send back the same query to the sender to port udp/53. This might create a loop if the resolver uses the same IP address for listening for queries and for performing the resolution as well."
-author = "ivan.jedek@oryxlabs.com"
+info = "Query Reflection (To Port 53)"
+short = "Query reflection back to sender to port 53"
 category = "Empty responses"
+desc = '''
+Instead of sending a DNS response with an answer, this module resends the original query back to the sender on UDP port 53, exactly as it was received. The original query is never actually answered; the connection is simply abandoned, resulting a timeout.
 
-code = '''
+:warning:**BEWARE**:warning: This behavior is intentionally designed to **create a loop** between the client/resolver and the PolarDNS server. For instance, if the client is a recursive resolver using the **same IP address** for both receiving queries and sending queries during resolution, it could result in an **infinite loop** of queries being sent back and forth indefinitely.
+
+This could potentially lead to a Denial of Service (DoS) situation.
+
+This is one of the main reasons why a recursive resolver should always use separate IP addresses for receiving queries and for sending out queries to other DNS servers (during resolution), to prevent potential infinite loops and other security risks.
+'''
+format = '''
+**`queryback3.yourdomain.com`**
+
+This module has no parameters.
+'''
+seealso = "close, timeout, empty1, empty2, empty3, empty4, empty5, empty6, empty7, queryback1, queryback2, queryback4"
+
+[[module.example]]
+description = "In this example, we run the query directly against PolarDNS server. We see that the client (dig) does not actually receive any response, and the query results in a timeout three times in a row:"
+command = "dig queryback3.yourdomain.com @10.211.55.2"
+pcapexplain = "However, in the PCAP file below, we can see that the original query was sent back to us (reflected) to UDP port 53. This is exactly what PolarDNS sent to our UDP port 53:"
+append = "We can see that it is the exact same query that we originally sent. It was sent back to our UDP port 53. Since we do not run any DNS server on our system, nothing significant happened. However, if the initial query had been run through a recursive resolver (instead of directly to PolarDNS), it would be sent back (reflected) to the recursive resolver, potentially resulting in an infinite loop."
+
+[[module.example]]
+description = "In the following example, we also use the [newid] modifier, which generates a new Transaction ID for each response. The query once again results in a timeout three times in a row:"
+command = "dig queryback3.newid.yourdomain.com @10.211.55.2"
+append = "In the PCAP file, we can see again that the original query was sent back to us (reflected) to UDP port 53. The only difference is that the Transaction ID varies each time. This could potentially increase the likelihood of ending up in an infinite loop compared to the previous example."
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("queryback3"):
    # Domain starts with "queryback3", let's send back the same query to the sender
    # to udp/53 port, as an attempt to make a loop.
    # Don't send any response to the original query (let it timeout)
-   buffer = resp.ID + req.RAW[2:]
-   log("sending back the same query to udp port 53")
-   # send back the query to port udp 53
-   s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-   s.sendto(buffer, ((self.client_address[0], 53)))
+   sender = self.client_address[0]
+   if sender != "127.0.0.1":
+       buffer = resp.ID + req.RAW[2:]
+       log("sending back the same query to udp://" + sender + ":53")
+       # send back the query to port udp 53
+       s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+       s.sendto(buffer, ((sender, 53)))
+   else:
+       log("not sending back the same query to myself")
    # don't send anything back in this connection
    timeout_conn(self)
    #####################################################################

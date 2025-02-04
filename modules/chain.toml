@@ -1,12 +1,77 @@
 [module]
 name = "chain"
 type = "feature"
-info = "alias chain"
-desc = "Respond with an incremented chain record which creates an infinite alias chain. This feature supports CNAME/DNAME/HTTPS/SVCB/SRV/MX/NS/SPF(TXT) resource types"
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "Alias Chains"
+short = "Chain alias generator supporting multiple record types"
+category = "Alias chains"
+records = "NS, MX, SRV, TXT, SPF, SVCB, HTTPS, CNAME, DNAME"
+tags = "Domain Lock-Up, Denial of Service"
+desc = '''
+This module implements **incremental alias chains** in DNS using variety of different record (resource) types. It supports the following record types:
 
-code = '''
+- CNAME (Canonical Name)
+- DNAME (Delegation Name)
+- HTTPS (HyperText Transfer Protocol Secure)
+- SVCB (Service Binding)
+- SPF (Sender Policy Framework)
+- SRV (Service Locator)
+- MX (Mail Exchange)
+- NS (Name Server)
+
+The module returns an alias record with an incremented domain name index, forming a chain that continues to increment indefinitely.
+
+Specifically, this module generates an alias record in the format `chain###.yourdomain.com`, where `###` represents the incremented index.
+
+The concept is that if the client/resolver attempts to resolve this alias further, it will generate yet another incremented alias, causing the process to continue indefinitely and potentially keeping the resolver occupied.
+
+However, in practice, most modern resolvers detect such chains and terminate the resolution after encountering a certain number of consecutive aliases (e.g., 20 aliases) or upon reaching a specified time limit for the resolution (e.g., 30 seconds).
+
+:warning:**BEWARE**:warning:This could potentially lead to a **domain lock-up (DoS)**.
+'''
+format = '''
+**`chain<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies an arbitrary number that will be incremented in the response.
+'''
+seealso = "alias, loop, chain, cnchain, dnchain, htchain, mxchain, nschain, spfchain, srchain, svchain"
+rfc = "RFC1034, RFC1035, RFC2672, RFC2782, RFC2915, RFC3761, RFC4408, RFC6672, RFC7208, RFC9460"
+
+[[module.example]]
+description = "By default, the module generates a CNAME alias with the index of 1:"
+command = "dig chain.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "If we attempt to resolve the resulting domain name (`chain1.yourdomain.com`), we receive an incremented alias record:"
+command = "dig chain1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "If we continue to resolve the next domain name (`chain2.yourdomain.com`), we again receive an incremented alias record:"
+command = "dig chain2.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "This resolution process can continue indefinitely, as there are no limits on the size of the index number. Each resolution yields another incremented alias record:"
+command = "dig chain9999999999999999999999999.yourdomain.com @127.0.0.1"
+append = "The domain name will never be fully resolved as the incremental process continues indefinitely."
+
+[[module.example]]
+description = "In this example, we ask for a different record type. Specifically, we request a DNAME alias record with an index of 100:"
+command = "dig DNAME chain100.yourdomain.com @127.0.0.1"
+append = "We can see that we received an incremented DNAME alias record."
+
+[[module.example]]
+description = "In this example, we request an MX record with an index of 1,000:"
+command = "dig MX chain1000.yourdomain.com @127.0.0.1"
+append = "We can see that we received an incremented MX alias record."
+
+[[module.example]]
+description = "In this example, we request an SPF record with an index of 10,000. Since SPF records are published within TXT records in DNS, we request a TXT record in this case:"
+command = "dig TXT chain10000.yourdomain.com @127.0.0.1"
+append = "Again, we received an incremented SPF alias record as the answer. The domain name will never be fully resolved as the incremental process continues indefinitely."
+
+[module.code]
+python = '''
            elif req.first_subdomain.startswith("chain"):
               # Send incremented CNAME/DNAME/HTTPS/SVCB/SRV/MX/NS/SPF(TXT) alias record.
               ### DNS header ########

@@ -1,0 +1,222 @@
+[module]
+name = "nfz"
+type = "modifier"
+info = "Name Fuzzing Generator"
+short = "Powerful name fuzzing generator"
+category = "Fuzzing"
+records = "NS, MX, SRV, TXT, SPF, SVCB, HTTPS, CNAME, DNAME"
+desc = '''
+This modifier allows to generate various illegal and malformed domain names based on the selected variant and size.
+
+This generator was primarily created for the alias features (such as [alias], [cnalias], [dnalias], etc.) to provide a unified mechanism for generating malformed domain names.
+
+The module enables experimentation with the structure of domain names and the key aspects and limitations of how domain names and IP addresses are transmitted during DNS communication. The most notable aspects include:
+
+ - [**DNS name notation**](http://www.tcpipguide.com/free/t_DNSNameNotationandMessageCompressionTechnique.htm) defines how domain names are represented and transmitted over the network. In this notation, each domain is divided into subdomains (labels), with the size of each label prepended before the label itself. The domain name ends with a NULL byte, representing the **ROOT** domain.
+
+	- For example: `www.example.com` is transmitted as `\[3]www\[7]example\[3]com\[0]`. Note that actual dot (.) symbols are never transmitted.
+
+ - **The total size of a domain name** cannot exceed 253 characters.
+
+ - **The size of a single label** (a subdomain) cannot exceed 63 characters.
+
+ - **IP addresses** are transmitted as raw bytes. An IPv4 address simply consists of 4 consecutive bytes, and an IPv6 address consists of 16 consecutive bytes. Actual dot (.) or colon (:) symbols are never transmitted.
+
+ - **Permitted characters in domain names** include letters (a-z), digits (0-9), and hyphens (-). While domain names typically use ASCII characters, internationalized domain names (IDNs) rely on Punycode to represent non-ASCII characters.
+
+ - Domain names **cannot contain binary or non-printable characters**. Additionally:
+
+	- **Labels** (subdomains) cannot begin or end with a hyphen (-).
+
+	- **Spaces** and **special characters** (like @, #, $, etc.) are not allowed.
+
+	- Domain names are **case-insensitive** (e.g., `Example.COM` is equivalent to `example.com`).
+
+'''
+rfc = "RFC1034, RFC1035"
+format = '''
+**`*.nfz<VARIANT>.s<SUBDOMAINS>.m<MALFORMATION>.p<POSITION>.*`**
+
+Where:
+
+- The **`VARIANT`** parameter specifies the particular name fuzzing variant. The following 7 customizable variants are supported:
+
+	- **`nfz0`** generates a standalone malformation only.
+
+	- **`nfz1`** generates a malformation within the `always.yourdomain.com` (resolvable) domain.
+
+	- **`nfz2`** generates a malformation within the `nonres.yourdomain.com` (non-resolvable) domain.
+
+	- **`nfz3`** generates a malformation within the same feature domain (e.g., `alias.yourdomain.com`).
+
+	- **`nfz4`** generates a malformation within the `always######.yourdomain.com` (resolvable) domain, where `######` represents a random number.
+
+	- **`nfz5`** generates a malformation within the `nonres######.yourdomain.com` (non-resolvable) domain, where `######` represents a random number.
+
+	- **`nfz6`** generates a malformation within the same feature domain (e.g., `alias######.yourdomain.com`), where `######` represents a random number.
+
+- The **`SUBDOMAINS`** parameter specifies the number of subdomains that the malformation should consist of. By default, a single subdomain is generated if this parameter is not specified.
+
+- The **`MALFORMATION`** parameter specifies the type of malformation to generate. There are 10 different variants supported, which produce the following results:
+
+	- **`m0.\[SIZE]`** generates NULL byte string of the specified size.
+
+	- **`m1.\[SIZE]`** generates a string made of random letter or number, with the same character repeated.
+
+	- **`m2.\[SIZE]`** generates a string made of random letter or number, with each character being random.
+
+	- **`m3.\[SIZE]`** generates a string made of random printable character, with the same character repeated.
+
+	- **`m4.\[SIZE]`** generates a string made of random printable character, with each character being random.
+
+	- **`m5.\[SIZE]`** generates random byte string with the same byte repeated.
+
+	- **`m6.\[SIZE]`** generates random byte string with each byte being random.
+
+	- **`m7.\[SIZE]`** generates incremental byte string with the same byte repeated.
+
+	- **`m8.\[SIZE]`** generates incremental byte string with each byte being incremented.
+
+	- **`m9.\[SIZE].\[BYTE]`** generates a string made of a specific byte value and size.
+
+- The **`POSITION`** parameter specifies the insertion point where the malformation should occur. This is applicable only to `nfz1` through `nfz6` variants, with the following 13 insertion points (positions) available:
+
+	- **`p0`** generates malformation `<HERE>.always######.yourdomain.com`.
+
+	- **`p1`** generates malformation `<HERE>always######.yourdomain.com`.
+
+	- **`p2`** generates malformation `always<HERE>######.yourdomain.com`.
+
+	- **`p3`** generates malformation `always######<HERE>.yourdomain.com`.
+
+	- **`p4`** generates malformation `always######<HERE>yourdomain.com`.
+
+	- **`p5`** generates malformation `always######.<HERE>.yourdomain.com`.
+
+	- **`p6`** generates malformation `always######.<HERE>yourdomain.com`.
+
+	- **`p7`** generates malformation `always######.yourdomain<HERE>.com`.
+
+	- **`p8`** generates malformation `always######.yourdomain<HERE>com`.
+
+	- **`p9`** generates malformation `always######.yourdomain.<HERE>.com`.
+
+	- **`p10`** generates malformation `always######.yourdomain.<HERE>com`.
+
+	- **`p11`** generates malformation `always######.yourdomain.com<HERE>`.
+
+	- **`p12`** generates malformation `always######.yourdomain.com.<HERE>`.
+
+Additionaly, the following alternative format is supported without any other additional parameters:
+
+**`*.nfz<VARIANT>.*`**
+
+Where:
+
+- The **`VARIANT`** parameter specifies the particular name fuzzing variant. The following 12 non-customizable variants are supported:
+
+	- **`nfz7`** generates only the ROOT domain (`.`)
+
+	- **`nfz8`** generates a malformed name consisting of a random domain in the format `always######.yourdomain.com:80`
+
+	- **`nfz9`** generates a malformed name consisting of a random domain in the format `always######.yourdomain.com:443`
+
+	- **`nfz10`** generates a malformed name consisting of a random domain in the format `http://always######.yourdomain.com/`
+
+	- **`nfz11`** generates a malformed name consisting of a random domain in the format `http://always######.yourdomain.com:80/`
+
+	- **`nfz12`** generates a malformed name consisting of a random domain in the format `https://always######.yourdomain.com/`
+
+	- **`nfz13`** generates a malformed name consisting of a random domain in the format `https://always######.yourdomain.com:443/`
+
+	- **`nfz14`** generates a malformed name consisting of `1.2.3.4` (an IP address in DNS name notation)
+
+	- **`nfz15`** generates a malformed name consisting of `1.2.3.4:80` (an IP address and port in DNS name notation)
+
+	- **`nfz16`** generates a malformed name consisting of `1\\.2\\.3\\.4` (an IP address in DNS name notation, represented as a single label with literal dot symbols)
+
+	- **`nfz17`** generates a malformed name consisting of `1\\.2\\.3\\.4:80` (an IP address and port in DNS name notation, represented as a single label with literal dot symbols)
+
+	- **`nfz18`** generates a malformed name consisting of `127.0.0.1` (our own IP address in DNS name notation)
+
+	- **`nfz19`** generates a malformed name consisting of `127.0.0.1:80` (our own IP address and port in DNS name notation)
+'''
+
+[[module.example]]
+description = '''
+To demonstrate the capabilities of this name fuzzing generator, all the examples below use the [alias] feature to produce five `CNAME` sample alias records. The target domain names are malformed using the generator in different configurations and combinations.
+
+For reference, the first example demonstrates the default behavior of the [alias] feature without involving any name fuzzing:
+'''
+command = "dig alias.5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Now we incorporate the name fuzzer into the query. In this example, we use the `nfz0` variant which generates a standalone malformation. Without any additional options, it generates a malformation consisting of a single NULL byte (`\\000`):"
+command = "dig alias.5.nfz0.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "By using the `s<SIZE>` parameter, we can specify that the malformation should consist of multiple subdomains. In this example, we request the malformation to include 3 subdomains by adding the `s3` parameter in the query. Without any other parameters, each subdomain will contain a single NULL byte (`\\000`):"
+command = "dig alias.5.nfz0.s3.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "We can achieve the same result as the previous example by explicitly specifying the malformation variant `m0`. The `m0` variant is the default malformation, generating a single NULL byte (`\\000`):"
+command = "dig alias.5.nfz0.s3.m0.yourdomain.com @127.0.0.1"
+append = "Note that the malformation parameter also allows specifying the size (length) of the malformation."
+
+[[module.example]]
+description = "In this example, we request the malformation to consist of 2 NULL bytes. This can be achieved by including the `m0.2` parameter in the query:"
+command = "dig alias.5.nfz0.s3.m0.2.yourdomain.com @127.0.0.1"
+append = "As a result, each of the 3 subdomains now consists of 2 NULL bytes (`\\000`)."
+
+[[module.example]]
+description = "The malformation parameter (`m`) supports 10 different malformation variants. So far, we have explored only NULL bytes. In this example, we generate a malformation consisting of random letters and numbers. This can be achieved by using the `m2` malformation:"
+command = "dig alias.5.nfz0.s3.m2.2.yourdomain.com @127.0.0.1"
+append = "As a result, each of the 3 subdomains now consists of 2 random letter and numbers."
+
+[[module.example]]
+description = "Now, instead of generating a standalone malformation (using the `nfz0` parameter), we can generate the malformation within a legitimate domain name, such as `always123456.yourdomain.com`. To achieve this, we use the `nfz4` variant while keeping all other parameters the same:"
+command = "dig alias.5.nfz4.s3.m2.2.yourdomain.com @127.0.0.1"
+append = "We can see that the malformation occured at the beginning of the target domain name, which is the default insertion point (position)."
+
+[[module.example]]
+description = "We can change the position for the malformation using the `p<POS>` parameter. There are 13 insertion points (positions) available. In this case, we request to insert the malformation in the middle of the target domain name by using the `p4` paramater:"
+command = "dig alias.5.nfz4.s3.m2.2.p4.yourdomain.com @127.0.0.1"
+append = "We can see that the malformation occured in the middle of the target domain name."
+
+[[module.example]]
+description = '''It’s important to note that this generator can be used in conjunction with other features, not limited to the [alias] feature.
+
+In this example, we use the [mxalias] feature to request the generation of 10 MX alias records. Additionally, we specify the insertion of 5 random bytes (malformation `m6.5`) at the end of each domain name (position `p11`):'''
+command = "dig mxalias.10.nfz4.m6.5.p11.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = '''The generator allows the creation of domain names that violate DNS standards, enabling experimentation with domain and subdomain lengths.
+
+For instance, in this example, we generate a single domain (variant `nfz0`) consisting of 63 random letters (malformation `m2.63`). As you may know, DNS standards specify that a subdomain cannot exceed 63 characters in length:'''
+command = "dig alias.nfz0.m2.63.yourdomain.com @127.0.0.1"
+append = "We can see that this domain name does not appear to cause any immediate issues."
+
+[[module.example]]
+description = "Now, we modify the query to generate a single domain consisting of 64 random letters (malformation `m2.64`). This directly violates DNS specifications, as a subdomain cannot exceed 63 characters in length:"
+command = "dig alias.nfz0.m2.64.yourdomain.com @127.0.0.1"
+append = '''In this case, we can see that the client (dig) is unable to parse this response because the resulting subdomain length (64 characters) exceeds the limit specified in DNS standards.
+
+By combining various parameters, we can generate countless variations of malformations.'''
+
+[[module.example]]
+description = "In this example, we generate a simple malformation by inserting a NULL byte (`\\000`) into the target domain name at every possible position using different `p<POS>` parameters. This allows us to observe how the malformation manifests at various positions within the domain name:"
+command = "dig alias.nfz6.m0.p0.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p1.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p2.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p3.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p4.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p5.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p6.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p7.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p8.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p9.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p10.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p11.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m0.p12.yourdomain.com @127.0.0.1 +short"
+append = "Each of these malformations may have a slightly different impact on the parsing functions of a given software (or library) processing these domain names."
+
+[[module.example]]
+description = "In this example, we insert a literal dot (`.`) symbol into the target domain name using the `m9.1.46` malformation (where 46 is the ASCII decimal code for a dot). The insertion is applied at every possible position using different `p<POS>` parameters. This allows us to observe how the malformation appears at various positions within the domain name:"
+command = "dig alias.nfz6.m9.1.46.p0.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p1.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p2.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p3.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p4.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p5.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p6.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p7.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p8.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p9.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p10.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p11.yourdomain.com @127.0.0.1 +short; dig alias.nfz6.m9.1.46.p12.yourdomain.com @127.0.0.1 +short"
+append = "Each of these malformations could once again cause different problems when parsing these domain names."
+
+[[module.example]]
+description = "In the last example, we generate a malformed domain name consisting of 127 subdomains, each composed of a single literal dot (`.`) symbol:"
+command = "dig alias.s127.nfz0.m9.1.46.yourdomain.com @127.0.0.1 +noidnout"
+append = "This can certainly confuse some resolvers or clients."
+
+[module.code]
+# The code is located in the polardns.py and nfz.py file.

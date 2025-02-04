@@ -1,0 +1,40 @@
+[module]
+name = "anrr"
+type = "modifier"
+info = "Set Answer RRs in the Header"
+short = "Modify the number of Answers (RRs) in the DNS response header"
+category = "Header manipulation"
+desc = '''
+This modifier allows to modify the number of Answers (RRs) in the DNS response header.
+
+It's important to note that this does not change the actual Answer section in the DNS response body in any way.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+'''
+format = '''
+**`*.anrr<NUMBER>.*`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies the number of Answers in the DNS response header. Note that the maximum number of Answers that can be set is 65535, as it is a 2-byte field.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = "In this example, we use the basic [always] feature which always resolves to an IP address. Additionally, we set the number of answer RRs in the DNS header to 0. This arrangement leads to a warning message about 16 extra bytes at the end because the parser is not expecting any answer in the body since the DNS header indicates there are no answers (`ANSWER: 0`):"
+command = "dig always.anrr0.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Similar to the previous example, but in this case, we set the number of Answer RRs in the DNS header to 1. This adjustment actually accurately reflects the actual content of the DNS response body, resulting in a completely valid and correct answer:"
+command = "dig always.anrr1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Similar to the previous examples, but in this case, we set the number of Answer RRs in the DNS header to 2. This arrangement leads to a warning message about malformed packet because there is only one answer in the body while the parser is expecting two answers (`ANSWER: 2`):"
+command = "dig always.anrr2.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Similar to the previous example, but in this case, we set the number of Answer RRs in the DNS header to 100. This arrangement leads to a warning message about malformed packet again because there is only one answer in the body while the parser is expecting a hundred answers (`ANSWER: 100`):"
+command = "dig always.anrr100.yourdomain.com @127.0.0.1"
+
+[module.code]
+# The code is located in the polardns.py file.

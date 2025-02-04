@@ -1,12 +1,61 @@
 [module]
 name = "srchain"
 type = "feature"
-info = "SRV alias chain"
-desc = "Respond with an incremented SRV record. This creates an infinite alias chain."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "SRV Alias Chains"
+short = "SRV chain alias generator"
+category = "Alias chains"
+records = "SRV"
+tags = "Domain Lock-Up, Denial of Service"
+rfc = "RFC2782"
+desc = '''
+This module implements **incremental alias chains** using **SRV (Service Locator)** records. It returns an alias record with an incremented domain name index, forming a chain that continues to increment indefinitely.
 
-code = '''
+Specifically, this module generates an SRV alias record in the format `srchain###.yourdomain.com`, where `###` represents the incremented index.
+
+The concept is that if the client/resolver attempts to resolve this alias further, it will generate yet another incremented alias, causing the process to continue indefinitely and potentially keeping the resolver occupied.
+
+However, in practice, most modern resolvers detect such chains and terminate the resolution after encountering a certain number of consecutive aliases (e.g., 20 aliases) or upon reaching a specified time limit for the resolution (e.g., 30 seconds).
+
+The SRV records include fields for Priority, Weight, and Port number. In this module, both the Priority and Weight are set to 0, while the Port number is randomly assigned for each record.
+
+Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, "service labels", or "underscore labels".
+
+Note that this feature provides the same functionality as requesting an SRV record for the generic [chain] feature.
+
+:warning:**BEWARE**:warning:This could potentially lead to a **domain lock-up (DoS)**.
+'''
+format = '''
+**`srchain<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies an arbitrary number that will be incremented in the response.
+'''
+seealso = "sralias, srloop, chain, cnchain, dnchain, htchain, mxchain, nschain, spfchain, srchain, svchain"
+
+[[module.example]]
+description = "By default, the module generates an SRV alias record with the index of 1:"
+command = "dig srchain.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "If we attempt to resolve the resulting domain name (`srchain1.yourdomain.com`), we receive an incremented alias record:"
+command = "dig srchain1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "If we continue to resolve the next domain name (`srchain2.yourdomain.com`), we again receive an incremented alias record:"
+command = "dig srchain2.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "This resolution process can continue indefinitely, as there are no limits on the size of the index number. Each resolution yields another incremented alias record:"
+command = "dig srchain9999999999999999999999999.yourdomain.com @127.0.0.1"
+append = "The domain name will never be fully resolved as the incremental process continues indefinitely."
+
+[[module.example]]
+description = "As mentioned in the description, this module also supports DNS queries for locating different services using the underscore (_) prefix notation. This example demonstrates such usage, where we search for an HTTP service specifically designed for mobile devices and running over TCP. We receive an incremented SRV alias record as expected:"
+command = "dig _mobile._http._tcp.srchain100.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
            elif req.first_subdomain.startswith("srchain"):
               # Send incremented SRV alias record.
               new_domain_name = increment_chain(req.full_domain)

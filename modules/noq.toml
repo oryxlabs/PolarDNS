@@ -1,0 +1,38 @@
+[module]
+name = "noq"
+type = "modifier"
+info = "Remove the Query Section"
+short = "Remove the Query section from the DNS response body"
+category = "Packet manipulation"
+desc = '''
+This modifier is designed to remove the entire Query section (question) from the DNS response body.
+
+It's important to note that this does not change the number of Question RRs indicated in the DNS header. To modify the number of Question RRs in the DNS header, use the [qurr] modifier.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+'''
+format = '''
+**`*.noq.*`**
+
+This module has no parameters.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = '''
+All the examples below use the basic [always] feature which always resolves to an IP address.
+
+In this example, we request the removal of the Query section from the DNS response body. This results in a `bad compression pointer` error because the DNS compression is enabled by default. The error occurs because the Name field in the Answer section contains a pointer that references itself instead of pointing to the domain name in the now-missing Query section:
+'''
+command = "dig always.noq.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Similar to the previous example, but in this case we also disable the DNS compression (using the [nc] modifier). This leads to a `malformed message packet` warning because the number of Question RRs (1) and Answer RRs (1) indicated in the header does not match the actual number of questions (0) and answers (1) in the body, as we removed the Query section from the body. Consequently, the entire body is shifted upwards, and what was intended as the Answer is now treated as the Query, leaving no actual Answer in the body:"
+command = "dig always.noq.nc.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Expanding on the previous example, here we also modify the number of Question RRs in the header to 0 (using the [qurr] modifier) to affirm that there truly are no questions in this DNS response. This adjustment results in a legitimate DNS response that contains only the Answer section. Although highly unusual, this combination produces a correctly formatted DNS response which is also accepted by the client (dig):"
+command = "dig always.noq.nc.qurr0.yourdomain.com @127.0.0.1"
+
+[module.code]
+# The code is located in the polardns.py file.

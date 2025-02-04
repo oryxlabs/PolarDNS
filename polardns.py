@@ -14,8 +14,9 @@ import struct
 import glob
 import time
 import os
+import nfz
 
-polardns_version = "1.5.0"
+polardns_version = "1.6.0"
 
 ################################
 
@@ -34,6 +35,7 @@ for line in _config['main']['known_servers'].split('\n'):
     known_servers[host] = ip_address
 
 debug = config['debug']
+#debug = 1
 
 config_ttl = int(config['ttl'])
 config_sleep = float(config['sleep'])
@@ -240,506 +242,152 @@ def convData2Bin(x):
     return b''.join(parts)
 
 ################################
-# Name fuzzer function (nfz)
 
 def name_fuzz(n):
     rand_suffix = '{:06d}'.format(random.getrandbits(20) % 1000000)
     match n:
       ######################
       case 0:
-         # NULL byte(s)
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = b'\x00' * resp.nfz_sv
-            dom = struct.pack(">B", resp.nfz_sv) + tmp + b'\x00'
-         else:
-            dom = b'\x01\x00\x00'
+         dom = nfz.name_fuzz_malf_p0(resp) + b'\x00'
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 1:
+      case 1 | 2 | 3 | 4 | 5 | 6:
+         match n:
+            case 1:
+               firstdom = "always"
+               suffix = ""
+            case 2:
+               firstdom = "nonres"
+               suffix = ""
+            case 3:
+               firstdom = req.first_subdomain
+               suffix = ""
+            case 4:
+               firstdom = "always"
+               suffix = rand_suffix
+            case 5:
+               firstdom = "nonres"
+               suffix = rand_suffix
+            case 6:
+               firstdom = req.first_subdomain
+               suffix = rand_suffix
+         # figure out the position
+         match resp.nfz_pos:
+            case 0:
+               # <HERE>.always######.yourdomain.com
+               dom  = nfz.name_fuzz_malf_p0(resp)
+               dom += convData2Bin(firstdom + suffix + "." + req.sld_tld_domain) + b'\x00'
+            case 1:
+               # <HERE>always######.yourdomain.com
+               dom  = nfz.name_fuzz_malf_p1(resp, firstdom + suffix)
+               dom += convData2Bin(req.sld_tld_domain) + b'\x00'
+            case 2:
+               # always<HERE>######.yourdomain.com
+               dom  = nfz.name_fuzz_malf_p2(resp, firstdom, suffix)
+               dom += convData2Bin(req.sld_tld_domain) + b'\x00'
+            case 3:
+               # always######<HERE>.yourdomain.com
+               dom  = nfz.name_fuzz_malf_p3(resp, firstdom + suffix)
+               dom += convData2Bin(req.sld_tld_domain) + b'\x00'
+            case 4:
+               # always######<HERE>yourdomain.com
+               dom  = nfz.name_fuzz_malf_p4(resp, firstdom + suffix, req.sld)
+               dom += convData2Bin(req.tld) + b'\x00'
+            case 5:
+               # always######.<HERE>.yourdomain.com
+               dom  = convData2Bin(firstdom + suffix)
+               dom += nfz.name_fuzz_malf_p0(resp)
+               dom += convData2Bin(req.sld_tld_domain) + b'\x00'
+            case 6:
+               # always######.<HERE>yourdomain.com
+               dom  = convData2Bin(firstdom + suffix)
+               dom += nfz.name_fuzz_malf_p1(resp, req.sld)
+               dom += convData2Bin(req.tld) + b'\x00'
+            case 7:
+               # always######.yourdomain<HERE>.com
+               dom  = convData2Bin(firstdom + suffix)
+               dom += nfz.name_fuzz_malf_p3(resp, req.sld)
+               dom += convData2Bin(req.tld) + b'\x00'
+            case 8:
+               # always######.yourdomain<HERE>com
+               dom  = convData2Bin(firstdom + suffix)
+               dom += nfz.name_fuzz_malf_p4(resp, req.sld, req.tld) + b'\x00'
+            case 9:
+               # always######.yourdomain.<HERE>.com
+               dom  = convData2Bin(firstdom + suffix + "." + req.sld)
+               dom += nfz.name_fuzz_malf_p0(resp)
+               dom += convData2Bin(req.tld) + b'\x00'
+            case 10:
+               # always######.yourdomain.<HERE>com
+               dom  = convData2Bin(firstdom + suffix + "." + req.sld)
+               dom += nfz.name_fuzz_malf_p1(resp, req.tld) + b'\x00'
+            case 11:
+               # always######.yourdomain.com<HERE>
+               dom  = convData2Bin(firstdom + suffix + "." + req.sld)
+               dom += nfz.name_fuzz_malf_p3(resp, req.tld) + b'\x00'
+            case 12:
+               # always######.yourdomain.com.<HERE>
+               dom  = convData2Bin(firstdom + suffix + "." + req.sld_tld_domain)
+               dom += nfz.name_fuzz_malf_p0(resp) + b'\x00'
+         resp.DOM_ALREADY_CONVERTED = 1
+      ######################
+      case 7:
          # <ROOT> domain
          dom = b'\x00'
          resp.DOM_ALREADY_CONVERTED = 1
       ######################
-      case 2:
-         # random printable ASCII character(s)
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want multiple random characters
-            dom = ''.join(random.choice(string.printable) for _ in range(resp.nfz_sv))
-         else:
-            dom = random.choice(string.printable)
-      ######################
-      case 3:
-         # random printable ASCII character(s)
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want repeat the random character
-            dom = random.choice(string.printable) * resp.nfz_sv
-         else:
-            dom = random.choice(string.printable)
-      ######################
-      case 4:
-         # random byte(s)
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want multiple random bytes
-            tmp = b''.join(random.getrandbits(8).to_bytes(1, 'big') for _ in range(resp.nfz_sv))
-            dom = struct.pack(">B", resp.nfz_sv) + tmp + b'\x00'
-         else:
-            dom = b'\x01' + random.getrandbits(8).to_bytes(1, 'big') + b'\x00'
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 5:
-         # random byte(s) - repeated
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = random.getrandbits(8).to_bytes(1, 'big') * resp.nfz_sv
-            dom = struct.pack(">B", resp.nfz_sv) + tmp + b'\x00'
-         else:
-            dom = b'\x01' + random.getrandbits(8).to_bytes(1, 'big') + b'\x00'
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 6:
-         # byte(s) starting from 0 to 255 (incremental)
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = b''
-            for _ in range(resp.nfz_sv):
-               tmp += resp.nfz_byte_iterator.to_bytes(1, 'big')
-               resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-            dom = struct.pack(">B", resp.nfz_sv) + tmp + b'\x00'
-         else:
-            dom = b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big') + b'\x00'
-            resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 7:
-         # byte(s) starting from 0 to 255 (repeated)
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = resp.nfz_byte_iterator.to_bytes(1, 'big') * resp.nfz_sv
-            dom = struct.pack(">B", resp.nfz_sv) + tmp + b'\x00'
-         else:
-            dom = b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big') + b'\x00'
-         resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
       case 8:
-         # max label sized (63) random binary string
-         siz = 63
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the string more times
-            # Note: subvariant 4 and above will already exceed the max domain size (255)
-            dom = b''
-            for _ in range(resp.nfz_sv):
-               data = bytes([random.getrandbits(8) for _ in range(siz)])
-               dom += struct.pack(">B", len(data)) + data
-            dom += b"\x00"
-         else:
-            data = bytes([random.getrandbits(8) for _ in range(siz)])
-            dom = struct.pack(">B", len(data)) + data + b"\x00"
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 9:
-         # max label sized (63) random string made of printable characters
-         siz = 63
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the string more times
-            # Note: subvariant 4 and above will already exceed the max domain size (255)
-            dom = ''.join(random.choice(string.printable) for _ in range(siz))
-            for _ in range(resp.nfz_sv-1):
-               dom += "." + ''.join(random.choice(string.printable) for _ in range(siz))
-         else:
-            dom = ''.join(random.choice(string.printable) for _ in range(siz))
-      ######################
-      case 10:
-         # max label sized (63) random string made of letters and numbers
-         siz = 63
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the string more times
-            # Note: subvariant 4 and above will already exceed the max domain size (255)
-            dom = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
-            for _ in range(resp.nfz_sv-1):
-               dom += "." + ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
-         else:
-            dom = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
-      ######################
-      case 11:
-         # random 1 byte long subdomain(s)
-         dom = b'\x01' + random.getrandbits(8).to_bytes(1, 'big')
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            for _ in range(resp.nfz_sv-1):
-               dom += b'\x01' + random.getrandbits(8).to_bytes(1, 'big')
-         dom += b'\x00'
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 12:
-         # random 1 byte long subdomain(s) made of printable character
-         siz = 1
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the string more times
-            # Note: subvariant 4 and above will already exceed the max domain size (255)
-            dom = ''.join(random.choice(string.printable) for _ in range(siz))
-            for _ in range(resp.nfz_sv-1):
-               dom += "." + ''.join(random.choice(string.printable) for _ in range(siz))
-         else:
-            dom = ''.join(random.choice(string.printable) for _ in range(siz))
-      ######################
-      case 13:
-         # random 1 byte long subdomain(s) made of letters and numbers
-         siz = 1
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the string more times
-            # Note: subvariant 4 and above will already exceed the max domain size (255)
-            dom = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
-            for _ in range(resp.nfz_sv-1):
-               dom += "." + ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
-         else:
-            dom = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
-      ######################
-      case 14:
-         # 1 byte long subdomain(s) from \x00 to \xff (incremental)
-         dom = b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big')
-         resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            for _ in range(resp.nfz_sv-1):
-               dom += b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big')
-               resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         dom += b'\x00'
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 15:
-         # 1 byte long subdomain(s) from \x00 to \xff (repeated)
-         dom = b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big')
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            for _ in range(resp.nfz_sv-1):
-               dom += b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big')
-         dom += b'\x00'
-         resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 16:
-         # nonres<######>.yourdomain.com
-         dom = "nonres" + rand_suffix + "." + req.sld_tld_domain
-      ######################
-      case 17:
-         # always<######>.yourdomain.com
-         dom = "always" + rand_suffix + "." + req.sld_tld_domain
-      ######################
-      case 18:
-         # always<######>.<NULL byte(s)>.yourdomain.com
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = b'\x00' * resp.nfz_sv
-            dom += struct.pack(">B", resp.nfz_sv) + tmp
-         else:
-            dom += b'\x01\x00'
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 19:
-         # always123456.<random byte(s)>.yourdomain.com
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = b''.join(random.getrandbits(8).to_bytes(1, 'big') for _ in range(resp.nfz_sv))
-            dom += struct.pack(">B", resp.nfz_sv) + tmp
-         else:
-            dom += b'\x01' + random.getrandbits(8).to_bytes(1, 'big')
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 20:
-         # always123456.<random byte(s)>.yourdomain.com (repeated)
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = random.getrandbits(8).to_bytes(1, 'big') * resp.nfz_sv
-            dom += struct.pack(">B", resp.nfz_sv) + tmp
-         else:
-            dom += b'\x01' + random.getrandbits(8).to_bytes(1, 'big')
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 21:
-         # always123456.<byte(s) starting from 0 to 255>.yourdomain.com (incremental)
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = b''
-            for _ in range(resp.nfz_sv):
-               tmp += resp.nfz_byte_iterator.to_bytes(1, 'big')
-               resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-            dom += struct.pack(">B", resp.nfz_sv) + tmp
-         else:
-            dom += b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big')
-            resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 22:
-         # always123456.<byte(s) starting from 0 to 255>.yourdomain.com (repeated)
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = resp.nfz_byte_iterator.to_bytes(1, 'big') * resp.nfz_sv
-            dom += struct.pack(">B", resp.nfz_sv) + tmp
-         else:
-            dom += b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big')
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 23:
-         # always.123456.<random 1 byte long subdomain(s)>.yourdomain.com
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         dom += b'\x01' + random.getrandbits(8).to_bytes(1, 'big')
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            for _ in range(resp.nfz_sv-1):
-               dom += b'\x01' + random.getrandbits(8).to_bytes(1, 'big')
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 24:
-         # always123456.<random 1 byte long subdomain(s) made of printable character>.yourdomain.com
-         siz = 1
-         dom = "always" + rand_suffix + "."
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the string more times
-            # Note: subvariant 4 and above will already exceed the max domain size (255)
-            dom += ''.join(random.choice(string.printable) for _ in range(siz))
-            for _ in range(resp.nfz_sv-1):
-               dom += "." + ''.join(random.choice(string.printable) for _ in range(siz))
-         else:
-            dom += ''.join(random.choice(string.printable) for _ in range(siz))
-         dom += "." + req.sld_tld_domain
-      ######################
-      case 25:
-         # always123456.<random 1 byte long subdomain(s) made of a letter or a number>.yourdomain.com
-         siz = 1
-         dom = "always" + rand_suffix + "."
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the string more times
-            # Note: subvariant 4 and above will already exceed the max domain size (255)
-            dom += ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
-            for _ in range(resp.nfz_sv-1):
-               dom += "." + ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
-         else:
-            dom += ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(siz))
-         dom += "." + req.sld_tld_domain
-      ######################
-      case 26:
-         # always123456.<1 byte long subdomain(s) from \x00 to \xff>.yourdomain.com (incremental)
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            for _ in range(resp.nfz_sv):
-               dom += b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big')
-               resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 27:
-         # always123456.<1 byte long subdomain(s) from \x00 to \xff>.yourdomain.com (repeated)
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            for _ in range(resp.nfz_sv):
-               dom += b'\x01' + resp.nfz_byte_iterator.to_bytes(1, 'big')
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 28:
-         # <NULL byte(s)>always123456.yourdomain.com
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = b'\x00' * resp.nfz_sv
-            dom = struct.pack(">B", resp.nfz_sv+12) + tmp
-         else:
-            dom = struct.pack(">B", 1+12) + b'\x00'
-         dom += bytes("always" + rand_suffix, "utf-8")
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 29:
-         # <random byte(s)>always123456.yourdomain.com (truly random)
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = b''.join(random.getrandbits(8).to_bytes(1, 'big') for _ in range(resp.nfz_sv))
-            dom = struct.pack(">B", resp.nfz_sv+12) + tmp
-         else:
-            dom = struct.pack(">B", 1+12) + random.getrandbits(8).to_bytes(1, 'big')
-         dom += bytes("always" + rand_suffix, "utf-8")
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 30:
-         # <random byte(s)>always123456.yourdomain.com (repeated)
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = random.getrandbits(8).to_bytes(1, 'big') * resp.nfz_sv
-            dom = struct.pack(">B", resp.nfz_sv+12) + tmp
-         else:
-            dom = struct.pack(">B", 1+12) + random.getrandbits(8).to_bytes(1, 'big')
-         dom += bytes("always" + rand_suffix, "utf-8")
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 31:
-         # <random byte(s) starting from 0 to 255>always123456.yourdomain.com (incremental)
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = b''
-            for _ in range(resp.nfz_sv):
-               tmp += resp.nfz_byte_iterator.to_bytes(1, 'big')
-               resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-            dom = struct.pack(">B", resp.nfz_sv+12) + tmp
-         else:
-            dom = struct.pack(">B", 1+12) + resp.nfz_byte_iterator.to_bytes(1, 'big')
-            resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         dom += bytes("always" + rand_suffix, "utf-8")
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 32:
-         # <random byte(s) starting from 0 to 255>always123456.yourdomain.com (repeated)
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = resp.nfz_byte_iterator.to_bytes(1, 'big') * resp.nfz_sv
-            dom = struct.pack(">B", resp.nfz_sv+12) + tmp
-         else:
-            dom = struct.pack(">B", 1+12) + resp.nfz_byte_iterator.to_bytes(1, 'big')
-         dom += bytes("always" + rand_suffix, "utf-8")
-         dom += convDom2Bin(req.sld_tld_domain)
-         resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 33:
-         # always123456.yourdomain.com<NULL byte(s)>
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         dom += struct.pack(">B", len(req.sld)) + bytes(req.sld, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = b'\x00' * resp.nfz_sv
-            dom += struct.pack(">B", resp.nfz_sv+len(req.tld)) + bytes(req.tld, "utf-8") + tmp
-         else:
-            dom += struct.pack(">B", 1+len(req.tld)) + bytes(req.tld, "utf-8") + b'\x00'
-         dom += b'\x00'
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 34:
-         # always123456.yourdomain.com<random byte(s)> (truly random)
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         dom += struct.pack(">B", len(req.sld)) + bytes(req.sld, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = b''.join(random.getrandbits(8).to_bytes(1, 'big') for _ in range(resp.nfz_sv))
-            dom += struct.pack(">B", resp.nfz_sv+len(req.tld)) + bytes(req.tld, "utf-8") + tmp
-         else:
-            dom += struct.pack(">B", 1+len(req.tld)) + bytes(req.tld, "utf-8") + random.getrandbits(8).to_bytes(1, 'big')
-         dom += b'\x00'
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 35:
-         # always123456.yourdomain.com<random byte(s)> (repeated)
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         dom += struct.pack(">B", len(req.sld)) + bytes(req.sld, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = random.getrandbits(8).to_bytes(1, 'big') * resp.nfz_sv
-            dom += struct.pack(">B", resp.nfz_sv+len(req.tld)) + bytes(req.tld, "utf-8") + tmp
-         else:
-            dom += struct.pack(">B", 1+len(req.tld)) + bytes(req.tld, "utf-8") + random.getrandbits(8).to_bytes(1, 'big')
-         dom += b'\x00'
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 36:
-         # always123456.yourdomain.com<byte(s) starting from 0 to 255> (incremental)
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         dom += struct.pack(">B", len(req.sld)) + bytes(req.sld, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = b''
-            for _ in range(resp.nfz_sv):
-               tmp += resp.nfz_byte_iterator.to_bytes(1, 'big')
-               resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-            dom += struct.pack(">B", resp.nfz_sv+len(req.tld)) + bytes(req.tld, "utf-8") + tmp
-         else:
-            dom += struct.pack(">B", 1+len(req.tld)) + bytes(req.tld, "utf-8") + resp.nfz_byte_iterator.to_bytes(1, 'big')
-            resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         dom += b'\x00'
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 37:
-         # always123456.yourdomain.com<byte(s) starting from 0 to 255> (repeated)
-         dom = b'\x0c' + bytes("always" + rand_suffix, "utf-8")
-         dom += struct.pack(">B", len(req.sld)) + bytes(req.sld, "utf-8")
-         if hasattr(resp, "nfz_sv"):
-            # if there is a sub-variant, it means we want to repeat the byte more times
-            tmp = resp.nfz_byte_iterator.to_bytes(1, 'big') * resp.nfz_sv
-            dom += struct.pack(">B", resp.nfz_sv+len(req.tld)) + bytes(req.tld, "utf-8") + tmp
-         else:
-            dom += struct.pack(">B", 1+len(req.tld)) + bytes(req.tld, "utf-8") + resp.nfz_byte_iterator.to_bytes(1, 'big')
-         dom += b'\x00'
-         resp.nfz_byte_iterator = (resp.nfz_byte_iterator + 1) % 256
-         resp.DOM_ALREADY_CONVERTED = 1
-      ######################
-      case 38:
          # always123456.yourdomain.com:80
          dom = "always" + rand_suffix + "." + req.sld_tld_domain + ":80"
       ######################
-      case 39:
+      case 9:
          # always123456.yourdomain.com:443
          dom = "always" + rand_suffix + "." + req.sld_tld_domain + ":443"
       ######################
-      case 40:
+      case 10:
          # http://always123456.yourdomain.com/
          dom = "http://always" + rand_suffix + "." + req.sld_tld_domain + "/"
       ######################
-      case 41:
+      case 11:
          # http://always123456.yourdomain.com:80/
          dom = "http://always" + rand_suffix + "." + req.sld_tld_domain + ":80/"
       ######################
-      case 42:
+      case 12:
          # https://always123456.yourdomain.com/
          dom = "https://always" + rand_suffix + "." + req.sld_tld_domain + "/"
       ######################
-      case 43:
+      case 13:
          # https://always123456.yourdomain.com:443/
          dom = "https://always" + rand_suffix + "." + req.sld_tld_domain + ":443/"
       ######################
-      case 44:
+      case 14:
          # 1.2.3.4 (in DNS name notation as 4 labels)
          dom = "1.2.3.4"
       ######################
-      case 45:
+      case 15:
          # 1.2.3.4:80 (in DNS name notation as 4 labels)
          dom = "1.2.3.4:80"
       ######################
-      case 46:
+      case 16:
          # 1.2.3.4 (in DNS name notation as 1 label)
          dom = "1<DOT>2<DOT>3<DOT>4"
       ######################
-      case 47:
+      case 17:
          # 1.2.3.4:80 (in DNS name notation as 1 label)
          dom = "1<DOT>2<DOT>3<DOT>4:80"
       ######################
-      case 48:
+      case 18:
          # <OUR-IP-ADDRESS> (in DNS name notation as 4 labels)
          dom = ZONEFILE["ns1." + req.sld_tld_domain]["A"]
       ######################
-      case 49:
+      case 19:
          # <OUR-IP-ADDRESS>:80 (in DNS name notation as 4 labels)
          ourip = ZONEFILE["ns1." + req.sld_tld_domain]["A"]
          dom = ourip + ":80"
       ######################
       case _:
          # hello (default case)
-         dom = "hello"
+         dom = "wrongnfz"
       ######################
     return dom
 
@@ -865,7 +513,8 @@ def random_chain(req_domain):
 def log(m):
     stamp = str(time.time()).ljust(18, "0")
     end = ""
-    if resp.len != 0:
+    #if resp.len != 0:
+    if resp.len >= 0:
        # custom length requested in the response? print message at the end
        if proto == "tcp":
           end = " (LEN:" + str(resp.len) + ")"
@@ -914,16 +563,34 @@ def send_buf(self, buffer, totallen = 0):
    #  - Overridden length specified by the '.lenXXX.' modifier in the domain name
    #  - Overridden length provided as a parameter to this function
    #  - Calculated from the buffer length if neither of the above is provided
-   buflen = resp.len or totallen or len(buffer)
+   if resp.len >= 0:
+      buflen = resp.len
+   else:
+      buflen = totallen or len(buffer)
+
    if hasattr(resp, "cutcount"):
       buflen -= resp.rl * resp.cutcount  # adjust the length
    if hasattr(resp, "addbyte"):
       buflen += resp.rl * resp.addcount  # adjust the length
    try:
-      self.request.sendall(struct.pack(">H", buflen) + newbuffer)
+      if hasattr(resp, "chunked"):
+         send_buf_chunked(self, struct.pack(">H", buflen) + newbuffer)
+      else:
+         self.request.sendall(struct.pack(">H", buflen) + newbuffer)
    except Exception as e:
        print(f"Error sending buffer: {e}")
        return(-1)
+
+################################
+# Send buffer chunked (TCP only).
+# The buffer is expected to contain the length at the beginning
+
+def send_buf_chunked(self, buffer):
+   for i in range(0, len(buffer), resp.chunked):
+      chunk = buffer[i:i + resp.chunked]
+      print("Sending:", chunk) if debug else True
+      time.sleep(resp.sleep)
+      self.request.sendall(chunk)
 
 ################################
 # Send buffer without length (TCP only)
@@ -1234,7 +901,7 @@ def process_DNS(self, req):
         resp.compress = config_compression
         resp.sleep = config_sleep
         resp.TTL = config_ttl
-        resp.len = 0
+        resp.len = -1
         resp.rl = 0  # recalculate length in TCP (in case cut/add is used)
         resp.noq = req.QURR # number of questions
         resp.QURR = req.QURR # number of questions
@@ -1249,14 +916,17 @@ def process_DNS(self, req):
             if label.startswith("slp"):        # custom delay requested
                if label[3:].isnumeric():
                   resp.sleep = float(int(label[3:])/1000)
+                  addcustomlog("SLP:" + str(resp.sleep))
             #######################
             elif label.startswith("ttl"):      # custom TTL requested
                if label[3:].isnumeric():
                   resp.TTL = int(label[3:])
+                  addcustomlog("TTL:" + str(resp.TTL))
             #######################
             elif label.startswith("len"):      # TCP length override
                if label[3:].isnumeric():
                   resp.len = min(int(label[3:]), 65535)
+                  addcustomlog("LEN:" + str(resp.len))
             #######################
             elif label == "newid":             # new random transaction ID
                resp.ID = struct.pack(">H", random.getrandbits(16))
@@ -1298,13 +968,41 @@ def process_DNS(self, req):
             #######################
             elif label.startswith("nfz"):      # enable name fuzzer
                if label[3:].isnumeric():
-                  resp.nfz = int(label[3:])    # the variant
-                  if req.subdomains[index+1].isnumeric():     # does the next subdomain contain only a number?
-                     resp.nfz_sv = int(req.subdomains[index+1])  # if yes, then it is a sub-variant
-                     addcustomlog("NFZ:" + str(resp.nfz) + "." + str(resp.nfz_sv))
-                  else:
-                     addcustomlog("NFZ:" + str(resp.nfz))
+                  resp.nfz = min(int(label[3:]), 19)    # the variant
+                  resp.nfz_pos = getattr(resp, 'nfz_pos', 0)                   # default position
+                  resp.nfz_subs = getattr(resp, 'nfz_subs', 1)                 # default number of subdomains
+                  resp.nfz_malf = getattr(resp, 'nfz_malf', 0)                 # default malformation
+                  resp.nfz_malf_size = getattr(resp, 'nfz_malf_size', 1)       # default malformation size
                   resp.nfz_byte_iterator = 0   # to make sure we keep track of values from \x00 to \xff
+                  addcustomlog("NFZ:" + str(resp.nfz))
+            # # # # # # # # # # # #
+            elif label.startswith("s"):        # number of subdomains
+               if label[1:].isnumeric():
+                  resp.nfz_subs = min(int(label[1:]), 65535)
+                  addcustomlog("S:" + str(resp.nfz_subs))
+            # # # # # # # # # # # #
+            elif label.startswith("m"):        # malformation
+               if label[1:].isnumeric():
+                  resp.nfz_malf = min(int(label[1:]), 9)
+                  resp.nfz_malf_size = getattr(resp, 'nfz_malf_size', 1)       # default malformation size
+                  resp.nfz_malf_byte = getattr(resp, 'nfz_malf_byte', b'\x00') # default malformation custom byte
+                  resp.nfz_pos = getattr(resp, 'nfz_pos', 0)                   # default position
+                  if req.subdomains[index+1].isnumeric() and req.subdomains[index+2].isnumeric():
+                     # the next 2 subdomains contain only numbers, which can only be size and byte for malformation 9
+                     resp.nfz_malf_size = min(int(req.subdomains[index+1]), 65535)
+                     resp.nfz_malf_byte = min(int(req.subdomains[index+2]), 255)
+                     addcustomlog("M:" + str(resp.nfz_malf) + "." + str(resp.nfz_malf_byte) + "." + str(resp.nfz_malf_size))
+                     resp.nfz_malf_byte = resp.nfz_malf_byte.to_bytes(1, 'big')
+                  elif req.subdomains[index+1].isnumeric():     # does the next subdomain contain only a number?
+                     resp.nfz_malf_size = int(req.subdomains[index+1])  # if yes, then it is the size
+                     addcustomlog("M:" + str(resp.nfz_malf) + "." + str(resp.nfz_malf_size))
+                  else:
+                     addcustomlog("M:" + str(resp.nfz_malf))
+            # # # # # # # # # # # #
+            elif label.startswith("p"):        # position
+               if label[1:].isnumeric():
+                  resp.nfz_pos = min(int(label[1:]), 12)
+                  addcustomlog("P:" + str(resp.nfz_pos))
             #######################
             elif label == "nc":                # no compression
                resp.compress = 0
@@ -1315,19 +1013,26 @@ def process_DNS(self, req):
                addcustomlog("FC")
             #######################
             elif label.startswith("cut"):      # cut N bytes from the end of the packet
-               resp.cutcount = int(label[3:]) if label[3:].isnumeric() else 0
-               addcustomlog("CUT:" + str(resp.cutcount))
+               if label[3:].isnumeric():
+                  resp.cutcount = int(label[3:])
+                  addcustomlog("CUT:" + str(resp.cutcount))
+            #######################
+            elif label.startswith("cnk"):      # send in N bytes long chunks
+               if label[3:].isnumeric():
+                  resp.chunked = int(label[3:])
+                  addcustomlog("CHUNKED:" + str(resp.chunked))
             #######################
             elif label.startswith("add"):  # add N bytes to the end of the packet
-               resp.addcount = int(label[3:]) if label[3:].isnumeric() else 0
-               next_subdom = req.subdomains[index+1]
-               if next_subdom.isnumeric():
-                  resp.addbyte = min(int(next_subdom), 255)
-               elif next_subdom.startswith("0x"):
-                  resp.addbyte = min(int(next_subdom[2:], 16), 255)
-               else:
-                  resp.addbyte = "r"
-               addcustomlog("ADD:" + str(resp.addcount) + "." + str(resp.addbyte))
+               if label[3:].isnumeric():
+                  resp.addcount = int(label[3:]) if label[3:].isnumeric() else 0
+                  next_subdom = req.subdomains[index+1]
+                  if next_subdom.isnumeric():
+                     resp.addbyte = min(int(next_subdom), 255)
+                  elif next_subdom.startswith("0x"):
+                     resp.addbyte = min(int(next_subdom[2:], 16), 255)
+                  else:
+                     resp.addbyte = "r"
+                  addcustomlog("ADD:" + str(resp.addcount) + "." + str(resp.addbyte))
             #######################
             elif label == "rl":                # recalculate length in TCP
                resp.rl = 1                     # in case 'cut' or 'add' was used
@@ -1429,20 +1134,36 @@ def process_DNS(self, req):
               #####################################################################
            elif req.first_subdomain.startswith("always") or req.first_subdomain.startswith("something"):
               # Always resolve what starts with always or something
-              ip = "2.3.4.5"
+              ip = ""
+              data = b''
+              resp.type_str = ""
+              if req.type_str == "AAAA":
+                 resp.type_str = "AAAA"
+                 ip = "1111:2222:3333:4444:5555:6666:7777:8888"
+                 data  = struct.pack(">H", 16)                 ## Data length
+                 data += socket.inet_pton(socket.AF_INET6, ip) ## IP
+              else:
+                 ip = "2.3.4.5"
+                 resp.type_str = "A"
+                 data  = struct.pack(">H", 4)      ## Data length
+                 data += socket.inet_aton(ip)      ## IP
+              answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 1
               ### DNS header ########
-              buffer = prep_dns_header(b'\x84\x00', resp.QURR, 1, 0, 0)
+              buffer = prep_dns_header(b'\x84\x00', resp.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
               if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
-              # A
-              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
-              buffer += getTypeBin("A") + getClassBin("IN")
-              buffer += struct.pack(">L", resp.TTL)    ## TTL
-              buffer += struct.pack(">H", 4)           ## Data length
-              buffer += socket.inet_aton(ip)           ## IP
+              # A or AAAA
+              for i in range(answers):
+                 if hasattr(resp, "nfz"):
+                    buffer += name_fuzz(resp.nfz)
+                 else:
+                    buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                 buffer += getTypeBin(resp.type_str) + getClassBin("IN")
+                 buffer += struct.pack(">L", resp.TTL)    ## TTL
+                 buffer += data
               # log and send
-              log("A %s" % (ip))
+              log("%s %s" % (resp.type_str, ip))
               send_buf(self, buffer)
               #####################################################################
            elif req.full_domain == "version.polar" and req.type_str == "TXT" and req.class_str == "CH":
@@ -1497,7 +1218,10 @@ def add_modules_and_rerun():
                     print("loading", mod_file) if debug else True
                     with open(mod_file, "rb") as mf:
                         mod = tomllib.load(mf)
-                        mod_lines = mod['module']['code'].splitlines()
+                        try:
+                            mod_lines = mod['module']['code']['python'].splitlines()
+                        except:
+                            continue
                         mod_indent = len(mod_lines[0]) - len(mod_lines[0].lstrip())
                         if mod_lines[0].strip().startswith("if"):
                             # if the first line starts with "if", change it to "elif"

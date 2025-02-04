@@ -1,0 +1,140 @@
+---
+layout: default
+title: "Cnk - Send Response in Chunks (TCP only)"
+parent: "Packet manipulation"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Cnk - Send Response in Chunks (TCP only)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Cnk - Send Response in Chunks (TCP only)</h1>
+<p>This modifier allows dividing the DNS response packet into multiple chunks of a specified size, which are then sent sequentially, one after another.</p>
+<p>It is recommended to use this in combination with the <a href="slp.html">slp</a> modifier to introduce a delay between sending each chunk.</p>
+<p>Such approach can delay the complete reception of the response and occupy a resolution worker/thread on the target DNS resolver for a prolonged period of time. Sending numerous such requests simultaneously can potentially lead to a Denial of Service (DoS) situation on the resolver.</p>
+<p>This modifier is compatible with and can be combined with any other existing feature or modifier.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../packet-manipulation.html'>Packet manipulation</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.cnk&lt;BYTES&gt;.*</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;BYTES&gt;</code></strong> parameter specifies the size of each chunk for dividing the DNS response packet. If the specified size exceeds the total packet size, the entire packet will be sent as a single chunk.</li>
+</ul>
+<h2>Examples</h2>
+<p>In this example, we use the basic <a href="always.html">always</a> feature to request 10 A records in TCP mode. Additionally, we request the response to be divided into 20-byte chunks with a 150-millisecond delay between sending each chunk:</p>
+<div><pre class='output-block'><strong># dig always.10.cnk20.slp150.yourdomain.com @127.0.0.1 +tcp</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.10.cnk20.slp150.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 45549
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.10.cnk20.slp150.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+always.10.cnk20.slp150.yourdomain.com. 60 IN A	2.3.4.5
+always.10.cnk20.slp150.yourdomain.com. 60 IN A	2.3.4.5
+always.10.cnk20.slp150.yourdomain.com. 60 IN A	2.3.4.5
+always.10.cnk20.slp150.yourdomain.com. 60 IN A	2.3.4.5
+always.10.cnk20.slp150.yourdomain.com. 60 IN A	2.3.4.5
+always.10.cnk20.slp150.yourdomain.com. 60 IN A	2.3.4.5
+always.10.cnk20.slp150.yourdomain.com. 60 IN A	2.3.4.5
+always.10.cnk20.slp150.yourdomain.com. 60 IN A	2.3.4.5
+always.10.cnk20.slp150.yourdomain.com. 60 IN A	2.3.4.5
+always.10.cnk20.slp150.yourdomain.com. 60 IN A	2.3.4.5
+
+;; Query time: <span style="background-color: yellow;">1848 msec</span>
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Wed Dec 11 15:51:56 +04 2024
+;; MSG SIZE  rcvd: 215</pre></div><p><a href='../outputs/cnk/dig_always.10.cnk20.slp150.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><p><p>We can see that this setup effectively extended the time required to receive the full response to approximately 1.85 seconds.</p></p><br>
+<p>Similar to the previous example, but in this case, we request the response to be divided into 10-byte chunks. This configuration effectively doubles the time required to receive the full response. Additionally, we use the <a href="tc.html">tc</a> modifier to force the resolver to communicate with the PolarDNS server in TCP mode:</p>
+<div><pre class='output-block'><strong># dig always.10.cnk10.slp150.tc.yourdomain.com @127.0.0.1</strong>
+
+;; Truncated, retrying in TCP mode.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.10.cnk10.slp150.tc.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 28346
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.10.cnk10.slp150.tc.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+always.10.cnk10.slp150.tc.yourdomain.com. 60 IN	A 2.3.4.5
+always.10.cnk10.slp150.tc.yourdomain.com. 60 IN	A 2.3.4.5
+always.10.cnk10.slp150.tc.yourdomain.com. 60 IN	A 2.3.4.5
+always.10.cnk10.slp150.tc.yourdomain.com. 60 IN	A 2.3.4.5
+always.10.cnk10.slp150.tc.yourdomain.com. 60 IN	A 2.3.4.5
+always.10.cnk10.slp150.tc.yourdomain.com. 60 IN	A 2.3.4.5
+always.10.cnk10.slp150.tc.yourdomain.com. 60 IN	A 2.3.4.5
+always.10.cnk10.slp150.tc.yourdomain.com. 60 IN	A 2.3.4.5
+always.10.cnk10.slp150.tc.yourdomain.com. 60 IN	A 2.3.4.5
+always.10.cnk10.slp150.tc.yourdomain.com. 60 IN	A 2.3.4.5
+
+;; Query time: <span style="background-color: yellow;">3512 msec</span>
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Wed Dec 11 15:52:01 +04 2024
+;; MSG SIZE  rcvd: 218</pre></div><p><a href='../outputs/cnk/dig_always.10.cnk10.slp150.tc.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we use the <a href="spfalias1.html">spfalias1</a> feature to request 10 SPF (TXT) records and forcing TCP mode by using the <a href="tc.html">tc</a> modifier. Additionally, we request the response to be divided into 10-byte chunks with a 100-millisecond delay between sending each chunk:</p>
+<div><pre class='output-block'><strong># dig spfalias1.10.tc.cnk10.slp100.yourdomain.com @127.0.0.1</strong>
+
+;; Truncated, retrying in TCP mode.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; spfalias1.10.tc.cnk10.slp100.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 34484
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfalias1.10.tc.cnk10.slp100.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+spfalias1.10.tc.cnk10.slp100.yourdomain.com. 60	IN TXT &quot;v=spf1 include:spfalias12580.10.tc.cnk10.slp100.yourdomain.com ~all&quot;
+spfalias1.10.tc.cnk10.slp100.yourdomain.com. 60	IN TXT &quot;v=spf1 include:spfalias154391.10.tc.cnk10.slp100.yourdomain.com ~all&quot;
+spfalias1.10.tc.cnk10.slp100.yourdomain.com. 60	IN TXT &quot;v=spf1 include:spfalias123335.10.tc.cnk10.slp100.yourdomain.com ~all&quot;
+spfalias1.10.tc.cnk10.slp100.yourdomain.com. 60	IN TXT &quot;v=spf1 include:spfalias138454.10.tc.cnk10.slp100.yourdomain.com ~all&quot;
+spfalias1.10.tc.cnk10.slp100.yourdomain.com. 60	IN TXT &quot;v=spf1 include:spfalias132776.10.tc.cnk10.slp100.yourdomain.com ~all&quot;
+spfalias1.10.tc.cnk10.slp100.yourdomain.com. 60	IN TXT &quot;v=spf1 include:spfalias15822.10.tc.cnk10.slp100.yourdomain.com ~all&quot;
+spfalias1.10.tc.cnk10.slp100.yourdomain.com. 60	IN TXT &quot;v=spf1 include:spfalias194079.10.tc.cnk10.slp100.yourdomain.com ~all&quot;
+spfalias1.10.tc.cnk10.slp100.yourdomain.com. 60	IN TXT &quot;v=spf1 include:spfalias114179.10.tc.cnk10.slp100.yourdomain.com ~all&quot;
+spfalias1.10.tc.cnk10.slp100.yourdomain.com. 60	IN TXT &quot;v=spf1 include:spfalias1308.10.tc.cnk10.slp100.yourdomain.com ~all&quot;
+spfalias1.10.tc.cnk10.slp100.yourdomain.com. 60	IN TXT &quot;v=spf1 include:spfalias196642.10.tc.cnk10.slp100.yourdomain.com ~all&quot;
+
+;; Query time: <span style="background-color: yellow;">9072 msec</span>
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Thu Dec 12 10:13:40 +04 2024
+;; MSG SIZE  rcvd: 867</pre></div><p><a href='../outputs/cnk/dig_spfalias1.10.tc.cnk10.slp100.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>Given the resulting packet size of 867 bytes, this setup effectively extended the time required to receive the full response to slightly over 9 seconds.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="add.html">Add - Add N Bytes to the End of the Packet</a></li>
+<li><a href="cut.html">Cut - Cut N Bytes from the End of the Packet</a></li>
+<li><a href="fc.html">Fc - Force Compression</a></li>
+<li><a href="len.html">Len - Set Custom Length in TCP</a></li>
+<li><a href="nc.html">Nc - No Compression</a></li>
+<li><a href="noq.html">Noq - Remove the Query Section</a></li>
+<li><a href="rl.html">Rl - Recalculate Length in TCP</a></li>
+<li><a href="slp.html">Slp - Add a Delay (Latency)</a></li>
+<li><a href="tc.html">Tc - Set Truncated Flag (Force TCP Mode)</a></li>
+<li><a href="ttl.html">Ttl - Set Custom TTL Value</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="newid.html">NewId - Set Random Transaction ID</a></li>
+<li><a href="flgs.html">Flgs - Set Custom Flags in the Header</a></li>
+<li><a href="qurr.html">Qurr - Set Question RRs in the Header</a></li>
+<li><a href="anrr.html">Anrr - Set Answer RRs in the Header</a></li>
+<li><a href="aurr.html">Aurr - Set Authority RRs in the Header</a></li>
+<li><a href="adrr.html">Adrr - Set Additional RRs in the Header</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

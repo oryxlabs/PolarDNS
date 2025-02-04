@@ -1,0 +1,36 @@
+<pre class='output-block'><strong># dig injptr123.3rp.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr123.3rp.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 6852
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injptr123.3rp.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+injptr123.3rp.yourdomain.com. 60 IN	A	1.2.3.4
+<span style="color:red;">6.6.6.6.in-addr.arpa.	60	IN	PTR	injected123.a3rdparty.net.</span>
+
+;; Query time: 3 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:22:32 +04 2025
+;; MSG SIZE  rcvd: 121
+
+
+<strong># dig -x 6.6.6.6 @10.211.55.2 +norecurse</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 6.6.6.6 @10.211.55.2 +norecurse
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="color:red;">NXDOMAIN</span>, id: 27350
+;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;6.6.6.6.in-addr.arpa.		IN	PTR
+
+;; Query time: 3 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:22:32 +04 2025
+;; MSG SIZE  rcvd: 38</pre>

@@ -1,0 +1,21 @@
+<pre class='output-block'><strong># dig spfalias2.11.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; spfalias2.11.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 43201
+;; flags: qr aa; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfalias2.11.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+spfalias2.11.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfalias240144.11.yourdomain.com include:spfalias265182.11.yourdomain.com include:spfalias245219.11.yourdomain.com include:spfalias247661.11.yourdomain.com include:spfalias243649.11.yourdomain.com ~all&quot;
+spfalias2.11.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfalias265611.11.yourdomain.com include:spfalias260064.11.yourdomain.com include:spfalias294134.11.yourdomain.com include:spfalias243027.11.yourdomain.com include:spfalias227584.11.yourdomain.com ~all&quot;
+spfalias2.11.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfalias271689.11.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 16 15:04:13 +04 2024
+;; MSG SIZE  rcvd: 568
+</pre>

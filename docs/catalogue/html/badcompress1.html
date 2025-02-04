@@ -1,0 +1,128 @@
+---
+layout: default
+title: "BadCompress1 - Custom Offset in Name Field"
+parent: "Bad compression"
+---
+
+<!DOCTYPE html>
+<head>
+<title>BadCompress1 - Custom Offset in Name Field</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>BadCompress1 - Custom Offset in Name Field</h1>
+<p>The DNS protocol supports compressing domain names to save space by reducing redundancy for repeated domain names within DNS messages. This compression scheme can be applied to various record (resource) types, such as <strong>A</strong>, <strong>CNAME</strong>, <strong>MX</strong>, or <strong>PTR</strong> records.</p>
+<p>DNS compression works by using pointers to refer back to previously specified domain names within the DNS message. Here are the key aspects of the compression scheme:</p>
+<ul>
+<li><strong>Pointers</strong>: The compression scheme uses <strong>2-byte pointers</strong> that refer to previous occurrences of the same domain name (or a part of the domain name) within the DNS message.</li>
+<li><strong>Format</strong>: The pointer mechanism is encoded with the first two bits set to 11, followed by a <strong>14-bit offset</strong> indicating the location of the domain name in the message.</li>
+<li><strong>Offset</strong>: The offset specifies the location of the domain name relative to the beginning of the DNS packet, allowing the pointer to reference where the domain name can be found.</li>
+</ul>
+<p>This particular module is designed to respond with a single answer containing a <strong>CNAME record</strong> (alias) where the <strong>Name field</strong> is compressed.</p>
+<p>Typically, the compression pointer points to the <strong>offset 12</strong>, where the original domain name is located in the <strong>QUERY section</strong>. This is a common and fixed location in many standard DNS responses, represented by the typical <strong>0xc00c</strong> byte value used instead of the domain name.</p>
+<p>However, this module allows the compression pointer in the <strong>Name field</strong> to point to <strong>any location</strong> within the DNS message by specifying an <strong>arbitrary offset</strong>.</p>
+<p>By specifying various offsets, this will inevitably lead to parsing errors.</p><p><strong>Category:</strong> <a href='../bad-compression.html'>Bad compression</a></p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>badcompress1.&lt;OFFSET&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;OFFSET&gt;</code></strong> parameter specifies the offset location relative to the beginning of the DNS packet.</li>
+</ul>
+<p>Note that an offset of 12 is the typical location where the original domain name is located in the QUERY section.</p>
+<h2>Examples</h2>
+<p>In this example, we set the pointer to offset 0, which is the beginning of the DNS packet. This location typically contains the Transaction ID (a random number), which is not a domain name. As a result, the parser is unable to interpret this response correctly:</p>
+<div><pre class='output-block'><strong># dig badcompress1.0.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Got bad packet</span>: bad label type
+87 bytes
+a1 98 84 00 00 01 00 01 00 00 00 00 0c 62 61 64          .............bad
+63 6f 6d 70 72 65 73 73 31 01 30 0a 79 6f 75 72          compress1.0.your
+64 6f 6d 61 69 6e 03 63 6f 6d 00 00 01 00 01 c0          domain.com......
+00 00 05 00 01 00 00 00 3c 00 1c 0b 61 6c 77 61          ........&lt;...alwa
+79 73 31 37 38 32 36 0a 79 6f 75 72 64 6f 6d 61          ys17826.yourdoma
+69 6e 03 63 6f 6d 00                                     in.com.</pre></div><p><a href='../outputs/badcompress1/dig_badcompress1.0.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>Note that this may result in a different outcome each time you try it, as the Transaction ID is a random number.</p></p><br>
+<p>In this example, we set the pointer to offset 3, which is the 4th byte of the DNS packet. This location typically contains the Flags field, and in our case, it contains a NULL byte (\000). Although a NULL byte is not a typical domain name, it represents the ROOT domain (the top of the DNS hierarchy). This is why we see a period symbol in the ANSWER section as the domain name we queried:</p>
+<div><pre class='output-block'><strong># dig badcompress1.3.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; badcompress1.3.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 44216
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;badcompress1.3.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+.			60	IN	CNAME	always11117.yourdomain.com.
+
+;; Query time: 7 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Nov 12 13:37:14 +04 2024
+;; MSG SIZE  rcvd: 87</pre></div><p><a href='../outputs/badcompress1/dig_badcompress1.3.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Here, we request the pointer to point to the offset 12 which is the typical location where the original domain name is located in the QUERY section. This results in a completely valid and correct answer:</p>
+<div><pre class='output-block'><strong># dig badcompress1.12.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; badcompress1.12.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 46658
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;badcompress1.12.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+badcompress1.12.yourdomain.com.	60 IN	CNAME	always9809.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Nov 12 13:20:39 +04 2024
+;; MSG SIZE  rcvd: 87</pre></div><p><a href='../outputs/badcompress1/dig_badcompress1.12.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we set the pointer to offset 100, which is outside the bounds of the DNS packet in this case (the size of this response is only 89 bytes). As a result, the parser detects that the compression pointer is referencing an invalid location and fails to interpret the response entirely:</p>
+<div><pre class='output-block'><strong># dig badcompress1.100.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Got bad packet</span>: bad compression pointer
+89 bytes
+e9 39 84 00 00 01 00 01 00 00 00 00 0c 62 61 64          .9...........bad
+63 6f 6d 70 72 65 73 73 31 03 31 30 30 0a 79 6f          compress1.100.yo
+75 72 64 6f 6d 61 69 6e 03 63 6f 6d 00 00 01 00          urdomain.com....
+01 c0 64 00 05 00 01 00 00 00 3c 00 1c 0b 61 6c          ..d.......&lt;...al
+77 61 79 73 38 31 37 37 33 0a 79 6f 75 72 64 6f          ways81773.yourdo
+6d 61 69 6e 03 63 6f 6d 00                               main.com.</pre></div><p><a href='../outputs/badcompress1/dig_badcompress1.100.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:</p>
+<div><pre class='output-block'><strong># dig badcompress1${RANDOM}.3.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; badcompress121705.3.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 21202
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;badcompress121705.3.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+.			60	IN	CNAME	always95736.yourdomain.com.
+
+;; Query time: 8 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Nov 12 13:54:00 +04 2024
+;; MSG SIZE  rcvd: 92</pre></div><p><a href='../outputs/badcompress1/dig_badcompress1__RANDOM_.3.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="badcompress2.html">BadCompress2 - Custom Offset in CNAME Field</a></li>
+<li><a href="badcompressfwptr1.html">BadCompressFwPtr1 - Forward and Double Pointer in Name Field (Variant 1)</a></li>
+<li><a href="badcompressfwptr2.html">BadCompressFwPtr2 - Forward and Double Pointer in Name Field (Variant 2)</a></li>
+<li><a href="badcompressloop1.html">BadCompressLoop1 - Pointer Loop in Name Field (Variant 1)</a></li>
+<li><a href="badcompressloop2.html">BadCompressLoop2 - Pointer Loop in Name Field (Variant 2)</a></li>
+<li><a href="badcompressloop3.html">BadCompressLoop3 - Double Pointer Loop</a></li>
+<li><a href="badcompressloop4.html">BadCompressLoop4 - Pointer Loop in CNAME Field (Variant 1)</a></li>
+<li><a href="badcompressloop5.html">BadCompressLoop5 - Pointer Loop in CNAME Field (Variant 2)</a></li>
+<li><a href="badcompressmid1.html">BadCompressMid1 - Compression in the Middle of CNAME</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

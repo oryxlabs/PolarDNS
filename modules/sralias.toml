@@ -1,12 +1,66 @@
 [module]
 name = "sralias"
 type = "feature"
-info = "SRV random N aliases"
-desc = "Respond with N number of SRV aliases containing random chain index (`sralias####.yourdomain.com`). BEWARE: This could result in multiplication."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "Random SRV Aliases"
+short = "SRV random alias generator"
+category = "Aliases"
+records = "SRV"
+tags = "Amplification, Domain Lock-Up, Denial of Service"
+rfc = "RFC2782"
+desc = '''
+This module is designed to return one or more **random aliases** using **SRV (Service Locator)** records.
 
-code = '''
+It specifically generates a random SRV alias record in the format `sralias######.yourdomain.com`, where `######` represents a random number.
+
+The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.
+
+The SRV records include fields for Priority, Weight, and Port number. In this module, both the Priority and Weight are set to 0, while the Port number is randomly assigned for each record.
+
+Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, "service labels", or "underscore labels". It also supports returning multiple records in a single response.
+
+Note that this feature provides the same functionality as requesting the SRV record for the generic [alias] feature.
+
+:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
+'''
+format = '''
+**`sralias.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many aliases should be generated in the response.
+'''
+seealso = "srloop, srchain, alias, cnalias, dnalias, htalias, mxalias, nptenumalias, nsalias, ptralias, spfalias1, spfalias2, sralias, svalias"
+
+[[module.example]]
+description = "By default, the module generates a single SRV alias record response:"
+command = "dig sralias.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Same example as above, but this time we explicitly specify that we want to receive a single SRV record:"
+command = "dig sralias.1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we specify that we want to receive 5 (five) SRV alias records:"
+command = "dig sralias.5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "As mentioned in the description, this module also supports DNS queries for locating different services using the underscore (_) prefix notation. In this example, we search for SIP (Session Initiation Protocol) service. We request to receive a single SRV alias record:"
+command = "dig _sip.sralias.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Here, we search for SIP service running over UDP, and we want to receive 2 (two) SRV alias records:"
+command = "dig _sip._udp.sralias.2.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Here, we search for HTTP service running over TCP, and we request to receive 10 (ten) SRV alias records:"
+command = "dig _http._tcp.sralias.10.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Here, we search for HTTP service specifically designed for mobile devices, running over TCP. We request to receive 20 (twenty) SRV alias records in the response:"
+command = "dig _mobile._http._tcp.sralias.20.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
            elif req.first_subdomain.startswith("sralias"):
               # Send multiple random SRV aliases (RFC 2782).
               # BEWARE: This could result in multiplication

@@ -1,0 +1,36 @@
+[module]
+name = "ttl"
+type = "modifier"
+info = "Set Custom TTL Value"
+short = "Set custom TTL value"
+category = "Packet manipulation"
+desc = '''
+This modifier allows to modify the Time-to-Live (TTL) values in the DNS response, overriding any TTL settings specified in the configuration file.
+
+When applied, it modifies the TTL value for each answer included in the DNS response body.
+
+TTL is a field in a DNS packet that defines how long (in seconds) the data can be stored in cache by resolvers or clients. Once the TTL expires, the cached data becomes outdated, and a new query is required to refresh the information.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+'''
+format = '''
+**`*.ttl<NUMBER>.*`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies the TTL value to be applied to each answer (record) in the response. Note that the maximum TTL value is 2,147,483,648 seconds (approximately 68.09 years), as the TTL field is 31 bits long.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = "In this example, we use the basic [always] feature which always resolves to an IP address. We specify the TTL value to be `12345678` in the DNS response:"
+command = "dig always.ttl12345678.yourdomain.com @127.0.0.1"
+append = "We can see that the answer has a TTL value of `12345678`."
+
+[[module.example]]
+description = "In this example, we use the [size] feature which returns multiple anwers at once. We specify the TTL value to be `99999` for each answer:"
+command = "dig size.ttl99999.yourdomain.com @127.0.0.1"
+append = "We can see that each record has a TTL value of `99999`."
+
+[module.code]
+# The code is located in the polardns.py file.

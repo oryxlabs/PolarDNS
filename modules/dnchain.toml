@@ -1,12 +1,53 @@
 [module]
 name = "dnchain"
 type = "feature"
-info = "DNAME alias chain"
-desc = "Respond with an incremented DNAME record. This creates an infinite alias chain."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "DNAME Alias Chains"
+short = "DNAME chain alias generator"
+category = "Alias chains"
+records = "DNAME"
+tags = "Domain Lock-Up, Denial of Service"
+rfc = "RFC2672, RFC6672"
+desc = '''
+This module implements **incremental alias chains** using **DNAME (Delegation Name)** records. It returns an alias record with an incremented domain name index, forming a chain that continues to increment indefinitely.
 
-code = '''
+Specifically, this module generates a DNAME alias record in the format `dnchain###.yourdomain.com`, where `###` represents the incremented index.
+
+The concept is that if the client/resolver attempts to resolve this alias further, it will generate yet another incremented alias, causing the process to continue indefinitely and potentially keeping the resolver occupied.
+
+However, in practice, most modern resolvers detect such chains and terminate the resolution after encountering a certain number of consecutive aliases (e.g., 20 aliases) or upon reaching a specified time limit for the resolution (e.g., 30 seconds).
+
+Note that this feature provides the same functionality as requesting a DNAME record for the generic [chain] feature.
+
+:warning:**BEWARE**:warning:This could potentially lead to a **domain lock-up (DoS)**.
+'''
+format = '''
+**`dnchain<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies an arbitrary number that will be incremented in the response.
+'''
+seealso = "dnalias, dnloop, chain, cnchain, dnchain, htchain, mxchain, nschain, spfchain, srchain, svchain"
+
+[[module.example]]
+description = "By default, the module generates a DNAME alias with the index of 1:"
+command = "dig dnchain.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "If we attempt to resolve the resulting domain name (`dnchain1.yourdomain.com`), we receive an incremented alias record:"
+command = "dig dnchain1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "If we continue to resolve the next domain name (`dnchain2.yourdomain.com`), we again receive an incremented alias record:"
+command = "dig dnchain2.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "This resolution process can continue indefinitely, as there are no limits on the size of the index number. Each resolution yields another incremented alias record:"
+command = "dig dnchain9999999999999999999999999.yourdomain.com @127.0.0.1"
+append = "The domain name will never be fully resolved as the incremental process continues indefinitely."
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("dnchain"):
    # Send incremented DNAME alias
    new_domain_name = increment_chain(req.full_domain)

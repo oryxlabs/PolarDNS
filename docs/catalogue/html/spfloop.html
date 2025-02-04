@@ -1,0 +1,126 @@
+---
+layout: default
+title: "SpfLoop - SPF (TXT) Alias Loops"
+parent: "Alias loops"
+---
+
+<!DOCTYPE html>
+<head>
+<title>SpfLoop - SPF (TXT) Alias Loops</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>SpfLoop - SPF (TXT) Alias Loops</h1>
+<p>This module implements <strong>alias loops</strong> using <strong>SPF (Sender Policy Framework)</strong> records. The loops can be a <strong>direct loop</strong>, where the alias points back to the <strong>same domain name</strong> as in the original query, or they can include <strong>multiple elements</strong>, cycling through a specified number of domains.</p>
+<p>The idea is that if the client/resolver decides to resolve this further, it will enter an <strong>infinite loop</strong>. In practice, however, most modern resolvers detect such loops and terminate the resolution.</p>
+<p>The SPF protocol is used to specify which mail servers are authorized to send emails on behalf of a domain, and SPF records are typically published within TXT records in DNS.</p>
+<p>Note that this feature provides the same functionality as requesting a TXT record for the generic <a href="loop.html">loop</a> feature.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to a domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../alias-loops.html'>Alias loops</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc4408/" target="_blank">RFC4408</a>, <a href="https://datatracker.ietf.org/doc/rfc7208/" target="_blank">RFC7208</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>spfloop.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter specifies the number of elements the loop should contain.</li>
+</ul>
+<h2>Examples</h2>
+<p>In this example, we see a direct loop formed by sending a query that results in a SPF record containing the exact same domain name as the one in the query:</p>
+<div><pre class='output-block'><strong># dig spfloop.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; spfloop.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 62987
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfloop.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+spfloop.yourdomain.com.	60	IN	TXT	&quot;v=spf1 include:spfloop.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Nov 06 13:56:26 +04 2024
+;; MSG SIZE  rcvd: 95</pre></div><p><a href='../outputs/spfloop/dig_spfloop.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request a SPF alias loop consisting of 5 elements:</p>
+<div><pre class='output-block'><strong># dig spfloop.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; spfloop.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 33532
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfloop.5.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+spfloop.5.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfloop.5.1.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Nov 06 13:56:28 +04 2024
+;; MSG SIZE  rcvd: 101</pre></div><p><a href='../outputs/spfloop/dig_spfloop.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>The resulting domain name <code class='code-block'>spfloop.5.1.yourdomain.com</code> represents the 1st element of the loop.</p></p><br>
+<p>By resolving the 1st element, we are pointed to the 2nd element of the loop:</p>
+<div><pre class='output-block'><strong># dig spfloop.5.1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; spfloop.5.1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 29903
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfloop.5.1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+spfloop.5.1.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfloop.5.2.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Nov 06 13:56:29 +04 2024
+;; MSG SIZE  rcvd: 103</pre></div><p><a href='../outputs/spfloop/dig_spfloop.5.1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>This continues up to the 5th and final element &mdash; <code class='code-block'>spfloop.5.5.yourdomain.com</code>.</p></p><br>
+<p>By resolving the final element of the loop, we are directed back to the 1st element again:</p>
+<div><pre class='output-block'><strong># dig spfloop.5.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; spfloop.5.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 39048
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfloop.5.5.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+spfloop.5.5.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:spfloop.5.1.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Nov 06 13:56:30 +04 2024
+;; MSG SIZE  rcvd: 103</pre></div><p><a href='../outputs/spfloop/dig_spfloop.5.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that we are indeed pointed back to the 1st element again, forming a loop.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="cnloop.html">CnLoop - CNAME Alias Loops</a></li>
+<li><a href="dnloop.html">DnLoop - DNAME Alias Loops</a></li>
+<li><a href="htloop.html">HtLoop - HTTPS Alias Loops</a></li>
+<li><a href="loop.html">Loop - Alias Loops</a></li>
+<li><a href="mxloop.html">MxLoop - MX Alias Loops</a></li>
+<li><a href="nptenumloop.html">NptEnumLoop - NAPTR ENUM Alias Loops</a></li>
+<li><a href="nsloop.html">NsLoop - NS Alias Loops</a></li>
+<li><a href="ptrloop1.html">PtrLoop1 - PTR Alias Loops (Variant 1)</a></li>
+<li><a href="ptrloop2.html">PtrLoop2 - PTR Alias Loops (Variant 2)</a></li>
+<li><a href="srloop.html">SrLoop - SRV Alias Loops</a></li>
+<li><a href="svloop.html">SvLoop - SVCB Alias Loops</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="spfalias1.html">SpfAlias1 - Random SPF (TXT) Aliases (Variant 1)</a></li>
+<li><a href="spfalias2.html">SpfAlias2 - Random SPF (TXT) Aliases (Variant 2)</a></li>
+<li><a href="spfchain.html">SpfChain - SPF (TXT) Alias Chains</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

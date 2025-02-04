@@ -1,0 +1,18 @@
+<pre class='output-block'><strong># dig MX loop.5.1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; MX loop.5.1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 31031
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop.5.1.yourdomain.com.	IN	MX
+
+;; ANSWER SECTION:
+loop.5.1.yourdomain.com. 60	IN	MX	0 loop.5.2.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Nov 07 11:31:46 +04 2024
+;; MSG SIZE  rcvd: 80</pre>

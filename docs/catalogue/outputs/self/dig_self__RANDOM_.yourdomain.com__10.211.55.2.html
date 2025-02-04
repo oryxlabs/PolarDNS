@@ -1,0 +1,21 @@
+<pre class='output-block'><strong># dig self${RANDOM}.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; self17337.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 19681
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;self17337.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+self17337.yourdomain.com. 35302	IN	A	10.211.55.3
+
+;; ADDITIONAL SECTION:
+self17337.yourdomain.com. 60	IN	TXT	&quot;10.211.55.3:35302&quot;
+
+;; Query time: 12 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Mon Nov 04 13:24:59 +04 2024
+;; MSG SIZE  rcvd: 88</pre>

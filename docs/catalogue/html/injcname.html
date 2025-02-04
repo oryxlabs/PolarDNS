@@ -1,0 +1,302 @@
+---
+layout: default
+title: "InjCname - CNAME Record Injection"
+parent: "Cache poisoning"
+---
+
+<!DOCTYPE html>
+<head>
+<title>InjCname - CNAME Record Injection</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>InjCname - CNAME Record Injection</h1>
+<p>This module was designed for cache poisoning experiments, specifically for injecting <strong>unsolicited CNAME records</strong> into responses.</p>
+<p>The module can handle queries for the following record types:</p>
+<ul>
+<li>A (Address Record)</li>
+<li>AAAA (IPv6 Address Record)</li>
+<li>CNAME (Canonical Name)</li>
+<li>DNAME (Delegation Name)</li>
+<li>MX (Mail Exchange)</li>
+<li>NS (Name Server)</li>
+<li>PTR (Pointer)</li>
+</ul>
+<p>When a query for any of these record types is received, the module responds with a standard answer based on the requested type. Additionally, it includes an <strong>unsolicited CNAME record</strong> in the response, aiming for the resolver to pick it up and store it in its cache.</p>
+<p>If successful, this means we can inject DNS records into the resolver&#x27;s cache by including unsolicited records in the responses from the server-side.</p><p><strong>Category:</strong> <a href='../cache-poisoning.html'>Cache poisoning</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>injcname[N].[3rp].[rpq].[adq].[rev].[als].[oi].yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>N</code></strong> optional parameter is an arbitrary number used as an identifier appended to the injected domain name. This helps label and distinguish the specific domain name being injected.</li>
+<li>The <strong><code class='code-block'>3rp</code></strong> optional parameter uses a <strong>3rd-party</strong> parent domain (such as <strong>a3rdparty.net</strong>) for the injected record, instead of the <strong>yourdomain.com</strong> (default). If successful, the impact would be much more serious, as it would allow the injection of information for an arbitrary 3rd-party domain.</li>
+<li>The <strong><code class='code-block'>rpq</code></strong> (replace question) optional parameter <strong>replaces</strong> the question in the query section with the domain name matching the injected record, potentially convincing the resolver that it originally requested the unsolicited record.</li>
+<li>The <strong><code class='code-block'>adq</code></strong> (add question) optional parameter <strong>adds</strong> an additional question in the query section asking for the injected record, which could similarly convince the resolver that it requested the unsolicited record.</li>
+<li>The <strong><code class='code-block'>rev</code></strong> (reverse) optional parameter <strong>reverses the order</strong> of answers &mdash; placing the unsolicited record first, followed by the actual answer to the query.</li>
+<li>The <strong><code class='code-block'>als</code></strong> (all sections) optional parameter places the unsolicited records in all three sections (ANSWER, AUTHORITY and ADDITIONAL), instead of just in the ANSWER section. This approach can potentially increase the likelihood of the injected information being picked up and stored.</li>
+<li>The <strong><code class='code-block'>oi</code></strong> (only injected) optional parameter causes the response to <strong>contain only</strong> the unsolicited record, omitting the actual answer to the query entirely.</li>
+</ul>
+<p>Note that all these parameters can be combined with one another to produce different injection variants.</p>
+<h2>Examples</h2>
+<p>In this example, we demonstrate the basic functionality. By default, the injected record appears as the second answer, following the first (legitimate) answer. The injected record unsolicitedly resolves a subdomain under the same parent domain. In the subsequent query, we verify whether the resolver picked up and cached the unsolicited record:</p>
+<div><pre class='output-block'><strong># dig injcname.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injcname.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 30059
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injcname.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+injcname.yourdomain.com. 60	IN	A	1.2.3.4
+<span style="color:red;">injected.yourdomain.com. 60	IN	CNAME	always940900.yourdomain.com.</span>
+
+;; Query time: 3 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:27:23 +04 2025
+;; MSG SIZE  rcvd: 121
+
+
+<strong># dig injected.yourdomain.com @10.211.55.2 +norecurse</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injected.yourdomain.com @10.211.55.2 +norecurse
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="color:red;">NXDOMAIN</span>, id: 25096
+;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injected.yourdomain.com.	IN	A
+
+;; Query time: 7 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:27:23 +04 2025
+;; MSG SIZE  rcvd: 41</pre></div><p><a href='../outputs/injcname/dig_injcname.yourdomain.com__10.211.55.2__dig_injected.yourdomain.com__10.211.55.2__norecurse.pcap'>Download PCAP File</a></p><p><p>We can see that the injected record was not cached, as we received <code class='code-block'>NXDOMAIN</code> (No such name) status. This means that the injection did not succeed.</p></p><br>
+<p>In this example, we use the identifier <code class='code-block'>123</code> to label the injected domain name, resulting in the generation of a specific domain name with the same label:</p>
+<div><pre class='output-block'><strong># dig injcname123.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injcname123.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 3799
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injcname123.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+injcname123.yourdomain.com. 60	IN	A	1.2.3.4
+<span style="color:red;">injected123.yourdomain.com. 60	IN	CNAME	always495849.yourdomain.com.</span>
+
+;; Query time: 3 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:27:24 +04 2025
+;; MSG SIZE  rcvd: 127</pre></div><p><a href='../outputs/injcname/dig_injcname123.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>This helps in identifying specific test cases during the testing process.</p></p><br>
+<p>As mentioned earlier, this module can respond to various record types, not just A records. In this example, we request an NS record. As a result, we receive a valid NS record followed by an unsolicited CNAME record:</p>
+<div><pre class='output-block'><strong># dig NS injcname.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; NS injcname.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 56323
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injcname.yourdomain.com.	IN	NS
+
+;; ANSWER SECTION:
+injcname.yourdomain.com. 60	IN	NS	always326907.yourdomain.com.
+<span style="color:red;">injected.yourdomain.com. 60	IN	CNAME	always259864.yourdomain.com.</span>
+
+;; Query time: 3 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:27:25 +04 2025
+;; MSG SIZE  rcvd: 146</pre></div><p><a href='../outputs/injcname/dig_NS_injcname.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>The module can handle A, AAAA, CNAME, DNAME, MX, NS and PTR record queries.</p></p><br>
+<p>In the following example, we use the <strong>3rp</strong> (3rd-party) parameter to request that the unsolicited record contain a subdomain under a 3rd-party parent domain. If successful, this scenario would have a much greater impact. In the subsequent query, we verify again whether the resolver picked up and cached the unsolicited record:</p>
+<div><pre class='output-block'><strong># dig injcname123.3rp.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injcname123.3rp.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 30293
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injcname123.3rp.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+injcname123.3rp.yourdomain.com.	60 IN	A	1.2.3.4
+<span style="color:red;">injected123.a3rdparty.net. 60	IN	CNAME	always079390.yourdomain.com.</span>
+
+;; Query time: 7 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:27:27 +04 2025
+;; MSG SIZE  rcvd: 130
+
+
+<strong># dig injected123.a3rdparty.net @10.211.55.2 +norecurse</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injected123.a3rdparty.net @10.211.55.2 +norecurse
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="color:red;">NXDOMAIN</span>, id: 15734
+;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injected123.a3rdparty.net.	IN	A
+
+;; Query time: 0 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:27:27 +04 2025
+;; MSG SIZE  rcvd: 43</pre></div><p><a href='../outputs/injcname/dig_injcname123.3rp.yourdomain.com__10.211.55.2__dig_injected123.a3rdparty.net__10.211.55.2__norecurse.pcap'>Download PCAP File</a></p><p><p>We can see that the injected record was not cached, as we received <code class='code-block'>NXDOMAIN</code> (No such name) status. This means that the injection did not succeed.</p></p><br>
+<p>In this example, we use the <strong>rev</strong> parameter to reverse the order of answers &mdash; the unsolicited record appears first, followed by the legitimate one. This arrangement could potentially increase the likelihood of the injected information being picked up and cached:</p>
+<div><pre class='output-block'><strong># dig injcname123.3rp.rev.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injcname123.3rp.rev.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 14613
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injcname123.3rp.rev.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+<span style="color:red;">injected123.a3rdparty.net. 60	IN	CNAME	always189711.yourdomain.com.</span>
+injcname123.3rp.rev.yourdomain.com. 60 IN A	1.2.3.4
+
+;; Query time: 7 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:27:28 +04 2025
+;; MSG SIZE  rcvd: 134</pre></div><p><a href='../outputs/injcname/dig_injcname123.3rp.rev.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we use the <strong>rpq</strong> parameter to replace the question in the query section with information from the unsolicited record, in an attempt to convince the resolver that it originally requested this record:</p>
+<div><pre class='output-block'><strong># dig injcname12345.rpq.yourdomain.com @10.211.55.2</strong>
+
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/CNAME/IN
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/CNAME/IN
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/CNAME/IN
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injcname12345.rpq.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; no servers could be reached</pre></div><p>We can see that the client (dig) did not accept the response because the question (in the response) did not match the question in the original query. Here is the actual DNS response that was sent back to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 53715
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+<span style="color:red;">;injected12345.yourdomain.com.  IN      CNAME</span>
+
+;; ANSWER SECTION:
+injcname12345.rpq.yourdomain.com. 60      IN      A       1.2.3.4
+<span style="color:red;">injected12345.yourdomain.com. 60      IN      CNAME   always198181.yourdomain.com.</pre></span><p><a href='../outputs/injcname/dig_injcname12345.rpq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>We can see that the question (query) was replaced to match the unsolicited record. The question remains as to how different resolvers would handle such a scenario &mdash; some resolvers may potentially accept this response.</p></p><br>
+<p>In the next example, we use the <strong>adq</strong> parameter to add the question in the response asking for the unsolicited record, as another attempt to convince the resolver that it originally requested this record. We can see again that the client (dig) does not accept this response because the question does not match the original query:</p>
+<div><pre class='output-block'><strong># dig injcname12345.adq.yourdomain.com @10.211.55.2</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/CNAME/IN
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/CNAME/IN
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/CNAME/IN
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injcname12345.adq.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle this scenario. Here is the actual DNS response that was generated and returned to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 38401
+;; flags: qr aa; QUERY: 2, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injcname12345.adq.yourdomain.com. IN      A
+<span style="color:red;">;injected12345.yourdomain.com.  IN      CNAME</span>
+
+;; ANSWER SECTION:
+injcname12345.adq.yourdomain.com. 60      IN      A       1.2.3.4
+<span style="color:red;">injected12345.yourdomain.com. 60      IN      CNAME   always391458.yourdomain.com.</pre></span><p><a href='../outputs/injcname/dig_injcname12345.adq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>We can see that there are two questions &mdash; the original query and an additional one matching the unsolicited record.</p></p><br>
+<p>In this example, the <strong>oi</strong> (only injected) parameter causes the answers to include only the injected (unsolicited) record, without the actual answer to the original query:</p>
+<div><pre class='output-block'><strong># dig injcname.oi.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injcname.oi.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 3194
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injcname.oi.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+<span style="color:red;">injected.yourdomain.com. 60	IN	CNAME	always314551.yourdomain.com.</span>
+
+;; Query time: 3 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:28:02 +04 2025
+;; MSG SIZE  rcvd: 108</pre></div><p><a href='../outputs/injcname/dig_injcname.oi.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>Note that the question remains the same as in the original query.</p></p><br>
+<p>Here, we also request to replace the question in the query section with the unsolicited domain name. We can see that the dig client does not accept the response again because the question does not match the original query:</p>
+<div><pre class='output-block'><strong># dig injcname.oi.rpq.yourdomain.com @10.211.55.2</strong>
+
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected.yourdomain.com/CNAME/IN
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected.yourdomain.com/CNAME/IN
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected.yourdomain.com/CNAME/IN
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injcname.oi.rpq.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle such a scenario. Here is the actual DNS response that was sent back to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 41971
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+<span style="color:red;">;injected.yourdomain.com.       IN      CNAME</span>
+
+;; ANSWER SECTION:
+<span style="color:red;">injected.yourdomain.com. 60      IN      CNAME   always860204.yourdomain.com.</pre></span><p><a href='../outputs/injcname/dig_injcname.oi.rpq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>Some resolvers may potentially accept this response.</p></p><br>
+<p>Lastly, in this example, we use the <strong>als</strong> (all sections) parameter to include the records in all sections of the DNS response:</p>
+<div><pre class='output-block'><strong># dig injcname.als.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injcname.als.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 13355
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 2, ADDITIONAL: 2
+
+;; QUESTION SECTION:
+;injcname.als.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+injcname.als.yourdomain.com. 60	IN	A	1.2.3.4
+<span style="color:red;">injected.yourdomain.com. 60	IN	CNAME	always461965.yourdomain.com.</span>
+
+;; AUTHORITY SECTION:
+injcname.als.yourdomain.com. 60	IN	A	1.2.3.4
+<span style="color:red;">injected.yourdomain.com. 60	IN	CNAME	always461965.yourdomain.com.</span>
+
+;; ADDITIONAL SECTION:
+injcname.als.yourdomain.com. 60	IN	A	1.2.3.4
+<span style="color:red;">injected.yourdomain.com. 60	IN	CNAME	always461965.yourdomain.com.</span>
+
+;; Query time: 8 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:28:20 +04 2025
+;; MSG SIZE  rcvd: 285</pre></div><p><a href='../outputs/injcname/dig_injcname.als.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>This could potentially increase the likelihood of the injected information being picked up and stored.</p>
+<p>Keep in mind that all these parameters can be combined to create different injection variants.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="inja.html">InjA - A Record Injection</a></li>
+<li><a href="injaaaa.html">InjAaaa - AAAA Record Injection</a></li>
+<li><a href="injdname.html">InjDname - DNAME Record Injection</a></li>
+<li><a href="injmx.html">InjMx - MX Record Injection</a></li>
+<li><a href="injns.html">InjNs - NS Record Injection</a></li>
+<li><a href="injptr.html">InjPtr - PTR Record Injection</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

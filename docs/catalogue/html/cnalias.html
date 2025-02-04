@@ -1,0 +1,113 @@
+---
+layout: default
+title: "CnAlias - Random CNAME Aliases"
+parent: "Aliases"
+---
+
+<!DOCTYPE html>
+<head>
+<title>CnAlias - Random CNAME Aliases</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>CnAlias - Random CNAME Aliases</h1>
+<p>This module is designed to return one or more <strong>random aliases</strong> using <strong>CNAME (Canonical Name)</strong> records.</p>
+<p>It specifically generates a random CNAME alias record in the format <code class='code-block'>cnalias######.yourdomain.com</code>, where <code class='code-block'>######</code> represents a random number.</p>
+<p>The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.</p>
+<p>Note that this feature provides the same functionality as requesting the CNAME record for the generic <a href="alias.html">alias</a> feature. Responding with multiple records (aliases) in a single response is also supported.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../aliases.html'>Aliases</a></p><p><strong>Tags:</strong> Amplification, Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1034/" target="_blank">RFC1034</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>cnalias.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines how many aliases should be generated in the response.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, it returns a single CNAME alias:</p>
+<div><pre class='output-block'><strong># dig cnalias.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; cnalias.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 35958
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;cnalias.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+cnalias.yourdomain.com.	60	IN	CNAME	cnalias855038.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 16 09:36:57 +04 2024
+;; MSG SIZE  rcvd: 82
+</pre></div><p><a href='../outputs/cnalias/dig_cnalias.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Same example as above, but this time we explicitly specify that we want to receive a single CNAME record:</p>
+<div><pre class='output-block'><strong># dig cnalias.1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; cnalias.1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 23974
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;cnalias.1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+cnalias.1.yourdomain.com. 60	IN	CNAME	cnalias684642.1.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 16 09:36:59 +04 2024
+;; MSG SIZE  rcvd: 86
+</pre></div><p><a href='../outputs/cnalias/dig_cnalias.1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this case, we specify that we want to receive five CNAME aliases:</p>
+<div><pre class='output-block'><strong># dig cnalias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; cnalias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 35342
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;cnalias.5.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+cnalias.5.yourdomain.com. 60	IN	CNAME	cnalias217971.5.yourdomain.com.
+cnalias.5.yourdomain.com. 60	IN	CNAME	cnalias62435.5.yourdomain.com.
+cnalias.5.yourdomain.com. 60	IN	CNAME	cnalias615162.5.yourdomain.com.
+cnalias.5.yourdomain.com. 60	IN	CNAME	cnalias737434.5.yourdomain.com.
+cnalias.5.yourdomain.com. 60	IN	CNAME	cnalias25705.5.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 16 09:37:00 +04 2024
+;; MSG SIZE  rcvd: 260
+</pre></div><p><a href='../outputs/cnalias/dig_cnalias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="alias.html">Alias - Random Aliases</a></li>
+<li><a href="dnalias.html">DnAlias - Random DNAME Aliases</a></li>
+<li><a href="htalias.html">HtAlias - Random HTTPS Aliases</a></li>
+<li><a href="mxalias.html">MxAlias - Random MX Aliases</a></li>
+<li><a href="nptenumalias.html">NptEnumAlias - Random NAPTR ENUM Aliases</a></li>
+<li><a href="nsalias.html">NsAlias - Random NS Aliases</a></li>
+<li><a href="ptralias.html">PtrAlias - Random PTR Aliases</a></li>
+<li><a href="spfalias1.html">SpfAlias1 - Random SPF (TXT) Aliases (Variant 1)</a></li>
+<li><a href="spfalias2.html">SpfAlias2 - Random SPF (TXT) Aliases (Variant 2)</a></li>
+<li><a href="sralias.html">SrAlias - Random SRV Aliases</a></li>
+<li><a href="svalias.html">SvAlias - Random SVCB Aliases</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="cnloop.html">CnLoop - CNAME Alias Loops</a></li>
+<li><a href="cnchain.html">CnChain - CNAME Alias Chains</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

@@ -1,0 +1,64 @@
+---
+layout: default
+title: "NptEnumLoop - NAPTR ENUM Alias Loops"
+parent: "Alias loops"
+---
+
+<!DOCTYPE html>
+<head>
+<title>NptEnumLoop - NAPTR ENUM Alias Loops</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>NptEnumLoop - NAPTR ENUM Alias Loops</h1>
+<p>This module implements <strong>alias loops</strong> using <strong>NAPTR (Naming Authority Pointer) ENUM</strong> records, which are used to map identifiers like telephone numbers to a variety of service URIs, including SIP addresses, voicemail systems, and web or email addresses.</p>
+<p>This module is specifically designed to handle DNS queries that translate telephone numbers into SIP service URIs using the E.164 format. In this format, a phone number such as <code class='code-block'>1234567890</code> is transformed into the reversed sequence <code class='code-block'>0.9.8.7.6.5.4.3.2.1.e164.arpa</code>. This domain is then queried in DNS to identify the corresponding designated SIP service address.</p>
+<p>When this module receives a NAPTR DNS query for translating a telephone number ending with the digit <code class='code-block'>2</code>, it will generate a response with a SIP service URI. This URI will point to the <strong>same domain name</strong> as in the original query, effectively creating a <strong>direct loop</strong>.</p>
+<p>While NAPTR ENUM records do not contain aliases like CNAME records, this could achieve similar results by prompting the client to perform consecutive queries to resolve it.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to a domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../alias-loops.html'>Alias loops</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc2915/" target="_blank">RFC2915</a>, <a href="https://datatracker.ietf.org/doc/rfc3761/" target="_blank">RFC3761</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>2.*.e164.arpa</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>In this example, we look up the telephone number <code class='code-block'>8765432</code>. As a result, we receive a response containing a SIP URI pointing to the exact same phone number, formatted as an E.164 address:</p>
+<div><pre class='output-block'><strong># dig NAPTR 2.3.4.5.6.7.8.e164.arpa @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; NAPTR 2.3.4.5.6.7.8.e164.arpa @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 57772
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;2.3.4.5.6.7.8.e164.arpa.	IN	NAPTR
+
+;; ANSWER SECTION:
+2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 &quot;U&quot; &quot;E2U+sip&quot; &quot;!^.*$!2.3.4.5.6.7.8.e164.arpa!&quot; .
+
+;; Query time: 7 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Nov 06 15:02:15 +04 2024
+;; MSG SIZE  rcvd: 99</pre></div><p><a href='../outputs/nptenumloop/dig_NAPTR_2.3.4.5.6.7.8.e164.arpa__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>This effectively creates a direct loop if the client attempts to resolve it further.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="cnloop.html">CnLoop - CNAME Alias Loops</a></li>
+<li><a href="dnloop.html">DnLoop - DNAME Alias Loops</a></li>
+<li><a href="htloop.html">HtLoop - HTTPS Alias Loops</a></li>
+<li><a href="loop.html">Loop - Alias Loops</a></li>
+<li><a href="mxloop.html">MxLoop - MX Alias Loops</a></li>
+<li><a href="nsloop.html">NsLoop - NS Alias Loops</a></li>
+<li><a href="ptrloop1.html">PtrLoop1 - PTR Alias Loops (Variant 1)</a></li>
+<li><a href="ptrloop2.html">PtrLoop2 - PTR Alias Loops (Variant 2)</a></li>
+<li><a href="spfloop.html">SpfLoop - SPF (TXT) Alias Loops</a></li>
+<li><a href="srloop.html">SrLoop - SRV Alias Loops</a></li>
+<li><a href="svloop.html">SvLoop - SVCB Alias Loops</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="nptenumalias.html">NptEnumAlias - Random NAPTR ENUM Aliases</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

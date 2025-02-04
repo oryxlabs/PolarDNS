@@ -1,23 +1,60 @@
 [module]
 name = "queryback4"
 type = "feature"
-info = ""
-desc = ""
-author = "ivan.jedek@oryxlabs.com"
+info = "Query Reflection (Random, to Port 53)"
+short = "Query reflection back to sender to port 53 (unique query)"
 category = "Empty responses"
+desc = '''
+This module is an enhanced variant of the [queryback3] module.
 
-code = '''
+Similar to the [queryback3] module, instead of sending a DNS response with an answer, this module resends the original query back to the sender on UDP port 53. The original query is never actually answered; the connection is simply abandoned, resulting in a timeout.
+
+:warning:**BEWARE**:warning: This behavior is intentionally designed to **create a loop** between the client/resolver and the PolarDNS server. For instance, if the client is a recursive resolver using the **same IP address** for both receiving queries and sending queries during resolution, it could result in an **infinite loop** of queries being sent back and forth indefinitely.
+
+The difference from the [queryback3] module is that a random number is appended to the query (to the “queryback4” feature name). This is to avoid receiving cached responses from the target recursive resolver.
+
+This could potentially increase the likelihood of ending up in a loop, leading to a Denial of Service (DoS) situation.
+'''
+format = '''
+**`queryback4.yourdomain.com`**
+
+This module has no parameters.
+'''
+seealso = "close, timeout, empty1, empty2, empty3, empty4, empty5, empty6, empty7, queryback1, queryback2, queryback3"
+
+[[module.example]]
+description = "In this example, we run the query directly against PolarDNS server. We see that the client (dig) does not actually receive any response, and the query results in a timeout three times in a row:"
+command = "dig queryback4.yourdomain.com @10.211.55.2"
+pcapexplain = "In the PCAP file below, we can see that the original query was sent back to us (reflected) to UDP port 53, each time with a random number appended to the query. As mentioned in the description above, this is an enhancement to circumvent caching. Here is an example of a query that PolarDNS sent back to us:"
+append = "Keep in mind that this query was sent back to us, to our UDP port 53. Since we do not run any DNS server on our system, nothing significant occured. However, if the initial query had been run through a recursive resolver (instead of directly to PolarDNS), it would be sent back (reflected) to the recursive resolver, potentially resulting in an infinite loop."
+
+[[module.example]]
+description = "In the following example, we also use the [newid] modifier, which generates a new Transaction ID for each response. The query once again results in a timeout three times in a row:"
+command = "dig queryback4.newid.yourdomain.com @10.211.55.2"
+append = "In the PCAP file, we can see again that the original query was sent back to us (reflected) to UDP port 53, each time with a random number appended to it. However, the [newid] modifier also causes the Transaction ID to vary each time, which could potentially increase the likelihood of ending up in a loop compared to the previous example."
+
+[[module.example]]
+description = "In the last example, we append a random number to the feature name. This still maintains the same functionality, as any string or text can be appended after the feature name to avoid receiving cached records. Using a random number from the start should further increase the chances of creating a loop on the target recursive resolver:"
+command = "dig queryback4${RANDOM}.newid.yourdomain.com @10.211.55.2"
+append = "Using this form should maximize the chances of creating a loop on the target recursive resolver, as everything is unique - the original domain name (with a random number), the subsequent domain names (with random numbers), and the Transaction IDs. The target resolver is unlikely to have any cached records for these."
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("queryback4"):
-   # Domain starts with "queryback4", let's send back a random variant of the query
-   # to the sender to udp/53 port, as an attempt to make a loop.
-   # Don't send any response to the original query (let it timeout)
-   # Todo
-   buffer = resp.ID + req.RAW[2:]
-   log("sending back the same query to udp port 53")
-   # send back the query to port udp 53
-   s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-   s.sendto(buffer, ((self.client_address[0], 53)))
-   # just close the original connection, don't send anything there
-   close_conn(self)
+   sender = self.client_address[0]
+   if sender != "127.0.0.1":
+       ### DNS header ########
+       buffer = prep_dns_header(req.FLAGS, req.QURR, 0, 0, 0)
+       ### QUESTION SECTION ########
+       newname = "queryback4" + str(random.getrandbits(66)) + "." + ".".join(req.subdomains[1:])
+       if resp.noq: buffer += convDom2Bin(newname) + req.type_bin + req.class_bin
+       log("sending back new similar query to udp://" + sender + ":53")
+       # send back the query to port udp 53
+       s = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+       s.sendto(buffer, ((sender, 53)))
+   else:
+       log("not sending back the query to myself")
+   # don't send anything back in this connection
+   timeout_conn(self)
    #####################################################################
 '''

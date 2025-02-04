@@ -1,12 +1,40 @@
 [module]
 name = "badcompressmid1"
 type = "feature"
-info = "Compression in the middle of CNAME"
-desc = "Respond with CNAME, where the CNAME contains \"abc\" + a pointer to the query name + additional \"hello\" string. Data length indicates the \"hello\" string should be included in the CNAME."
-author = "ivan.jedek@oryxlabs.com"
+info = "Compression in the Middle of CNAME"
+short = "Compression used in the middle of CNAME field"
 category = "Bad compression"
+records = "CNAME"
+desc = '''
+The DNS protocol supports compressing domain names to save space by reducing redundancy for repeated domain names within DNS messages. This compression scheme can be applied to various record (resource) types, such as **A**, **CNAME**, **MX**, or **PTR** records.
 
-code = '''
+This module is designed to respond with a single answer containing a **CNAME record** (alias) where the **CNAME field** (located at the end of the record) is compressed in a manner that violates DNS specifications.
+
+In this case, the **CNAME field** contains the alias name `abc.badcompressmid1.yourdomain.com.hello`. This alias is constructed using compression, with the compression pointer placed in the **middle** of the alias name. Specifically, the **CNAME field** consists of the string `abc`, followed by a compression pointer that points back to the original domain name located in the **QUERY section** (`badcompressmid1.yourdomain.com`), and then followed by the string `hello`.
+
+Placing the **compression pointer** in the **middle** in this case is achieved by deliberately setting the **Data length** value (in the **CNAME record**) to indicate that the `hello` string should still be included as part of the alias name.
+
+This arrangement directly violates DNS specifications, as the **compression pointer** is placed in the **middle** of the compressed string. According to the DNS protocol, a **compression pointer** must always be the last part of the compressed string.
+'''
+rfc = "RFC1035"
+format = '''
+**`badcompressmid1.yourdomain.com`**
+
+This module has no parameters.
+'''
+seealso = "badcompress1, badcompress2, badcompressfwptr1, badcompressfwptr2, badcompressloop1, badcompressloop2, badcompressloop3, badcompressloop4, badcompressloop5, badcompressmid1"
+
+[[module.example]]
+description = "In this example, we can see that the client (dig) is unable to process the response because of the compression pointer being placed in the middle of the domain name (alias name):"
+command = "dig badcompressmid1.yourdomain.com @127.0.0.1"
+append = "By examining the PCAP file in Wireshark, we can see that Wireshark parses the response without any issues, ignoring the appended `hello` string. However, different DNS resolvers and clients may handle such malformed responses in vastly different ways, making this an intriguing use case for testing."
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig badcompressmid1${RANDOM}.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("badcompressmid1"):
    # Send answer with a compression pointer in the CNAME in the middle, trying to
    # concatenate it with additional string

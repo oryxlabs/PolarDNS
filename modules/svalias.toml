@@ -1,12 +1,64 @@
 [module]
 name = "svalias"
 type = "feature"
-info = "SVCB random N aliases"
-desc = "Respond with N number of SVCB aliases containing random chain index (`svalias####.yourdomain.com`). BEWARE: This could result in multiplication."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "Random SVCB Aliases"
+short = "SVCB random alias generator"
+category = "Aliases"
+records = "SVCB"
+tags = "Amplification, Domain Lock-Up, Denial of Service"
+rfc = "RFC9460"
+desc = '''
+This module is designed to return one or more **random aliases** using **SVCB (Service Binding)** records.
 
-code = '''
+It specifically generates a random SVCB alias record in the format `svalias######.yourdomain.com`, where `######` represents a random number.
+
+The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.
+
+Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, "service labels", or "underscore labels". It also supports returning multiple records in a single response.
+
+Note that this module provides the same functionality as requesting the SVCB record for the generic [alias] module.
+
+:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
+'''
+format = '''
+**`svalias.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many aliases should be generated in the response.
+'''
+seealso = "svloop, svchain, alias, cnalias, dnalias, htalias, mxalias, nptenumalias, nsalias, ptralias, spfalias1, spfalias2, sralias, svalias"
+
+[[module.example]]
+description = "By default, the module returns a single SVCB alias record (with SvcPriority set to 0):"
+command = "dig svalias.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Same example as above, but this time we explicitly specify that we want to receive a single SVCB record:"
+command = "dig svalias.1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we specify that we want to receive 5 (five) SVCB alias records:"
+command = "dig svalias.5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "As mentioned in the description, this module also supports DNS queries for locating different services using the underscore (_) prefix notation. In this example, we search for SIP (Session Initiation Protocol) service, and we request to receive a single SVCB alias record:"
+command = "dig _sip.svalias.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Here, we search for SIP service running over UDP, and we want to receive 2 (two) SVCB alias records:"
+command = "dig _sip._udp.svalias.2.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Here, we search for HTTP service running over TCP, and we request to receive 10 (ten) SVCB alias records:"
+command = "dig _http._tcp.svalias.10.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Here, we search for HTTP service specifically designed for mobile devices, running over TCP. We request 20 (twenty) SVCB alias records in the response:"
+command = "dig _mobile._http._tcp.svalias.20.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
            elif req.first_subdomain.startswith("svalias"):
               # Send multiple random SVCB aliases (RFC 9460).
               # BEWARE: This could result in multiplication

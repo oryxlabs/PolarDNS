@@ -1,12 +1,40 @@
 [module]
 name = "ptrloop2"
 type = "feature"
-info = "PTR loop 2"
-desc = "Respond with an incremented domain name within the same network range (198.51.100.0/24), iterating through the entire network range, effectively creating a loop."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "PTR Alias Loops (Variant 2)"
+short = "PTR loop alias generator (variant 2)"
+category = "Alias loops"
+records = "PTR"
+tags = "Domain Lock-Up, Denial of Service"
+rfc = "RFC1035"
+desc = '''
+This module implements **alias loops** using **reverse DNS lookups (PTR records)**, which map IP addresses back to domain names.
 
-code = '''
+It specifically handles reverse DNS queries for any IP address within the private `198.51.100.0/24` network range, known as TEST-NET-2, which is typically used for documentation and examples.
+
+When this module receives a reverse DNS lookup query for an IP address such as `198.51.100.x` (this means searching for the PTR record for `x.100.51.198.in-addr.arpa` domain), it responds with a PTR record with incremented domain name, cycling through addresses from `198.51.100.0` to `198.51.100.255` indefinitely, effectively creating a **loop**.
+
+:warning:**BEWARE**:warning:This could potentially lead to a domain lock-up (DoS).
+'''
+seealso = "ptralias, cnloop, dnloop, htloop, loop, mxloop, nptenumloop, nsloop, ptrloop1, ptrloop2, spfloop, srloop, svloop"
+format = '''
+**`*.100.51.198.in-addr.arpa`**
+
+This module has no parameters.
+'''
+
+[[module.example]]
+description = "In this example, we perform a reverse lookup for the IP address `198.51.100.0`, which is the 1st element of the loop. The result is an incremented IP address (`192.51.100.1`) in in-addr.arpa format:"
+command = "dig -x 198.51.100.0 @127.0.0.1"
+append = "This incrementation continues up to the last IP address (the final element) - `192.51.100.255` (or `255.100.51.198.in-addr.arpa` in in-addr.arpa format)."
+
+[[module.example]]
+description = "By resolving the final element of the loop, we are directed back to the 1st element again:"
+command = "dig -x 198.51.100.255 @127.0.0.1"
+append = "This setup effectively creates a loop."
+
+[module.code]
+python = '''
            elif req.full_domain.lower().endswith(".100.51.198.in-addr.arpa"):
               # Asking for a reverse record for the IP address 198.51.100.x (x.100.51.198.in-addr.arpa PTR record).
               # The 198.51.100.0/24 network range is TEST-NET-2 typically used for documentation/examples.

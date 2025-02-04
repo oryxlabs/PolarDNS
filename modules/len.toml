@@ -1,0 +1,48 @@
+[module]
+name = "len"
+type = "modifier"
+info = "Set Custom Length in TCP"
+short = "Set custom DNS packet length in TCP"
+category = "Packet manipulation"
+desc = '''
+This modifier allows adjusting the DNS packet length (size), which is defined as a 2-byte field at the beginning of the packet in TCP mode.
+
+It is important to note that this functionality is specific to TCP mode only, because only in TCP the DNS packets contain a length field at the beginning. DNS packets sent over UDP do not have length defined at the beginning.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier, as long as the communication is happening over TCP.
+'''
+format = '''
+**`*.len<NUMBER>.*`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines the length of the DNS response in bytes. Note that the maximum possible size of a DNS packet is 65535, as it is a 2-byte field.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = '''
+All the examples below use the basic [always] feature which always resolves to an IP address. Additionally, TCP mode is selected as the communication protocol for all examples.
+
+In this example, we specify the DNS response length as 0 bytes. As a result, the parser is completely unable to interpret the packet, despite the entire DNS response being transmitted in full:
+'''
+command = "dig always.len0.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "In this case, we specify the packet length as 20 bytes. This once again prevents the parser to parse the packet correctly. The parser can only see the DNS header (12 bytes) and the first 8 bytes from the Question section which is only a small fragment of it:"
+command = "dig always.len20.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "In this case, we specify the packet length as 45 bytes. This happens to exactly match the end of the Question section. As a result, the parser can only process the Question section, omitting any subsequent sections. This creates a discrepancy between the indicated number of Answer RRs (`ANSWER: 1`) in the DNS header and the actual answers in the body, which the parser cannot access. Consequently, a warning about malformed packet is displayed:"
+command = "dig always.len45.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "In this case, we specify the packet length as 61 bytes, which happens to exactly match the length of the entire packet. As a result, the packet is fully parsed without errors, producing a valid and correct answer:"
+command = "dig always.len61.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "In this case, we specify the packet length as 100 bytes, which exceeds the actual size of the entire packet. As a result, the parser assumes the packet was not transmitted properly and attempts to retry again. Since it never receives a response of actual 100 bytes in size, the process ultimately fails:"
+command = "dig always.len100.yourdomain.com @127.0.0.1 +tcp"
+
+[module.code]
+# The code is located in the polardns.py file.

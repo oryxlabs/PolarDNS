@@ -1,0 +1,523 @@
+---
+layout: default
+title: "Nfz - Name Fuzzing Generator"
+parent: "Fuzzing"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Nfz - Name Fuzzing Generator</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Nfz - Name Fuzzing Generator</h1>
+<p>This modifier allows to generate various illegal and malformed domain names based on the selected variant and size.</p>
+<p>This generator was primarily created for the alias features (such as <a href="alias.html">alias</a>, <a href="cnalias.html">cnalias</a>, <a href="dnalias.html">dnalias</a>, etc.) to provide a unified mechanism for generating malformed domain names.</p>
+<p>The module enables experimentation with the structure of domain names and the key aspects and limitations of how domain names and IP addresses are transmitted during DNS communication. The most notable aspects include:</p>
+<ul>
+<li>
+<p><a href="http://www.tcpipguide.com/free/t_DNSNameNotationandMessageCompressionTechnique.htm" target="_blank"><strong>DNS name notation</strong></a> defines how domain names are represented and transmitted over the network. In this notation, each domain is divided into subdomains (labels), with the size of each label prepended before the label itself. The domain name ends with a NULL byte, representing the <strong>ROOT</strong> domain.</p>
+<ul>
+<li>For example: <code class='code-block'>www.example.com</code> is transmitted as <code class='code-block'>[3]www[7]example[3]com[0]</code>. Note that actual dot (.) symbols are never transmitted.</li>
+</ul>
+</li>
+<li>
+<p><strong>The total size of a domain name</strong> cannot exceed 253 characters.</p>
+</li>
+<li>
+<p><strong>The size of a single label</strong> (a subdomain) cannot exceed 63 characters.</p>
+</li>
+<li>
+<p><strong>IP addresses</strong> are transmitted as raw bytes. An IPv4 address simply consists of 4 consecutive bytes, and an IPv6 address consists of 16 consecutive bytes. Actual dot (.) or colon (:) symbols are never transmitted.</p>
+</li>
+<li>
+<p><strong>Permitted characters in domain names</strong> include letters (a-z), digits (0-9), and hyphens (-). While domain names typically use ASCII characters, internationalized domain names (IDNs) rely on Punycode to represent non-ASCII characters.</p>
+</li>
+<li>
+<p>Domain names <strong>cannot contain binary or non-printable characters</strong>. Additionally:</p>
+<ul>
+<li>
+<p><strong>Labels</strong> (subdomains) cannot begin or end with a hyphen (-).</p>
+</li>
+<li>
+<p><strong>Spaces</strong> and <strong>special characters</strong> (like @, #, $, etc.) are not allowed.</p>
+</li>
+<li>
+<p>Domain names are <strong>case-insensitive</strong> (e.g., <code class='code-block'>Example.COM</code> is equivalent to <code class='code-block'>example.com</code>).</p>
+</li>
+</ul>
+</li>
+</ul><p><strong>Category:</strong> <a href='../fuzzing.html'>Fuzzing</a></p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1034/" target="_blank">RFC1034</a>, <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.nfz&lt;VARIANT&gt;.s&lt;SUBDOMAINS&gt;.m&lt;MALFORMATION&gt;.p&lt;POSITION&gt;.*</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>
+<p>The <strong><code class='code-block'>VARIANT</code></strong> parameter specifies the particular name fuzzing variant. The following 7 customizable variants are supported:</p>
+<ul>
+<li>
+<p><strong><code class='code-block'>nfz0</code></strong> generates a standalone malformation only.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz1</code></strong> generates a malformation within the <code class='code-block'>always.yourdomain.com</code> (resolvable) domain.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz2</code></strong> generates a malformation within the <code class='code-block'>nonres.yourdomain.com</code> (non-resolvable) domain.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz3</code></strong> generates a malformation within the same feature domain (e.g., <code class='code-block'>alias.yourdomain.com</code>).</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz4</code></strong> generates a malformation within the <code class='code-block'>always######.yourdomain.com</code> (resolvable) domain, where <code class='code-block'>######</code> represents a random number.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz5</code></strong> generates a malformation within the <code class='code-block'>nonres######.yourdomain.com</code> (non-resolvable) domain, where <code class='code-block'>######</code> represents a random number.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz6</code></strong> generates a malformation within the same feature domain (e.g., <code class='code-block'>alias######.yourdomain.com</code>), where <code class='code-block'>######</code> represents a random number.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>The <strong><code class='code-block'>SUBDOMAINS</code></strong> parameter specifies the number of subdomains that the malformation should consist of. By default, a single subdomain is generated if this parameter is not specified.</p>
+</li>
+<li>
+<p>The <strong><code class='code-block'>MALFORMATION</code></strong> parameter specifies the type of malformation to generate. There are 10 different variants supported, which produce the following results:</p>
+<ul>
+<li>
+<p><strong><code class='code-block'>m0.[SIZE]</code></strong> generates NULL byte string of the specified size.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>m1.[SIZE]</code></strong> generates a string made of random letter or number, with the same character repeated.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>m2.[SIZE]</code></strong> generates a string made of random letter or number, with each character being random.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>m3.[SIZE]</code></strong> generates a string made of random printable character, with the same character repeated.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>m4.[SIZE]</code></strong> generates a string made of random printable character, with each character being random.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>m5.[SIZE]</code></strong> generates random byte string with the same byte repeated.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>m6.[SIZE]</code></strong> generates random byte string with each byte being random.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>m7.[SIZE]</code></strong> generates incremental byte string with the same byte repeated.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>m8.[SIZE]</code></strong> generates incremental byte string with each byte being incremented.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>m9.[SIZE].[BYTE]</code></strong> generates a string made of a specific byte value and size.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>The <strong><code class='code-block'>POSITION</code></strong> parameter specifies the insertion point where the malformation should occur. This is applicable only to <code class='code-block'>nfz1</code> through <code class='code-block'>nfz6</code> variants, with the following 13 insertion points (positions) available:</p>
+<ul>
+<li>
+<p><strong><code class='code-block'>p0</code></strong> generates malformation <code class='code-block'>&lt;HERE&gt;.always######.yourdomain.com</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p1</code></strong> generates malformation <code class='code-block'>&lt;HERE&gt;always######.yourdomain.com</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p2</code></strong> generates malformation <code class='code-block'>always&lt;HERE&gt;######.yourdomain.com</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p3</code></strong> generates malformation <code class='code-block'>always######&lt;HERE&gt;.yourdomain.com</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p4</code></strong> generates malformation <code class='code-block'>always######&lt;HERE&gt;yourdomain.com</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p5</code></strong> generates malformation <code class='code-block'>always######.&lt;HERE&gt;.yourdomain.com</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p6</code></strong> generates malformation <code class='code-block'>always######.&lt;HERE&gt;yourdomain.com</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p7</code></strong> generates malformation <code class='code-block'>always######.yourdomain&lt;HERE&gt;.com</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p8</code></strong> generates malformation <code class='code-block'>always######.yourdomain&lt;HERE&gt;com</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p9</code></strong> generates malformation <code class='code-block'>always######.yourdomain.&lt;HERE&gt;.com</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p10</code></strong> generates malformation <code class='code-block'>always######.yourdomain.&lt;HERE&gt;com</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p11</code></strong> generates malformation <code class='code-block'>always######.yourdomain.com&lt;HERE&gt;</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>p12</code></strong> generates malformation <code class='code-block'>always######.yourdomain.com.&lt;HERE&gt;</code>.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Additionaly, the following alternative format is supported without any other additional parameters:</p>
+<pre class='output-block'><strong>*.nfz&lt;VARIANT&gt;.*</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>
+<p>The <strong><code class='code-block'>VARIANT</code></strong> parameter specifies the particular name fuzzing variant. The following 12 non-customizable variants are supported:</p>
+<ul>
+<li>
+<p><strong><code class='code-block'>nfz7</code></strong> generates only the ROOT domain (<code class='code-block'>.</code>)</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz8</code></strong> generates a malformed name consisting of a random domain in the format <code class='code-block'>always######.yourdomain.com:80</code></p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz9</code></strong> generates a malformed name consisting of a random domain in the format <code class='code-block'>always######.yourdomain.com:443</code></p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz10</code></strong> generates a malformed name consisting of a random domain in the format <code class='code-block'>http://always######.yourdomain.com/</code></p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz11</code></strong> generates a malformed name consisting of a random domain in the format <code class='code-block'>http://always######.yourdomain.com:80/</code></p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz12</code></strong> generates a malformed name consisting of a random domain in the format <code class='code-block'>https://always######.yourdomain.com/</code></p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz13</code></strong> generates a malformed name consisting of a random domain in the format <code class='code-block'>https://always######.yourdomain.com:443/</code></p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz14</code></strong> generates a malformed name consisting of <code class='code-block'>1.2.3.4</code> (an IP address in DNS name notation)</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz15</code></strong> generates a malformed name consisting of <code class='code-block'>1.2.3.4:80</code> (an IP address and port in DNS name notation)</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz16</code></strong> generates a malformed name consisting of <code class='code-block'>1\.2\.3\.4</code> (an IP address in DNS name notation, represented as a single label with literal dot symbols)</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz17</code></strong> generates a malformed name consisting of <code class='code-block'>1\.2\.3\.4:80</code> (an IP address and port in DNS name notation, represented as a single label with literal dot symbols)</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz18</code></strong> generates a malformed name consisting of <code class='code-block'>127.0.0.1</code> (our own IP address in DNS name notation)</p>
+</li>
+<li>
+<p><strong><code class='code-block'>nfz19</code></strong> generates a malformed name consisting of <code class='code-block'>127.0.0.1:80</code> (our own IP address and port in DNS name notation)</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2>Examples</h2>
+<p>To demonstrate the capabilities of this name fuzzing generator, all the examples below use the <a href="alias.html">alias</a> feature to produce five <code class='code-block'>CNAME</code> sample alias records. The target domain names are malformed using the generator in different configurations and combinations.</p>
+<p>For reference, the first example demonstrates the default behavior of the <a href="alias.html">alias</a> feature without involving any name fuzzing:</p>
+<div><pre class='output-block'><strong># dig alias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 16317
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+alias.5.yourdomain.com.	60	IN	CNAME	alias259422.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	CNAME	alias434060.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	CNAME	alias415975.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	CNAME	alias183368.5.yourdomain.com.
+alias.5.yourdomain.com.	60	IN	CNAME	alias644227.5.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 29 15:12:15 +04 2025
+;; MSG SIZE  rcvd: 250</pre></div><p><a href='../outputs/nfz/dig_alias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Now we incorporate the name fuzzer into the query. In this example, we use the <code class='code-block'>nfz0</code> variant which generates a standalone malformation. Without any additional options, it generates a malformation consisting of a single NULL byte (<code class='code-block'>\000</code>):</p>
+<div><pre class='output-block'><strong># dig alias.5.nfz0.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.5.nfz0.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 64356
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.nfz0.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+alias.5.nfz0.yourdomain.com. 60	IN	CNAME	\000.
+alias.5.nfz0.yourdomain.com. 60	IN	CNAME	\000.
+alias.5.nfz0.yourdomain.com. 60	IN	CNAME	\000.
+alias.5.nfz0.yourdomain.com. 60	IN	CNAME	\000.
+alias.5.nfz0.yourdomain.com. 60	IN	CNAME	\000.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 29 15:12:16 +04 2025
+;; MSG SIZE  rcvd: 120</pre></div><p><a href='../outputs/nfz/dig_alias.5.nfz0.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>By using the <code class='code-block'>s&lt;SIZE&gt;</code> parameter, we can specify that the malformation should consist of multiple subdomains. In this example, we request the malformation to include 3 subdomains by adding the <code class='code-block'>s3</code> parameter in the query. Without any other parameters, each subdomain will contain a single NULL byte (<code class='code-block'>\000</code>):</p>
+<div><pre class='output-block'><strong># dig alias.5.nfz0.s3.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.5.nfz0.s3.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 6661
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.nfz0.s3.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+alias.5.nfz0.s3.yourdomain.com.	60 IN	CNAME	\000.\000.\000.
+alias.5.nfz0.s3.yourdomain.com.	60 IN	CNAME	\000.\000.\000.
+alias.5.nfz0.s3.yourdomain.com.	60 IN	CNAME	\000.\000.\000.
+alias.5.nfz0.s3.yourdomain.com.	60 IN	CNAME	\000.\000.\000.
+alias.5.nfz0.s3.yourdomain.com.	60 IN	CNAME	\000.\000.\000.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 29 15:12:17 +04 2025
+;; MSG SIZE  rcvd: 143</pre></div><p><a href='../outputs/nfz/dig_alias.5.nfz0.s3.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>We can achieve the same result as the previous example by explicitly specifying the malformation variant <code class='code-block'>m0</code>. The <code class='code-block'>m0</code> variant is the default malformation, generating a single NULL byte (<code class='code-block'>\000</code>):</p>
+<div><pre class='output-block'><strong># dig alias.5.nfz0.s3.m0.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.5.nfz0.s3.m0.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 53480
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.nfz0.s3.m0.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+alias.5.nfz0.s3.m0.yourdomain.com. 60 IN CNAME	\000.\000.\000.
+alias.5.nfz0.s3.m0.yourdomain.com. 60 IN CNAME	\000.\000.\000.
+alias.5.nfz0.s3.m0.yourdomain.com. 60 IN CNAME	\000.\000.\000.
+alias.5.nfz0.s3.m0.yourdomain.com. 60 IN CNAME	\000.\000.\000.
+alias.5.nfz0.s3.m0.yourdomain.com. 60 IN CNAME	\000.\000.\000.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 29 15:12:19 +04 2025
+;; MSG SIZE  rcvd: 146</pre></div><p><a href='../outputs/nfz/dig_alias.5.nfz0.s3.m0.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>Note that the malformation parameter also allows specifying the size (length) of the malformation.</p></p><br>
+<p>In this example, we request the malformation to consist of 2 NULL bytes. This can be achieved by including the <code class='code-block'>m0.2</code> parameter in the query:</p>
+<div><pre class='output-block'><strong># dig alias.5.nfz0.s3.m0.2.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.5.nfz0.s3.m0.2.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 62731
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.nfz0.s3.m0.2.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+alias.5.nfz0.s3.m0.2.yourdomain.com. 60	IN CNAME \000\000.\000\000.\000\000.
+alias.5.nfz0.s3.m0.2.yourdomain.com. 60	IN CNAME \000\000.\000\000.\000\000.
+alias.5.nfz0.s3.m0.2.yourdomain.com. 60	IN CNAME \000\000.\000\000.\000\000.
+alias.5.nfz0.s3.m0.2.yourdomain.com. 60	IN CNAME \000\000.\000\000.\000\000.
+alias.5.nfz0.s3.m0.2.yourdomain.com. 60	IN CNAME \000\000.\000\000.\000\000.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 29 15:12:20 +04 2025
+;; MSG SIZE  rcvd: 163</pre></div><p><a href='../outputs/nfz/dig_alias.5.nfz0.s3.m0.2.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>As a result, each of the 3 subdomains now consists of 2 NULL bytes (<code class='code-block'>\000</code>).</p></p><br>
+<p>The malformation parameter (<code class='code-block'>m</code>) supports 10 different malformation variants. So far, we have explored only NULL bytes. In this example, we generate a malformation consisting of random letters and numbers. This can be achieved by using the <code class='code-block'>m2</code> malformation:</p>
+<div><pre class='output-block'><strong># dig alias.5.nfz0.s3.m2.2.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.5.nfz0.s3.m2.2.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 28755
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.nfz0.s3.m2.2.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+alias.5.nfz0.s3.m2.2.yourdomain.com. 60	IN CNAME 2f.6s.nd.
+alias.5.nfz0.s3.m2.2.yourdomain.com. 60	IN CNAME 78.66.3r.
+alias.5.nfz0.s3.m2.2.yourdomain.com. 60	IN CNAME xm.5v.dt.
+alias.5.nfz0.s3.m2.2.yourdomain.com. 60	IN CNAME hp.lp.no.
+alias.5.nfz0.s3.m2.2.yourdomain.com. 60	IN CNAME wy.br.mo.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 29 15:12:21 +04 2025
+;; MSG SIZE  rcvd: 163</pre></div><p><a href='../outputs/nfz/dig_alias.5.nfz0.s3.m2.2.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>As a result, each of the 3 subdomains now consists of 2 random letter and numbers.</p></p><br>
+<p>Now, instead of generating a standalone malformation (using the <code class='code-block'>nfz0</code> parameter), we can generate the malformation within a legitimate domain name, such as <code class='code-block'>always123456.yourdomain.com</code>. To achieve this, we use the <code class='code-block'>nfz4</code> variant while keeping all other parameters the same:</p>
+<div><pre class='output-block'><strong># dig alias.5.nfz4.s3.m2.2.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.5.nfz4.s3.m2.2.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 4808
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.nfz4.s3.m2.2.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+alias.5.nfz4.s3.m2.2.yourdomain.com. 60	IN CNAME rn.at.qv.always202808.yourdomain.com.
+alias.5.nfz4.s3.m2.2.yourdomain.com. 60	IN CNAME em.mv.95.always132544.yourdomain.com.
+alias.5.nfz4.s3.m2.2.yourdomain.com. 60	IN CNAME 9x.zh.eg.always987898.yourdomain.com.
+alias.5.nfz4.s3.m2.2.yourdomain.com. 60	IN CNAME zx.86.82.always613148.yourdomain.com.
+alias.5.nfz4.s3.m2.2.yourdomain.com. 60	IN CNAME 1w.jf.pk.always884560.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 29 15:12:22 +04 2025
+;; MSG SIZE  rcvd: 303</pre></div><p><a href='../outputs/nfz/dig_alias.5.nfz4.s3.m2.2.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that the malformation occured at the beginning of the target domain name, which is the default insertion point (position).</p></p><br>
+<p>We can change the position for the malformation using the <code class='code-block'>p&lt;POS&gt;</code> parameter. There are 13 insertion points (positions) available. In this case, we request to insert the malformation in the middle of the target domain name by using the <code class='code-block'>p4</code> paramater:</p>
+<div><pre class='output-block'><strong># dig alias.5.nfz4.s3.m2.2.p4.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.5.nfz4.s3.m2.2.p4.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 57600
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.5.nfz4.s3.m2.2.p4.yourdomain.com.	IN A
+
+;; ANSWER SECTION:
+alias.5.nfz4.s3.m2.2.p4.yourdomain.com.	60 IN CNAME always797836e5.a2.5qyourdomain.com.
+alias.5.nfz4.s3.m2.2.p4.yourdomain.com.	60 IN CNAME always165747u8.h2.0xyourdomain.com.
+alias.5.nfz4.s3.m2.2.p4.yourdomain.com.	60 IN CNAME always83654888.jl.mxyourdomain.com.
+alias.5.nfz4.s3.m2.2.p4.yourdomain.com.	60 IN CNAME always4981675j.4i.40yourdomain.com.
+alias.5.nfz4.s3.m2.2.p4.yourdomain.com.	60 IN CNAME always506886wl.vv.9jyourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 29 15:12:24 +04 2025
+;; MSG SIZE  rcvd: 296</pre></div><p><a href='../outputs/nfz/dig_alias.5.nfz4.s3.m2.2.p4.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that the malformation occured in the middle of the target domain name.</p></p><br>
+<p>It’s important to note that this generator can be used in conjunction with other features, not limited to the <a href="alias.html">alias</a> feature.</p>
+<p>In this example, we use the <a href="mxalias.html">mxalias</a> feature to request the generation of 10 MX alias records. Additionally, we specify the insertion of 5 random bytes (malformation <code class='code-block'>m6.5</code>) at the end of each domain name (position <code class='code-block'>p11</code>):</p>
+<div><pre class='output-block'><strong># dig mxalias.10.nfz4.m6.5.p11.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; mxalias.10.nfz4.m6.5.p11.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 64058
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;mxalias.10.nfz4.m6.5.p11.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+mxalias.10.nfz4.m6.5.p11.yourdomain.com. 60 IN MX 0 always637611.yourdomain.como\146\189=\129.
+mxalias.10.nfz4.m6.5.p11.yourdomain.com. 60 IN MX 0 always031761.yourdomain.com\208\188&gt;\176b.
+mxalias.10.nfz4.m6.5.p11.yourdomain.com. 60 IN MX 0 always995918.yourdomain.com\018W\151o\219.
+mxalias.10.nfz4.m6.5.p11.yourdomain.com. 60 IN MX 0 always759031.yourdomain.comY\176\238\228\020.
+mxalias.10.nfz4.m6.5.p11.yourdomain.com. 60 IN MX 0 always858743.yourdomain.comm=\024\173E.
+mxalias.10.nfz4.m6.5.p11.yourdomain.com. 60 IN MX 0 always175948.yourdomain.com\179\207y\.\148.
+mxalias.10.nfz4.m6.5.p11.yourdomain.com. 60 IN MX 0 always277526.yourdomain.com\192g\187J\026.
+mxalias.10.nfz4.m6.5.p11.yourdomain.com. 60 IN MX 0 always153513.yourdomain.com\016In\027h.
+mxalias.10.nfz4.m6.5.p11.yourdomain.com. 60 IN MX 0 always645000.yourdomain.comk\226\166\012H.
+mxalias.10.nfz4.m6.5.p11.yourdomain.com. 60 IN MX 0 always941773.yourdomain.com\203\211\232\156\021.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 29 15:12:25 +04 2025
+;; MSG SIZE  rcvd: 537</pre></div><p><a href='../outputs/nfz/dig_mxalias.10.nfz4.m6.5.p11.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>The generator allows the creation of domain names that violate DNS standards, enabling experimentation with domain and subdomain lengths.</p>
+<p>For instance, in this example, we generate a single domain (variant <code class='code-block'>nfz0</code>) consisting of 63 random letters (malformation <code class='code-block'>m2.63</code>). As you may know, DNS standards specify that a subdomain cannot exceed 63 characters in length:</p>
+<div><pre class='output-block'><strong># dig alias.nfz0.m2.63.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.nfz0.m2.63.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 9276
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.nfz0.m2.63.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+alias.nfz0.m2.63.yourdomain.com. 60 IN	CNAME	w8oh98hfydubgkm685edjt1xd0erx0ua8q9bcwwzigjcnhzpukxpgnenwjgqsnn.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 29 15:12:26 +04 2025
+;; MSG SIZE  rcvd: 126</pre></div><p><a href='../outputs/nfz/dig_alias.nfz0.m2.63.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that this domain name does not appear to cause any immediate issues.</p></p><br>
+<p>Now, we modify the query to generate a single domain consisting of 64 random letters (malformation <code class='code-block'>m2.64</code>). This directly violates DNS specifications, as a subdomain cannot exceed 63 characters in length:</p>
+<div><pre class='output-block'><strong># dig alias.nfz0.m2.64.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Got bad packet</span>: bad label type
+127 bytes
+40 a6 84 00 00 01 00 01 00 00 00 00 05 61 6c 69          @............ali
+61 73 04 6e 66 7a 30 02 6d 32 02 36 34 0a 79 6f          as.nfz0.m2.64.yo
+75 72 64 6f 6d 61 69 6e 03 63 6f 6d 00 00 01 00          urdomain.com....
+01 c0 0c 00 05 00 01 00 00 00 3c 00 42 40 31 6a          ..........&lt;.B@1j
+73 6b 75 76 6d 32 77 35 32 69 77 6f 36 7a 37 6a          skuvm2w52iwo6z7j
+33 32 35 73 65 77 72 79 62 76 74 37 67 77 6a 73          325sewrybvt7gwjs
+6d 6f 7a 32 64 6e 6c 37 65 30 61 79 62 6b 6c 76          moz2dnl7e0aybklv
+70 6d 6e 67 35 34 78 39 69 30 6e 79 6e 70 00             pmng54x9i0nynp.</pre></div><p><a href='../outputs/nfz/dig_alias.nfz0.m2.64.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>In this case, we can see that the client (dig) is unable to parse this response because the resulting subdomain length (64 characters) exceeds the limit specified in DNS standards.</p>
+<p>By combining various parameters, we can generate countless variations of malformations.</p></p><br>
+<p>In this example, we generate a simple malformation by inserting a NULL byte (<code class='code-block'>\000</code>) into the target domain name at every possible position using different <code class='code-block'>p&lt;POS&gt;</code> parameters. This allows us to observe how the malformation manifests at various positions within the domain name:</p>
+<div><pre class='output-block'><strong># dig alias.nfz6.m0.p0.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  \000.alias199246.yourdomain.com.
+<strong># dig alias.nfz6.m0.p1.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  \000alias508882.yourdomain.com.
+<strong># dig alias.nfz6.m0.p2.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias\000661625.yourdomain.com.
+<strong># dig alias.nfz6.m0.p3.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias645718\000.yourdomain.com.
+<strong># dig alias.nfz6.m0.p4.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias287171\000yourdomain.com.
+<strong># dig alias.nfz6.m0.p5.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias359097.\000.yourdomain.com.
+<strong># dig alias.nfz6.m0.p6.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias663104.\000yourdomain.com.
+<strong># dig alias.nfz6.m0.p7.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias271369.yourdomain\000.com.
+<strong># dig alias.nfz6.m0.p8.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias230516.yourdomain\000com.
+<strong># dig alias.nfz6.m0.p9.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias704486.yourdomain.\000.com.
+<strong># dig alias.nfz6.m0.p10.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias514658.yourdomain.\000com.
+<strong># dig alias.nfz6.m0.p11.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias588767.yourdomain.com\000.
+<strong># dig alias.nfz6.m0.p12.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias515164.yourdomain.com.\000.</pre></div><p><a href='../outputs/nfz/dig_alias.nfz6.m0.p0.yourdomain.com__127.0.0.1__short__dig_alias.nfz6.m0.p1.yourdomain.com__127.0.0.1__short__dig_alias.nfz6.m0.p2.yourdomain.com__127.0.0.1__short__dig_alias.nfz6.m0.p3.yourdomain.com__127.0.0.1__short__dig_alias.nfz6.m0.p4.yourdomai.pcap'>Download PCAP File</a></p><p><p>Each of these malformations may have a slightly different impact on the parsing functions of a given software (or library) processing these domain names.</p></p><br>
+<p>In this example, we insert a literal dot (<code class='code-block'>.</code>) symbol into the target domain name using the <code class='code-block'>m9.1.46</code> malformation (where 46 is the ASCII decimal code for a dot). The insertion is applied at every possible position using different <code class='code-block'>p&lt;POS&gt;</code> parameters. This allows us to observe how the malformation appears at various positions within the domain name:</p>
+<div><pre class='output-block'><strong># dig alias.nfz6.m9.1.46.p0.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  \..alias143613.yourdomain.com.
+<strong># dig alias.nfz6.m9.1.46.p1.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  \.alias943137.yourdomain.com.
+<strong># dig alias.nfz6.m9.1.46.p2.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias\.340205.yourdomain.com.
+<strong># dig alias.nfz6.m9.1.46.p3.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias484224\..yourdomain.com.
+<strong># dig alias.nfz6.m9.1.46.p4.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias169565\.yourdomain.com.
+<strong># dig alias.nfz6.m9.1.46.p5.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias817510.\..yourdomain.com.
+<strong># dig alias.nfz6.m9.1.46.p6.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias245800.\.yourdomain.com.
+<strong># dig alias.nfz6.m9.1.46.p7.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias011536.yourdomain\..com.
+<strong># dig alias.nfz6.m9.1.46.p8.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias997207.yourdomain\.com.
+<strong># dig alias.nfz6.m9.1.46.p9.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias956856.yourdomain.\..com.
+<strong># dig alias.nfz6.m9.1.46.p10.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias058339.yourdomain.\.com.
+<strong># dig alias.nfz6.m9.1.46.p11.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias722072.yourdomain.com\..
+<strong># dig alias.nfz6.m9.1.46.p12.yourdomain.com @127.0.0.1 +short</strong>  --&gt;  alias174168.yourdomain.com.\..</pre></div><p><a href='../outputs/nfz/dig_alias.nfz6.m9.1.46.p0.yourdomain.com__127.0.0.1__short__dig_alias.nfz6.m9.1.46.p1.yourdomain.com__127.0.0.1__short__dig_alias.nfz6.m9.1.46.p2.yourdomain.com__127.0.0.1__short__dig_alias.nfz6.m9.1.46.p3.yourdomain.com__127.0.0.1__short__dig_alias..pcap'>Download PCAP File</a></p><p><p>Each of these malformations could once again cause different problems when parsing these domain names.</p></p><br>
+<p>In the last example, we generate a malformed domain name consisting of 127 subdomains, each composed of a single literal dot (<code class='code-block'>.</code>) symbol:</p>
+<div><pre class='output-block'><strong># dig alias.s127.nfz0.m9.1.46.yourdomain.com @127.0.0.1 +noidnout</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.s127.nfz0.m9.1.46.yourdomain.com @127.0.0.1 +noidnout
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 39363
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.s127.nfz0.m9.1.46.yourdomain.com.	IN A
+
+;; ANSWER SECTION:
+alias.s127.nfz0.m9.1.46.yourdomain.com.	60 IN CNAME \..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..\..
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Jan 29 15:12:32 +04 2025
+;; MSG SIZE  rcvd: 323</pre></div><p><a href='../outputs/nfz/dig_alias.s127.nfz0.m9.1.46.yourdomain.com__127.0.0.1__noidnout.pcap'>Download PCAP File</a></p><p><p>This can certainly confuse some resolvers or clients.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="afuzz1.html">AFuzz1 - Single A Record with Arbitrary Byte</a></li>
+<li><a href="afuzz2.html">AFuzz2 - Many Bogus A Records and Legit A Record</a></li>
+<li><a href="bigbintxt.html">BigBinTxt - TXT Record with Multiple Binary Strings</a></li>
+<li><a href="bigtxt.html">BigTxt - TXT Record with Multiple Text Strings</a></li>
+<li><a href="manybintxt.html">ManyBinTxt - Many TXT Records with Binary Data</a></li>
+<li><a href="manytxt.html">ManyTxt - Many TXT Records with Random Text</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

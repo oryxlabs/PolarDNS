@@ -1,0 +1,28 @@
+<pre class='output-block'><strong># dig -x 10.10.123.123 @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 10.10.123.123 @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 33535
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;123.123.10.10.in-addr.arpa.	IN	PTR
+
+;; ANSWER SECTION:
+123.123.10.10.in-addr.arpa. 60	IN	PTR	198.196.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	183.114.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	214.112.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	164.29.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	15.98.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	184.62.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	36.205.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	97.158.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	74.204.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	170.165.10.10.in-addr.arpa.
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Oct 17 14:47:46 +04 2024
+;; MSG SIZE  rcvd: 437
+</pre>

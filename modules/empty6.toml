@@ -1,12 +1,35 @@
 [module]
 name = "empty6"
 type = "feature"
-info = "ANSWER section is missing"
-desc = "Send normal DNS response, but remove the ANSWER section."
-author = "ivan.jedek@oryxlabs.com"
+info = "ANSWER Section Missing"
+short = "ANSWER section missing"
 category = "Empty responses"
+desc = '''
+This module is designed to respond with a standard-looking DNS response that, according to the DNS header, contains a single Answer. However, the actual Answer is intentionally ommited. The entire ANSWER section is removed from the body.
 
-code = '''
+This is likely to result in unexpected errors.
+'''
+format = '''
+**`empty6.yourdomain.com`**
+
+This module has no parameters.
+'''
+seealso = "close, timeout, empty1, empty2, empty3, empty4, empty5, empty7, queryback1, queryback2, queryback3, queryback4"
+
+[[module.example]]
+description = "In this example, we can see that we receive a DNS response with the entire ANSWER section missing from the body. The parser cannot interpret this response properly and identifies it as malformed:"
+command = "dig empty6.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In TCP mode, the results are the same as in the previous example in UDP mode. The entire ANSWER section is missing from the body and we see a warning about malformed packet:"
+command = "dig empty6.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "Like other features, we can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig empty6${RANDOM}.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("empty6"):
    # Send back a normal looking DNS response, but remove the ANSWER SECTION
    ### DNS header ########

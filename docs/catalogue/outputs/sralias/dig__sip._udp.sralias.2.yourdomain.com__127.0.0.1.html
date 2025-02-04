@@ -1,0 +1,19 @@
+<pre class='output-block'><strong># dig _sip._udp.sralias.2.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; _sip._udp.sralias.2.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 8670
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_sip._udp.sralias.2.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+_sip._udp.sralias.2.yourdomain.com. 60 IN SRV	0 0 43511 _sip._udp.sralias9688.2.yourdomain.com.
+_sip._udp.sralias.2.yourdomain.com. 60 IN SRV	0 0 20036 _sip._udp.sralias665035.2.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:25:55 +04 2024
+;; MSG SIZE  rcvd: 170</pre>

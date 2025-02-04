@@ -1,0 +1,18 @@
+<pre class='output-block'><strong># dig injptr.oi.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr.oi.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 66
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injptr.oi.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+<span style="color:red;">6.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.</span>
+
+;; Query time: 3 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:23:08 +04 2025
+;; MSG SIZE  rcvd: 99</pre>

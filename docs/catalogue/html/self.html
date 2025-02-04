@@ -1,0 +1,120 @@
+---
+layout: default
+title: "Self - What Is My IP Address"
+parent: "General features"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Self - What Is My IP Address</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Self - What Is My IP Address</h1>
+<p>This module generates a DNS response containing the <strong>source IP address</strong> and the <strong>source port</strong> information of the connecting client/resolver.</p>
+<p>This is useful for identifying our <strong>external IP address</strong> as it appears on the internet. However, when querying through a <strong>recursive resolver</strong>, this module allows us to see the <strong>source IP address</strong> that the resolver uses for its queries. Typically, a DNS resolver receives queries on one network interface and performs DNS resolutions from another.</p>
+<p>Technically, this module generates a DNS response that includes <strong>2 answers</strong> &mdash; an <strong>A record</strong> and a <strong>TXT record</strong>. Both records contain the source IP address and the source port information. Since the A record is limited to containing only a single IP address, the TTL value of the A record is used to carry the source port information.</p>
+<p>However, be aware that many resolvers may modify the TTL value, so it is recommended to rely on the TXT record for accurate source port information.</p><p><strong>Category:</strong> <a href='../general-features.html'>General features</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>self.yourdomain.com</strong></pre>
+
+<p>or</p>
+<pre class='output-block'><strong>whatismyip.yourdomain.com</strong></pre>
+<h2>Examples</h2>
+<p>By default, this module returns an A record containing the source IP address, with its TTL value representing the source port. Additionally, the module provides a TXT record in the Additional section containing the same information:</p>
+<div><pre class='output-block'><strong># dig self.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; self.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 23838
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;self.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+self.yourdomain.com.	60134	IN	A	127.0.0.1
+
+;; ADDITIONAL SECTION:
+self.yourdomain.com.	60	IN	TXT	&quot;127.0.0.1:60134&quot;
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 13:07:03 +04 2024
+;; MSG SIZE  rcvd: 81</pre></div><p><a href='../outputs/self/dig_self.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>If a TXT record is requested, it will appear first in the response order:</p>
+<div><pre class='output-block'><strong># dig TXT self.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; TXT self.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 33763
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;self.yourdomain.com.		IN	TXT
+
+;; ANSWER SECTION:
+self.yourdomain.com.	60	IN	TXT	&quot;127.0.0.1:55474&quot;
+
+;; ADDITIONAL SECTION:
+self.yourdomain.com.	55474	IN	A	127.0.0.1
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 13:07:04 +04 2024
+;; MSG SIZE  rcvd: 81</pre></div><p><a href='../outputs/self/dig_TXT_self.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Alternatively, the <code class='code-block'>whatismyip</code> feature name can also be used:</p>
+<div><pre class='output-block'><strong># dig TXT whatismyip.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; TXT whatismyip.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 51412
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;whatismyip.yourdomain.com.	IN	TXT
+
+;; ANSWER SECTION:
+whatismyip.yourdomain.com. 60	IN	TXT	&quot;127.0.0.1:36296&quot;
+
+;; ADDITIONAL SECTION:
+whatismyip.yourdomain.com. 36296 IN	A	127.0.0.1
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 13:07:05 +04 2024
+;; MSG SIZE  rcvd: 87</pre></div><p><a href='../outputs/self/dig_TXT_whatismyip.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Like other features, we can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:</p>
+<div><pre class='output-block'><strong># dig self${RANDOM}.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; self17337.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 19681
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;self17337.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+self17337.yourdomain.com. 35302	IN	A	10.211.55.3
+
+;; ADDITIONAL SECTION:
+self17337.yourdomain.com. 60	IN	TXT	&quot;10.211.55.3:35302&quot;
+
+;; Query time: 12 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Mon Nov 04 13:24:59 +04 2024
+;; MSG SIZE  rcvd: 88</pre></div><p><a href='../outputs/self/dig_self__RANDOM_.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="always.html">Always - Always Resolve to IP Address</a></li>
+<li><a href="size.html">Size - Max A or AAAA Records Within Size Limit</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

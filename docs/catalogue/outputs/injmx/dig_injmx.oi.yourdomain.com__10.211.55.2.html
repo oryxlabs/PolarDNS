@@ -1,0 +1,18 @@
+<pre class='output-block'><strong># dig injmx.oi.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injmx.oi.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 37052
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injmx.oi.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+<span style="color:red;">injected.yourdomain.com. 60	IN	MX	0 always808835.yourdomain.com.</span>
+
+;; Query time: 3 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Tue Jan 14 13:27:03 +04 2025
+;; MSG SIZE  rcvd: 107</pre>

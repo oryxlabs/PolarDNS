@@ -1,0 +1,18 @@
+<pre class='output-block'><strong># dig MX chain1000.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; MX chain1000.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 61690
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;chain1000.yourdomain.com.	IN	MX
+
+;; ANSWER SECTION:
+chain1000.yourdomain.com. 60	IN	MX	0 chain1001.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Nov 08 23:23:37 +04 2024
+;; MSG SIZE  rcvd: 82</pre>

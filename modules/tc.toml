@@ -1,0 +1,30 @@
+[module]
+name = "tc"
+type = "modifier"
+info = "Set Truncated Flag (Force TCP Mode)"
+short = "Force TCP mode by setting Truncated (TC) flag"
+category = "Packet manipulation"
+desc = '''
+This modifier directs PolarDNS to respond with only the DNS header with the Truncated (TC) bit flag set. This flag signals to the resolver/client that the response is too large, prompting it to retry the query over TCP.
+
+In essence, this modifier allows us to enforce the use of TCP mode for communication between the resolver/client and PolarDNS.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+'''
+format = '''
+**`*.tc.*`**
+
+This module has no parameters.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = "In this example, we use the [basic] always feature which always resolves to an IP address. We request the Truncated (TC) bit to be set in the DNS response. As a result, the client retries the query using TCP mode:"
+command = "dig always.tc.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we use the [size] feature which returns multiple anwers at once. Once again we request the Truncated (TC) bit to be set in the DNS response. As a result, the client retries the query using TCP mode:"
+command = "dig size.tc.yourdomain.com @127.0.0.1"
+
+[module.code]
+# The code is located in the polardns.py file.

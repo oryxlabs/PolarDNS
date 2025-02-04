@@ -1,12 +1,59 @@
 [module]
 name = "empty4"
 type = "feature"
-info = "Only TXID and NULL bytes"
-desc = "Send empty response with only the TXID (first 2 bytes of every DNS response) + arbitrary number of NULLs."
-author = "ivan.jedek@oryxlabs.com"
+info = "Only Transaction ID and NULL Bytes"
+short = "Send only Transaction ID and NULL bytes"
 category = "Empty responses"
+desc = '''
+Every DNS packet contains the following parts:
 
-code = '''
+- **Header:**
+	- **Length field** (TCP only, 2 bytes)
+	- **Transaction ID** (2 bytes)
+	- **Flags field** (2 bytes)
+	- **Number of Questions** (2 bytes)
+	- **Number of Answer RRs** (2 bytes)
+	- **Number of Authority RRs** (2 bytes)
+	- **Number of Additional RRs** (2 bytes)
+- **Body**:
+	- **Queries Section**: Contains **QNAME**, **QTYPE**, and **QCLASS** for each query.
+	- **Answer Section**: Contains answer RRs (if any).
+	- **Authority Section**: Contains authoritative RRs (if any).
+	- **Additional Section**: Contains additional RRs (if any).
+
+This module is designed to respond with an incomplete DNS response containing only the **Transaction ID**, followed by an arbitrary number of NULL bytes (`\\000`).
+
+This is likely to result in unexpected errors.
+
+Note that DNS packets in TCP mode must include a **Length field** at the beginning. This module ensures that the Length field is correctly set when operating in TCP mode.
+'''
+format = '''
+**`empty4.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many NULL bytes should be generated in the response. By default, a single NULL byte is generated.
+'''
+seealso = "close, timeout, empty1, empty2, empty3, empty5, empty6, empty7, queryback1, queryback2, queryback3, queryback4"
+
+[[module.example]]
+description = "By default, the module generates a single NULL byte as the response. Although the response contains a valid Transaction ID, it includes nothing beyond the single NULL byte. This is insufficient for a valid DNS response, causing the client to make three attempts to resolve the error:"
+command = "dig empty4.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request 100 NULL bytes as the response. As a result, the parser only partially processes the packet. It interprets the response as a standard query (due to Flags field being `\\000\\000`) and finds that the number of questions, answers, authority, and additional records are all zero. Consequently, the parser identifies 90 extra bytes at the end of the packet:"
+command = "dig empty4.100.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In TCP mode, the results are the same as in the previous example in UDP mode, resulting in significant malformations shown:"
+command = "dig empty4.100.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "In this example, the DNS response is sent in TCP mode (using the [tc] modifier) with the length field indicating that it is a 200-byte long packet (using the [len] modifier). However, the response body contains no data. There is only the Transaction ID and nothing else (zero NULLs bytes). As a result, the parser becomes confused and makes three attempts to resolve the error:"
+command = "dig empty4.0.len200.tc.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("empty4"):
    # Send the query ID + arbitrary number of NULLs
    nulls = 1 # number of NULLs to send
@@ -16,7 +63,7 @@ if req.first_subdomain.startswith("empty4"):
    buffer += b"\x00" * nulls
    log("only query ID and %d NULL(s)" % (nulls))
    if proto == "tcp":
-      if resp.len != 0:
+      if resp.len >= 0:
          buffer  = struct.pack(">H", resp.len)
          buffer += resp.ID
          buffer += b"\x00" * nulls

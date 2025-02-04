@@ -1,12 +1,35 @@
 [module]
 name = "empty1"
 type = "feature"
-info = "Empty response"
-desc = "Send empty response, simply an empty packet."
-author = "ivan.jedek@oryxlabs.com"
+info = "Empty Packet"
+short = "Send an empty packet"
 category = "Empty responses"
+desc = '''
+This module is designed to send an empty response, composed entirely of an empty packet.
 
-code = '''
+In both UDP and TCP modes, the client/resolver will receive only the UDP or TCP packet header without any data or payload.
+'''
+format = '''
+**`empty1.yourdomain.com`**
+
+This module has no parameters.
+'''
+seealso = "close, timeout, empty2, empty3, empty4, empty5, empty6, empty7, queryback1, queryback2, queryback3, queryback4"
+
+[[module.example]]
+description = "In this example, we request an empty packet as the response in UDP mode, resulting in the client making three attempts to resolve the error:"
+command = "dig empty1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we request an empty packet as the response in TCP mode, resulting in the client again making three attempts to resolve the error:"
+command = "dig empty1.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig empty1${RANDOM}.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("empty1"):
    # Send empty packet
    log("empty packet")

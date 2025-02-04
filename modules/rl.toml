@@ -1,0 +1,46 @@
+[module]
+name = "rl"
+type = "modifier"
+info = "Recalculate Length in TCP"
+short = "Recalculate DNS packet length in TCP (used in combination with cut/add)"
+category = "Packet manipulation"
+desc = '''
+In TCP mode, this modifier recalculates the DNS packet length if it was adjusted using the [cut] or [add] modifiers.
+
+It is important to note that this functionality is specific to TCP mode only, because only in TCP the DNS packets contain a length field at the beginning. DNS packets sent over UDP do not have length defined at the beginning.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier, as long as the communication is happening over TCP.
+'''
+format = '''
+**`*.rl.*`**
+
+This module has no parameters.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = '''
+The following examples illustrate why recalculating the DNS packet length is essential in TCP mode.
+
+In this example, we use the basic [always] feature, which always resolves to an IP address. Additionally, we operate in TCP mode and append 10 random bytes to the end of the packet without recalculating the length. As a result, the parser completely ignores the appended data, since the length was not recalculated:
+'''
+command = "dig always.add10.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "After adding the [rl] modifier to recalculate the length, the parser can now see the entire packet and consequently displays a warning about 10 extra bytes at the end:"
+command = "dig always.add10.rl.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "In the next example, we use the [size] feature, which returns multiple answers up to a specified size limit. In this case, we set the packet size limit to 200 bytes. As a result, 9 answers can fit within the response:"
+command = "dig size.200.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "Now, we request 64 bytes to be removed from the response by using the [cut] modifier. This effectively removes the last **4 answers** from the response body (each **A record** is exactly **16 bytes**, so **64 / 16 = 4**). Since the length was not recalculated, the parser assumes an error occured during transmission, as the packet is shorter than what is specified in the header:"
+command = "dig size.200.cut64.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "By adding the [rl] modifier to recalculate the length, the parser is now able to see the entire packet correctly. It identifies that the response is malformed. We can see only 5 answers in the response body instead of 9 because 4 of them were removed using the [cut] modifier:"
+command = "dig size.200.cut64.rl.yourdomain.com @127.0.0.1 +tcp"
+
+[module.code]
+# The code is located in the polardns.py file.

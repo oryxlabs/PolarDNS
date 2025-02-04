@@ -1,0 +1,216 @@
+---
+layout: default
+title: "SvAlias - Random SVCB Aliases"
+parent: "Aliases"
+---
+
+<!DOCTYPE html>
+<head>
+<title>SvAlias - Random SVCB Aliases</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>SvAlias - Random SVCB Aliases</h1>
+<p>This module is designed to return one or more <strong>random aliases</strong> using <strong>SVCB (Service Binding)</strong> records.</p>
+<p>It specifically generates a random SVCB alias record in the format <code class='code-block'>svalias######.yourdomain.com</code>, where <code class='code-block'>######</code> represents a random number.</p>
+<p>The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.</p>
+<p>Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, &quot;service labels&quot;, or &quot;underscore labels&quot;. It also supports returning multiple records in a single response.</p>
+<p>Note that this module provides the same functionality as requesting the SVCB record for the generic <a href="alias.html">alias</a> module.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../aliases.html'>Aliases</a></p><p><strong>Tags:</strong> Amplification, Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc9460/" target="_blank">RFC9460</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>svalias.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines how many aliases should be generated in the response.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, the module returns a single SVCB alias record (with SvcPriority set to 0):</p>
+<div><pre class='output-block'><strong># dig svalias.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; svalias.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 36109
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;svalias.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+svalias.yourdomain.com.	60	IN	SVCB	0 svalias245011.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:33:59 +04 2024
+;; MSG SIZE  rcvd: 84</pre></div><p><a href='../outputs/svalias/dig_svalias.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Same example as above, but this time we explicitly specify that we want to receive a single SVCB record:</p>
+<div><pre class='output-block'><strong># dig svalias.1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; svalias.1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 35041
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;svalias.1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+svalias.1.yourdomain.com. 60	IN	SVCB	0 svalias689763.1.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:34:00 +04 2024
+;; MSG SIZE  rcvd: 88</pre></div><p><a href='../outputs/svalias/dig_svalias.1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this case, we specify that we want to receive 5 (five) SVCB alias records:</p>
+<div><pre class='output-block'><strong># dig svalias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; svalias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 794
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;svalias.5.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+svalias.5.yourdomain.com. 60	IN	SVCB	0 svalias175584.5.yourdomain.com.
+svalias.5.yourdomain.com. 60	IN	SVCB	0 svalias670081.5.yourdomain.com.
+svalias.5.yourdomain.com. 60	IN	SVCB	0 svalias709467.5.yourdomain.com.
+svalias.5.yourdomain.com. 60	IN	SVCB	0 svalias534655.5.yourdomain.com.
+svalias.5.yourdomain.com. 60	IN	SVCB	0 svalias197848.5.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:34:01 +04 2024
+;; MSG SIZE  rcvd: 272</pre></div><p><a href='../outputs/svalias/dig_svalias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>As mentioned in the description, this module also supports DNS queries for locating different services using the underscore (_) prefix notation. In this example, we search for SIP (Session Initiation Protocol) service, and we request to receive a single SVCB alias record:</p>
+<div><pre class='output-block'><strong># dig _sip.svalias.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; _sip.svalias.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 26281
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_sip.svalias.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+_sip.svalias.yourdomain.com. 60	IN	SVCB	0 _sip.svalias380835.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:34:03 +04 2024
+;; MSG SIZE  rcvd: 94</pre></div><p><a href='../outputs/svalias/dig__sip.svalias.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Here, we search for SIP service running over UDP, and we want to receive 2 (two) SVCB alias records:</p>
+<div><pre class='output-block'><strong># dig _sip._udp.svalias.2.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; _sip._udp.svalias.2.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 22396
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_sip._udp.svalias.2.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+_sip._udp.svalias.2.yourdomain.com. 60 IN SVCB	0 _sip._udp.svalias68871.2.yourdomain.com.
+_sip._udp.svalias.2.yourdomain.com. 60 IN SVCB	0 _sip._udp.svalias58558.2.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:34:04 +04 2024
+;; MSG SIZE  rcvd: 162</pre></div><p><a href='../outputs/svalias/dig__sip._udp.svalias.2.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Here, we search for HTTP service running over TCP, and we request to receive 10 (ten) SVCB alias records:</p>
+<div><pre class='output-block'><strong># dig _http._tcp.svalias.10.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; _http._tcp.svalias.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 27173
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_http._tcp.svalias.10.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+_http._tcp.svalias.10.yourdomain.com. 60 IN SVCB 0 _http._tcp.svalias774366.10.yourdomain.com.
+_http._tcp.svalias.10.yourdomain.com. 60 IN SVCB 0 _http._tcp.svalias88586.10.yourdomain.com.
+_http._tcp.svalias.10.yourdomain.com. 60 IN SVCB 0 _http._tcp.svalias229026.10.yourdomain.com.
+_http._tcp.svalias.10.yourdomain.com. 60 IN SVCB 0 _http._tcp.svalias993449.10.yourdomain.com.
+_http._tcp.svalias.10.yourdomain.com. 60 IN SVCB 0 _http._tcp.svalias635189.10.yourdomain.com.
+_http._tcp.svalias.10.yourdomain.com. 60 IN SVCB 0 _http._tcp.svalias725211.10.yourdomain.com.
+_http._tcp.svalias.10.yourdomain.com. 60 IN SVCB 0 _http._tcp.svalias974324.10.yourdomain.com.
+_http._tcp.svalias.10.yourdomain.com. 60 IN SVCB 0 _http._tcp.svalias229791.10.yourdomain.com.
+_http._tcp.svalias.10.yourdomain.com. 60 IN SVCB 0 _http._tcp.svalias498227.10.yourdomain.com.
+_http._tcp.svalias.10.yourdomain.com. 60 IN SVCB 0 _http._tcp.svalias862743.10.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:34:05 +04 2024
+;; MSG SIZE  rcvd: 633</pre></div><p><a href='../outputs/svalias/dig__http._tcp.svalias.10.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Here, we search for HTTP service specifically designed for mobile devices, running over TCP. We request 20 (twenty) SVCB alias records in the response:</p>
+<div><pre class='output-block'><strong># dig _mobile._http._tcp.svalias.20.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; _mobile._http._tcp.svalias.20.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 64946
+;; flags: qr aa; QUERY: 1, ANSWER: 20, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_mobile._http._tcp.svalias.20.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias811997.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias517921.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias587035.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias138536.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias549532.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias954047.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias193364.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias11198.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias43082.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias60358.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias234123.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias302443.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias867824.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias529761.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias826335.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias219670.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias48921.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias369726.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias185492.20.yourdomain.com.
+_mobile._http._tcp.svalias.20.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias986029.20.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Nov 04 16:34:06 +04 2024
+;; MSG SIZE  rcvd: 1378</pre></div><p><a href='../outputs/svalias/dig__mobile._http._tcp.svalias.20.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="alias.html">Alias - Random Aliases</a></li>
+<li><a href="cnalias.html">CnAlias - Random CNAME Aliases</a></li>
+<li><a href="dnalias.html">DnAlias - Random DNAME Aliases</a></li>
+<li><a href="htalias.html">HtAlias - Random HTTPS Aliases</a></li>
+<li><a href="mxalias.html">MxAlias - Random MX Aliases</a></li>
+<li><a href="nptenumalias.html">NptEnumAlias - Random NAPTR ENUM Aliases</a></li>
+<li><a href="nsalias.html">NsAlias - Random NS Aliases</a></li>
+<li><a href="ptralias.html">PtrAlias - Random PTR Aliases</a></li>
+<li><a href="spfalias1.html">SpfAlias1 - Random SPF (TXT) Aliases (Variant 1)</a></li>
+<li><a href="spfalias2.html">SpfAlias2 - Random SPF (TXT) Aliases (Variant 2)</a></li>
+<li><a href="sralias.html">SrAlias - Random SRV Aliases</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="svloop.html">SvLoop - SVCB Alias Loops</a></li>
+<li><a href="svchain.html">SvChain - SVCB Alias Chains</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

@@ -1,0 +1,160 @@
+---
+layout: default
+title: "Size - Max A or AAAA Records Within Size Limit"
+parent: "General features"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Size - Max A or AAAA Records Within Size Limit</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Size - Max A or AAAA Records Within Size Limit</h1>
+<p>This module is designed to generate a DNS response that includes as many A or AAAA records as it is possible to fit within the specified packet size limit.</p>
+<p>Default size limit is 512 bytes.</p>
+<p>In case the AAAA record is requested, the module responds with AAAA records.</p>
+<p>Note that the number of records that can fit in a response depends significantly on whether DNS compression is enabled or disabled. By default, compression is enabled but can be changed in the PolarDNS configuration file. Additionally, compression can be enabled or disabled for individual responses using the <a href="fc.html">fc</a> and <a href="nc.html">nc</a> modifiers.</p><p><strong>Category:</strong> <a href='../general-features.html'>General features</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>size.&lt;BYTES&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;BYTES&gt;</code></strong> parameter specifies the maximum size limit for the response. If it is not provided, the default limit is set to 512 bytes.</li>
+</ul>
+<h2>Examples</h2>
+<p>In this example, we request a DNS response that is limited to 512 bytes in size (the default value):</p>
+<div><pre class='output-block'><strong># dig size.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; size.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 10418
+;; flags: qr aa; QUERY: 1, ANSWER: 29, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+size.yourdomain.com.	60	IN	A	127.0.0.37
+size.yourdomain.com.	60	IN	A	127.0.0.78
+size.yourdomain.com.	60	IN	A	127.0.0.175
+size.yourdomain.com.	60	IN	A	127.0.0.116
+size.yourdomain.com.	60	IN	A	127.0.0.99
+size.yourdomain.com.	60	IN	A	127.0.0.132
+size.yourdomain.com.	60	IN	A	127.0.0.153
+size.yourdomain.com.	60	IN	A	127.0.0.22
+size.yourdomain.com.	60	IN	A	127.0.0.150
+size.yourdomain.com.	60	IN	A	127.0.0.217
+size.yourdomain.com.	60	IN	A	127.0.0.238
+size.yourdomain.com.	60	IN	A	127.0.0.161
+size.yourdomain.com.	60	IN	A	127.0.0.234
+size.yourdomain.com.	60	IN	A	127.0.0.171
+size.yourdomain.com.	60	IN	A	127.0.0.132
+size.yourdomain.com.	60	IN	A	127.0.0.241
+size.yourdomain.com.	60	IN	A	127.0.0.216
+size.yourdomain.com.	60	IN	A	127.0.0.197
+size.yourdomain.com.	60	IN	A	127.0.0.153
+size.yourdomain.com.	60	IN	A	127.0.0.221
+size.yourdomain.com.	60	IN	A	127.0.0.70
+size.yourdomain.com.	60	IN	A	127.0.0.233
+size.yourdomain.com.	60	IN	A	127.0.0.119
+size.yourdomain.com.	60	IN	A	127.0.0.193
+size.yourdomain.com.	60	IN	A	127.0.0.208
+size.yourdomain.com.	60	IN	A	127.0.0.241
+size.yourdomain.com.	60	IN	A	127.0.0.15
+size.yourdomain.com.	60	IN	A	127.0.0.143
+size.yourdomain.com.	60	IN	A	127.0.0.197
+
+;; Query time: 7 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Jan 16 10:27:35 +04 2025
+;; MSG SIZE  rcvd: 501</pre></div><p><a href='../outputs/size/dig_size.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that 29 (twenty-nine) A records can fit within this size limit. The response size was exactly 501 bytes.</p></p><br>
+<p>In this example, we request a DNS response that is limited to 256 bytes in size. We also use the <a href="nc.html">nc</a> modifier to instruct PolarDNS to disable DNS compression for this response:</p>
+<div><pre class='output-block'><strong># dig size.256.nc.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; size.256.nc.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 16453
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.256.nc.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+size.256.nc.yourdomain.com. 60	IN	A	127.0.0.88
+size.256.nc.yourdomain.com. 60	IN	A	127.0.0.42
+size.256.nc.yourdomain.com. 60	IN	A	127.0.0.230
+size.256.nc.yourdomain.com. 60	IN	A	127.0.0.191
+size.256.nc.yourdomain.com. 60	IN	A	127.0.0.250
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Jan 16 10:27:36 +04 2025
+;; MSG SIZE  rcvd: 254</pre></div><p><a href='../outputs/size/dig_size.256.nc.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that with compression disabled, it’s possible to fit 5 (five) A records within the 256-byte limit.</p></p><br>
+<p>Now, we enable DNS compression (using the <a href="fc.html">fc</a> modifier) and use the same 256-bytes size limit:</p>
+<div><pre class='output-block'><strong># dig size.256.fc.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; size.256.fc.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 38113
+;; flags: qr aa; QUERY: 1, ANSWER: 13, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.256.fc.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.110
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.75
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.0
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.235
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.223
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.57
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.109
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.134
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.183
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.102
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.178
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.39
+size.256.fc.yourdomain.com. 60	IN	A	127.0.0.82
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Jan 16 10:27:38 +04 2025
+;; MSG SIZE  rcvd: 252</pre></div><p><a href='../outputs/size/dig_size.256.fc.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>With compression enabled, we can accomodate 13 (thirteen) A records within the same 256-byte limit.</p></p><br>
+<p>In this example, we query for the AAAA record and specify size limit of 256 bytes:</p>
+<div><pre class='output-block'><strong># dig AAAA size.256.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; AAAA size.256.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 50394
+;; flags: qr aa; QUERY: 1, ANSWER: 7, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.256.yourdomain.com.	IN	AAAA
+
+;; ANSWER SECTION:
+size.256.yourdomain.com. 60	IN	AAAA	::cb47
+size.256.yourdomain.com. 60	IN	AAAA	::635f
+size.256.yourdomain.com. 60	IN	AAAA	::b655
+size.256.yourdomain.com. 60	IN	AAAA	::b7e6
+size.256.yourdomain.com. 60	IN	AAAA	::6a5f
+size.256.yourdomain.com. 60	IN	AAAA	::1845
+size.256.yourdomain.com. 60	IN	AAAA	::8354
+
+;; Query time: 11 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Jan 16 10:31:18 +04 2025
+;; MSG SIZE  rcvd: 237</pre></div><p><a href='../outputs/size/dig_AAAA_size.256.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that 7 (seven) AAAA records can fit within this 256-byte limit. This is with compression enabled (default).</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="always.html">Always - Always Resolve to IP Address</a></li>
+<li><a href="self.html">Self - What Is My IP Address</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

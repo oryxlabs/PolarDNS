@@ -1,0 +1,28 @@
+<pre class='output-block'><strong># dig afuzz2.10.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; afuzz2.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 10538
+;; flags: qr aa; QUERY: 1, ANSWER: 11, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;afuzz2.10.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+af\000zz2.10.yourdomain.com. 60	IN	A	6.6.6.0
+af\001zz2.10.yourdomain.com. 60	IN	A	6.6.6.1
+af\002zz2.10.yourdomain.com. 60	IN	A	6.6.6.2
+af\003zz2.10.yourdomain.com. 60	IN	A	6.6.6.3
+af\004zz2.10.yourdomain.com. 60	IN	A	6.6.6.4
+af\005zz2.10.yourdomain.com. 60	IN	A	6.6.6.5
+af\006zz2.10.yourdomain.com. 60	IN	A	6.6.6.6
+af\007zz2.10.yourdomain.com. 60	IN	A	6.6.6.7
+af\008zz2.10.yourdomain.com. 60	IN	A	6.6.6.8
+af\009zz2.10.yourdomain.com. 60	IN	A	6.6.6.9
+afuzz2.10.yourdomain.com. 60	IN	A	2.3.4.5
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Jan 03 16:53:38 +04 2025
+;; MSG SIZE  rcvd: 482</pre>

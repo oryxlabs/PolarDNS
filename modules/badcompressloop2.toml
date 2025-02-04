@@ -1,12 +1,36 @@
 [module]
 name = "badcompressloop2"
 type = "feature"
-info = "Pointer loop in Name field 2"
-desc = "Respond with CNAME, where the answer Name field only contains \"abc\" and a pointer to the beginning of the \"abc\" (=> a loop)."
-author = "ivan.jedek@oryxlabs.com"
+info = "Pointer Loop in Name Field (Variant 2)"
+short = "Compression pointer loop in the Name field (variant 2)"
 category = "Bad compression"
+records = "CNAME"
+rfc = "RFC1035"
+desc = '''
+The DNS protocol supports compressing domain names to save space by reducing redundancy for repeated domain names within DNS messages. This compression scheme can be applied to various record (resource) types, such as **A**, **CNAME**, **MX**, or **PTR** records.
 
-code = '''
+This particular module is designed to respond with a single answer containing a **CNAME record** (alias) where the **Name field** is partially compressed.
+
+The **Name field** includes only the `abc` string (a beginning of a domain name) followed by a compression pointer that points back to the beginning of the `abc` string. This setup effectively creates a **loop**.
+'''
+format = '''
+**`badcompressloop2.yourdomain.com`**
+
+This module has no parameters.
+'''
+seealso = "badcompress1, badcompress2, badcompressfwptr1, badcompressfwptr2, badcompressloop1, badcompressloop2, badcompressloop3, badcompressloop4, badcompressloop5, badcompressmid1"
+
+[[module.example]]
+description = "In this example, we can see that the client (dig) is unable to process the response because of the compression loop:"
+command = "dig badcompressloop2.yourdomain.com @127.0.0.1"
+append = "By examining the PCAP file in Wireshark, we can see that it detects the loop and displays the error message `<Name contains a pointer that loops>` while parsing the field. However, different DNS resolvers and clients may handle such malformed responses in vastly different ways, making this an intriguing use case for testing."
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig badcompressloop2${RANDOM}.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("badcompressloop2"):
    # Send answer with a compression pointer loop in the Answer name - variant 2
    ### DNS header ########

@@ -1,37 +1,97 @@
 [module]
 name = "size"
 type = "feature"
-info = "Max A records within size limit"
-desc = "Respond with as many A records as we can possibly fit into a desired maximum packet size limit"
-author = "ivan.jedek@oryxlabs.com"
+info = "Max A or AAAA Records Within Size Limit"
+short = "Send maximum number of A or AAAA records within size limit"
 category = "General features"
+records = "A, AAAA"
+desc = '''
+This module is designed to generate a DNS response that includes as many A or AAAA records as it is possible to fit within the specified packet size limit.
 
-code = '''
+Default size limit is 512 bytes.
+
+In case the AAAA record is requested, the module responds with AAAA records.
+
+Note that the number of records that can fit in a response depends significantly on whether DNS compression is enabled or disabled. By default, compression is enabled but can be changed in the PolarDNS configuration file. Additionally, compression can be enabled or disabled for individual responses using the [fc] and [nc] modifiers.
+'''
+rfc = ""
+format = '''
+**`size.<BYTES>.yourdomain.com`**
+
+Where:
+
+- The **`<BYTES>`** parameter specifies the maximum size limit for the response. If it is not provided, the default limit is set to 512 bytes.
+'''
+
+[[module.example]]
+description = "In this example, we request a DNS response that is limited to 512 bytes in size (the default value):"
+command = "dig size.yourdomain.com @127.0.0.1"
+append = "We can see that 29 (twenty-nine) A records can fit within this size limit. The response size was exactly 501 bytes."
+
+[[module.example]]
+description = "In this example, we request a DNS response that is limited to 256 bytes in size. We also use the [nc] modifier to instruct PolarDNS to disable DNS compression for this response:"
+command = "dig size.256.nc.yourdomain.com @127.0.0.1"
+append = "We can see that with compression disabled, it’s possible to fit 5 (five) A records within the 256-byte limit."
+
+[[module.example]]
+description = "Now, we enable DNS compression (using the [fc] modifier) and use the same 256-bytes size limit:"
+command = "dig size.256.fc.yourdomain.com @127.0.0.1"
+append = "With compression enabled, we can accomodate 13 (thirteen) A records within the same 256-byte limit."
+
+[[module.example]]
+description = "In this example, we query for the AAAA record and specify size limit of 256 bytes:"
+command = "dig AAAA size.256.yourdomain.com @127.0.0.1"
+append = "We can see that 7 (seven) AAAA records can fit within this 256-byte limit. This is with compression enabled (default)."
+
+[module.code]
+python = '''
 elif req.first_subdomain.startswith("size"):
    # Send as many A records as we can possibly fit into a desired max size
    desired_size = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 512
+
    # compute how much space we have left after we add the necessities
-   req_name_len = len(convDom2Bin(req.full_domain))
-   space_left = desired_size - 16 - req_name_len
+   req.full_domain_bin = convDom2Bin(req.full_domain)
+   req_name_len = len(req.full_domain_bin)
+
+   resp.type_str = "A"
+   record_size = 14  # A record without name
+   if req.type_str == "AAAA":
+      resp.type_str = "AAAA"
+      record_size = 26 # AAAA record without name
+
+   #                         header + query section
+   space_left = desired_size - 12 - 4 - req_name_len
    if proto == "tcp": space_left -= 2
    if space_left < 0: space_left = 0
+
    # compute how many answers we can fit
-   answers = int(space_left/16) if resp.compress else int(space_left/(14+req_name_len))
+   answers = int(space_left/(record_size+2)) if resp.compress else int(space_left/(record_size+req_name_len))
+
    print("space left: %d, can fit: %d" % (space_left, answers)) if debug else True
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', resp.QURR, answers, 0, 0)
    ### QUESTION SECTION ########
-   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   if resp.noq: buffer += req.full_domain_bin + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
-   # A
-   for i in range(answers):
-       buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
-       buffer += getTypeBin("A") + getClassBin("IN")
-       buffer += struct.pack(">L", resp.TTL)    ## TTL
-       buffer += struct.pack(">H", 4)           ## Data length
-       buffer += b'\x7f\x00\x00' + random.getrandbits(8).to_bytes(1, 'big') ## 127.0.0.<RANDOM>
+   if resp.type_str == "AAAA":
+      # AAAA
+      for i in range(answers):
+          buffer += b'\xc0\x0c' if resp.compress else req.full_domain_bin
+          buffer += getTypeBin(resp.type_str) + getClassBin("IN")
+          buffer += struct.pack(">L", resp.TTL)    ## TTL
+          buffer += struct.pack(">H", 16)           ## Data length
+          buffer += b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+          buffer += random.getrandbits(16).to_bytes(2, 'big') ## 0000:0000:0000:0000:0000:0000:0000:<RANDOM>
+   else:
+      # A
+      for i in range(answers):
+          buffer += b'\xc0\x0c' if resp.compress else req.full_domain_bin
+          buffer += getTypeBin(resp.type_str) + getClassBin("IN")
+          buffer += struct.pack(">L", resp.TTL)    ## TTL
+          buffer += struct.pack(">H", 4)           ## Data length
+          buffer += b'\x7f\x00\x00' + random.getrandbits(8).to_bytes(1, 'big') ## 127.0.0.<RANDOM>
    # log and send
-   log("%d A records in %d B packet size limit" % (answers, desired_size))
+   log("%d %s records in %d B packet size limit" % (answers, resp.type_str, desired_size))
    send_buf(self, buffer)
    #####################################################################
 '''

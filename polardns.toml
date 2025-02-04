@@ -22,7 +22,7 @@ parse_edns0 = 1
 sleep = 0
 
 # a 3rdparty domain which we don't own
-a3rdparty_domain = 'whatever.com'
+a3rdparty_domain = 'a3rdparty.net'
 
 known_servers = """
 127.0.0.1   localhost

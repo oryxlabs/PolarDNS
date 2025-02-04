@@ -1,0 +1,210 @@
+---
+layout: default
+title: "Loop - Alias Loops"
+parent: "Alias loops"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Loop - Alias Loops</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Loop - Alias Loops</h1>
+<p>This module implements <strong>alias loops</strong> in DNS using variety of different record (resource) types. It supports the following record types:</p>
+<ul>
+<li>CNAME (Canonical Name)</li>
+<li>DNAME (Delegation Name)</li>
+<li>HTTPS (HyperText Transfer Protocol Secure)</li>
+<li>SVCB (Service Binding)</li>
+<li>SPF (Sender Policy Framework)</li>
+<li>SRV (Service Locator)</li>
+<li>MX (Mail Exchange)</li>
+<li>NS (Name Server)</li>
+</ul>
+<p>The loops can be a <strong>direct loop</strong>, where the alias points back to the same domain name as in the original query, or they can include <strong>multiple elements</strong>, cycling through a specified number of domains.</p>
+<p>The idea is that if the client/resolver decides to resolve the response further, it will enter an <strong>infinite loop</strong>. In practice, however, most modern resolvers detect such loops and terminate the resolution.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to a domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../alias-loops.html'>Alias loops</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1034/" target="_blank">RFC1034</a>, <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a>, <a href="https://datatracker.ietf.org/doc/rfc2672/" target="_blank">RFC2672</a>, <a href="https://datatracker.ietf.org/doc/rfc2782/" target="_blank">RFC2782</a>, <a href="https://datatracker.ietf.org/doc/rfc2915/" target="_blank">RFC2915</a>, <a href="https://datatracker.ietf.org/doc/rfc3761/" target="_blank">RFC3761</a>, <a href="https://datatracker.ietf.org/doc/rfc4408/" target="_blank">RFC4408</a>, <a href="https://datatracker.ietf.org/doc/rfc6672/" target="_blank">RFC6672</a>, <a href="https://datatracker.ietf.org/doc/rfc7208/" target="_blank">RFC7208</a>, <a href="https://datatracker.ietf.org/doc/rfc9460/" target="_blank">RFC9460</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>loop.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter specifies the number of elements the loop should contain.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, the module generates a direct CNAME alias loop:</p>
+<div><pre class='output-block'><strong># dig loop.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; loop.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 41495
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+loop.yourdomain.com.	60	IN	CNAME	loop.yourdomain.com.
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Nov 07 10:53:17 +04 2024
+;; MSG SIZE  rcvd: 70</pre></div><p><a href='../outputs/loop/dig_loop.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that the CNAME alias points to the same domain name, effectively forming a direct loop.</p></p><br>
+<p>Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:</p>
+<div><pre class='output-block'><strong># dig loop${RANDOM}.yourdomain.com @10.211.55.2</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; loop1079.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 36755
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop1079.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+loop1079.yourdomain.com. 60	IN	CNAME	loop1079.yourdomain.com.
+
+;; Query time: 7 msec
+;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
+;; WHEN: Thu Nov 07 10:53:18 +04 2024
+;; MSG SIZE  rcvd: 78</pre></div><p><a href='../outputs/loop/dig_loop__RANDOM_.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request a MX alias loop consisting of 5 elements:</p>
+<div><pre class='output-block'><strong># dig MX loop.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; MX loop.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 44830
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop.5.yourdomain.com.		IN	MX
+
+;; ANSWER SECTION:
+loop.5.yourdomain.com.	60	IN	MX	0 loop.5.1.yourdomain.com.
+
+;; Query time: 24 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Nov 07 11:31:45 +04 2024
+;; MSG SIZE  rcvd: 78</pre></div><p><a href='../outputs/loop/dig_MX_loop.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>The resulting domain name <code class='code-block'>loop.5.1.yourdomain.com</code> represents the 1st element of the loop.</p></p><br>
+<p>By resolving the 1st element, we are pointed to the 2nd element of the loop:</p>
+<div><pre class='output-block'><strong># dig MX loop.5.1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; MX loop.5.1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 31031
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop.5.1.yourdomain.com.	IN	MX
+
+;; ANSWER SECTION:
+loop.5.1.yourdomain.com. 60	IN	MX	0 loop.5.2.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Nov 07 11:31:46 +04 2024
+;; MSG SIZE  rcvd: 80</pre></div><p><a href='../outputs/loop/dig_MX_loop.5.1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>This continues up to the 5th and final element &mdash; <code class='code-block'>loop.5.5.yourdomain.com</code>.</p></p><br>
+<p>By resolving the final element of the loop, we are directed back to the 1st element again:</p>
+<div><pre class='output-block'><strong># dig MX loop.5.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; MX loop.5.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 63220
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop.5.5.yourdomain.com.	IN	MX
+
+;; ANSWER SECTION:
+loop.5.5.yourdomain.com. 60	IN	MX	0 loop.5.1.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Nov 07 11:31:47 +04 2024
+;; MSG SIZE  rcvd: 80</pre></div><p><a href='../outputs/loop/dig_MX_loop.5.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that we are indeed pointed back to the 1st element again, forming a loop.</p></p><br>
+<p>In this example, we request an SPF alias loop consisting of 10 elements. Since SPF records are published within TXT records in DNS, we request a TXT record in this case:</p>
+<div><pre class='output-block'><strong># dig TXT loop.10.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; TXT loop.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 13350
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop.10.yourdomain.com.		IN	TXT
+
+;; ANSWER SECTION:
+loop.10.yourdomain.com.	60	IN	TXT	&quot;v=spf1 include:loop.10.1.yourdomain.com ~all&quot;
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Nov 07 11:35:51 +04 2024
+;; MSG SIZE  rcvd: 97</pre></div><p><a href='../outputs/loop/dig_TXT_loop.10.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>The resulting domain name <code class='code-block'>loop.10.1.yourdomain.com</code> represents the 1st element of the loop.</p></p><br>
+<p>By resolving the 1st element, we are pointed to the 2nd element of the loop:</p>
+<div><pre class='output-block'><strong># dig TXT loop.10.1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; TXT loop.10.1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 42805
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop.10.1.yourdomain.com.	IN	TXT
+
+;; ANSWER SECTION:
+loop.10.1.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:loop.10.2.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Nov 07 11:35:52 +04 2024
+;; MSG SIZE  rcvd: 99</pre></div><p><a href='../outputs/loop/dig_TXT_loop.10.1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>This continues up to the 10th and final element &mdash; <code class='code-block'>loop.10.10.yourdomain.com</code>.</p></p><br>
+<p>By resolving the final element of the loop, we are directed back to the 1st element again:</p>
+<div><pre class='output-block'><strong># dig TXT loop.10.10.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; TXT loop.10.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 43528
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop.10.10.yourdomain.com.	IN	TXT
+
+;; ANSWER SECTION:
+loop.10.10.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:loop.10.1.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Nov 07 11:35:54 +04 2024
+;; MSG SIZE  rcvd: 100</pre></div><p><a href='../outputs/loop/dig_TXT_loop.10.10.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that we are indeed pointed back to the 1st element again, forming a loop.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="cnloop.html">CnLoop - CNAME Alias Loops</a></li>
+<li><a href="dnloop.html">DnLoop - DNAME Alias Loops</a></li>
+<li><a href="htloop.html">HtLoop - HTTPS Alias Loops</a></li>
+<li><a href="mxloop.html">MxLoop - MX Alias Loops</a></li>
+<li><a href="nptenumloop.html">NptEnumLoop - NAPTR ENUM Alias Loops</a></li>
+<li><a href="nsloop.html">NsLoop - NS Alias Loops</a></li>
+<li><a href="ptrloop1.html">PtrLoop1 - PTR Alias Loops (Variant 1)</a></li>
+<li><a href="ptrloop2.html">PtrLoop2 - PTR Alias Loops (Variant 2)</a></li>
+<li><a href="spfloop.html">SpfLoop - SPF (TXT) Alias Loops</a></li>
+<li><a href="srloop.html">SrLoop - SRV Alias Loops</a></li>
+<li><a href="svloop.html">SvLoop - SVCB Alias Loops</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="alias.html">Alias - Random Aliases</a></li>
+<li><a href="chain.html">Chain - Alias Chains</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

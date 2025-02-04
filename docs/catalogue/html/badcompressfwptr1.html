@@ -1,0 +1,60 @@
+---
+layout: default
+title: "BadCompressFwPtr1 - Forward and Double Pointer in Name Field (Variant 1)"
+parent: "Bad compression"
+---
+
+<!DOCTYPE html>
+<head>
+<title>BadCompressFwPtr1 - Forward and Double Pointer in Name Field (Variant 1)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>BadCompressFwPtr1 - Forward and Double Pointer in Name Field (Variant 1)</h1>
+<p>The DNS protocol supports compressing domain names to save space by reducing redundancy for repeated domain names within DNS messages. This compression scheme can be applied to various record (resource) types, such as <strong>A</strong>, <strong>CNAME</strong>, <strong>MX</strong>, or <strong>PTR</strong> records.</p>
+<p>This module is designed to respond with a single answer containing a <strong>CNAME record</strong> (alias) where the <strong>Name field</strong> is compressed using a <strong>forward pointer</strong> (in violation of DNS specifications) that points to the <strong>CNAME field</strong> at the end, which also uses compression. This results in <strong>double compression</strong>, further violating DNS specifications.</p>
+<p>In this case, the <strong>CNAME field</strong> contains the alias name <code class='code-block'>abc.badcompressfwptr1.yourdomain.com</code>. This alias is constructed using standard compression. The field includes only the <code class='code-block'>abc</code> string, followed by a <strong>compression pointer</strong> that points back to the original domain name located in the <strong>QUERY section</strong>. Note that this <strong>CNAME field</strong> is located at the end of the <strong>CNAME record</strong>.</p>
+<p>The <strong>Name field</strong> (located at the beginning of the <strong>CNAME record</strong>) consists solely of a compression pointer that points <strong>forward</strong> to the <strong>CNAME field</strong> at the end of the packet. This arrangement forces the parser to first jump forward (to the <code class='code-block'>abc</code> string) and then jump backward to complete the interpretation. However, neither <strong>forward</strong> nor <strong>double pointers</strong> are permitted in DNS.</p>
+<p>In the DNS protocol, compression is achieved by using single <strong>backward pointers</strong> only, not forward pointers. Compression pointers are permitted to point only to previous positions in the message, because forward pointers require the parser to jump ahead in the message, increasing processing complexity and processing time.</p><p><strong>Category:</strong> <a href='../bad-compression.html'>Bad compression</a></p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>badcompressfwptr1.yourdomain.com</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>The following query demonstrates the module’s functionality. It returns a CNAME record compressed in a way that violates DNS specifications &mdash; specifically by using forward and double compression pointers. We can see that the client (dig) is unable to parse such a response:</p>
+<div><pre class='output-block'><strong># dig badcompressfwptr1.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Got bad packet</span>: bad compression pointer
+68 bytes
+4a 4b 84 00 00 01 00 01 00 00 00 00 11 62 61 64          JK...........bad
+63 6f 6d 70 72 65 73 73 66 77 70 74 72 31 0a 79          compressfwptr1.y
+6f 75 72 64 6f 6d 61 69 6e 03 63 6f 6d 00 00 01          ourdomain.com...
+00 01 c0 3e 00 05 00 01 00 00 00 3c 00 06 03 61          ...&gt;.......&lt;...a
+62 63 c0 0c                                              bc..</pre></div><p><a href='../outputs/badcompressfwptr1/dig_badcompressfwptr1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>However, by examining the PCAP file in Wireshark, we can see that it parses the response without any issues. This demonstrates its superior parsing capabilities, as it is able to handle both forward and double compression pointers despite violating DNS specifications.</p>
+<p>This also shows that different DNS resolvers and clients may handle such malformed responses differently, making this an intriguing use case for testing.</p></p><br>
+<p>Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:</p>
+<div><pre class='output-block'><strong># dig badcompressfwptr1${RANDOM}.yourdomain.com @10.211.55.2</strong>
+
+;; <span style="background-color: yellow;">Got bad packet</span>: bad compression pointer
+73 bytes
+27 3c 84 00 00 01 00 01 00 00 00 00 16 62 61 64          &#x27;&lt;...........bad
+63 6f 6d 70 72 65 73 73 66 77 70 74 72 31 32 33          compressfwptr123
+38 38 38 0a 79 6f 75 72 64 6f 6d 61 69 6e 03 63          888.yourdomain.c
+6f 6d 00 00 01 00 01 c0 43 00 05 00 01 00 00 00          om......C.......
+3c 00 06 03 61 62 63 c0 0c                               &lt;...abc..</pre></div><p><a href='../outputs/badcompressfwptr1/dig_badcompressfwptr1__RANDOM_.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="badcompress1.html">BadCompress1 - Custom Offset in Name Field</a></li>
+<li><a href="badcompress2.html">BadCompress2 - Custom Offset in CNAME Field</a></li>
+<li><a href="badcompressfwptr2.html">BadCompressFwPtr2 - Forward and Double Pointer in Name Field (Variant 2)</a></li>
+<li><a href="badcompressloop1.html">BadCompressLoop1 - Pointer Loop in Name Field (Variant 1)</a></li>
+<li><a href="badcompressloop2.html">BadCompressLoop2 - Pointer Loop in Name Field (Variant 2)</a></li>
+<li><a href="badcompressloop3.html">BadCompressLoop3 - Double Pointer Loop</a></li>
+<li><a href="badcompressloop4.html">BadCompressLoop4 - Pointer Loop in CNAME Field (Variant 1)</a></li>
+<li><a href="badcompressloop5.html">BadCompressLoop5 - Pointer Loop in CNAME Field (Variant 2)</a></li>
+<li><a href="badcompressmid1.html">BadCompressMid1 - Compression in the Middle of CNAME</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

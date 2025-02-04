@@ -1,12 +1,44 @@
 [module]
 name = "empty2"
 type = "feature"
-info = "Only NULL bytes"
-desc = "Send empty response with arbitrary number of NULLs (x00)."
-author = "ivan.jedek@oryxlabs.com"
+info = "Only NULL Bytes"
+short = "Send only NULL bytes"
 category = "Empty responses"
+desc = '''
+This module is designed to respond with an empty answer consisting solely of an arbitrary number of NULL bytes (`\\000`).
 
-code = '''
+Note that DNS packets in TCP mode include a length field at the beginning, but this module intentionally disregards this requirement and sends back only the specified number of NULL bytes as the response.
+
+For a variant that provides the length information correctly in TCP mode, refer to the [empty3] module.
+'''
+seealso = "close, timeout, empty1, empty3, empty4, empty5, empty6, empty7, queryback1, queryback2, queryback3, queryback4"
+format = '''
+**`empty2.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many NULL bytes should be generated in the response. By default, a single NULL byte is generated.
+'''
+
+[[module.example]]
+description = "By default, the module generates a single NULL byte as the response. This is insufficient for a valid DNS response, causing the client to make three attempts to resolve the error:"
+command = "dig empty2.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request 100 NULL bytes as the response. In this case, the parser interprets the Transaction ID in the response as 0 (`\\000\\000`) which clearly does not match the Transaction ID from the original query. As a result, the client again makes three attempts to resolve the error:"
+command = "dig empty2.100.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we switch to TCP mode and request 100 NULL bytes as the response. Since a DNS packet in TCP mode includes a length field at the beginning, the parser interprets the packet as having zero length. We can also see that in TCP mode, the client does not make any further attempts to resolve the error:"
+command = "dig empty2.100.yourdomain.com @127.0.0.1 +tcp"
+append = "For a variant that provides the length information correctly in TCP, look at the [empty3] module."
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig empty2${RANDOM}.100.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("empty2"):
    # Send arbitrary number of NULLs
    nulls = 1 # number of NULLs to send

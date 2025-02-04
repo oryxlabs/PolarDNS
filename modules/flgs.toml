@@ -1,0 +1,42 @@
+[module]
+name = "flgs"
+type = "modifier"
+info = "Set Custom Flags in the Header"
+short = "Set custom flags in the DNS response header"
+category = "Header manipulation"
+desc = '''
+This modifier enables modification of the Flags field in the DNS header of the response. Flags can be set using decimal or hexadecimal numbers, or they can be generated randomly.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+'''
+rfc = "RFC1035"
+format = '''
+**`*.flgs<FLAGS>.*`**
+
+Where:
+
+- The **`<FLAGS>`** parameter can either be:
+	- A hexadecimal number (0x0 - 0xffff)
+	- A decimal number (0 - 65535)
+	- A random number (r)
+
+Note that in a DNS packet the Flags field is a 2-byte field, which means the maximum value can be 65535 in decimal or 0xffff in hexadecimal.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = "In this example, we use the basic [always] feature which always resolves to an IP address. Additionally, we request to set the flags in the response header to the value of `0x8403`. This value indicates that the response is a standard query response, affirms authority over the domain, and sets the reply code to `NXDOMAIN` (No such name):"
+command = "dig always.flgs0x8403.yourdomain.com @127.0.0.1"
+append = "This DNS response may cause confusion as it presents a valid A record in the response while simultaneously indicating that the domain does not exist."
+
+[[module.example]]
+description = "Same as above, but the flags are specified as a decimal number:"
+command = "dig always.flgs33795.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we request to generate completely random flags in the response. Given that there are 65535 possible combinations of flags, this may very likely cause unexpected results and errors:"
+command = "dig always.flgsr.yourdomain.com @127.0.0.1"
+append = "We can see that the client is unable to interpret any of the responses."
+
+[module.code]
+# The code is located in the polardns.py file.

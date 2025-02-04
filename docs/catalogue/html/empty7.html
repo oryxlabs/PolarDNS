@@ -1,0 +1,72 @@
+---
+layout: default
+title: "Empty7 - ANSWER Section Is NULL Bytes"
+parent: "Empty responses"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Empty7 - ANSWER Section Is NULL Bytes</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Empty7 - ANSWER Section Is NULL Bytes</h1>
+<p>This module is designed to respond with a standard-looking DNS response that, according to the DNS header, contains a single Answer. However, the actual Answer in the body is replaced with NULL bytes (<code class='code-block'>\000</code>).</p>
+<p>This is likely to result in unexpected errors.</p><p><strong>Category:</strong> <a href='../empty-responses.html'>Empty responses</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>empty7.yourdomain.com</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>In this example, we can see that the dig client is unable to interpret the DNS response. This is because the entire ANSWER section has been replaced with NULL bytes, resulting in a format error:</p>
+<div><pre class='output-block'><strong># dig empty7.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Got bad packet</span>: FORMERR
+76 bytes
+45 c3 84 00 00 01 00 01 00 00 00 00 06 65 6d 70          E............emp
+74 79 37 0a 79 6f 75 72 64 6f 6d 61 69 6e 03 63          ty7.yourdomain.c
+6f 6d 00 00 01 00 01 00 00 00 00 00 00 00 00 00          om..............
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00          ................
+00 00 00 00 00 00 00 00 00 00 00 00                      ............
+</pre></div><p><a href='../outputs/empty7/dig_empty7.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In TCP mode, the outcomes are the same as in the previous example in UDP mode, resulting in a format error:</p>
+<div><pre class='output-block'><strong># dig empty7.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; <span style="background-color: yellow;">Got bad packet</span>: FORMERR
+76 bytes
+98 ac 84 00 00 01 00 01 00 00 00 00 06 65 6d 70          .............emp
+74 79 37 0a 79 6f 75 72 64 6f 6d 61 69 6e 03 63          ty7.yourdomain.c
+6f 6d 00 00 01 00 01 00 00 00 00 00 00 00 00 00          om..............
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00          ................
+00 00 00 00 00 00 00 00 00 00 00 00                      ............
+</pre></div><p><a href='../outputs/empty7/dig_empty7.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>Like other features, we can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:</p>
+<div><pre class='output-block'><strong># dig empty7${RANDOM}.yourdomain.com @10.211.55.2</strong>
+
+;; <span style="background-color: yellow;">Got bad packet</span>: FORMERR
+86 bytes
+c1 88 84 00 00 01 00 01 00 00 00 00 0b 65 6d 70          .............emp
+74 79 37 31 38 35 39 32 0a 79 6f 75 72 64 6f 6d          ty718592.yourdom
+61 69 6e 03 63 6f 6d 00 00 01 00 01 00 00 00 00          ain.com.........
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00          ................
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00          ................
+00 00 00 00 00 00                                        ......</pre></div><p><a href='../outputs/empty7/dig_empty7__RANDOM_.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="close.html">Close - Close the Connection</a></li>
+<li><a href="empty1.html">Empty1 - Empty Packet</a></li>
+<li><a href="empty2.html">Empty2 - Only NULL Bytes</a></li>
+<li><a href="empty3.html">Empty3 - Only NULL Bytes (Suitable for TCP)</a></li>
+<li><a href="empty4.html">Empty4 - Only Transaction ID and NULL Bytes</a></li>
+<li><a href="empty5.html">Empty5 - Only DNS Header and NULL Bytes</a></li>
+<li><a href="empty6.html">Empty6 - ANSWER Section Missing</a></li>
+<li><a href="queryback1.html">QueryBack1 - Query Reflection</a></li>
+<li><a href="queryback2.html">QueryBack2 - Query Reflection (Stripped)</a></li>
+<li><a href="queryback3.html">QueryBack3 - Query Reflection (To Port 53)</a></li>
+<li><a href="queryback4.html">QueryBack4 - Query Reflection (Random, to Port 53)</a></li>
+<li><a href="timeout.html">Timeout - Do Not Respond</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

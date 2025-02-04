@@ -1,0 +1,18 @@
+<pre class='output-block'><strong># dig PTR 255.100.51.198.in-addr.arpa @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; PTR 255.100.51.198.in-addr.arpa @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 31273
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;255.100.51.198.in-addr.arpa.	IN	PTR
+
+;; ANSWER SECTION:
+255.100.51.198.in-addr.arpa. 60	IN	PTR	0.100.51.198.in-addr.arpa.
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Nov 06 15:52:14 +04 2024
+;; MSG SIZE  rcvd: 84</pre>

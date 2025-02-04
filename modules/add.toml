@@ -1,0 +1,63 @@
+[module]
+name = "add"
+type = "modifier"
+info = "Add N Bytes to the End of the Packet"
+short = "Append any number of bytes to the end of the DNS response packet"
+category = "Packet manipulation"
+desc = '''
+This modifier allows adding (appending) an arbitrary number of bytes to the end of the DNS response packet.
+
+Additionally, it allows specifying a particular byte value for the appended bytes. This value can be defined as a decimal number, a hexadecimal number, or set to random if left unspecified.
+
+In TCP mode, ensure the DNS packet length is recalculated by using the [rl] modifier.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+'''
+format = '''
+**`*.add<NUMBER>.<BYTE>.*`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies the number of bytes to be added to the response. Note that a DNS packet cannot exceed a total size of 65,535 bytes.
+
+- The **`<BYTE>`** optional parameter can either be:
+
+	- A hexadecimal number (0x0 - 0xff)
+	- A decimal number (0 - 255)
+	- Ommited, which results in a random value being used
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = '''
+All the examples below use the basic [always] feature which always resolves to an IP address.
+
+In this example, we specify appending 10 random bytes to the end of the DNS response. This results in a warning message about 10 extra bytes at the end, but the actual response remains intact:
+'''
+command = "dig always.add10.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Similar to the previous example, but in this case, we specify appending 500 bytes with the value 255 (0xff in hexadecimal) to the end of the DNS response. This triggers a warning message about 500 extra bytes at the end:"
+command = "dig always.add500.255.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Same as the previous examples, except that we append 500 NULL bytes. Once again, we see a warning message about 500 extra bytes at the end:"
+command = "dig always.add500.0.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we combine the operation with the [cut] modifier to replace the IP address in the answer. First, we remove the last 4 bytes from the response (which correspond to the IP address in the A record), and then we append 4 random bytes. This effectively replaces the IP address in the answer with a random IP address:"
+command = "dig always.cut4.add4.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = '''In TCP mode, we must combine this with the [rl] modifier to recalculate the DNS packet length.
+
+In this example, we use TCP mode without recalculating the length. We request to append 500 NULL bytes to the response. Since the length was not recalculated, the parser completely ignores the appended bytes:
+'''
+command = "dig always.add500.0.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "After adding the [rl] modifier to recalculate the length, the parser now processes the entire packet and identifies the 500 extra bytes at the end:"
+command = "dig always.add500.0.rl.yourdomain.com @127.0.0.1 +tcp"
+
+[module.code]
+# The code is located in the polardns.py file.

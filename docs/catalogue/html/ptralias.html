@@ -1,0 +1,221 @@
+---
+layout: default
+title: "PtrAlias - Random PTR Aliases"
+parent: "Aliases"
+---
+
+<!DOCTYPE html>
+<head>
+<title>PtrAlias - Random PTR Aliases</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>PtrAlias - Random PTR Aliases</h1>
+<p>This module is designed to return one or more <strong>random aliases</strong> using <strong>reverse DNS lookups (PTR records)</strong>, which map IP addresses back to domain names.</p>
+<p>It specifically handles reverse DNS queries for any IP address within the private <code class='code-block'>10.0.0.0/8</code> network range, which is reserved for internal use only.</p>
+<p>When this module receives a reverse DNS lookup query for an IP address such as <code class='code-block'>10.x.y.z</code> (this means searching for the PTR record for <code class='code-block'>z.y.x.10.in-addr.arpa</code> domain), it responds with a PTR record that contains a randomly generated <code class='code-block'>in-addr.arpa</code> domain from within the same <code class='code-block'>10.0.0.0/8</code> range.</p>
+<p>The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases.</p>
+<p>Additionally, this module can respond with multiple PTR records. The number of records generated is determined by the second octet of the IP address. For example, a query for the IP address <code class='code-block'>10.5.0.0</code> will generate five PTR records.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../aliases.html'>Aliases</a></p><p><strong>Tags:</strong> Amplification, Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.*.&lt;NUMBER&gt;.10.in-addr.arpa</strong></pre>
+
+<p>or</p>
+<pre class='output-block'><strong>10.&lt;NUMBER&gt;.*.*</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines how many aliases should be generated in the response.</li>
+</ul>
+<h2>Examples</h2>
+<p>The most basic example to generate a single PTR alias record:</p>
+<div><pre class='output-block'><strong># dig -x 10.1.0.0 @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 10.1.0.0 @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 42782
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;0.0.1.10.in-addr.arpa.		IN	PTR
+
+;; ANSWER SECTION:
+0.0.1.10.in-addr.arpa.	60	IN	PTR	181.93.1.10.in-addr.arpa.
+
+;; Query time: 15 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Oct 17 14:47:42 +04 2024
+;; MSG SIZE  rcvd: 77
+</pre></div><p><a href='../outputs/ptralias/dig__x_10.1.0.0__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Same as above, written in ARPA domain format:</p>
+<div><pre class='output-block'><strong># dig PTR 0.0.1.10.in-addr.arpa @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; PTR 0.0.1.10.in-addr.arpa @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 43213
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;0.0.1.10.in-addr.arpa.		IN	PTR
+
+;; ANSWER SECTION:
+0.0.1.10.in-addr.arpa.	60	IN	PTR	53.20.1.10.in-addr.arpa.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Oct 17 14:47:44 +04 2024
+;; MSG SIZE  rcvd: 76
+</pre></div><p><a href='../outputs/ptralias/dig_PTR_0.0.1.10.in_addr.arpa__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Here we request to generate ten PTR alias records:</p>
+<div><pre class='output-block'><strong># dig -x 10.10.123.123 @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 10.10.123.123 @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 33535
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;123.123.10.10.in-addr.arpa.	IN	PTR
+
+;; ANSWER SECTION:
+123.123.10.10.in-addr.arpa. 60	IN	PTR	198.196.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	183.114.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	214.112.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	164.29.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	15.98.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	184.62.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	36.205.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	97.158.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	74.204.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	170.165.10.10.in-addr.arpa.
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Oct 17 14:47:46 +04 2024
+;; MSG SIZE  rcvd: 437
+</pre></div><p><a href='../outputs/ptralias/dig__x_10.10.123.123__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Same as above, written in ARPA domain format:</p>
+<div><pre class='output-block'><strong># dig PTR 123.123.10.10.in-addr.arpa @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; PTR 123.123.10.10.in-addr.arpa @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 43848
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;123.123.10.10.in-addr.arpa.	IN	PTR
+
+;; ANSWER SECTION:
+123.123.10.10.in-addr.arpa. 60	IN	PTR	67.222.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	222.55.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	93.102.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	49.231.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	75.70.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	31.110.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	175.15.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	16.12.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	173.9.10.10.in-addr.arpa.
+123.123.10.10.in-addr.arpa. 60	IN	PTR	4.198.10.10.in-addr.arpa.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Oct 17 14:47:48 +04 2024
+;; MSG SIZE  rcvd: 430
+</pre></div><p><a href='../outputs/ptralias/dig_PTR_123.123.10.10.in_addr.arpa__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request a thousand PTR alias records. While this is extremely unusual and bizzare, it still works:</p>
+<div><pre class='output-block'><strong># dig -x 10.1000.0.0 @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 10.1000.0.0 @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 23802
+;; flags: qr aa; QUERY: 1, ANSWER: 1000, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;0.0.1000.10.in-addr.arpa.	IN	PTR
+
+;; ANSWER SECTION:
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	209.48.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	53.235.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	230.211.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	171.184.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	235.160.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	241.67.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	202.152.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	129.233.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	171.66.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	133.73.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	29.94.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	1.126.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	145.115.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	68.216.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	173.198.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	54.125.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	173.15.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	109.200.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	58.129.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	222.240.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	223.245.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	101.106.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	237.220.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	132.197.1000.10.in-addr.arpa.
+... cut ...
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	218.14.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	17.233.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	58.192.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	245.146.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	139.140.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	146.48.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	136.27.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	235.182.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	87.126.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	114.104.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	42.27.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	250.12.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	16.71.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	90.69.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	100.202.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	155.247.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	10.187.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	140.74.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	202.5.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	183.239.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	35.12.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	63.55.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	85.147.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	172.119.1000.10.in-addr.arpa.
+0.0.1000.10.in-addr.arpa. 60	IN	PTR	249.86.1000.10.in-addr.arpa.
+
+;; Query time: 11 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Oct 17 14:48:36 +04 2024
+;; MSG SIZE  rcvd: 41172
+</pre>
+</div><p><a href='../outputs/ptralias/dig__x_10.1000.0.0__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="alias.html">Alias - Random Aliases</a></li>
+<li><a href="cnalias.html">CnAlias - Random CNAME Aliases</a></li>
+<li><a href="dnalias.html">DnAlias - Random DNAME Aliases</a></li>
+<li><a href="htalias.html">HtAlias - Random HTTPS Aliases</a></li>
+<li><a href="mxalias.html">MxAlias - Random MX Aliases</a></li>
+<li><a href="nptenumalias.html">NptEnumAlias - Random NAPTR ENUM Aliases</a></li>
+<li><a href="nsalias.html">NsAlias - Random NS Aliases</a></li>
+<li><a href="spfalias1.html">SpfAlias1 - Random SPF (TXT) Aliases (Variant 1)</a></li>
+<li><a href="spfalias2.html">SpfAlias2 - Random SPF (TXT) Aliases (Variant 2)</a></li>
+<li><a href="sralias.html">SrAlias - Random SRV Aliases</a></li>
+<li><a href="svalias.html">SvAlias - Random SVCB Aliases</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="ptrloop1.html">PtrLoop1 - PTR Alias Loops (Variant 1)</a></li>
+<li><a href="ptrloop2.html">PtrLoop2 - PTR Alias Loops (Variant 2)</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

@@ -1,0 +1,95 @@
+---
+layout: default
+title: "Empty3 - Only NULL Bytes (Suitable for TCP)"
+parent: "Empty responses"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Empty3 - Only NULL Bytes (Suitable for TCP)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Empty3 - Only NULL Bytes (Suitable for TCP)</h1>
+<p>This module is designed to respond with an empty answer consisting solely of an arbitrary number of NULL bytes (<code class='code-block'>\000</code>).</p>
+<p>Note that DNS packets in TCP mode include a length field at the beginning.</p>
+<p>This module correctly provides the length information at the beginning of the packet in TCP mode. For a variant that does not provide the length information in TCP mode, refer to the <a href="empty2.html">empty2</a> module.</p><p><strong>Category:</strong> <a href='../empty-responses.html'>Empty responses</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>empty3.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines how many NULL bytes should be generated in the response. By default, a single NULL byte is generated.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, the module generates a single NULL byte as the response. This is insufficient for a valid DNS response, causing the client to make three attempts to resolve the error:</p>
+<div><pre class='output-block'><strong># dig empty3.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty3.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/empty3/dig_empty3.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request 100 NULL bytes as the response. In this case, the parser interprets the Transaction ID in the response as 0 (<code class='code-block'>\000\000</code>) which does not match the Transaction ID from the original query. As a result, the client again makes three attempts to resolve the error:</p>
+<div><pre class='output-block'><strong># dig empty3.100.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 5404, got 0
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 5404, got 0
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 5404, got 0
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty3.100.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/empty3/dig_empty3.100.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we switch to TCP mode and request 100 NULL bytes as the response. In this module, the length is correctly provided at the beginning of the packet, allowing the parser to proceeds with parsing the Transaction ID. It interprets the Transaction ID in the response as 0 (<code class='code-block'>\000\000</code>) which does not match the Transaction ID from the original query. In TCP mode, the client does not make any further attempts to resolve the error:</p>
+<div><pre class='output-block'><strong># dig empty3.100.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; <span style="background-color: yellow;">ERROR</span>: ID mismatch: expected ID 64330, got 0
+</pre></div><p><a href='../outputs/empty3/dig_empty3.100.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:</p>
+<div><pre class='output-block'><strong># dig empty3${RANDOM}.100.yourdomain.com @10.211.55.2</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 33773, got 0
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 33773, got 0
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: ID mismatch: expected ID 33773, got 0
+;; <span style="background-color: yellow;">Warning</span>: query response not set
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty332312.100.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; no servers could be reached</pre></div><p><a href='../outputs/empty3/dig_empty3__RANDOM_.100.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="close.html">Close - Close the Connection</a></li>
+<li><a href="empty1.html">Empty1 - Empty Packet</a></li>
+<li><a href="empty2.html">Empty2 - Only NULL Bytes</a></li>
+<li><a href="empty4.html">Empty4 - Only Transaction ID and NULL Bytes</a></li>
+<li><a href="empty5.html">Empty5 - Only DNS Header and NULL Bytes</a></li>
+<li><a href="empty6.html">Empty6 - ANSWER Section Missing</a></li>
+<li><a href="empty7.html">Empty7 - ANSWER Section Is NULL Bytes</a></li>
+<li><a href="queryback1.html">QueryBack1 - Query Reflection</a></li>
+<li><a href="queryback2.html">QueryBack2 - Query Reflection (Stripped)</a></li>
+<li><a href="queryback3.html">QueryBack3 - Query Reflection (To Port 53)</a></li>
+<li><a href="queryback4.html">QueryBack4 - Query Reflection (Random, to Port 53)</a></li>
+<li><a href="timeout.html">Timeout - Do Not Respond</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

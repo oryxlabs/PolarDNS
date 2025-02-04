@@ -1,12 +1,40 @@
 [module]
 name = "badcompressfwptr2"
 type = "feature"
-info = "Double compression pointer"
-desc = "Respond with CNAME (abc.badcompressfwptr2.yourdomain.com) and use a forward pointer in the answer Name field to point to the end (the actual CNAME). But, skip the \"abc\" portion so that it will point directly to another pointer pointing to the beginning (to the domain name in the query)."
-author = "ivan.jedek@oryxlabs.com"
+info = "Forward and Double Pointer in Name Field (Variant 2)"
+short = "Forward and double compression pointers in the Name field (variant 2)"
 category = "Bad compression"
+records = "CNAME"
+rfc = "RFC1035"
+desc = '''
+The DNS protocol supports compressing domain names to save space by reducing redundancy for repeated domain names within DNS messages. This compression scheme can be applied to various record (resource) types, such as **A**, **CNAME**, **MX**, or **PTR** records.
 
-code = '''
+This module is designed to respond with a single answer containing a **CNAME record** (alias) where the **Name field** is compressed using a **forward pointer** (in violation of DNS specifications) that points to the **CNAME field** at the end, which also uses compression. This results in **double compression**, further violating DNS specifications.
+
+In this case, the **CNAME field** contains the alias name `abc.badcompressfwptr2.yourdomain.com`. This alias is constructed using standard compression. The field includes only the `abc` string, followed by a **compression pointer** that points back to the original domain name located in the **QUERY section**. Note that this **CNAME field** is located at the end of the **CNAME record**.
+
+The **Name field** (located at the beginning of the **CNAME record**) consists solely of a compression pointer that points **forward** to the **CNAME field** at the end of the packet, specifically to the position of the pointer, skipping the `abc` string portion. This arrangement forces the parser to first jump forward and then immediately backward to complete the interpretation. However, neither **forward** nor **double pointers** are permitted in DNS.
+
+In the DNS protocol, compression is achieved by using single **backward pointers** only, not forward pointers. Compression pointers are permitted to point only to previous positions in the message, because forward pointers require the parser to jump ahead in the message, increasing processing complexity and processing time.
+'''
+format = '''
+**`badcompressfwptr2.yourdomain.com`**
+
+This module has no parameters.
+'''
+seealso = "badcompress1, badcompress2, badcompressfwptr1, badcompressfwptr2, badcompressloop1, badcompressloop2, badcompressloop3, badcompressloop4, badcompressloop5, badcompressmid1"
+
+[[module.example]]
+description = "The following query demonstrates the module’s functionality. It returns a CNAME record compressed in a way that violates DNS specifications - specifically by using forward and double compression pointers. We can see that the client (dig) is unable to parse such a response:"
+command = "dig badcompressfwptr2.yourdomain.com @127.0.0.1"
+append = "By examining the PCAP file in Wireshark, we can see that Wireshark parses the response without any issues, demonstrating its ability to handle both forward and double compression pointers. However, different DNS resolvers and clients may handle such malformed responses in significantly different ways, making this an intriguing use case for testing."
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig badcompressfwptr2${RANDOM}.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("badcompressfwptr2"):
    # Send answer with a forward compression pointer pointing to another pointer - variant 2
    ### DNS header ########

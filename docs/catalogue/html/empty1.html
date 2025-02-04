@@ -1,0 +1,77 @@
+---
+layout: default
+title: "Empty1 - Empty Packet"
+parent: "Empty responses"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Empty1 - Empty Packet</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Empty1 - Empty Packet</h1>
+<p>This module is designed to send an empty response, composed entirely of an empty packet.</p>
+<p>In both UDP and TCP modes, the client/resolver will receive only the UDP or TCP packet header without any data or payload.</p><p><strong>Category:</strong> <a href='../empty-responses.html'>Empty responses</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>empty1.yourdomain.com</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>In this example, we request an empty packet as the response in UDP mode, resulting in the client making three attempts to resolve the error:</p>
+<div><pre class='output-block'><strong># dig empty1.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/empty1/dig_empty1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this case, we request an empty packet as the response in TCP mode, resulting in the client again making three attempts to resolve the error:</p>
+<div><pre class='output-block'><strong># dig empty1.yourdomain.com @127.0.0.1 +tcp</strong>
+
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+;; communications <span style="background-color: yellow;">error</span> to 127.0.0.1#53: end of file
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty1.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; no servers could be reached
+</pre></div><p><a href='../outputs/empty1/dig_empty1.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:</p>
+<div><pre class='output-block'><strong># dig empty1${RANDOM}.yourdomain.com @10.211.55.2</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+;; <span style="background-color: yellow;">Warning</span>: short (&lt; header size) message received
+;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; empty124422.yourdomain.com @10.211.55.2
+;; global options: +cmd
+;; no servers could be reached</pre></div><p><a href='../outputs/empty1/dig_empty1__RANDOM_.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="close.html">Close - Close the Connection</a></li>
+<li><a href="empty2.html">Empty2 - Only NULL Bytes</a></li>
+<li><a href="empty3.html">Empty3 - Only NULL Bytes (Suitable for TCP)</a></li>
+<li><a href="empty4.html">Empty4 - Only Transaction ID and NULL Bytes</a></li>
+<li><a href="empty5.html">Empty5 - Only DNS Header and NULL Bytes</a></li>
+<li><a href="empty6.html">Empty6 - ANSWER Section Missing</a></li>
+<li><a href="empty7.html">Empty7 - ANSWER Section Is NULL Bytes</a></li>
+<li><a href="queryback1.html">QueryBack1 - Query Reflection</a></li>
+<li><a href="queryback2.html">QueryBack2 - Query Reflection (Stripped)</a></li>
+<li><a href="queryback3.html">QueryBack3 - Query Reflection (To Port 53)</a></li>
+<li><a href="queryback4.html">QueryBack4 - Query Reflection (Random, to Port 53)</a></li>
+<li><a href="timeout.html">Timeout - Do Not Respond</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

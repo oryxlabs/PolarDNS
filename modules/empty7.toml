@@ -1,12 +1,35 @@
 [module]
 name = "empty7"
 type = "feature"
-info = "ANSWER section is NULL bytes"
-desc = "Send normal DNS response, but replace the ANSWER section with NULLs."
-author = "ivan.jedek@oryxlabs.com"
+info = "ANSWER Section Is NULL Bytes"
+short = "ANSWER section replaced with NULL bytes"
 category = "Empty responses"
+desc = '''
+This module is designed to respond with a standard-looking DNS response that, according to the DNS header, contains a single Answer. However, the actual Answer in the body is replaced with NULL bytes (`\\000`).
 
-code = '''
+This is likely to result in unexpected errors.
+'''
+format = '''
+**`empty7.yourdomain.com`**
+
+This module has no parameters.
+'''
+seealso = "close, timeout, empty1, empty2, empty3, empty4, empty5, empty6, queryback1, queryback2, queryback3, queryback4"
+
+[[module.example]]
+description = "In this example, we can see that the dig client is unable to interpret the DNS response. This is because the entire ANSWER section has been replaced with NULL bytes, resulting in a format error:"
+command = "dig empty7.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In TCP mode, the outcomes are the same as in the previous example in UDP mode, resulting in a format error:"
+command = "dig empty7.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "Like other features, we can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig empty7${RANDOM}.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("empty7"):
    # Send back a normal DNS response, but ANSWER SECTION is just NULLs
    ### DNS header ########

@@ -1,12 +1,48 @@
 [module]
 name = "nptenumalias"
 type = "feature"
-info = "NAPTR ENUM random N aliases"
-desc = "Respond with N number of NAPTR ENUM records containing random E.164 phone numbers (aliases) in SIP service URI. BEWARE: This could result in multiplication."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "Random NAPTR ENUM Aliases"
+short = "NAPTR ENUM random alias generator"
+category = "Aliases"
+records = "NAPTR"
+tags = "Amplification, Domain Lock-Up, Denial of Service"
+rfc = "RFC2915, RFC3761"
+desc = '''
+This module implements **random aliases** using **NAPTR (Naming Authority Pointer) ENUM** records, which are used to map identifiers like telephone numbers to a variety of service URIs, including SIP addresses, voicemail systems, and web or email addresses.
 
-code = '''
+This module is specifically designed to handle DNS queries that translate telephone numbers into SIP service URIs using the E.164 format. In this format, a phone number such as `1234567890` is transformed into the reversed sequence `0.9.8.7.6.5.4.3.2.1.e164.arpa`. This domain is then queried in DNS to identify the corresponding designated SIP service address.
+
+When this module receives a NAPTR DNS query for translating a telephone number ending with the digit `1`, it will generate a response with a SIP service URI. This URI will point to another (random) phone number, also formatted in the E.164 standard and ending with the digit `1`.
+
+The idea is that if the resolver/client decides to resolve this E.164 address, it will result in the generation of yet another alias, potentially creating an infinite chain of random aliases. Although NAPTR ENUM records do not function as direct aliases like CNAME records, this setup could theoretically produce similar effect by compelling the client to perform consecutive queries to resolve it.
+
+Additionally, this module can respond with multiple NAPTR records. The number of records generated is determined by the second digit of the phone number address. For example, a query for the phone number such as `1234567891` (converted to `1.9.8.7.6.5.4.3.2.1.e164.arpa` in the E.164 format) will generate nine PTR records.
+
+:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
+'''
+format = '''
+**`1.<NUMBER>.*.e164.arpa`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many aliases should be generated in the response.
+'''
+seealso = "nptenumloop, alias, cnalias, dnalias, htalias, mxalias, nptenumalias, nsalias, ptralias, spfalias1, spfalias2, sralias, svalias"
+
+[[module.example]]
+description = "In this example, when we look up the telephone number `3211`, we receive a response containing a SIP URI. This URI includes a randomly generated phone number, formatted as an E.164 address. If this address is subsequently looked up, it will lead to the generation of another random E.164 address:"
+command = "dig NAPTR 1.1.2.3.e164.arpa @127.0.0.1"
+
+[[module.example]]
+description = "In this example, when we look up the telephone number `1234567891`, we receive a response containing nine SIP URIs. Each URI includes a randomly generated phone number, formatted as an E.164 address:"
+command = "dig NAPTR 1.9.8.7.6.5.4.3.2.1.e164.arpa @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we use the A record type to look up the telephone number `1234567891`. We receive the same response as in the previous example. This demonstrates that it is not necessary to explicitly request NAPTR record types to use this module:"
+command = "dig 1.9.8.7.6.5.4.3.2.1.e164.arpa @127.0.0.1"
+
+[module.code]
+python = '''
            elif req.first_subdomain == "1" and req.full_domain.endswith(".e164.arpa"):
               # Requesting to translate an E.164 telephone number ending with the digit 1 (e.g., a NAPTR
               # record for 1.<anything>.e164.arpa in reverse). The response will be a SIP service URI

@@ -1,0 +1,187 @@
+---
+layout: default
+title: "Add - Add N Bytes to the End of the Packet"
+parent: "Packet manipulation"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Add - Add N Bytes to the End of the Packet</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Add - Add N Bytes to the End of the Packet</h1>
+<p>This modifier allows adding (appending) an arbitrary number of bytes to the end of the DNS response packet.</p>
+<p>Additionally, it allows specifying a particular byte value for the appended bytes. This value can be defined as a decimal number, a hexadecimal number, or set to random if left unspecified.</p>
+<p>In TCP mode, ensure the DNS packet length is recalculated by using the <a href="rl.html">rl</a> modifier.</p>
+<p>This modifier is compatible with and can be combined with any other existing feature or modifier.</p><p><strong>Category:</strong> <a href='../packet-manipulation.html'>Packet manipulation</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.add&lt;NUMBER&gt;.&lt;BYTE&gt;.*</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>
+<p>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter specifies the number of bytes to be added to the response. Note that a DNS packet cannot exceed a total size of 65,535 bytes.</p>
+</li>
+<li>
+<p>The <strong><code class='code-block'>&lt;BYTE&gt;</code></strong> optional parameter can either be:</p>
+<ul>
+<li>A hexadecimal number (0x0 &mdash; 0xff)</li>
+<li>A decimal number (0 &mdash; 255)</li>
+<li>Ommited, which results in a random value being used</li>
+</ul>
+</li>
+</ul>
+<h2>Examples</h2>
+<p>All the examples below use the basic <a href="always.html">always</a> feature which always resolves to an IP address.</p>
+<p>In this example, we specify appending 10 random bytes to the end of the DNS response. This results in a warning message about 10 extra bytes at the end, but the actual response remains intact:</p>
+<div><pre class='output-block'><strong># dig always.add10.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.add10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 42424
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 10 extra bytes at end
+
+;; QUESTION SECTION:
+;always.add10.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.add10.yourdomain.com. 60	IN	A	2.3.4.5
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Oct 24 11:39:03 +04 2024
+;; MSG SIZE  rcvd: 71
+</pre></div><p><a href='../outputs/add/dig_always.add10.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Similar to the previous example, but in this case, we specify appending 500 bytes with the value 255 (0xff in hexadecimal) to the end of the DNS response. This triggers a warning message about 500 extra bytes at the end:</p>
+<div><pre class='output-block'><strong># dig always.add500.255.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.add500.255.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 36103
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 500 extra bytes at end
+
+;; QUESTION SECTION:
+;always.add500.255.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+always.add500.255.yourdomain.com. 60 IN	A	2.3.4.5
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Oct 24 00:19:59 +04 2024
+;; MSG SIZE  rcvd: 566
+</pre></div><p><a href='../outputs/add/dig_always.add500.255.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Same as the previous examples, except that we append 500 NULL bytes. Once again, we see a warning message about 500 extra bytes at the end:</p>
+<div><pre class='output-block'><strong># dig always.add500.0.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.add500.0.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 47613
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 500 extra bytes at end
+
+;; QUESTION SECTION:
+;always.add500.0.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.add500.0.yourdomain.com.	60 IN	A	2.3.4.5
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Oct 24 00:20:00 +04 2024
+;; MSG SIZE  rcvd: 564
+</pre></div><p><a href='../outputs/add/dig_always.add500.0.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this case, we combine the operation with the <a href="cut.html">cut</a> modifier to replace the IP address in the answer. First, we remove the last 4 bytes from the response (which correspond to the IP address in the A record), and then we append 4 random bytes. This effectively replaces the IP address in the answer with a random IP address:</p>
+<div><pre class='output-block'><strong># dig always.cut4.add4.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.cut4.add4.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 61706
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.cut4.add4.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+always.cut4.add4.yourdomain.com. 60 IN	A	105.104.169.227
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Oct 24 00:20:01 +04 2024
+;; MSG SIZE  rcvd: 65
+</pre></div><p><a href='../outputs/add/dig_always.cut4.add4.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In TCP mode, we must combine this with the <a href="rl.html">rl</a> modifier to recalculate the DNS packet length.</p>
+<p>In this example, we use TCP mode without recalculating the length. We request to append 500 NULL bytes to the response. Since the length was not recalculated, the parser completely ignores the appended bytes:</p>
+<div><pre class='output-block'><strong># dig always.add500.0.yourdomain.com @127.0.0.1 +tcp</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.add500.0.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 54886
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.add500.0.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.add500.0.yourdomain.com.	60 IN	A	2.3.4.5
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Thu Oct 24 00:20:03 +04 2024
+;; MSG SIZE  rcvd: 64
+</pre></div><p><a href='../outputs/add/dig_always.add500.0.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+<p>After adding the <a href="rl.html">rl</a> modifier to recalculate the length, the parser now processes the entire packet and identifies the 500 extra bytes at the end:</p>
+<div><pre class='output-block'><strong># dig always.add500.0.rl.yourdomain.com @127.0.0.1 +tcp</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.add500.0.rl.yourdomain.com @127.0.0.1 +tcp
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 53263
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 500 extra bytes at end
+
+;; QUESTION SECTION:
+;always.add500.0.rl.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+always.add500.0.rl.yourdomain.com. 60 IN A	2.3.4.5
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Thu Oct 24 00:20:04 +04 2024
+;; MSG SIZE  rcvd: 567
+</pre></div><p><a href='../outputs/add/dig_always.add500.0.rl.yourdomain.com__127.0.0.1__tcp.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="cnk.html">Cnk - Send Response in Chunks (TCP only)</a></li>
+<li><a href="cut.html">Cut - Cut N Bytes from the End of the Packet</a></li>
+<li><a href="fc.html">Fc - Force Compression</a></li>
+<li><a href="len.html">Len - Set Custom Length in TCP</a></li>
+<li><a href="nc.html">Nc - No Compression</a></li>
+<li><a href="noq.html">Noq - Remove the Query Section</a></li>
+<li><a href="rl.html">Rl - Recalculate Length in TCP</a></li>
+<li><a href="slp.html">Slp - Add a Delay (Latency)</a></li>
+<li><a href="tc.html">Tc - Set Truncated Flag (Force TCP Mode)</a></li>
+<li><a href="ttl.html">Ttl - Set Custom TTL Value</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="newid.html">NewId - Set Random Transaction ID</a></li>
+<li><a href="flgs.html">Flgs - Set Custom Flags in the Header</a></li>
+<li><a href="qurr.html">Qurr - Set Question RRs in the Header</a></li>
+<li><a href="anrr.html">Anrr - Set Answer RRs in the Header</a></li>
+<li><a href="aurr.html">Aurr - Set Authority RRs in the Header</a></li>
+<li><a href="adrr.html">Adrr - Set Additional RRs in the Header</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

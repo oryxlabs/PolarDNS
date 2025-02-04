@@ -1,12 +1,61 @@
 [module]
 name = "svchain"
 type = "feature"
-info = "SVCB alias chain"
-desc = "Respond with an incremented SVCB record. This creates an infinite alias chain."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "SVCB Alias Chains"
+short = "SVCB chain alias generator"
+category = "Alias chains"
+records = "SVCB"
+tags = "Domain Lock-Up, Denial of Service"
+rfc = "RFC9460"
+desc = '''
+This module implements **incremental alias chains** using **SVCB (Service Binding)** records. It returns an alias record with an incremented domain name index, forming a chain that continues to increment indefinitely.
 
-code = '''
+Specifically, this module generates an SVCB alias record in the format `svchain###.yourdomain.com`, where `###` represents the incremented index.
+
+The concept is that if the client/resolver attempts to resolve this alias further, it will generate yet another incremented alias, causing the process to continue indefinitely and potentially keeping the resolver occupied.
+
+However, in practice, most modern resolvers detect such chains and terminate the resolution after encountering a certain number of consecutive aliases (e.g., 20 aliases) or upon reaching a specified time limit for the resolution (e.g., 30 seconds).
+
+The SVCB records include a priority field called SvcPriority. In this module, SvcPriority is set to 0 for every record.
+
+Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, "service labels", or "underscore labels".
+
+Note that this feature provides the same functionality as requesting an SVCB record for the generic [chain] feature.
+
+:warning:**BEWARE**:warning:This could potentially lead to a **domain lock-up (DoS)**.
+'''
+format = '''
+**`svchain<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies an arbitrary number that will be incremented in the response.
+'''
+seealso = "svalias, svloop, chain, cnchain, dnchain, htchain, mxchain, nschain, spfchain, srchain, svchain"
+
+[[module.example]]
+description = "By default, the module generates an SVCB alias record with the index of 1:"
+command = "dig svchain.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "If we attempt to resolve the resulting domain name (`svchain1.yourdomain.com`), we receive an incremented alias record:"
+command = "dig svchain1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "If we continue to resolve the next domain name (`svchain2.yourdomain.com`), we again receive an incremented alias record:"
+command = "dig svchain2.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "This resolution process can continue indefinitely, as there are no limits on the size of the index number. Each resolution yields another incremented alias record:"
+command = "dig svchain9999999999999999999999999.yourdomain.com @127.0.0.1"
+append = "The domain name will never be fully resolved as the incremental process continues indefinitely."
+
+[[module.example]]
+description = "As mentioned in the description, this module also supports DNS queries for locating different services using the underscore (_) prefix notation. This example demonstrates such usage, where we search for an HTTP service specifically designed for mobile devices and running over TCP. We receive an incremented SVCB alias record as expected:"
+command = "dig _mobile._http._tcp.svchain100.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
            elif req.first_subdomain.startswith("svchain"):
               # Send incremented SVCB alias (RFC 9460).
               new_domain_name = increment_chain(req.full_domain)

@@ -1,12 +1,40 @@
 [module]
 name = "afuzz2"
 type = "feature"
-info = "Many bogus A records and legit A record"
-desc = "Respond with many bogus A records containing byte values starting from 0 up to 255 max, followed by a legitimate answer (proper A record) in the end."
-author = "ivan.jedek@oryxlabs.com"
-category = "General features"
+info = "Many Bogus A Records and Legit A Record"
+short = "Send multiple A records with injected byte in the hostname"
+category = "Fuzzing"
+records = "A"
+desc = '''
+This module is designed to respond with multiple bogus and illegitimate A records, followed by a legitimate A record as the final answer.
 
-code = '''
+Similar to the [afuzz1] module, this module injects a single incremental byte into the middle of the hostname in each A record (in the ANSWER section). The final record, however, is a proper A record that correctly answers the query.
+
+This setup forces the resolver or DNS client to parse through all the illegitimate and malformed records before arriving at the correct answer.
+'''
+format = '''
+**`afuzz2.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies how many bogus A records should appear before the correct A record in the DNS response.
+'''
+seealso = "afuzz1, afuzz2"
+
+[[module.example]]
+description = "In this example, we request to generate 10 bogus A records, each with an injected byte in the hostname. The final (11th) A record contains the correct answer to the query:"
+command = "dig afuzz2.10.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to generate 256 bogus A records, each containing an injection byte in the hostname. The injected byte ranges from a NULL byte (`\\000`) to `\\255`. The final (257th) A record provides the correct answer to our query:"
+command = "dig afuzz2.256.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig afuzz2${RANDOM}.10.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("afuzz2"):
    # Send many A records with a slightly distorted name. In the end, provide the correct one also
    # af<01>zz2.yourdomain.com   A   6.6.6.1

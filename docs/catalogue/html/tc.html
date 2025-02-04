@@ -1,0 +1,119 @@
+---
+layout: default
+title: "Tc - Set Truncated Flag (Force TCP Mode)"
+parent: "Packet manipulation"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Tc - Set Truncated Flag (Force TCP Mode)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Tc - Set Truncated Flag (Force TCP Mode)</h1>
+<p>This modifier directs PolarDNS to respond with only the DNS header with the Truncated (TC) bit flag set. This flag signals to the resolver/client that the response is too large, prompting it to retry the query over TCP.</p>
+<p>In essence, this modifier allows us to enforce the use of TCP mode for communication between the resolver/client and PolarDNS.</p>
+<p>This modifier is compatible with and can be combined with any other existing feature or modifier.</p><p><strong>Category:</strong> <a href='../packet-manipulation.html'>Packet manipulation</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.tc.*</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>In this example, we use the <a href="basic.html">basic</a> always feature which always resolves to an IP address. We request the Truncated (TC) bit to be set in the DNS response. As a result, the client retries the query using TCP mode:</p>
+<div><pre class='output-block'><strong># dig always.tc.yourdomain.com @127.0.0.1</strong>
+
+;; Truncated, retrying in TCP mode.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.tc.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 28291
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.tc.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.tc.yourdomain.com. 60	IN	A	2.3.4.5
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Wed Oct 23 13:36:54 +04 2024
+;; MSG SIZE  rcvd: 58
+</pre></div><p><a href='../outputs/tc/dig_always.tc.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we use the <a href="size.html">size</a> feature which returns multiple anwers at once. Once again we request the Truncated (TC) bit to be set in the DNS response. As a result, the client retries the query using TCP mode:</p>
+<div><pre class='output-block'><strong># dig size.tc.yourdomain.com @127.0.0.1</strong>
+
+;; Truncated, retrying in TCP mode.
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; size.tc.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 34423
+;; flags: qr aa; QUERY: 1, ANSWER: 29, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.tc.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+size.tc.yourdomain.com.	60	IN	A	127.0.0.88
+size.tc.yourdomain.com.	60	IN	A	127.0.0.18
+size.tc.yourdomain.com.	60	IN	A	127.0.0.208
+size.tc.yourdomain.com.	60	IN	A	127.0.0.244
+size.tc.yourdomain.com.	60	IN	A	127.0.0.30
+size.tc.yourdomain.com.	60	IN	A	127.0.0.208
+size.tc.yourdomain.com.	60	IN	A	127.0.0.149
+size.tc.yourdomain.com.	60	IN	A	127.0.0.73
+size.tc.yourdomain.com.	60	IN	A	127.0.0.189
+size.tc.yourdomain.com.	60	IN	A	127.0.0.227
+size.tc.yourdomain.com.	60	IN	A	127.0.0.31
+size.tc.yourdomain.com.	60	IN	A	127.0.0.145
+size.tc.yourdomain.com.	60	IN	A	127.0.0.243
+size.tc.yourdomain.com.	60	IN	A	127.0.0.53
+size.tc.yourdomain.com.	60	IN	A	127.0.0.114
+size.tc.yourdomain.com.	60	IN	A	127.0.0.115
+size.tc.yourdomain.com.	60	IN	A	127.0.0.139
+size.tc.yourdomain.com.	60	IN	A	127.0.0.225
+size.tc.yourdomain.com.	60	IN	A	127.0.0.25
+size.tc.yourdomain.com.	60	IN	A	127.0.0.98
+size.tc.yourdomain.com.	60	IN	A	127.0.0.159
+size.tc.yourdomain.com.	60	IN	A	127.0.0.235
+size.tc.yourdomain.com.	60	IN	A	127.0.0.137
+size.tc.yourdomain.com.	60	IN	A	127.0.0.227
+size.tc.yourdomain.com.	60	IN	A	127.0.0.187
+size.tc.yourdomain.com.	60	IN	A	127.0.0.113
+size.tc.yourdomain.com.	60	IN	A	127.0.0.120
+size.tc.yourdomain.com.	60	IN	A	127.0.0.109
+size.tc.yourdomain.com.	60	IN	A	127.0.0.89
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Wed Oct 23 13:36:56 +04 2024
+;; MSG SIZE  rcvd: 504
+</pre></div><p><a href='../outputs/tc/dig_size.tc.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="add.html">Add - Add N Bytes to the End of the Packet</a></li>
+<li><a href="cnk.html">Cnk - Send Response in Chunks (TCP only)</a></li>
+<li><a href="cut.html">Cut - Cut N Bytes from the End of the Packet</a></li>
+<li><a href="fc.html">Fc - Force Compression</a></li>
+<li><a href="len.html">Len - Set Custom Length in TCP</a></li>
+<li><a href="nc.html">Nc - No Compression</a></li>
+<li><a href="noq.html">Noq - Remove the Query Section</a></li>
+<li><a href="rl.html">Rl - Recalculate Length in TCP</a></li>
+<li><a href="slp.html">Slp - Add a Delay (Latency)</a></li>
+<li><a href="ttl.html">Ttl - Set Custom TTL Value</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="newid.html">NewId - Set Random Transaction ID</a></li>
+<li><a href="flgs.html">Flgs - Set Custom Flags in the Header</a></li>
+<li><a href="qurr.html">Qurr - Set Question RRs in the Header</a></li>
+<li><a href="anrr.html">Anrr - Set Answer RRs in the Header</a></li>
+<li><a href="aurr.html">Aurr - Set Authority RRs in the Header</a></li>
+<li><a href="adrr.html">Adrr - Set Additional RRs in the Header</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

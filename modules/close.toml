@@ -1,12 +1,37 @@
 [module]
 name = "close"
 type = "feature"
-info = "Close the connection"
-desc = "Don't respond, just close the connection immediately."
-author = "ivan.jedek@oryxlabs.com"
+info = "Close the Connection"
+short = "Close the connection"
 category = "Empty responses"
+desc = '''
+The module is designed to close the connection without returning any response to the client.
 
-code = '''
+In TCP mode, it immeditaly sends a TCP packet with the FIN (Finish) flag to the client, gracefully terminating the connection.
+
+In UDP mode, no response is sent, resulting in a timeout.
+'''
+seealso = "timeout, empty1, empty2, empty3, empty4, empty5, empty6, empty7, queryback1, queryback2, queryback3, queryback4"
+format = '''
+**`close.yourdomain.com`**
+
+This module has no parameters.
+'''
+
+[[module.example]]
+description = "In UDP mode, the connection is terminated without sending any response, leading to a timeout. The client makes three attempts:"
+command = "dig close.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In TCP mode, the connection is gracefully terminated without sending any response. Once again, the client makes three attempts to resolve the error:"
+command = "dig close.yourdomain.com @127.0.0.1 +tcp"
+
+[[module.example]]
+description = "Like other features, you can append anything to the feature name to avoid receiving cached responses from the target DNS resolver. This forces the target resolver to actively communicate with our PolarDNS server instead of responding with cached answers. Using a random number is the most effective strategy:"
+command = "dig close${RANDOM}.yourdomain.com @10.211.55.2"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("close"):
    # Close the connection
    log("just closing connection")

@@ -1,12 +1,59 @@
 [module]
 name = "empty5"
 type = "feature"
-info = "Only TXID, flags, RRs and NULL bytes"
-desc = "Send normal DNS header including TXID, flags and number of RRs, but then send only arbitrary number of NULLs."
-author = "ivan.jedek@oryxlabs.com"
+info = "Only DNS Header and NULL Bytes"
+short = "Send only DNS header and NULL bytes"
 category = "Empty responses"
+desc = '''
+Every DNS packet contains the following parts:
 
-code = '''
+- **Header:**
+	- **Length field** (TCP only, 2 bytes)
+	- **Transaction ID** (2 bytes)
+	- **Flags field** (2 bytes)
+	- **Number of Questions** (2 bytes)
+	- **Number of Answer RRs** (2 bytes)
+	- **Number of Authority RRs** (2 bytes)
+	- **Number of Additional RRs** (2 bytes)
+- **Body**:
+	- **Queries Section**: Contains **QNAME**, **QTYPE**, and **QCLASS** for each query.
+	- **Answer Section**: Contains answer RRs (if any).
+	- **Authority Section**: Contains authoritative RRs (if any).
+	- **Additional Section**: Contains additional RRs (if any).
+
+This module is designed to respond with an incomplete DNS response consisting only of the DNS header (containing the **Transaction ID**, **Flags field**, and the **number of RRs**). Instead of a body, it sends an arbitrary number of NULL bytes (`\\000`).
+
+This is likely to result in unexpected errors.
+
+Note that DNS packets in TCP mode must include a **Length field** at the beginning. This module ensures that the Length field is correctly set when operating in TCP mode.
+'''
+format = '''
+**`empty5.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many NULL bytes should be generated in the response. By default, a single NULL byte is generated.
+'''
+seealso = "close, timeout, empty1, empty2, empty3, empty4, empty6, empty7, queryback1, queryback2, queryback3, queryback4"
+
+[[module.example]]
+description = "In the default usage, the DNS response body consists only of a single NULL byte. The parser identifies the packet as malformed and is unable to parse it correctly since there is just a single NULL byte in the body:"
+command = "dig empty5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we request the DNS response body to consist only of 5 NULL bytes. As a result, the Query section appears severely malformed (containing only NULL bytes), and the entire Answer section is missing. The parser attempts three times to resolve the errors in this case:"
+command = "dig empty5.5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we request the DNS response body to consist only of 100 NULL bytes. Consequently, both the Query and Answer sections are filled entirely with NULL bytes, making the packet impossible to interpret. The parser fails to process it, resulting in a format error:"
+command = "dig empty5.100.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In TCP mode, the results are the same as in the previous example in UDP mode, resulting in a format error:"
+command = "dig empty5.100.yourdomain.com @127.0.0.1 +tcp"
+
+[module.code]
+python = '''
 if req.first_subdomain.startswith("empty5"):
    # Send the query ID + set in DNS header that there is an ANSWER
    # + send arbitrary number of NULLs

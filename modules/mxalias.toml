@@ -1,12 +1,46 @@
 [module]
 name = "mxalias"
 type = "feature"
-info = "MX random N aliases"
-desc = "Respond with N number of MX records containing random chain index. BEWARE: This could result in multiplication."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "Random MX Aliases"
+short = "MX random alias generator"
+category = "Aliases"
+records = "MX"
+tags = "Amplification, Domain Lock-Up, Denial of Service"
+rfc = "RFC1035"
+desc = '''
+This module is designed to return one or more **random aliases** using **MX (Mail Exchange)** records.
 
-code = '''
+It specifically generates a random MX alias record in the format `mxalias######.yourdomain.com`, where `######` represents a random number.
+
+The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.
+
+Note that this feature provides the same functionality as requesting the MX record for the generic [alias] feature. Responding with multiple records (aliases) in a single response is also supported.
+
+:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
+'''
+format = '''
+**`mxalias.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many aliases should be generated in the response.
+'''
+seealso = "mxloop, mxchain, alias, cnalias, dnalias, htalias, mxalias, nptenumalias, nsalias, ptralias, spfalias1, spfalias2, sralias, svalias"
+
+[[module.example]]
+description = "By default, it returns a single MX alias:"
+command = "dig mxalias.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Same example as above, but this time we explicitly specify that we want to receive a single MX record:"
+command = "dig mxalias.1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we specify that we want to receive five MX aliases:"
+command = "dig mxalias.5.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
            elif req.first_subdomain.startswith("mxalias"):
               # Send multiple random MX aliases
               # BEWARE: This could result in multiplication

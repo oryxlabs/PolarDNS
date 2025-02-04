@@ -1,0 +1,18 @@
+<pre class='output-block'><strong># dig TXT loop.10.10.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; TXT loop.10.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 43528
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;loop.10.10.yourdomain.com.	IN	TXT
+
+;; ANSWER SECTION:
+loop.10.10.yourdomain.com. 60	IN	TXT	&quot;v=spf1 include:loop.10.1.yourdomain.com ~all&quot;
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Nov 07 11:35:54 +04 2024
+;; MSG SIZE  rcvd: 100</pre>

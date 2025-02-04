@@ -1,12 +1,50 @@
 [module]
 name = "spfalias1"
 type = "feature"
-info = "TXT SPF random N aliases"
-desc = "Respond with N number of SPF(TXT) aliases containing random chain index (`spfalias####.yourdomain.com`). BEWARE: This could result in multiplication."
-author = "ivan.jedek@oryxlabs.com"
-category = "Aliases, loops and chains"
+info = "Random SPF (TXT) Aliases (Variant 1)"
+short = "SPF (TXT) random alias generator (variant 1)"
+category = "Aliases"
+records = "TXT, SPF"
+tags = "Amplification, Domain Lock-Up, Denial of Service"
+rfc = "RFC4408, RFC7208"
+desc = '''
+This module is designed to generate DNS responses with **SPF (Sender Policy Framework)** records that contain **random aliases**. The SPF protocol is used for authorizing domains during email communication.
 
-code = '''
+This variant can produce multiple SPF entries, each contained within a single TXT record. In this case, each SPF entry contains a single `include:` parameter with a randomly generated domain name (alias). This alias is in the format `spfalias1#####.yourdomain.com` where `#####` represents a random number.
+
+The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.
+
+Note that this feature provides the same functionality as requesting the TXT record for the generic [alias] feature. Responding with multiple records (aliases) in a single response is also supported.
+
+:warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
+'''
+format = '''
+**`spfalias1.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<NUMBER>`** parameter defines how many aliases should be generated in the response.
+'''
+seealso = "spfloop, spfchain, alias, cnalias, dnalias, htalias, mxalias, nptenumalias, nsalias, ptralias, spfalias1, spfalias2, sralias, svalias"
+
+[[module.example]]
+description = "By default, the module returns a single SPF (TXT) alias:"
+command = "dig spfalias1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Same example as above, but this time we explicitly specify that we want to receive a single SPF (TXT) record:"
+command = "dig spfalias1.1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this case, we specify that we want to receive five SPF (TXT) aliases:"
+command = "dig spfalias1.5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Here we can see that resolving any of the generated aliases leads to more aliases, potentially causing an infinite recursion:"
+command = "dig spfalias12345.5.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
            elif req.first_subdomain.startswith("spfalias1"):
               # Send multiple SPF (TXT) records with a random alias in the include parameter
               # BEWARE: This could result in multiplication

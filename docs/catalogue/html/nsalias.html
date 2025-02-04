@@ -1,0 +1,113 @@
+---
+layout: default
+title: "NsAlias - Random NS Aliases"
+parent: "Aliases"
+---
+
+<!DOCTYPE html>
+<head>
+<title>NsAlias - Random NS Aliases</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>NsAlias - Random NS Aliases</h1>
+<p>This module is designed to return one or more <strong>random aliases</strong> using <strong>NS (Name Server)</strong> records.</p>
+<p>It specifically generates a random NS alias record in the format <code class='code-block'>nsalias######.yourdomain.com</code>, where <code class='code-block'>######</code> represents a random number.</p>
+<p>The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.</p>
+<p>Note that this feature provides the same functionality as requesting the NS record for the generic <a href="alias.html">alias</a> feature. Responding with multiple records (aliases) in a single response is also supported.</p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../aliases.html'>Aliases</a></p><p><strong>Tags:</strong> Amplification, Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>nsalias.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines how many aliases should be generated in the response.</li>
+</ul>
+<h2>Examples</h2>
+<p>By default, it returns a single NS alias:</p>
+<div><pre class='output-block'><strong># dig nsalias.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; nsalias.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 41927
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;nsalias.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+nsalias.yourdomain.com.	60	IN	NS	nsalias819058.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 16 09:37:12 +04 2024
+;; MSG SIZE  rcvd: 82
+</pre></div><p><a href='../outputs/nsalias/dig_nsalias.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Same example as above, but this time we explicitly specify that we want to receive a single NS record:</p>
+<div><pre class='output-block'><strong># dig nsalias.1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; nsalias.1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 14846
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;nsalias.1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+nsalias.1.yourdomain.com. 60	IN	NS	nsalias328570.1.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 16 09:37:14 +04 2024
+;; MSG SIZE  rcvd: 86
+</pre></div><p><a href='../outputs/nsalias/dig_nsalias.1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this case, we specify that we want to receive five NS aliases:</p>
+<div><pre class='output-block'><strong># dig nsalias.5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; nsalias.5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 23339
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;nsalias.5.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+nsalias.5.yourdomain.com. 60	IN	NS	nsalias486130.5.yourdomain.com.
+nsalias.5.yourdomain.com. 60	IN	NS	nsalias559338.5.yourdomain.com.
+nsalias.5.yourdomain.com. 60	IN	NS	nsalias36708.5.yourdomain.com.
+nsalias.5.yourdomain.com. 60	IN	NS	nsalias928003.5.yourdomain.com.
+nsalias.5.yourdomain.com. 60	IN	NS	nsalias591080.5.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Wed Oct 16 09:37:15 +04 2024
+;; MSG SIZE  rcvd: 261
+</pre></div><p><a href='../outputs/nsalias/dig_nsalias.5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="alias.html">Alias - Random Aliases</a></li>
+<li><a href="cnalias.html">CnAlias - Random CNAME Aliases</a></li>
+<li><a href="dnalias.html">DnAlias - Random DNAME Aliases</a></li>
+<li><a href="htalias.html">HtAlias - Random HTTPS Aliases</a></li>
+<li><a href="mxalias.html">MxAlias - Random MX Aliases</a></li>
+<li><a href="nptenumalias.html">NptEnumAlias - Random NAPTR ENUM Aliases</a></li>
+<li><a href="ptralias.html">PtrAlias - Random PTR Aliases</a></li>
+<li><a href="spfalias1.html">SpfAlias1 - Random SPF (TXT) Aliases (Variant 1)</a></li>
+<li><a href="spfalias2.html">SpfAlias2 - Random SPF (TXT) Aliases (Variant 2)</a></li>
+<li><a href="sralias.html">SrAlias - Random SRV Aliases</a></li>
+<li><a href="svalias.html">SvAlias - Random SVCB Aliases</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="nsloop.html">NsLoop - NS Alias Loops</a></li>
+<li><a href="nschain.html">NsChain - NS Alias Chains</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

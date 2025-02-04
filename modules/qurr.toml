@@ -1,0 +1,44 @@
+[module]
+name = "qurr"
+type = "modifier"
+info = "Set Question RRs in the Header"
+short = "Modify the number of Questions (RRs) in the DNS response header"
+category = "Header manipulation"
+desc = '''
+This modifier allows to modify the number of Questions (RRs) in the DNS response header.
+
+It's important to note that this does not change the actual Query section in the DNS response body in any way. To remove the Query section from the body, use the [noq] modifier.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+'''
+format = '''
+**`*.qurr<NUMBER>.*`**
+
+Where:
+
+- The **`<NUMBER>`** parameter specifies the number of Questions in the DNS response header. Note that the maximum number of Questions that can be set is 65535, as it is a 2-byte field.
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = '''
+All the examples below use the basic [always] feature which always resolves to an IP address.
+
+In this example, we set the number of Questions (RRs) in the DNS header to 0, which indicates that there is no query in this DNS response. This arrangement leads to a warning about a malformed packet because the actual Query is still present in the body and is now being interpreted as the answer, which cannot be properly parsed. Moreover, there are now extra bytes at the end of the packet. These represent the actual answer, which is now completely ignored:
+'''
+command = "dig always.qurr0.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Similar to the previous example, but in this case, we set the number of Questions (RRs) in the DNS header to 1. This adjustment actually accurately reflects the actual content of the DNS response body, resulting in a completely valid and correct answer:"
+command = "dig always.qurr1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Similar to the previous examples, but in this case, we set the number of Questions (RRs) in the DNS header to 2, which indicates that there are two queries in this DNS response. This arrangement leads to a warning about a malformed packet because now the actual Answer in the body is interpreted as the second query. Moreover, the extra bytes at the end of the packet represent only the remaining fragment of the actual answer, which cannot be parsed into anything meaningful. Therefore, no real answer appears in this response:"
+command = "dig always.qurr2.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Similar to the previous examples, but in this case, we set the number of questions in the DNS header to 3, which indicates that there are three queries in this DNS response. This arrangement leads to communication errors and warnings about malformed packet because the packet cannot be parsed correctly in this manner. The actual Answer in the body is now interpreted as the second and third query, leading to critical parsing errors:"
+command = "dig always.qurr3.yourdomain.com @127.0.0.1"
+
+[module.code]
+# The code is located in the polardns.py file.

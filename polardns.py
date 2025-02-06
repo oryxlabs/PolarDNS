@@ -1249,7 +1249,7 @@ def add_modules_and_rerun():
             new_file.write(line)
 
     # Replace the current process with the new script, passing all arguments
-    os.execvp(sys.executable, [sys.executable, new_script_name] + sys.argv[1:])
+    os.execvp(sys.executable, [sys.executable, "-u", new_script_name] + sys.argv[1:])
 
 ################################
 

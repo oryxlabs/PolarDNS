@@ -13,7 +13,7 @@ parent: "Alias loops"
 <body>
 <h1>PtrLoop2 - PTR Alias Loops (Variant 2)</h1>
 <p>This module implements <strong>alias loops</strong> using <strong>reverse DNS lookups (PTR records)</strong>, which map IP addresses back to domain names.</p>
-<p>It specifically handles reverse DNS queries for any IP address within the private <code class='code-block'>198.51.100.0/24</code> network range, known as TEST-NET-2, which is typically used for documentation and examples.</p>
+<p>It specifically handles reverse DNS queries for any IP address within the <code class='code-block'>198.51.100.0/24</code> private network range, known as TEST-NET-2, which is typically used for documentation and examples.</p>
 <p>When this module receives a reverse DNS lookup query for an IP address such as <code class='code-block'>198.51.100.x</code> (this means searching for the PTR record for <code class='code-block'>x.100.51.198.in-addr.arpa</code> domain), it responds with a PTR record with incremented domain name, cycling through addresses from <code class='code-block'>198.51.100.0</code> to <code class='code-block'>198.51.100.255</code> indefinitely, effectively creating a <strong>loop</strong>.</p>
 <p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This could potentially lead to a domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../alias-loops.html'>Alias loops</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a></p>
 <h2>Format</h2>

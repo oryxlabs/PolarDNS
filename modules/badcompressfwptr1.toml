@@ -27,7 +27,7 @@ seealso = "badcompress1, badcompress2, badcompressfwptr1, badcompressfwptr2, bad
 [[module.example]]
 description = "The following query demonstrates the module’s functionality. It returns a CNAME record compressed in a way that violates DNS specifications - specifically by using forward and double compression pointers. We can see that the client (dig) is unable to parse such a response:"
 command = "dig badcompressfwptr1.yourdomain.com @127.0.0.1"
-append = '''However, by examining the PCAP file in Wireshark, we can see that it parses the response without any issues. This demonstrates its superior parsing capabilities, as it is able to handle both forward and double compression pointers despite violating DNS specifications.
+append = '''However, by examining the PCAP file in Wireshark, we can see that it parses the response without any issues. This demonstrates Wireshark's superior parsing capabilities, as it is able to handle both forward and double compression pointers despite violating DNS specifications.
 
 This also shows that different DNS resolvers and clients may handle such malformed responses differently, making this an intriguing use case for testing.'''
 

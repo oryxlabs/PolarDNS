@@ -14,7 +14,7 @@ has_toc: false
 
 1. [Local Setup](local-setup)
 1. [Public Setup (External Domain)](public-setup)
-1. [Building and Running PolarDNS Docker Image](docker-setup)
+1. [PolarDNS in a Docker](docker-setup)
 
 --- 
 

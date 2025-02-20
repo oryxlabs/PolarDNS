@@ -31,19 +31,14 @@ Make sure you are using Python 3.11 or newer to run the PolarDNS server:
 ```
 python polardns.py
 ```
-Alternatively, you can also deploy PolarDNS as a Docker image for which you can use the following steps.
 
-### Building and running PolarDNS Docker image
+### PolarDNS in a Docker
 
-1) To build the Docker image for PolarDNS:
+You can also run PolarDNS in a Docker:
 ```
-docker build -t polar_dns .
+docker run -p 53:53/tcp -p 53:53/udp oryxlabs/polardns
 ```
 
-2) To run the PolarDNS container:
-```
-docker run -d --name polar_dns_container -p 53:53/tcp -p 53:53/udp polar_dns
-```
 ## Working with PolarDNS
 
 By default, the server starts listening on all interfaces on UDP and TCP port 53 (0.0.0.0:53), ready to answer DNS queries.

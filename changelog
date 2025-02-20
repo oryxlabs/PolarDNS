@@ -1,3 +1,8 @@
+20/Feb/2025
+- updated documentation
+- published Docker image to Docker Hub (oryxlabs/polardns)
+- added a script `gendocs.py` for generating the documentation
+
 04/Feb/2025
 - release version 1.6.0
 

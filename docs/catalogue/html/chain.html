@@ -12,7 +12,7 @@ parent: "Alias chains"
 </head>
 <body>
 <h1>Chain - Alias Chains</h1>
-<p>This module implements <strong>incremental alias chains</strong> in DNS using variety of different record (resource) types. It supports the following record types:</p>
+<p>This module implements <strong>incremental alias chains</strong> using variety of different record (resource) types. It supports the following record types:</p>
 <ul>
 <li>CNAME (Canonical Name)</li>
 <li>DNAME (Delegation Name)</li>
@@ -112,7 +112,7 @@ chain9999999999999999999999999.yourdomain.com. 60 IN CNAME chain1000000000000000
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; WHEN: Fri Nov 08 23:23:34 +04 2024
 ;; MSG SIZE  rcvd: 123</pre></div><p><a href='../outputs/chain/dig_chain9999999999999999999999999.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>The domain name will never be fully resolved as the incremental process continues indefinitely.</p></p><br>
-<p>In this example, we ask for a different record type. Specifically, we request a DNAME alias record with an index of 100:</p>
+<p>As mentioned in the description, this module supports multiple different record types. In this example, we ask for a DNAME record type. Specifically, we request a DNAME alias record with an index of 100:</p>
 <div><pre class='output-block'><strong># dig DNAME chain100.yourdomain.com @127.0.0.1</strong>
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; DNAME chain100.yourdomain.com @127.0.0.1
@@ -150,7 +150,7 @@ chain1000.yourdomain.com. 60	IN	MX	0 chain1001.yourdomain.com.
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; WHEN: Fri Nov 08 23:23:37 +04 2024
 ;; MSG SIZE  rcvd: 82</pre></div><p><a href='../outputs/chain/dig_MX_chain1000.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that we received an incremented MX alias record.</p></p><br>
-<p>In this example, we request an SPF record with an index of 10,000. Since SPF records are published within TXT records in DNS, we request a TXT record in this case:</p>
+<p>In this example, we request an SPF record with an index of 10,000. Since SPF records are published within TXT records, we request a TXT record in this case:</p>
 <div><pre class='output-block'><strong># dig TXT chain10000.yourdomain.com @127.0.0.1</strong>
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; TXT chain10000.yourdomain.com @127.0.0.1

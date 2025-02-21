@@ -6,7 +6,7 @@ short = "SVCB random alias generator"
 category = "Aliases"
 records = "SVCB"
 tags = "Amplification, Domain Lock-Up, Denial of Service"
-rfc = "RFC9460"
+rfc = "RFC9460, RFC8552, RFC8553"
 desc = '''
 This module is designed to return one or more **random aliases** using **SVCB (Service Binding)** records.
 
@@ -14,7 +14,7 @@ It specifically generates a random SVCB alias record in the format `svalias#####
 
 The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.
 
-Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, "service labels", or "underscore labels". It also supports returning multiple records in a single response.
+Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, service labels, or underscore labels ([RFC8552](https://datatracker.ietf.org/doc/rfc8552/), [RFC8553](https://datatracker.ietf.org/doc/rfc8553/)).
 
 Note that this module provides the same functionality as requesting the SVCB record for the generic [alias] module.
 

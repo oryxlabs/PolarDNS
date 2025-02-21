@@ -6,7 +6,7 @@ short = "SRV random alias generator"
 category = "Aliases"
 records = "SRV"
 tags = "Amplification, Domain Lock-Up, Denial of Service"
-rfc = "RFC2782"
+rfc = "RFC2782, RFC8552, RFC8553"
 desc = '''
 This module is designed to return one or more **random aliases** using **SRV (Service Locator)** records.
 
@@ -14,11 +14,11 @@ It specifically generates a random SRV alias record in the format `sralias######
 
 The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.
 
-The SRV records include fields for Priority, Weight, and Port number. In this module, both the Priority and Weight are set to 0, while the Port number is randomly assigned for each record.
+Note that SRV records include fields for Priority, Weight, and Port number. In this module, both the Priority and Weight are set to 0, while the Port number is randomly generated for each record.
 
-Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, "service labels", or "underscore labels". It also supports returning multiple records in a single response.
+Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, service labels, or underscore labels ([RFC8552](https://datatracker.ietf.org/doc/rfc8552/), [RFC8553](https://datatracker.ietf.org/doc/rfc8553/)).
 
-Note that this feature provides the same functionality as requesting the SRV record for the generic [alias] feature.
+Note that this feature provides the same functionality as requesting the SRV record for the generic [alias] feature. Responding with multiple records (aliases) in a single response is also supported.
 
 :warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 '''

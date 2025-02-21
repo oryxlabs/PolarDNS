@@ -14,10 +14,10 @@ parent: "Alias loops"
 <h1>SvLoop - SVCB Alias Loops</h1>
 <p>This module implements <strong>alias loops</strong> using <strong>SVCB (Service Binding)</strong> records. The loops can be a <strong>direct loop</strong>, where the alias points back to the <strong>same domain name</strong> as in the original query, or they can include <strong>multiple elements</strong>, cycling through a specified number of domains.</p>
 <p>The idea is that if the client/resolver decides to resolve this further, it will enter an <strong>infinite loop</strong>. In practice, however, most modern resolvers detect such loops and terminate the resolution.</p>
-<p>The SVCB records include a SvcPriority field. In this module, the field always set to 0.</p>
-<p>Additionally, the module supports queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, &quot;service labels&quot;, or &quot;underscore labels&quot;.</p>
+<p>Note that SVCB records include a SvcPriority field. In this module, the field always set to 0.</p>
+<p>Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, service labels, or underscore labels (<a href="https://datatracker.ietf.org/doc/rfc8552/" target="_blank">RFC8552</a>, <a href="https://datatracker.ietf.org/doc/rfc8553/" target="_blank">RFC8553</a>).</p>
 <p>Note that this feature provides the same functionality as requesting a SVCB record for the generic <a href="loop.html">loop</a> feature.</p>
-<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to a domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../alias-loops.html'>Alias loops</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc9460/" target="_blank">RFC9460</a></p>
+<p><g-emoji>&#x26A0;</g-emoji><strong>BEWARE</strong><g-emoji>&#x26A0;</g-emoji>This can potentially lead to a domain lock-up (DoS).</p><p><strong>Category:</strong> <a href='../alias-loops.html'>Alias loops</a></p><p><strong>Tags:</strong> Domain Lock-Up, Denial of Service</p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc9460/" target="_blank">RFC9460</a>, <a href="https://datatracker.ietf.org/doc/rfc8552/" target="_blank">RFC8552</a>, <a href="https://datatracker.ietf.org/doc/rfc8553/" target="_blank">RFC8553</a></p>
 <h2>Format</h2>
 <pre class='output-block'><strong>svloop.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
 

@@ -6,7 +6,7 @@ short = "SVCB chain alias generator"
 category = "Alias chains"
 records = "SVCB"
 tags = "Domain Lock-Up, Denial of Service"
-rfc = "RFC9460"
+rfc = "RFC9460, RFC8552, RFC8553"
 desc = '''
 This module implements **incremental alias chains** using **SVCB (Service Binding)** records. It returns an alias record with an incremented domain name index, forming a chain that continues to increment indefinitely.
 
@@ -16,9 +16,9 @@ The concept is that if the client/resolver attempts to resolve this alias furthe
 
 However, in practice, most modern resolvers detect such chains and terminate the resolution after encountering a certain number of consecutive aliases (e.g., 20 aliases) or upon reaching a specified time limit for the resolution (e.g., 30 seconds).
 
-The SVCB records include a priority field called SvcPriority. In this module, SvcPriority is set to 0 for every record.
+Note that SVCB records include a priority field called SvcPriority. In this module, SvcPriority is set to 0 for every record.
 
-Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, "service labels", or "underscore labels".
+Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, service labels, or underscore labels ([RFC8552](https://datatracker.ietf.org/doc/rfc8552/), [RFC8553](https://datatracker.ietf.org/doc/rfc8553/)).
 
 Note that this feature provides the same functionality as requesting an SVCB record for the generic [chain] feature.
 

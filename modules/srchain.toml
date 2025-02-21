@@ -6,7 +6,7 @@ short = "SRV chain alias generator"
 category = "Alias chains"
 records = "SRV"
 tags = "Domain Lock-Up, Denial of Service"
-rfc = "RFC2782"
+rfc = "RFC2782, RFC8552, RFC8553"
 desc = '''
 This module implements **incremental alias chains** using **SRV (Service Locator)** records. It returns an alias record with an incremented domain name index, forming a chain that continues to increment indefinitely.
 
@@ -16,9 +16,9 @@ The concept is that if the client/resolver attempts to resolve this alias furthe
 
 However, in practice, most modern resolvers detect such chains and terminate the resolution after encountering a certain number of consecutive aliases (e.g., 20 aliases) or upon reaching a specified time limit for the resolution (e.g., 30 seconds).
 
-The SRV records include fields for Priority, Weight, and Port number. In this module, both the Priority and Weight are set to 0, while the Port number is randomly assigned for each record.
+Note that SRV records include fields for Priority, Weight, and Port number. In this module, both the Priority and Weight are set to 0, while the Port number is randomly generated for each record.
 
-Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, "service labels", or "underscore labels".
+Additionally, the module supports DNS queries for locating different services using the underscore (_) prefix notation, also known as Attrleaf naming pattern, service labels, or underscore labels ([RFC8552](https://datatracker.ietf.org/doc/rfc8552/), [RFC8553](https://datatracker.ietf.org/doc/rfc8553/)).
 
 Note that this feature provides the same functionality as requesting an SRV record for the generic [chain] feature.
 
@@ -51,8 +51,9 @@ command = "dig srchain9999999999999999999999999.yourdomain.com @127.0.0.1"
 append = "The domain name will never be fully resolved as the incremental process continues indefinitely."
 
 [[module.example]]
-description = "As mentioned in the description, this module also supports DNS queries for locating different services using the underscore (_) prefix notation. This example demonstrates such usage, where we search for an HTTP service specifically designed for mobile devices and running over TCP. We receive an incremented SRV alias record as expected:"
+description = "As mentioned in the description, this module also supports DNS queries for locating different services using the underscore (_) prefix notation. This example demonstrates such usage, where we search for an HTTP service running over TCP specifically designed for mobile devices:"
 command = "dig _mobile._http._tcp.srchain100.yourdomain.com @127.0.0.1"
+append = "We can see that we received an incremented SRV alias record."
 
 [module.code]
 python = '''

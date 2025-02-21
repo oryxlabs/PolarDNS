@@ -76,13 +76,13 @@ You should receive an ``A`` record with the ``2.3.4.5`` IP address again, but th
 
 In the above example, we have used the [`always`](https://oryxlabs.github.io/PolarDNS/catalogue/html/always.html) basic feature (which always resolves to something), and combined it with the [`ttl`](https://oryxlabs.github.io/PolarDNS/catalogue/html/ttl.html) modifier to adjust the TTL value and the [`slp`](https://oryxlabs.github.io/PolarDNS/catalogue/html/slp.html) modifier to wait before sending the response out.
 
-## Main functionalities (features and response modifiers)
+## PolarDNS functionalities
 
 PolarDNS has the following main functionalities:
 1. **Features**: These can produce various DNS responses. Most features have parameters, meaning that it is possible to adjust their behavior to produce variety of different DNS responses.
 1. **Response modifiers**: These can further modify the DNS responses coming out from the PolarDNS server. Modifiers are independent on the selected feature and can be combined freely.
 
-There are around 60 different features and 11 response modifiers currently implemented. By using different features and combining them together with different response modifiers, it is possible to produce countless variants of given response.
+There are over 70 different features and 18 response modifiers currently implemented. By using different features and combining them together with different response modifiers, it is possible to produce countless variants of given response.
 
 See the included **[catalogue](https://oryxlabs.github.io/PolarDNS/catalogue/catalogue.html)** of all implemented **features** and **response modifiers**.
 
@@ -115,11 +115,11 @@ See the [BlackHat MEA 2023](docs/pptx/) presentations (including BONUS slides) f
 
 Here's a high-level overview of what you need in order to start testing recursive DNS servers.
 
-1. Purchase a domain for your tests e.g., example123.com
+1. Purchase a domain for your tests e.g., ``example123.com`` using your favorite domain registrar.
 2. Get 2 Linux VPS instances with public and static IP addresses - these will be your nameservers.
-3. Deploy the PolarDNS server on both of your VPS instances (nameservers)
-4. Make sure to edit the ``polardns.toml`` configuration file and change your domain name and nameserver IP addresses
-5. In the domain registrar, select to manage the domain using your own nameservers (you will need to specify 2 public IPs of your servers - primary and secondary NS)
+3. Deploy the PolarDNS server on both instances.
+4. Edit the ``polardns.toml`` configuration file on each instance and change your domain name and nameserver IP addresses accordingly - same configuration on both.
+5. In the domain registrar, select to manage the domain using your own nameservers. You will need to specify the primary and secondary NS - provide IP addresses of your instances.
 
 Now your infrastructure should be ready for testing of any recursive DNS resolver of your choice.
 

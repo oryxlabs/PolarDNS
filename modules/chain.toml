@@ -7,7 +7,7 @@ category = "Alias chains"
 records = "NS, MX, SRV, TXT, SPF, SVCB, HTTPS, CNAME, DNAME"
 tags = "Domain Lock-Up, Denial of Service"
 desc = '''
-This module implements **incremental alias chains** in DNS using variety of different record (resource) types. It supports the following record types:
+This module implements **incremental alias chains** using variety of different record (resource) types. It supports the following record types:
 
 - CNAME (Canonical Name)
 - DNAME (Delegation Name)
@@ -56,7 +56,7 @@ command = "dig chain9999999999999999999999999.yourdomain.com @127.0.0.1"
 append = "The domain name will never be fully resolved as the incremental process continues indefinitely."
 
 [[module.example]]
-description = "In this example, we ask for a different record type. Specifically, we request a DNAME alias record with an index of 100:"
+description = "As mentioned in the description, this module supports multiple different record types. In this example, we ask for a DNAME record type. Specifically, we request a DNAME alias record with an index of 100:"
 command = "dig DNAME chain100.yourdomain.com @127.0.0.1"
 append = "We can see that we received an incremented DNAME alias record."
 
@@ -66,7 +66,7 @@ command = "dig MX chain1000.yourdomain.com @127.0.0.1"
 append = "We can see that we received an incremented MX alias record."
 
 [[module.example]]
-description = "In this example, we request an SPF record with an index of 10,000. Since SPF records are published within TXT records in DNS, we request a TXT record in this case:"
+description = "In this example, we request an SPF record with an index of 10,000. Since SPF records are published within TXT records, we request a TXT record in this case:"
 command = "dig TXT chain10000.yourdomain.com @127.0.0.1"
 append = "Again, we received an incremented SPF alias record as the answer. The domain name will never be fully resolved as the incremental process continues indefinitely."
 

@@ -39,7 +39,7 @@ In a nutshell, the easiest way of adding a new feature to PolarDNS is to take an
 Here's a step-by-step overview of the process:
 
 1. Edit the `polardns/core.py` file
-2. Create a copy of a similar feature, such as the [`always`](docs/catalogue/general-features.md#always-resolve-to-ip-always) feature
+2. Create a copy of a similar feature, such as the [`always`](https://oryxlabs.github.io/PolarDNS/catalogue/html/always.html) feature
 3. Implement the new feature:
    - 3.1. Change the initial matching rule
    - 3.2. Change the logic to build your DNS response
@@ -51,7 +51,7 @@ Let's briefly discuss the modularity in PolarDNS.
 
 ### <a name="polardns-modularity"></a>PolarDNS modularity
 
-Since version `v1.1`, PolarDNS has supported features defined as standalone, pluggable modules in the form of `.toml` files. You can look at the module repository [here](https://github.com/oryxlabs/PolarDNS/tree/main/modules).
+Since version `v1.1`, PolarDNS has supported features defined as standalone, pluggable modules in the form of `.toml` files. You can look at the module repository [here](https://github.com/oryxlabs/PolarDNS/tree/main/polardns/modules).
 
 Internally, the modularity of PolarDNS is implemented in such a way that, when you start PolarDNS, it first creates a copy of itself and incorporates all the modules' code. This generates the `polardns_real.py` file. It then runs this newly created file, and that's when the PolarDNS server actually begins operating.
 
@@ -99,7 +99,7 @@ They all share a similar structure that should be maintained for clarity. Essent
 3. Steps to construct the ANSWER section. This is where you will probably make the most changes.
 4. Steps to send the packet out and print a message on the console
 
-Here's the actual code for the [`always`](docs/catalogue/general-features.md#always-resolve-to-ip-always) feature, where you can see these sections and what all the code means:
+Here's the actual code for the [`always`](https://oryxlabs.github.io/PolarDNS/catalogue/html/always.html) feature, where you can see these sections and what all the code means:
 
 <img width="1000" alt="PolarDNS always feature code explained" src="assets/polardns-always-feature-code-explained.gif">
 

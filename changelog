@@ -1,4 +1,5 @@
 10/Mar/2025
+- release version 1.6.1
 - restructured the project into a package installable via `pip`
 - created a wrapper `polardns.py` to support traditional standalone usage
 - published the `polardns` package to PyPI repository (https://pypi.org/project/polardns/)

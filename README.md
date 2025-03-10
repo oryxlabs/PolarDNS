@@ -1,5 +1,7 @@
 <img width="800" alt="PolarDNS logo" src="docs/assets/polardns-logo-for-white-bg.png">
-PolarDNS is a specialized authoritative DNS server written in Python 3.x, which allows the operator to produce fully custom DNS responses, suitable for DNS protocol testing purposes.
+PolarDNS is a specialized authoritative DNS server written in Python 3.x, originally developed as a tool for security testing of DNS recursive resolvers from the server-side.
+<br><br>
+It allows the operator to produce custom DNS responses, making it suitable for in-depth DNS protocol testing purposes.
 
 _
 
@@ -22,22 +24,52 @@ This can be useful for:
 
 ## Installation
 
-1) Install Python 3.11 or newer.
-2) (Optional) Edit the `polardns.toml` configuration file and add your domain and nameserver IP addresses.
+There are three available methods to install PolarDNS.
 
-## Running PolarDNS
+PolarDNS requires Python 3.11 or newer and has no additional dependencies.
 
-Make sure you are using Python 3.11 or newer to run the PolarDNS server:
+### Method 1: Installation via Pip
+
+This is the easiest way to install and run PolarDNS:
 ```
+pip install polardns
+polardns
+```
+
+### Method 2: Traditional installation
+
+You can also clone the repository and run PolarDNS directly:
+```
+git clone https://github.com/oryxlabs/PolarDNS.git
+cd PolarDNS
 python polardns.py
 ```
 
-### PolarDNS in a Docker
+This method is recommended if you plan to debug or modify the code, or add new features.
 
-You can also run PolarDNS in a Docker:
+### Method 3: Running PolarDNS in Docker
+
+You can also run PolarDNS in a Docker container:
 ```
 docker run -p 53:53/tcp -p 53:53/udp oryxlabs/polardns
 ```
+
+## Running PolarDNS
+
+PolarDNS server is configurable via the `polardns/polardns.toml` configuration file.
+
+- For testing purposes, the default configuration should work fine for running locally.
+- However, you may want to adjust the configuration by adding your domain and nameserver IP addresses.
+
+Upon starting PolarDNS, you should see output similar to the following:
+```
+python polardns.py
+1741599804.9039893 | PolarDNS v1.6.1 server starting up
+1741599804.9039893 | Using '/path/to/your/polardns/polardns.toml' config file
+1741599804.9039893 | Starting listener at tcp://0.0.0.0:53
+1741599804.9039893 | Starting listener at udp://0.0.0.0:53
+```
+This indicates that the server is up and running.
 
 ## Working with PolarDNS
 
@@ -118,7 +150,7 @@ Here's a high-level overview of what you need in order to start testing recursiv
 1. Purchase a domain for your tests e.g., ``example123.com`` using your favorite domain registrar.
 2. Get 2 Linux VPS instances with public and static IP addresses - these will be your nameservers.
 3. Deploy the PolarDNS server on both instances.
-4. Edit the ``polardns.toml`` configuration file on each instance and change your domain name and nameserver IP addresses accordingly - same configuration on both.
+4. Edit the ``polardns/polardns.toml`` configuration file on each instance and change your domain name and nameserver IP addresses accordingly - same configuration on both.
 5. In the domain registrar, select to manage the domain using your own nameservers. You will need to specify the primary and secondary NS - provide IP addresses of your instances.
 
 Now your infrastructure should be ready for testing of any recursive DNS resolver of your choice.

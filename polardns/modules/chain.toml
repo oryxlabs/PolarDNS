@@ -79,7 +79,7 @@ python = '''
               ### QUESTION SECTION ########
               if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
-              new_domain_name = increment_chain(req.full_domain)
+              new_domain_name = increment_chain()
               bindom = convDom2Bin(new_domain_name)
               match req.type_str:
                  case "DNAME":

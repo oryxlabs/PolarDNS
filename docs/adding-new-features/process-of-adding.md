@@ -14,7 +14,7 @@ In a nutshell, the easiest way of adding a new feature to PolarDNS is to take an
 
 Here's a step-by-step overview of the process:
 
-1. Edit the `polardns.py` file
+1. Edit the `polardns/core.py` file
 2. Create a copy of a similar feature, such as the [`always`](../catalogue/html/always.html) feature
 3. Implement the new feature:
    - 3.1. Change the initial matching rule

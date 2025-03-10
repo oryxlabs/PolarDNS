@@ -10,7 +10,7 @@ nav_order: 7
 
 Because of the way modularity is implemented in PolarDNS, a specific method must be used when debugging.
 
-To debug PolarDNS, it's important to set breakpoints in the generated `polardns_real.py` file rather than the `polardns.py` file.
+To debug PolarDNS, it's important to set breakpoints in the generated `polardns_real.py` file rather than the `polardns/core.py` file.
 
 For example, once running PolarDNS in the PyCharm debugger, simply open the `polardns_real.py` file and set your breakpoints there to debug your code.
 

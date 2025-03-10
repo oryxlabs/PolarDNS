@@ -71,7 +71,7 @@ python = '''
               doms = []
               for i in range(answers):
                   # SVCB alias records
-                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                   bindom = convDom2Bin(dom)
                   data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
                   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
@@ -103,7 +103,7 @@ python = '''
               doms = []
               for i in range(answers):
                   # SVCB alias records
-                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                   bindom = convDom2Bin(dom)
                   data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
                   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)

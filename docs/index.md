@@ -7,7 +7,9 @@ nav_order: 1
 
 <img width="800" alt="PolarDNS logo" src="assets/polardns-logo-for-white-bg.png">
 
-PolarDNS is a specialized authoritative DNS server written in Python, which allows the operator to produce fully custom DNS responses, suitable for DNS protocol testing purposes.
+PolarDNS is a specialized authoritative DNS server written in Python 3.x, originally developed as a tool for security testing of DNS recursive resolvers from the server-side.
+
+It allows the operator to produce custom DNS responses, making it suitable for in-depth DNS protocol testing purposes.
 
 _
 

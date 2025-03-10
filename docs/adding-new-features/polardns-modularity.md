@@ -14,7 +14,7 @@ Internally, the modularity of PolarDNS is implemented in such a way that, when y
 
 This has specific implications for debugging the PolarDNS server, which we'll cover later.
 
-<g-emoji>&#x26A0;</g-emoji> Ensure you do NOT make changes to the `polardns_real.py` file, as your changes might be overwritten. <g-emoji>&#x26A0;</g-emoji>
+!!! Ensure you do NOT make changes directly to the `polardns_real.py` file, as your changes might be overwritten !!!
 
 Now let's see where we can add our code.
 

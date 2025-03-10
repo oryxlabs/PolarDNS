@@ -93,7 +93,7 @@ python = '''
                  case "DNAME":
                     type = "DNAME"
                     for i in range(answers):
-                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
                         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
                         buffer += getTypeBin("DNAME") + getClassBin("IN")
@@ -104,7 +104,7 @@ python = '''
                  case "HTTPS":
                     type = "HTTPS"
                     for i in range(answers):
-                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
                         data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
                         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
@@ -117,7 +117,7 @@ python = '''
                  case "SVCB":
                     type = "SVCB"
                     for i in range(answers):
-                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
                         data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
                         data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
@@ -131,7 +131,7 @@ python = '''
                  case "SRV":
                     type = "SRV"
                     for i in range(answers):
-                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
                         data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
                         port = random.getrandbits(16)
@@ -148,7 +148,7 @@ python = '''
                  case "MX":
                     type = "MX"
                     for i in range(answers):
-                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
                         data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
                         data_len = 2+len(bindom)                 # Priority (2 bytes) + Target domain
@@ -162,7 +162,7 @@ python = '''
                  case "NS":
                     type = "NS"
                     for i in range(answers):
-                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
                         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
                         buffer += getTypeBin("NS") + getClassBin("IN")
@@ -173,7 +173,7 @@ python = '''
                  case "TXT":
                     type = "SPF(TXT)"
                     for i in range(answers):
-                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         data = "v=spf1 include:" + dom + " ~all"
                         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
                         buffer += getTypeBin("TXT") + getClassBin("IN")
@@ -185,7 +185,7 @@ python = '''
                  case _:
                     type = "CNAME"
                     for i in range(answers):
-                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                        dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
                         data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
                         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)

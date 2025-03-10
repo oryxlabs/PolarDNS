@@ -12,11 +12,10 @@ has_toc: false
 ## Table of Contents
 {: .no_toc .text-delta }
 
-1. [Local Setup](local-setup)
-1. [Public Setup (External Domain)](public-setup)
-1. [PolarDNS in a Docker](docker-setup)
+1. [Installation Methods](installation-methods)
+1. [Running PolarDNS](running-polardns)
 
 --- 
 
-| Previous: [PolarDNS](..) | Next: [Local Setup](local-setup) |
+| Previous: [PolarDNS](..) | Next: [Installation Methods](installation-methods) |
 

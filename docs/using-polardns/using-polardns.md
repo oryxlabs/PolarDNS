@@ -20,4 +20,4 @@ has_toc: false
 
 --- 
 
-| Previous: [PolarDNS in a Docker](../installation/docker-setup) | Next: [Getting Started with PolarDNS](getting-started) |
+| Previous: [Running PolarDNS](../installation/running-polardns) | Next: [Getting Started with PolarDNS](getting-started) |

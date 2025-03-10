@@ -8,7 +8,7 @@ nav_order: 4
 
 # Where to Add the Code
 
-When adding new features to PolarDNS, it is generally recommended to work directly within the `polardns.py` file and implement the new feature there, rather than adding it to a `.toml` file right away.
+When adding new features to PolarDNS, it is generally recommended to work directly within the `polardns/core.py` file and implement the new feature there, rather than adding it to a `.toml` file right away.
 
 This is because editing a `.py` file is much more convenient. It provides the advantages of syntax highlighting, code autocompletion, and all the other benefits of modern code editors like PyCharm and others.
 

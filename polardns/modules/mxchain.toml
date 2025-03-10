@@ -50,7 +50,7 @@ append = "The domain name will never be fully resolved as the incremental proces
 python = '''
            elif req.first_subdomain.startswith("mxchain"):
               # Send incremented MX alias record.
-              new_domain_name = increment_chain(req.full_domain)
+              new_domain_name = increment_chain()
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
               ### QUESTION SECTION ########

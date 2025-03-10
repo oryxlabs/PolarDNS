@@ -53,7 +53,7 @@ python = '''
               doms = []
               for i in range(answers):
                   # NS
-                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                   bindom = convDom2Bin(dom)
                   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
                   buffer += getTypeBin("NS") + getClassBin("IN")

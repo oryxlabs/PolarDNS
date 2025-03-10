@@ -1,48 +1,48 @@
 [module]
-name = "cnalias"
+name = "dnalias"
 type = "feature"
-info = "Random CNAME Aliases"
-short = "CNAME random alias generator"
+info = "Random DNAME Aliases"
+short = "DNAME random alias generator"
 category = "Aliases"
-records = "CNAME"
+records = "DNAME"
 tags = "Amplification, Domain Lock-Up, Denial of Service"
-rfc = "RFC1034"
+rfc = "RFC2672, RFC6672"
 desc = '''
-This module is designed to return one or more **random aliases** using **CNAME (Canonical Name)** records.
+This module is designed to return one or more **random aliases** using **DNAME (Delegation Name)** records.
 
-It specifically generates a random CNAME alias record in the format `cnalias######.yourdomain.com`, where `######` represents a random number.
+It specifically generates a random DNAME alias record in the format `dnalias######.yourdomain.com`, where `######` represents a random number.
 
 The idea is that if the client/resolver decides to resolve this further, it will result in the generation of yet another alias, theoretically leading to a resolution of infinite chain of random aliases. In practice, however, most modern resolvers will terminate the resolution after encountering several consecutive alias records.
 
-Note that this feature provides the same functionality as requesting the CNAME record for the generic [alias] feature. Responding with multiple records (aliases) in a single response is also supported.
+Note that this feature provides the same functionality as requesting the DNAME record for the generic [alias] feature. Responding with multiple records (aliases) in a single response is also supported.
 
 :warning:**BEWARE**:warning:This can potentially lead to amplification effect (DoS) or domain lock-up (DoS).
 '''
 format = '''
-**`cnalias.<NUMBER>.yourdomain.com`**
+**`dnalias.<NUMBER>.yourdomain.com`**
 
 Where:
 
 - The **`<NUMBER>`** parameter defines how many aliases should be generated in the response.
 '''
-seealso = "cnloop, cnchain, alias, cnalias, dnalias, htalias, mxalias, nptenumalias, nsalias, ptralias, spfalias1, spfalias2, sralias, svalias"
+seealso = "dnloop, dnchain, alias, cnalias, dnalias, htalias, mxalias, nptenumalias, nsalias, ptralias, spfalias1, spfalias2, sralias, svalias"
 
 [[module.example]]
-description = "By default, it returns a single CNAME alias:"
-command = "dig cnalias.yourdomain.com @127.0.0.1"
+description = "By default, it returns a single DNAME alias:"
+command = "dig dnalias.yourdomain.com @127.0.0.1"
 
 [[module.example]]
-description = "Same example as above, but this time we explicitly specify that we want to receive a single CNAME record:"
-command = "dig cnalias.1.yourdomain.com @127.0.0.1"
+description = "Same example as above, but this time we explicitly specify that we want to receive a single DNAME record:"
+command = "dig dnalias.1.yourdomain.com @127.0.0.1"
 
 [[module.example]]
-description = "In this case, we specify that we want to receive five CNAME aliases:"
-command = "dig cnalias.5.yourdomain.com @127.0.0.1"
+description = "In this case, we specify that we want to receive five DNAME aliases:"
+command = "dig dnalias.5.yourdomain.com @127.0.0.1"
 
 [module.code]
 python = '''
-           elif req.first_subdomain.startswith("cnalias"):
-              # Send multiple random CNAME aliases
+           elif req.first_subdomain.startswith("dnalias"):
+              # Send multiple random DNAME aliases
               # BEWARE: This could result in multiplication
               answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 1
               ### DNS header ########
@@ -52,17 +52,17 @@ python = '''
               ### ANSWER SECTION ########
               doms = []
               for i in range(answers):
-                  # CNAME
-                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                  # DNAME
+                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                   bindom = convDom2Bin(dom)
                   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
-                  buffer += getTypeBin("CNAME") + getClassBin("IN")
+                  buffer += getTypeBin("DNAME") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)      ## TTL
                   buffer += struct.pack(">H", len(bindom))   ## Data length
-                  buffer += bindom                           ## CNAME value
+                  buffer += bindom                           ## DNAME value
                   doms.append(dom)
               # log and send
-              log("%d CNAME aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
+              log("%d DNAME aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
               send_buf(self, buffer)
               #####################################################################
 '''

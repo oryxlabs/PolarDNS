@@ -38,7 +38,7 @@ In a nutshell, the easiest way of adding a new feature to PolarDNS is to take an
 
 Here's a step-by-step overview of the process:
 
-1. Edit the `polardns.py` file
+1. Edit the `polardns/core.py` file
 2. Create a copy of a similar feature, such as the [`always`](docs/catalogue/general-features.md#always-resolve-to-ip-always) feature
 3. Implement the new feature:
    - 3.1. Change the initial matching rule
@@ -57,13 +57,13 @@ Internally, the modularity of PolarDNS is implemented in such a way that, when y
 
 This has specific implications for debugging the PolarDNS server, which we'll cover later.
 
-:exclamation: Ensure you do NOT make changes to the `polardns_real.py` file, as your changes might be overwritten :exclamation:
+:exclamation: Ensure you do NOT make changes directly to the `polardns_real.py` file, as your changes might be overwritten :exclamation:
 
 Now let's see where we can add our code.
 
 ### <a name="where-to-add-the-code"></a>Where to add the code
 
-When adding new features to PolarDNS, it is generally recommended to work directly within the `polardns.py` file and implement the new feature there, rather than adding it to a `.toml` file right away.
+When adding new features to PolarDNS, it is generally recommended to work directly within the `polardns/core.py` file and implement the new feature there, rather than adding it to a `.toml` file right away.
 
 This is because editing a `.py` file is much more convenient. It provides the advantages of syntax highlighting, code autocompletion, and all the other benefits of modern code editors like PyCharm and others.
 
@@ -117,7 +117,7 @@ Here are some excellent technical resources about the DNS protocol that can aid 
 
 Because of the way modularity is implemented in PolarDNS, a specific method must be used when debugging.
 
-To debug PolarDNS, it's important to set breakpoints in the generated `polardns_real.py` file rather than the `polardns.py` file.
+To debug PolarDNS, it's important to set breakpoints in the generated `polardns_real.py` file rather than the `polardns/core.py` file.
 
 For example, once running PolarDNS in the PyCharm debugger, simply open the `polardns_real.py` file and set your breakpoints there to debug your code.
 

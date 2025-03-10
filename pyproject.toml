@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "polardns"
+version = "1.6.1"
+description = "A specialized authoritative DNS server for penetration testing and vulnerability research."
+authors = [{name = "Ivan Jedek", email = "ivan.jedek@oryxlabs.com"}]
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+include = ["polardns*"]
+
+[project.scripts]
+polardns = "polardns.core:main"

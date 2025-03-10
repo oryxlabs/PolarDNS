@@ -73,7 +73,7 @@ python = '''
               doms = []
               for i in range(answers):
                   # SRV alias records
-                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                   port = random.getrandbits(16)
                   bindom = convDom2Bin(dom)
                   data_len = 2+2+2+len(bindom)  # Priority (2 bytes) + Weight (2 bytes) + Port (2 bytes) + Target domain
@@ -108,7 +108,7 @@ python = '''
               doms = []
               for i in range(answers):
                   # SRV alias records
-                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain(req.full_domain)
+                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                   port = random.getrandbits(16)
                   bindom = convDom2Bin(dom)
                   data_len = 2+2+2+len(bindom)  # Priority (2 bytes) + Weight (2 bytes) + Port (2 bytes) + Target domain

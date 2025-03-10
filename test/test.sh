@@ -14,14 +14,13 @@ domain=""
 
 # get the domain name from the config file
 config="polardns.toml"
-if [ -f "${config}" ]; then
-  domain="`grep -v '^#' ${config} | grep -m1 "domain = " | awk '{print $3}' | cut -f2 -d"'"`"
-else
+if [ ! -f "${config}" ]; then
   config="../polardns.toml"
-  if [ -f "${config}" ]; then
-    domain="`grep -v '^#' ${config} | grep -m1 "domain = " | awk '{print $3}' | cut -f2 -d"'"`"
+  if [ ! -f "${config}" ]; then
+    config="polardns/polardns.toml"
   fi
 fi
+domain="`grep -v '^#' ${config} | grep -m1 "domain = " | awk '{print $3}' | cut -f2 -d"'"`"
 if [ "${domain}" == "" ]; then
   echo "ERROR: cannot load domain name"
   exit 1

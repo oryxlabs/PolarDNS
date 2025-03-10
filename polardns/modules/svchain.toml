@@ -58,7 +58,7 @@ command = "dig _mobile._http._tcp.svchain100.yourdomain.com @127.0.0.1"
 python = '''
            elif req.first_subdomain.startswith("svchain"):
               # Send incremented SVCB alias (RFC 9460).
-              new_domain_name = increment_chain(req.full_domain)
+              new_domain_name = increment_chain()
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
               ### QUESTION SECTION ########
@@ -80,7 +80,7 @@ python = '''
            elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("svchain") or req.subdomains_lc[2].startswith("svchain") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("svchain"))):
               # Send incremented SVCB alias (RFC 9460) for any domain name with attribute leaves (domains
               # prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.svchain...'
-              new_domain_name = increment_chain(req.full_domain)
+              new_domain_name = increment_chain()
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
               ### QUESTION SECTION ########

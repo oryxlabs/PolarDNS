@@ -6,11 +6,33 @@ build-backend = "setuptools.build_meta"
 name = "polardns"
 version = "1.6.1"
 description = "A specialized authoritative DNS server for penetration testing and vulnerability research."
+readme = "README.md"
 authors = [{name = "Ivan Jedek", email = "ivan.jedek@oryxlabs.com"}]
 requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet :: Name Service (DNS)",
+    "Topic :: System :: Networking",
+    "Topic :: Security",
+    "Environment :: Console",
+]
+
+[project.urls]
+Source = "https://github.com/oryxlabs/PolarDNS"
+Documentation = "https://oryxlabs.github.io/PolarDNS"
+Tracker = "https://github.com/oryxlabs/PolarDNS/issues"
 
 [tool.setuptools.packages.find]
 include = ["polardns*"]
 
 [project.scripts]
 polardns = "polardns.core:main"
+

@@ -1,4 +1,4 @@
-<img width="800" alt="PolarDNS logo" src="docs/assets/polardns-logo-for-white-bg.png">
+<img width="800" alt="PolarDNS logo" src="https://raw.githubusercontent.com/oryxlabs/PolarDNS/main/docs/assets/polardns-logo-for-white-bg.png">
 PolarDNS is a specialized authoritative DNS server written in Python 3.x, originally developed as a tool for security testing of DNS recursive resolvers from the server-side.
 <br><br>
 It allows the operator to produce custom DNS responses, making it suitable for in-depth DNS protocol testing purposes.
@@ -89,7 +89,7 @@ dig always.yourdomain.com @127.0.0.1 +tcp
 
 You should receive an ``A`` record with the ``2.3.4.5`` IP address, similarly like in this screenshot:
 
-<img width="700" alt="PolarDNS example usage" src="docs/assets/polardns-example-usage.jpg">
+<img width="700" alt="PolarDNS example usage" src="https://raw.githubusercontent.com/oryxlabs/PolarDNS/main/docs/assets/polardns-example-usage.jpg">
 
 This indicates that the server is working properly.
 
@@ -104,7 +104,7 @@ dig always.ttl2000000000.slp1500.yourdomain.com @127.0.0.1
 
 You should receive an ``A`` record with the ``2.3.4.5`` IP address again, but this time with a TTL value of 2,000,000,000 (63.4 years) and after a delay of 1.5 seconds:
 
-<img width="700" alt="PolarDNS custom TTL and latency" src="docs/assets/polardns-custom-ttl-and-latency.jpg">
+<img width="700" alt="PolarDNS custom TTL and latency" src="https://raw.githubusercontent.com/oryxlabs/PolarDNS/main/docs/assets/polardns-custom-ttl-and-latency.jpg">
 
 In the above example, we have used the [`always`](https://oryxlabs.github.io/PolarDNS/catalogue/html/always.html) basic feature (which always resolves to something), and combined it with the [`ttl`](https://oryxlabs.github.io/PolarDNS/catalogue/html/ttl.html) modifier to adjust the TTL value and the [`slp`](https://oryxlabs.github.io/PolarDNS/catalogue/html/slp.html) modifier to wait before sending the response out.
 
@@ -141,7 +141,7 @@ These can lead to discovery of various vulnerabilities such as:
 -	Resource exhaustion
 -	Crashes, DoS
 
-See the [BlackHat MEA 2023](docs/pptx/) presentations (including BONUS slides) for more details, many more examples and use-cases.
+See the [BlackHat MEA 2023](https://github.com/oryxlabs/PolarDNS/tree/main/docs/pptx) presentations (including BONUS slides) for more details, many more examples and use-cases.
 
 ## Testing of recursive DNS resolvers
 
@@ -181,7 +181,7 @@ Adding new features to PolarDNS is essential for discovering truly novel DNS iss
 
 PolarDNS allows you to quickly add a new feature, try out your ideas, or develop a PoC without having to build your own DNS server. All you need is ability to understand Python code and a curiosity to experiment with the DNS protocol.
 
-There is a detailed, step-by-step [contribution guide](CONTRIBUTING.md) to get you started. There, you'll find not only how to add new features but also how to debug PolarDNS, submit issues, share ideas, and more.
+There is a detailed, step-by-step [contribution guide](https://github.com/oryxlabs/PolarDNS/blob/main/CONTRIBUTING.md) to get you started. There, you'll find not only how to add new features but also how to debug PolarDNS, submit issues, share ideas, and more.
 
 ## Links
 
@@ -194,4 +194,12 @@ DNS Protocol related links:
 DNS servers:
 - https://en.wikipedia.org/wiki/Comparison_of_DNS_server_software
 - https://www.lifewire.com/free-and-public-dns-servers-2626062
+
+## Credits
+
+Thank you to everyone who has contributed to PolarDNS! ❤️
+
+<a href="https://github.com/oryxlabs/polardns/graphs/contributors">
+  <img src="https://contrib.rocks/image?&columns=25&max=10000&&repo=oryxlabs/polardns" noZoom />
+</a>
 

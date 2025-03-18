@@ -251,14 +251,14 @@ injmx12345.adq.yourdomain.com. 60      IN      A       1.2.3.4
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injmx.oi.rpq.yourdomain.com @10.211.55.2
 ;; global options: +cmd
-;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle such a scenario. Here is the actual DNS response that was sent back to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 18080
+;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle such a scenario. Here is the actual DNS response that was sent back to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 50652
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 <span style="color:red;">;injected.yourdomain.com.       IN      MX</span>
 
 ;; ANSWER SECTION:
-<span style="color:red;">injected.yourdomain.com. 60      IN      MX      0 always030901.yourdomain.com.</pre></span><p><a href='../outputs/injmx/dig_injmx.oi.rpq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>Some resolvers may potentially accept this response.</p></p><br>
+<span style="color:red;">injected.yourdomain.com. 60      IN      MX      0 always342580.yourdomain.com.</pre></span><p><a href='../outputs/injmx/dig_injmx.oi.rpq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>Some resolvers may potentially accept this response.</p></p><br>
 <p>Lastly, in this example, we use the <strong>als</strong> (all sections) parameter to include the records in all sections of the DNS response:</p>
 <div><pre class='output-block'><strong># dig injmx.als.yourdomain.com @10.211.55.2</strong>
 

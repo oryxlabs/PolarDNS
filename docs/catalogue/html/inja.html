@@ -123,7 +123,7 @@ inja.yourdomain.com.	60	IN	CNAME	always649907.yourdomain.com.
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; inja123.3rp.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 53690
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 26450
 ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
@@ -133,9 +133,9 @@ inja.yourdomain.com.	60	IN	CNAME	always649907.yourdomain.com.
 inja123.3rp.yourdomain.com. 60	IN	A	1.2.3.4
 <span style="color:red;">injected123.a3rdparty.net. 60	IN	A	6.6.6.123</span>
 
-;; Query time: 4 msec
+;; Query time: 8 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Mon Mar 17 01:21:16 +04 2025
+;; WHEN: Tue Mar 18 21:55:55 +04 2025
 ;; MSG SIZE  rcvd: 101
 
 
@@ -144,7 +144,7 @@ inja123.3rp.yourdomain.com. 60	IN	A	1.2.3.4
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injected123.a3rdparty.net @10.211.55.2 +norecurse
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="color:red;">NXDOMAIN</span>, id: 26145
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="color:red;">NXDOMAIN</span>, id: 30744
 ;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
@@ -152,7 +152,7 @@ inja123.3rp.yourdomain.com. 60	IN	A	1.2.3.4
 
 ;; Query time: 4 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Mon Mar 17 01:21:16 +04 2025
+;; WHEN: Tue Mar 18 21:55:55 +04 2025
 ;; MSG SIZE  rcvd: 43</pre></div><p><a href='../outputs/inja/dig_inja123.3rp.yourdomain.com__10.211.55.2__dig_injected123.a3rdparty.net__10.211.55.2__norecurse.pcap'>Download PCAP File</a></p><p><p>We can see that the injected record was not cached, as we received <code class='code-block'>NXDOMAIN</code> (No such name) status. This means that the injection did not succeed.</p></p><br>
 <p>In this example, we use the <strong>rev</strong> parameter to reverse the order of answers &mdash; the unsolicited record appears first, followed by the legitimate one. This arrangement could potentially increase the likelihood of the injected information being picked up and cached:</p>
 <div><pre class='output-block'><strong># dig inja123.3rp.rev.yourdomain.com @10.211.55.2</strong>
@@ -160,7 +160,7 @@ inja123.3rp.yourdomain.com. 60	IN	A	1.2.3.4
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; inja123.3rp.rev.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 56116
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 49644
 ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
@@ -172,7 +172,7 @@ inja123.3rp.rev.yourdomain.com.	60 IN	A	1.2.3.4
 
 ;; Query time: 4 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Mon Mar 17 01:21:17 +04 2025
+;; WHEN: Tue Mar 18 21:55:11 +04 2025
 ;; MSG SIZE  rcvd: 105</pre></div><p><a href='../outputs/inja/dig_inja123.3rp.rev.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
 <p>In this example, we use the <strong>rpq</strong> parameter to replace the question in the query section with information from the unsolicited record, in an attempt to convince the resolver that it originally requested this record:</p>
 <div><pre class='output-block'><strong># dig inja12345.rpq.yourdomain.com @10.211.55.2</strong>
@@ -251,7 +251,7 @@ inja12345.adq.yourdomain.com. 60      IN      A       1.2.3.4
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; inja.oi.rpq.yourdomain.com @10.211.55.2
 ;; global options: +cmd
-;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle such a scenario. Here is the actual DNS response that was sent back to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 23156
+;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle such a scenario. Here is the actual DNS response that was sent back to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 33395
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:

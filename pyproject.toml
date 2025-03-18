@@ -8,6 +8,7 @@ version = "1.6.2"
 description = "A specialized authoritative DNS server for penetration testing and vulnerability research."
 readme = "README.md"
 authors = [{name = "Ivan Jedek", email = "ivan.jedek@oryxlabs.com"}]
+maintainers = [{name = "Ivan Jedek", email = "ivan.jedek@oryxlabs.com"}]
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
 classifiers = [
@@ -21,13 +22,14 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
     "Topic :: Internet :: Name Service (DNS)",
     "Topic :: System :: Networking",
+    "Topic :: Education :: Testing",
     "Topic :: Security",
     "Environment :: Console",
 ]
-keywords = ["DNS", "DNS Server", "Penetration Testing", "Vulnerability Research", "Fuzzing"]
+keywords = ["DNS", "DNS Server", "Testing", "Penetration Testing", "Vulnerability Research", "Fuzzing"]
 
 [project.urls]
-Source = "https://github.com/oryxlabs/PolarDNS"
+Homepage = "https://github.com/oryxlabs/PolarDNS"
 Documentation = "https://oryxlabs.github.io/PolarDNS"
 Tracker = "https://github.com/oryxlabs/PolarDNS/issues"
 

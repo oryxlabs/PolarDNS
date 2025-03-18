@@ -210,7 +210,7 @@ injns12345.rpq.yourdomain.com. 60      IN      A       1.2.3.4
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injns12345.adq.yourdomain.com @10.211.55.2
 ;; global options: +cmd
-;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle this scenario. Here is the actual DNS response that was generated and returned to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 27089
+;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle this scenario. Here is the actual DNS response that was generated and returned to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 2700
 ;; flags: qr aa; QUERY: 2, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
@@ -219,25 +219,25 @@ injns12345.rpq.yourdomain.com. 60      IN      A       1.2.3.4
 
 ;; ANSWER SECTION:
 injns12345.adq.yourdomain.com. 60      IN      A       1.2.3.4
-<span style="color:red;">injected12345.yourdomain.com. 60      IN      NS      always278121.yourdomain.com.</pre></span><p><a href='../outputs/injns/dig_injns12345.adq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>We can see that there are two questions &mdash; the original query and an additional one matching the unsolicited record.</p></p><br>
+<span style="color:red;">injected12345.yourdomain.com. 60      IN      NS      always342013.yourdomain.com.</pre></span><p><a href='../outputs/injns/dig_injns12345.adq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>We can see that there are two questions &mdash; the original query and an additional one matching the unsolicited record.</p></p><br>
 <p>In this example, the <strong>oi</strong> (only injected) parameter causes the answers to include only the injected (unsolicited) record, without the actual answer to the original query:</p>
 <div><pre class='output-block'><strong># dig injns.oi.yourdomain.com @10.211.55.2</strong>
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injns.oi.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 8043
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 58274
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;injns.oi.yourdomain.com.	IN	A
 
 ;; ANSWER SECTION:
-<span style="color:red;">injected.yourdomain.com. 60	IN	NS	always985759.yourdomain.com.</span>
+<span style="color:red;">injected.yourdomain.com. 60	IN	NS	always612154.yourdomain.com.</span>
 
-;; Query time: 7 msec
+;; Query time: 20 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:25:06 +04 2025
+;; WHEN: Tue Mar 18 22:14:27 +04 2025
 ;; MSG SIZE  rcvd: 105</pre></div><p><a href='../outputs/injns/dig_injns.oi.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>Note that the question remains the same as in the original query.</p></p><br>
 <p>Here, we also request to replace the question in the query section with the unsolicited domain name. We can see that the dig client does not accept the response again because the question does not match the original query:</p>
 <div><pre class='output-block'><strong># dig injns.oi.rpq.yourdomain.com @10.211.55.2</strong>

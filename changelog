@@ -1,3 +1,12 @@
+18/Mar/2025
+- release version 1.6.2
+- major rework of the polardns test runner `test/run.sh`, now based on actual dig outputs rather than just checksums
+
+13/Mar/2025
+- added `rc` modifier allowing to set custom reply codes (statuses) for DNS responses (e.g., NOERROR, NXDOMAIN, SERVFAIL)
+- implemented size limits in various functions to prevent errors caused by requesting oversized responses
+- added tests (total test count: 2439)
+
 10/Mar/2025
 - release version 1.6.1
 - restructured the project into a package installable via `pip`

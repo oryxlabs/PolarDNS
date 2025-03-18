@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "polardns"
-version = "1.6.1"
+version = "1.6.2"
 description = "A specialized authoritative DNS server for penetration testing and vulnerability research."
 readme = "README.md"
 authors = [{name = "Ivan Jedek", email = "ivan.jedek@oryxlabs.com"}]
@@ -24,6 +24,7 @@ classifiers = [
     "Topic :: Security",
     "Environment :: Console",
 ]
+keywords = ["DNS", "DNS Server", "Penetration Testing", "Vulnerability Research", "Fuzzing"]
 
 [project.urls]
 Source = "https://github.com/oryxlabs/PolarDNS"

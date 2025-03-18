@@ -17,7 +17,7 @@ import os
 from polardns import nfz
 from polardns import consts
 
-polardns_version = "1.6.1"
+polardns_version = "1.6.2"
 
 ################################
 
@@ -456,7 +456,9 @@ def send_buf(self, buffer, totallen = 0):
 
    # UDP mode
    if proto == "udp":
-      self.wfile.write(newbuffer)
+      # To avoid 'OSError: [Errno 90] Message too long' errors, cap the buffer size:
+      # 65535 (max DNS packet size) - 20 (IPv4 header) - 8 (UDP header) = 65507 bytes
+      self.wfile.write(newbuffer[:65507]) # actual max buffer size
       self.wfile.flush()
       return
 
@@ -475,6 +477,8 @@ def send_buf(self, buffer, totallen = 0):
       buflen -= resp.rl * resp.cutcount  # adjust the length
    if hasattr(resp, "addbyte"):
       buflen += resp.rl * resp.addcount  # adjust the length
+
+   buflen = min(buflen, 65535) # max DNS packet size
    try:
       if hasattr(resp, "chunked"):
          send_buf_chunked(self, struct.pack(">H", buflen) + newbuffer)
@@ -597,6 +601,12 @@ def prep_dns_header(flags, qurr, anrr, aurr, adrr):
     # custom number of Additional RRs
     try: resp.ADRR
     except AttributeError: resp.ADRR = adrr
+
+    # set custom reply-code (RCODE)
+    if hasattr(resp, "RCODE"):
+        flgs = bytearray(resp.FLGS)
+        flgs[-1] = (flgs[-1] & 0xF0) | (resp.RCODE & 0xF)
+        resp.FLGS = bytes(flgs)
 
     # construct the DNS header
     buffer = resp.ID
@@ -818,7 +828,7 @@ def process_DNS(self, req):
             #######################
             if label.startswith("slp"):        # custom delay requested
                if label[3:].isnumeric():
-                  resp.sleep = float(int(label[3:])/1000)
+                  resp.sleep = float(min(int(label[3:]), 60000)/1000) # max 60 seconds
                   addcustomlog("SLP:" + str(resp.sleep))
             #######################
             elif label.startswith("ttl"):      # custom TTL requested
@@ -834,6 +844,11 @@ def process_DNS(self, req):
             elif label == "newid":             # new random transaction ID
                resp.ID = struct.pack(">H", random.getrandbits(16))
                addcustomlog("NEWID")
+            #######################
+            elif label.startswith("rc"):      # set custom reply-code (RCODE) in the DNS header
+               if label[2:].isnumeric():
+                  resp.RCODE = min(int(label[2:]), 15)
+                  addcustomlog("RCODE:" + str(resp.RCODE))
             #######################
             elif label.startswith("flgs"):     # set custom flags in the DNS header
                flgs = label[4:]
@@ -881,7 +896,7 @@ def process_DNS(self, req):
             # # # # # # # # # # # #
             elif label.startswith("s"):        # number of subdomains
                if label[1:].isnumeric():
-                  resp.nfz_subs = min(int(label[1:]), 65535)
+                  resp.nfz_subs = min(int(label[1:]), 255)
                   addcustomlog("S:" + str(resp.nfz_subs))
             # # # # # # # # # # # #
             elif label.startswith("m"):        # malformation
@@ -892,12 +907,12 @@ def process_DNS(self, req):
                   resp.nfz_pos = getattr(resp, 'nfz_pos', 0)                   # default position
                   if req.subdomains[index+1].isnumeric() and req.subdomains[index+2].isnumeric():
                      # the next 2 subdomains contain only numbers, which can only be size and byte for malformation 9
-                     resp.nfz_malf_size = min(int(req.subdomains[index+1]), 65535)
+                     resp.nfz_malf_size = min(int(req.subdomains[index+1]), 255)
                      resp.nfz_malf_byte = min(int(req.subdomains[index+2]), 255)
                      addcustomlog("M:" + str(resp.nfz_malf) + "." + str(resp.nfz_malf_byte) + "." + str(resp.nfz_malf_size))
                      resp.nfz_malf_byte = resp.nfz_malf_byte.to_bytes(1, 'big')
                   elif req.subdomains[index+1].isnumeric():     # does the next subdomain contain only a number?
-                     resp.nfz_malf_size = int(req.subdomains[index+1])  # if yes, then it is the size
+                     resp.nfz_malf_size = min(int(req.subdomains[index+1]), 255)  # if yes, then it is the size
                      addcustomlog("M:" + str(resp.nfz_malf) + "." + str(resp.nfz_malf_size))
                   else:
                      addcustomlog("M:" + str(resp.nfz_malf))
@@ -915,15 +930,15 @@ def process_DNS(self, req):
                resp.compress = 1
                addcustomlog("FC")
             #######################
+            elif label.startswith("cnk"):      # send in N-byte long chunks
+               if label[3:].isnumeric():
+                  resp.chunked = int(label[3:])
+                  addcustomlog("CHUNKED:" + str(resp.chunked))
+            #######################
             elif label.startswith("cut"):      # cut N bytes from the end of the packet
                if label[3:].isnumeric():
                   resp.cutcount = int(label[3:])
                   addcustomlog("CUT:" + str(resp.cutcount))
-            #######################
-            elif label.startswith("cnk"):      # send in N bytes long chunks
-               if label[3:].isnumeric():
-                  resp.chunked = int(label[3:])
-                  addcustomlog("CHUNKED:" + str(resp.chunked))
             #######################
             elif label.startswith("add"):  # add N bytes to the end of the packet
                if label[3:].isnumeric():
@@ -946,7 +961,12 @@ def process_DNS(self, req):
             elif label == "tc" and proto == "udp": # request truncation
                # In UDP let's send only empty response with Truncated flag set.
                # This will prompt server/client to retry using TCP.
-               buffer = prep_dns_header(b'\x87\x00', req.QURR, 0, 0, 0)
+               buffer = resp.ID
+               buffer += b'\x87\x00'
+               buffer += struct.pack(">H", resp.QURR)
+               buffer += struct.pack(">H", 0)
+               buffer += struct.pack(">H", 0)
+               buffer += struct.pack(">H", 0)
                if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
                log("only a header with truncated flag (TC)")
                send_buf(self, buffer)
@@ -1050,7 +1070,7 @@ def process_DNS(self, req):
                  resp.type_str = "A"
                  data  = struct.pack(">H", 4)      ## Data length
                  data += socket.inet_aton(ip)      ## IP
-              answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 1
+              answers = min(int(req.subdomains[1]), 4096) if req.subdomains[1].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', resp.QURR, answers, 0, 0)
               ### QUESTION SECTION ########

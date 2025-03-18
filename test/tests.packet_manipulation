@@ -1,0 +1,75 @@
+# add/cut bytes
+always.cut4.add4.0.${domain}
+always.cut4.add4.0xff.${domain}
+always.cut4.add4.255.${domain}
++tcp always.cut4.add4.0.${domain}
++tcp always.cut4.add4.0xff.${domain}
++tcp always.cut4.add4.255.${domain}
+always.add1.0.${domain}
+always.add1.0x1.${domain}
+always.add1.r.${domain}
++tcp always.add1.0.${domain}
++tcp always.add1.0x1.${domain}
++tcp always.add1.r.${domain}
++tcp always.rl.add1.0.${domain}
++tcp always.rl.add1.0x1.${domain}
++tcp always.rl.add1.r.${domain}
+always.add.${domain}
+always.addbad.${domain}
+always.add10bad.${domain}
+always.cut.${domain}
+always.cutbad.${domain}
+always.cut10bad.${domain}
+
+# cut N bytes / cut.toml
+size.128.fc.cut.${domain}
+size.128.fc.cut00.${domain}
+size.128.fc.cut16.${domain}
+size.128.fc.tc.cut.${domain}
+size.128.fc.tc.cut00.${domain}
+size.128.fc.tc.cut16.${domain}
++tcp size.128.fc.cut.${domain}
++tcp size.128.fc.cut00.${domain}
++tcp size.128.fc.cut16.${domain}
+
+# chunked / cnk.toml
++tcp always.10.cnk20.slp10.${domain}
++tcp always.10.cnk50.slp100.${domain}
+always.10.cnk20.slp10.tc.${domain}
+always.10.cnk50.slp100.tc.${domain}
+
+nonexistent.noq.${domain}
+nonexistent.noq.qurr0.${domain}
+something.noq.nonexistent.com
+something.noq.qurr0.nonexistent.com
+nonexistent.tc.noq.${domain}
+nonexistent.tc.noq.qurr0.${domain}
+something.tc.noq.nonexistent.com
+something.tc.noq.qurr0.nonexistent.com
++tcp nonexistent.noq.${domain}
++tcp nonexistent.noq.qurr0.${domain}
++tcp something.noq.nonexistent.com
++tcp something.noq.qurr0.nonexistent.com
+
+nonexistent.tc.${domain}
+nonexistent.tc.qurr0.${domain}
+tc.nonexistent.com
+something.tc.nonexistent.com
+something.tc.qurr0.nonexistent.com
+always123.tc.${domain}
+cnchain123.tc.${domain}
+dnchain123.tc.${domain}
+
++tcp always123.ttl12345.${domain}
++tcp always123.ttl9999999.${domain}
++tcp always123.tc.${domain}
++tcp always123.noq.nc.${domain}
++tcp always123.noq.fc.${domain}
+always123.ttl12345.${domain}
+always123.ttl9999999.${domain}
+always123.ttl12345.tc.${domain}
+always123.ttl9999999.tc.${domain}
+always123.noq.nc.${domain}
+always123.noq.fc.${domain}
+always123.noq.tc.nc.${domain}
+always123.noq.tc.fc.${domain}

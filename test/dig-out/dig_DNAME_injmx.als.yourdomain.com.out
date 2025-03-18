@@ -1,0 +1,27 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> DNAME injmx.als.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 16517
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 2, ADDITIONAL: 2
+
+;; QUESTION SECTION:
+;injmx.als.yourdomain.com.	IN	DNAME
+
+;; ANSWER SECTION:
+injmx.als.yourdomain.com. 60	IN	DNAME	always431762.yourdomain.com.
+injected.yourdomain.com. 60	IN	MX	0 always601968.yourdomain.com.
+
+;; AUTHORITY SECTION:
+injmx.als.yourdomain.com. 60	IN	DNAME	always431762.yourdomain.com.
+injected.yourdomain.com. 60	IN	MX	0 always601968.yourdomain.com.
+
+;; ADDITIONAL SECTION:
+injmx.als.yourdomain.com. 60	IN	DNAME	always431762.yourdomain.com.
+injected.yourdomain.com. 60	IN	MX	0 always601968.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:44 +04 2025
+;; MSG SIZE  rcvd: 363
+

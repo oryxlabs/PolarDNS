@@ -37,8 +37,7 @@ if req.first_subdomain.startswith("afuzz1"):
    # todo: Send A record with a slightly distorted name.
    byte = 65
    if req.subdomains[1].isnumeric():
-      byte = int(req.subdomains[1])
-   if byte > 255: byte = 255
+      byte = min(int(req.subdomains[1]), 255)
    ### DNS header #######
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
    ### QUESTION SECTION ########

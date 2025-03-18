@@ -64,7 +64,7 @@ python = '''
            elif req.first_subdomain.startswith("sralias"):
               # Send multiple random SRV aliases (RFC 2782).
               # BEWARE: This could result in multiplication
-              answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 1
+              answers = min(int(req.subdomains[1]), 4096) if req.subdomains[1].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
@@ -99,7 +99,7 @@ python = '''
                  offset = 2   # _a._b.sralias.10.yourdomain.com
               elif req.subdomains_lc[3].startswith("sralias"):
                  offset = 3   # _a._b._c.sralias.10.yourdomain.com
-              answers = int(req.subdomains[offset+1]) if req.subdomains[offset+1].isnumeric() else 1
+              answers = min(int(req.subdomains[offset+1]), 4096) if req.subdomains[offset+1].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########

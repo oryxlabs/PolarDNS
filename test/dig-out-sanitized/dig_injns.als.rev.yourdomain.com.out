@@ -1,0 +1,24 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 2, ADDITIONAL: 2
+
+;; QUESTION SECTION:
+;injns.als.rev.<OURDOM>. IN A
+
+;; ANSWER SECTION:
+injected.<OURDOM>. 60 IN NS always<RANDOM>.<OURDOM>.
+injns.als.rev.<OURDOM>. 60 IN A 1.2.3.4
+
+;; AUTHORITY SECTION:
+injected.<OURDOM>. 60 IN NS always<RANDOM>.<OURDOM>.
+injns.als.rev.<OURDOM>. 60 IN A 1.2.3.4
+
+;; ADDITIONAL SECTION:
+injected.<OURDOM>. 60 IN NS always<RANDOM>.<OURDOM>.
+injns.als.rev.<OURDOM>. 60 IN A 1.2.3.4
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>
+

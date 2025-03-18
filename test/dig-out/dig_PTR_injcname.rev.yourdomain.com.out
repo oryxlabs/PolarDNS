@@ -1,0 +1,19 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> PTR injcname.rev.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 35723
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injcname.rev.yourdomain.com.	IN	PTR
+
+;; ANSWER SECTION:
+injected.yourdomain.com. 60	IN	CNAME	always008372.yourdomain.com.
+injcname.rev.yourdomain.com. 60	IN	PTR	always775653.yourdomain.com.
+
+;; Query time: 16 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:40 +04 2025
+;; MSG SIZE  rcvd: 150
+

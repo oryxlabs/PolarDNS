@@ -1,0 +1,14 @@
+;; Truncated, retrying in TCP mode.
+
+; <<>> DiG 9.18.10-2-Debian <<>> nonexistent.tc.qurr0.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 1136
+;; flags: qr aa; QUERY: 0, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: Message has 41 extra bytes at end
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Tue Mar 18 21:10:34 +04 2025
+;; MSG SIZE  rcvd: 53
+

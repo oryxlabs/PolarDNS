@@ -1,0 +1,28 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> +tcp size.512.nc.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31826
+;; flags: qr aa; QUERY: 1, ANSWER: 11, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.512.nc.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+size.512.nc.yourdomain.com. 60	IN	A	127.0.0.78
+size.512.nc.yourdomain.com. 60	IN	A	127.0.0.74
+size.512.nc.yourdomain.com. 60	IN	A	127.0.0.47
+size.512.nc.yourdomain.com. 60	IN	A	127.0.0.230
+size.512.nc.yourdomain.com. 60	IN	A	127.0.0.74
+size.512.nc.yourdomain.com. 60	IN	A	127.0.0.118
+size.512.nc.yourdomain.com. 60	IN	A	127.0.0.114
+size.512.nc.yourdomain.com. 60	IN	A	127.0.0.69
+size.512.nc.yourdomain.com. 60	IN	A	127.0.0.115
+size.512.nc.yourdomain.com. 60	IN	A	127.0.0.171
+size.512.nc.yourdomain.com. 60	IN	A	127.0.0.127
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Tue Mar 18 21:10:33 +04 2025
+;; MSG SIZE  rcvd: 506
+

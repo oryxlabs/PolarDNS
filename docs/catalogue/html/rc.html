@@ -1,0 +1,116 @@
+---
+layout: default
+title: "Rc - Set Custom Status (Reply Code)"
+parent: "Header manipulation"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Rc - Set Custom Status (Reply Code)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Rc - Set Custom Status (Reply Code)</h1>
+<p>This modifier allows you to set a custom response status (reply code) in the DNS response, such as NOERROR, NXDOMAIN, SERVFAIL, etc.</p>
+<p>The reply code value is 4 bits long and is stored in the last 4 bits of the second byte in the Flags field. This allows for a total of 16 possible DNS reply codes.</p>
+<p>This modifier is compatible with and can be combined with any other existing feature or modifier.</p><p><strong>Category:</strong> <a href='../header-manipulation.html'>Header manipulation</a></p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a>, <a href="https://datatracker.ietf.org/doc/rfc2136/" target="_blank">RFC2136</a>, <a href="https://datatracker.ietf.org/doc/rfc8490/" target="_blank">RFC8490</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>*.rc&lt;CODE&gt;.*</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;CODE&gt;</code></strong> parameter can either be:<ul>
+<li><strong><code class='code-block'>0</code></strong> (NOERROR) &mdash; No error condition</li>
+<li><strong><code class='code-block'>1</code></strong> (FORMERR) &mdash; Format error (server unable to interpret query)</li>
+<li><strong><code class='code-block'>2</code></strong> (SERVFAIL) &mdash; Server failure (unable to process due to internal error)</li>
+<li><strong><code class='code-block'>3</code></strong> (NXDOMAIN) &mdash; Non-existent domain</li>
+<li><strong><code class='code-block'>4</code></strong> (NOTIMP) &mdash; Not implemented (query type not supported)</li>
+<li><strong><code class='code-block'>5</code></strong> (REFUSED) &mdash; Query refused (policy reasons)</li>
+<li><strong><code class='code-block'>6</code></strong> (YXDOMAIN) &mdash; Name exists when it should not</li>
+<li><strong><code class='code-block'>7</code></strong> (YXRRSET) &mdash; RR set exists when it should not</li>
+<li><strong><code class='code-block'>8</code></strong> (NXRRSET) &mdash; RR set does not exist</li>
+<li><strong><code class='code-block'>9</code></strong> (NOTAUTH) &mdash; Server is not authoritative for the zone</li>
+<li><strong><code class='code-block'>10</code></strong> (NOTZONE) &mdash; Name is not within the zone</li>
+<li><strong><code class='code-block'>11</code></strong> (DSOTYPENI) &mdash; DS record type not implemented</li>
+<li><strong><code class='code-block'>12</code></strong> (RESERVED12) &mdash; Reserved for future use</li>
+<li><strong><code class='code-block'>13</code></strong> (RESERVED13) &mdash; Reserved for future use</li>
+<li><strong><code class='code-block'>14</code></strong> (RESERVED14) &mdash; Reserved for future use</li>
+<li><strong><code class='code-block'>15</code></strong> (RESERVED15) &mdash; Reserved for future use</li>
+</ul>
+</li>
+</ul>
+<h2>Examples</h2>
+<p>In this example, we use the basic <a href="always.html">always</a> feature which always resolves to an IP address. Additionally, we request to set the status in the response to <code class='code-block'>NXDOMAIN</code> (No such name) by including <code class='code-block'>rc3</code> in the domain name:</p>
+<div><pre class='output-block'><strong># dig always.rc3.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; always.rc3.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="background-color: yellow;">NXDOMAIN</span>, id: 43582
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.rc3.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always.rc3.yourdomain.com. 60	IN	A	2.3.4.5
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Mar 13 11:03:41 +04 2025
+;; MSG SIZE  rcvd: 59</pre></div><p><a href='../outputs/rc/dig_always.rc3.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>This DNS response may cause confusion as it presents a valid A record in the response while simultaneously indicating that the domain does not exist.</p></p><br>
+<p>In this example, we use the <a href="alias.html">alias</a> feature to generate 10 CNAME aliases. Additionally, we request to set the status in the response to <code class='code-block'>FORMERR</code> (Format error) by including <code class='code-block'>rc1</code> in the domain name:</p>
+<div><pre class='output-block'><strong># dig alias.10.rc1.yourdomain.com @127.0.0.1 +noedns</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.10.rc1.yourdomain.com @127.0.0.1 +noedns
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="background-color: yellow;">FORMERR</span>, id: 20065
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.10.rc1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias858735.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias457065.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias358428.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias804274.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias753098.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias361470.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias142873.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias779129.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias679580.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias146470.10.rc1.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Mar 13 11:03:42 +04 2025
+;; MSG SIZE  rcvd: 515</pre></div><p><a href='../outputs/rc/dig_alias.10.rc1.yourdomain.com__127.0.0.1__noedns.pcap'>Download PCAP File</a></p><p><p>This DNS response may again cause confusion as it presents a valid response while simultaneously indicating that the server was unable to interpret the query.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="adrr.html">Adrr - Set Additional RRs in the Header</a></li>
+<li><a href="anrr.html">Anrr - Set Answer RRs in the Header</a></li>
+<li><a href="aurr.html">Aurr - Set Authority RRs in the Header</a></li>
+<li><a href="flgs.html">Flgs - Set Custom Flags in the Header</a></li>
+<li><a href="newid.html">NewId - Set Random Transaction ID</a></li>
+<li><a href="qurr.html">Qurr - Set Question RRs in the Header</a></li>
+</ul>
+
+<h2>See also</h2>
+<ul><li><a href="tc.html">Tc - Set Truncated Flag (Force TCP Mode)</a></li>
+<li><a href="noq.html">Noq - Remove the Query Section</a></li>
+<li><a href="slp.html">Slp - Add a Delay (Latency)</a></li>
+<li><a href="ttl.html">Ttl - Set Custom TTL Value</a></li>
+<li><a href="len.html">Len - Set Custom Length in TCP</a></li>
+<li><a href="cnk.html">Cnk - Send Response in Chunks (TCP only)</a></li>
+<li><a href="cut.html">Cut - Cut N Bytes from the End of the Packet</a></li>
+<li><a href="add.html">Add - Add N Bytes to the End of the Packet</a></li>
+<li><a href="rl.html">Rl - Recalculate Length in TCP</a></li>
+<li><a href="fc.html">Fc - Force Compression</a></li>
+<li><a href="nc.html">Nc - No Compression</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

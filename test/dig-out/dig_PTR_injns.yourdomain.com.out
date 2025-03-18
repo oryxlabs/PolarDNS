@@ -1,0 +1,19 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> PTR injns.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 48155
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injns.yourdomain.com.		IN	PTR
+
+;; ANSWER SECTION:
+injns.yourdomain.com.	60	IN	PTR	always100547.yourdomain.com.
+injected.yourdomain.com. 60	IN	NS	always747175.yourdomain.com.
+
+;; Query time: 16 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:40 +04 2025
+;; MSG SIZE  rcvd: 143
+

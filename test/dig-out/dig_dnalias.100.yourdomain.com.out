@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> dnalias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20160
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;dnalias.100.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias22333.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias916232.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias121285.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias890075.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias178340.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias508211.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias836414.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias254148.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias815572.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias120424.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias222060.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias557787.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias337957.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias513177.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias495104.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias268244.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias245660.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias738545.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias16042.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias822916.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias648982.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias734170.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias18551.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias828770.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias168358.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias431297.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias259906.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias928483.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias818341.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias119399.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias651772.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias368795.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias12937.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias355476.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias881817.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias805892.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias550521.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias672349.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias679225.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias38188.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias660965.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias572727.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias875736.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias807769.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias794093.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias527638.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias849491.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias980955.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias412449.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias173260.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias591467.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias918116.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias936218.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias520363.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias263716.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias487264.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias472370.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias231630.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias570454.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias168170.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias227988.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias322670.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias507096.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias418832.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias141428.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias606490.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias730350.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias3990.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias666703.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias293531.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias18882.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias252113.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias895905.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias185016.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias231999.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias100126.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias448964.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias766924.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias874156.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias92652.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias217926.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias326581.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias655307.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias766770.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias860944.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias314203.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias706710.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias374600.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias819848.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias186362.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias165575.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias794043.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias880272.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias356258.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias540595.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias209330.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias312610.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias361314.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias270631.100.yourdomain.com.
+dnalias.100.yourdomain.com. 60	IN	DNAME	dnalias136653.100.yourdomain.com.
+
+;; Query time: 12 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 4635
+

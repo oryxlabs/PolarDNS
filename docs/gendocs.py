@@ -9,7 +9,7 @@ import re
 from dnslib import DNSRecord
 from html import escape
 
-modules_repo_dir = os.path.join('..', 'modules')
+modules_repo_dir = os.path.join('..', 'polardns', 'modules')
 catalogue_html_dir = os.path.join('catalogue', 'html')
 catalogue_output_dir = os.path.join('catalogue', 'outputs')
 
@@ -314,7 +314,6 @@ parent: "{module_catg}"
                 tmp = re.sub(r'([^a-z>])(Got bad packet)', r'\1<span style="background-color: yellow;">\2</span>', tmp, flags=re.IGNORECASE)
                 tmp = re.sub(r'([^a-z>])(Question section mismatch)', r'\1<span style="background-color: yellow;">\2</span>', tmp, flags=re.IGNORECASE)
                 tmp = re.sub(r'(;; Query time: )(\d+ msec)', lambda match: f'{match.group(1)}<span style="background-color: yellow;">{match.group(2)}</span>' if int(match.group(2).split()[0]) > 1000 else match.group(0), tmp)
-                #if "dig inj" in command:
                 if "dig " in command and " inj" in command:
                     # special formatting for injection scenarios
                     tmp = re.sub(r"^;?injected.*6\.6\.6\..*$", r'<span style="color:red;">\g<0></span>', tmp, flags=re.MULTILINE)
@@ -322,6 +321,8 @@ parent: "{module_catg}"
                     tmp = re.sub(r"^;?6\.6\.6\..*injected.*$", r'<span style="color:red;">\g<0></span>', tmp, flags=re.MULTILINE)
                     tmp = re.sub(r"^;?injected.*always.*$", r'<span style="color:red;">\g<0></span>', tmp, flags=re.MULTILINE)
                     tmp = re.sub(r'(NXDOMAIN)', r'<span style="color:red;">\1</span>', tmp)
+                elif "dig " in command and (".rc1." in command or ".rc3." in command):
+                    tmp = re.sub(r'(status: )([^, ]*)', r'\1<span style="background-color: yellow;">\2</span>', tmp, flags=re.IGNORECASE)
                 with open(filepath, 'w') as file:
                     file.write(tmp)
             with open(filepath, 'r') as file:

@@ -3,7 +3,7 @@
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injaaaa.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 32587
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 26061
 ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
@@ -11,11 +11,11 @@
 
 ;; ANSWER SECTION:
 injaaaa.yourdomain.com.	60	IN	A	1.2.3.4
-<span style="color:red;">injected.yourdomain.com. 60	IN	AAAA	6666:6666:6666:6666:6666:6666:6666:6666</span>
+<span style="color:red;">injected.yourdomain.com. 60	IN	AAAA	6666:6666:6666:6666:6666:6666:6666:0</span>
 
-;; Query time: 3 msec
+;; Query time: 8 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:25:25 +04 2025
+;; WHEN: Mon Mar 17 01:22:11 +04 2025
 ;; MSG SIZE  rcvd: 107
 
 
@@ -24,13 +24,13 @@ injaaaa.yourdomain.com.	60	IN	A	1.2.3.4
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injected.yourdomain.com @10.211.55.2 +norecurse
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="color:red;">NXDOMAIN</span>, id: 7052
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="color:red;">NXDOMAIN</span>, id: 12029
 ;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;injected.yourdomain.com.	IN	A
 
-;; Query time: 7 msec
+;; Query time: 0 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:25:25 +04 2025
+;; WHEN: Mon Mar 17 01:22:11 +04 2025
 ;; MSG SIZE  rcvd: 41</pre>

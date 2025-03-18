@@ -1,0 +1,73 @@
+# alias.toml
+alias.${domain}
+alias.100.${domain}
+CNAME alias.${domain}
+CNAME alias.100.${domain}
+DNAME alias.${domain}
+DNAME alias.100.${domain}
+HTTPS alias.${domain}
+HTTPS alias.100.${domain}
+SVCB alias.${domain}
+SVCB alias.100.${domain}
+SRV alias.${domain}
+SRV alias.100.${domain}
+MX alias.${domain}
+MX alias.100.${domain}
+NS alias.${domain}
+NS alias.100.${domain}
+TXT alias.${domain}
+TXT alias.100.${domain}
+
+# cnalias.toml
+cnalias.${domain}
+cnalias.100.${domain}
+
+# dnalias.toml
+dnalias.${domain}
+dnalias.100.${domain}
+
+# htalias.toml
+htalias.${domain}
+htalias.100.${domain}
+
+# svalias.toml
+svalias.${domain}
+svalias.100.${domain}
+_sip.svalias.${domain}
+_sip.svalias.100.${domain}
+_sip._udp.svalias.${domain}
+_sip._udp.svalias.100.${domain}
+_mobile._http._tcp.svalias.${domain}
+_mobile._http._tcp.svalias.100.${domain}
+
+# sralias.toml
+sralias.${domain}
+sralias.100.${domain}
+_sip.sralias.${domain}
+_sip.sralias.100.${domain}
+_sip._udp.sralias.${domain}
+_sip._udp.sralias.100.${domain}
+_mobile._http._tcp.sralias.${domain}
+_mobile._http._tcp.sralias.100.${domain}
+
+# mxalias.toml
+mxalias.${domain}
+mxalias.100.${domain}
+
+# nsalias.toml
+nsalias.${domain}
+nsalias.100.${domain}
+
+# spfalias1.toml spfalias2.toml
+spfalias1.${domain}
+spfalias1.100.${domain}
+spfalias2.${domain}
+spfalias2.100.${domain}
+
+# ptralias.toml
+-x 10.255.0.0
+-x 10.255.255.255
+
+# nptenumalias.toml
+NAPTR 1.e164.arpa
+NAPTR 1.5.2.3.4.5.6.7.8.e164.arpa

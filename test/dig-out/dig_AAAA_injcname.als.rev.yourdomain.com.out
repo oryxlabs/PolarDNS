@@ -1,0 +1,27 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> AAAA injcname.als.rev.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 55705
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 2, ADDITIONAL: 2
+
+;; QUESTION SECTION:
+;injcname.als.rev.yourdomain.com. IN	AAAA
+
+;; ANSWER SECTION:
+injected.yourdomain.com. 60	IN	CNAME	always329280.yourdomain.com.
+injcname.als.rev.yourdomain.com. 60 IN	AAAA	1111:2222:3333:4444:5555:6666:7777:8888
+
+;; AUTHORITY SECTION:
+injected.yourdomain.com. 60	IN	CNAME	always329280.yourdomain.com.
+injcname.als.rev.yourdomain.com. 60 IN	AAAA	1111:2222:3333:4444:5555:6666:7777:8888
+
+;; ADDITIONAL SECTION:
+injected.yourdomain.com. 60	IN	CNAME	always329280.yourdomain.com.
+injcname.als.rev.yourdomain.com. 60 IN	AAAA	1111:2222:3333:4444:5555:6666:7777:8888
+
+;; Query time: 24 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:39 +04 2025
+;; MSG SIZE  rcvd: 325
+

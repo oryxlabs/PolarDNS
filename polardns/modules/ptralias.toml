@@ -62,7 +62,7 @@ python = '''
               # domains (from the same range). This means that if the client/resolver will attempt to resolve
               # any of them, it will again end up here, producing even more PTR records from the same range.
               # BEWARE: This could result in multiplication
-              answers = int(req.subdomains[2]) if req.subdomains[2].isnumeric() else 1
+              answers = min(int(req.subdomains[2]), 2048) if req.subdomains[2].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########

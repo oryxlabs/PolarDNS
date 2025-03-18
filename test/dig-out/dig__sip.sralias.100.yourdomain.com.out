@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> _sip.sralias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 46146
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_sip.sralias.100.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 30917 _sip.sralias259115.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 50227 _sip.sralias374478.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 35445 _sip.sralias179980.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 8706 _sip.sralias44863.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 8769 _sip.sralias929904.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 12956 _sip.sralias920044.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 52115 _sip.sralias844452.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 32684 _sip.sralias192227.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 23612 _sip.sralias4265.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 19926 _sip.sralias323381.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 21660 _sip.sralias403661.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 53971 _sip.sralias260345.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 64021 _sip.sralias898470.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 64434 _sip.sralias453319.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 16482 _sip.sralias942482.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 2395 _sip.sralias595323.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 55023 _sip.sralias989453.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 55398 _sip.sralias154758.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 28296 _sip.sralias726419.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 29933 _sip.sralias187948.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 37029 _sip.sralias620059.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 42497 _sip.sralias849836.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 31625 _sip.sralias704109.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 32629 _sip.sralias142834.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 20673 _sip.sralias563971.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 318 _sip.sralias15393.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 21047 _sip.sralias464823.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 40192 _sip.sralias425051.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 59882 _sip.sralias115296.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 53083 _sip.sralias776958.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 12152 _sip.sralias158510.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 56148 _sip.sralias259918.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 21469 _sip.sralias178915.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 61107 _sip.sralias972246.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 40484 _sip.sralias503083.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 49667 _sip.sralias265595.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 58817 _sip.sralias2624.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 51413 _sip.sralias754015.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 56000 _sip.sralias122627.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 25154 _sip.sralias850776.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 3282 _sip.sralias32727.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 46962 _sip.sralias45324.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 62468 _sip.sralias198119.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 17316 _sip.sralias692897.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 23899 _sip.sralias23267.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 58813 _sip.sralias682631.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 57078 _sip.sralias133075.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 57984 _sip.sralias677622.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 6216 _sip.sralias690261.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 46464 _sip.sralias745716.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 17781 _sip.sralias735213.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 45358 _sip.sralias457825.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 62856 _sip.sralias560809.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 12724 _sip.sralias630115.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 19058 _sip.sralias209619.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 23515 _sip.sralias39834.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 64946 _sip.sralias705876.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 21721 _sip.sralias250608.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 56129 _sip.sralias607629.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 64259 _sip.sralias96551.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 16028 _sip.sralias398664.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 14849 _sip.sralias499978.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 51784 _sip.sralias796250.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 63037 _sip.sralias685125.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 38796 _sip.sralias375018.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 12389 _sip.sralias489101.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 17119 _sip.sralias732287.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 34467 _sip.sralias744817.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 63812 _sip.sralias158634.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 6043 _sip.sralias501925.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 29676 _sip.sralias336197.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 42090 _sip.sralias450207.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 53101 _sip.sralias42090.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 24909 _sip.sralias748654.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 59368 _sip.sralias317272.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 40904 _sip.sralias981729.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 6262 _sip.sralias296678.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 8232 _sip.sralias26855.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 43693 _sip.sralias180015.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 65497 _sip.sralias250974.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 64894 _sip.sralias423564.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 38715 _sip.sralias387080.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 24333 _sip.sralias587725.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 28752 _sip.sralias82567.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 55262 _sip.sralias930855.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 2653 _sip.sralias700444.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 65278 _sip.sralias754421.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 14458 _sip.sralias107485.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 58905 _sip.sralias661460.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 42430 _sip.sralias41326.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 62976 _sip.sralias457789.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 7526 _sip.sralias798982.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 32830 _sip.sralias448472.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 25387 _sip.sralias949829.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 48939 _sip.sralias798508.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 53274 _sip.sralias341827.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 19687 _sip.sralias442791.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 43755 _sip.sralias77948.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 27202 _sip.sralias418009.100.yourdomain.com.
+_sip.sralias.100.yourdomain.com. 60 IN	SRV	0 0 25999 _sip.sralias577765.100.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 5733
+

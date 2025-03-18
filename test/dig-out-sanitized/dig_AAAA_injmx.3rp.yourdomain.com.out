@@ -1,0 +1,16 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injmx.3rp.<OURDOM>. IN AAAA
+
+;; ANSWER SECTION:
+injmx.3rp.<OURDOM>. 60 IN AAAA 1111:2222:3333:4444:5555:6666:7777:8888
+injected.a3rdparty.net. 60 IN MX 0 always<RANDOM>.<OURDOM>.
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>
+

@@ -1,0 +1,81 @@
+# newid
+always123.newid.${domain}
+
+# flags
+always.flgs0x8403.${domain}
+always.flgs33795.${domain}
+always.flgs.${domain}
+always.flgsbad.${domain}
+always.flgs12345bad.${domain}
+
+# rc (reply code / status)
+always.rc0.${domain}
+always.rc1.${domain}
+always.rc2.${domain}
+always.rc3.${domain}
+always.rc4.${domain}
+always.rc5.${domain}
+always.rc6.${domain}
+always.rc7.${domain}
+always.rc8.${domain}
+always.rc9.${domain}
+always.rc10.${domain}
+always.rc11.${domain}
+always.rc12.${domain}
+always.rc13.${domain}
+always.rc14.${domain}
+always.rc15.${domain}
+nonexistent.rc0.${domain}
+nonexistent.rc1.${domain}
+nonexistent.rc2.${domain}
+nonexistent.rc3.${domain}
+nonexistent.rc4.${domain}
+nonexistent.rc5.${domain}
+nonexistent.rc6.${domain}
+nonexistent.rc7.${domain}
+nonexistent.rc8.${domain}
+nonexistent.rc9.${domain}
+nonexistent.rc10.${domain}
+nonexistent.rc11.${domain}
+nonexistent.rc12.${domain}
+nonexistent.rc13.${domain}
+nonexistent.rc14.${domain}
+nonexistent.rc15.${domain}
+
+# # # #
+nonexistent.qurr0.${domain}
+something.qurr0.nonexistent.com
++tcp nonexistent.qurr0.${domain}
++tcp something.qurr0.nonexistent.com
+always123.anrr0.tc.${domain}
+always123.aurr0.tc.${domain}
+always123.adrr0.tc.${domain}
+always123.anrr3.tc.${domain}
+always123.aurr3.tc.${domain}
+always123.adrr3.tc.${domain}
+always123.qurr0.tc.${domain}
+always123.qurr0.noq.tc.nc.${domain}
+always123.qurr0.noq.tc.fc.${domain}
+always123.qurr3.tc.${domain}
+# # # #
++tcp always123.anrr0.${domain}
++tcp always123.aurr0.${domain}
++tcp always123.adrr0.${domain}
++tcp always123.anrr3.${domain}
++tcp always123.aurr3.${domain}
++tcp always123.adrr3.${domain}
++tcp always123.qurr0.${domain}
++tcp always123.qurr0.noq.nc.${domain}
++tcp always123.qurr0.noq.fc.${domain}
++tcp always123.qurr3.${domain}
+# # # #
+always123.anrr0.${domain}
+always123.aurr0.${domain}
+always123.adrr0.${domain}
+always123.anrr3.${domain}
+always123.aurr3.${domain}
+always123.adrr3.${domain}
+always123.qurr0.${domain}
+always123.qurr0.noq.nc.${domain}
+always123.qurr0.noq.fc.${domain}
+always123.qurr3.${domain}

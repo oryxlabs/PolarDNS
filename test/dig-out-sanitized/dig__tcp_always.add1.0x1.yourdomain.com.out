@@ -1,0 +1,15 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always.add1.0x1.<OURDOM>. IN A
+
+;; ANSWER SECTION:
+always.add1.0x1.<OURDOM>. 60 IN A 2.3.4.5
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; MSG SIZE  rcvd: <SIZE>
+

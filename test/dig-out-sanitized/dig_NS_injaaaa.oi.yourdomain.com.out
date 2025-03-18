@@ -1,0 +1,15 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injaaaa.oi.<OURDOM>. IN NS
+
+;; ANSWER SECTION:
+injected.<OURDOM>. 60 IN AAAA 6666:6666:6666:6666:6666:6666:6666:0
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>
+

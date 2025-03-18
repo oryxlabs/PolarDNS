@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> svalias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 39157
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;svalias.100.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias47227.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias217589.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias13604.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias571284.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias855365.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias853214.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias692468.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias362042.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias85491.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias535034.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias860007.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias983592.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias486511.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias313883.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias254009.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias631603.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias164858.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias989534.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias398174.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias494032.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias22625.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias933845.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias570121.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias860715.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias244179.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias84662.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias685042.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias538750.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias354720.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias201812.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias145690.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias295514.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias815410.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias143906.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias25121.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias989295.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias781429.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias319964.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias552685.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias583470.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias193507.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias695253.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias26042.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias79560.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias97037.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias927413.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias287634.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias167052.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias88233.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias752604.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias359772.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias700572.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias951530.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias992684.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias790705.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias628630.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias369378.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias21421.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias193216.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias760993.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias250572.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias20350.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias82246.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias37725.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias138300.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias38990.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias477790.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias7587.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias31669.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias12187.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias700940.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias829813.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias488983.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias443034.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias769156.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias733416.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias374483.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias732974.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias101469.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias778716.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias253932.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias194627.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias351769.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias862627.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias196659.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias263450.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias862624.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias620391.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias857426.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias106455.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias192299.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias276442.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias562941.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias67466.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias833288.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias402213.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias967836.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias746487.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias400209.100.yourdomain.com.
+svalias.100.yourdomain.com. 60	IN	SVCB	0 svalias608492.100.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 4824
+

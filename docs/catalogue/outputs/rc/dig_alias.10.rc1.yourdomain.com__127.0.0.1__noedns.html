@@ -1,0 +1,27 @@
+<pre class='output-block'><strong># dig alias.10.rc1.yourdomain.com @127.0.0.1 +noedns</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; alias.10.rc1.yourdomain.com @127.0.0.1 +noedns
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="background-color: yellow;">FORMERR</span>, id: 20065
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.10.rc1.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias858735.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias457065.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias358428.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias804274.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias753098.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias361470.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias142873.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias779129.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias679580.10.rc1.yourdomain.com.
+alias.10.rc1.yourdomain.com. 60	IN	CNAME	alias146470.10.rc1.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Mar 13 11:03:42 +04 2025
+;; MSG SIZE  rcvd: 515</pre>

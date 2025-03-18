@@ -52,10 +52,10 @@ if req.first_subdomain.startswith("manytxt"):
    # Send many random TXT records
    nans = 10  # number of TXT records to send
    if req.subdomains[1].isnumeric():
-      nans = int(req.subdomains[1])
+      nans = min(int(req.subdomains[1]), 8192)
    chunksize = 255  # chunk size
    if req.subdomains[2].isnumeric():
-      chunksize = int(req.subdomains[2])
+      chunksize = min(int(req.subdomains[2]), 65535)
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, nans, 0, 0)
    ### QUESTION SECTION ########

@@ -16,7 +16,7 @@ format = '''
 
 This module has no parameters.
 '''
-seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, rc, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
 
 [[module.example]]
 description = "In this example, we use the [basic] always feature which always resolves to an IP address. We request to generate a new Transaction ID for the DNS response. As a result, the client is unable to associate the response with the original query:"
@@ -27,4 +27,4 @@ description = "In this example, we use the [size] feature which returns multiple
 command = "dig size.newid.yourdomain.com @127.0.0.1"
 
 [module.code]
-# The code is located in the polardns.py file.
+# The code is located in the polardns/core.py file.

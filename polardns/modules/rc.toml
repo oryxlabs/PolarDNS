@@ -1,0 +1,51 @@
+[module]
+name = "rc"
+type = "modifier"
+info = "Set Custom Status (Reply Code)"
+short = "Set custom status (reply code) in the DNS response"
+category = "Header manipulation"
+desc = '''
+This modifier allows you to set a custom response status (reply code) in the DNS response, such as NOERROR, NXDOMAIN, SERVFAIL, etc.
+
+The reply code value is 4 bits long and is stored in the last 4 bits of the second byte in the Flags field. This allows for a total of 16 possible DNS reply codes.
+
+This modifier is compatible with and can be combined with any other existing feature or modifier.
+'''
+rfc = "RFC1035, RFC2136, RFC8490"
+format = '''
+**`*.rc<CODE>.*`**
+
+Where:
+
+- The **`<CODE>`** parameter can either be:
+	- **`0`** (NOERROR) - No error condition
+	- **`1`** (FORMERR) - Format error (server unable to interpret query)
+	- **`2`** (SERVFAIL) - Server failure (unable to process due to internal error)
+	- **`3`** (NXDOMAIN) - Non-existent domain
+	- **`4`** (NOTIMP) - Not implemented (query type not supported)
+	- **`5`** (REFUSED) - Query refused (policy reasons)
+	- **`6`** (YXDOMAIN) - Name exists when it should not
+	- **`7`** (YXRRSET) - RR set exists when it should not
+	- **`8`** (NXRRSET) - RR set does not exist
+	- **`9`** (NOTAUTH) - Server is not authoritative for the zone
+	- **`10`** (NOTZONE) - Name is not within the zone
+	- **`11`** (DSOTYPENI) - DS record type not implemented
+	- **`12`** (RESERVED12) - Reserved for future use
+	- **`13`** (RESERVED13) - Reserved for future use
+	- **`14`** (RESERVED14) - Reserved for future use
+	- **`15`** (RESERVED15) - Reserved for future use
+'''
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, rc, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+
+[[module.example]]
+description = "In this example, we use the basic [always] feature which always resolves to an IP address. Additionally, we request to set the status in the response to `NXDOMAIN` (No such name) by including `rc3` in the domain name:"
+command = "dig always.rc3.yourdomain.com @127.0.0.1"
+append = "This DNS response may cause confusion as it presents a valid A record in the response while simultaneously indicating that the domain does not exist."
+
+[[module.example]]
+description = "In this example, we use the [alias] feature to generate 10 CNAME aliases. Additionally, we request to set the status in the response to `FORMERR` (Format error) by including `rc1` in the domain name:"
+command = "dig alias.10.rc1.yourdomain.com @127.0.0.1 +noedns"
+append = "This DNS response may again cause confusion as it presents a valid response while simultaneously indicating that the server was unable to interpret the query."
+
+[module.code]
+# The code is located in the polardns/core.py file.

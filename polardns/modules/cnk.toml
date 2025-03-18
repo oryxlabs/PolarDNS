@@ -22,7 +22,7 @@ Where:
 
 - The **`<BYTES>`** parameter specifies the size of each chunk for dividing the DNS response packet. If the specified size exceeds the total packet size, the entire packet will be sent as a single chunk.
 '''
-seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, rc, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
 
 [[module.example]]
 description = "In this example, we use the basic [always] feature to request 10 A records in TCP mode. Additionally, we request the response to be divided into 20-byte chunks with a 150-millisecond delay between sending each chunk:"
@@ -39,4 +39,4 @@ command = "dig spfalias1.10.tc.cnk10.slp100.yourdomain.com @127.0.0.1"
 append = "Given the resulting packet size of 867 bytes, this setup effectively extended the time required to receive the full response to slightly over 9 seconds."
 
 [module.code]
-# The code is located in the polardns.py file.
+# The code is located in the polardns/core.py file.

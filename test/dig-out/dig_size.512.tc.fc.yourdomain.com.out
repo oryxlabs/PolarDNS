@@ -1,0 +1,46 @@
+;; Truncated, retrying in TCP mode.
+
+; <<>> DiG 9.18.10-2-Debian <<>> size.512.tc.fc.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 32691
+;; flags: qr aa; QUERY: 1, ANSWER: 28, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.512.tc.fc.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.163
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.31
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.200
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.88
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.169
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.75
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.20
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.123
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.140
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.124
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.180
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.98
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.221
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.173
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.148
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.113
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.235
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.112
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.245
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.25
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.232
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.142
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.125
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.175
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.221
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.252
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.215
+size.512.tc.fc.yourdomain.com. 60 IN	A	127.0.0.71
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Tue Mar 18 21:10:33 +04 2025
+;; MSG SIZE  rcvd: 495
+

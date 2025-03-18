@@ -1,0 +1,18 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> MX injaaaa.oi.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 3991
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;injaaaa.oi.yourdomain.com.	IN	MX
+
+;; ANSWER SECTION:
+injected.yourdomain.com. 60	IN	AAAA	6666:6666:6666:6666:6666:6666:6666:0
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:41 +04 2025
+;; MSG SIZE  rcvd: 94
+

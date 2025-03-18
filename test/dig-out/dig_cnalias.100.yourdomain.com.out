@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> cnalias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37752
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;cnalias.100.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias302796.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias773043.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias724465.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias152142.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias28106.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias245861.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias916916.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias883308.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias684387.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias917480.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias148346.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias563352.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias112245.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias966532.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias373013.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias893856.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias868250.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias515899.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias173518.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias288314.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias139614.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias20278.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias797354.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias548033.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias422504.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias526896.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias788659.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias344493.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias785352.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias800074.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias958060.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias679095.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias793444.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias502542.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias302737.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias14639.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias262431.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias615756.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias839344.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias998433.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias615435.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias154190.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias712265.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias892448.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias719639.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias526401.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias109909.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias41419.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias560266.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias811248.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias397055.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias51675.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias313260.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias822766.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias155414.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias249936.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias964382.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias383024.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias981015.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias236332.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias2539.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias636874.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias810625.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias16387.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias356649.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias35067.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias552353.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias585362.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias282496.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias741457.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias960212.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias638461.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias344651.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias356397.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias108174.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias14364.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias86522.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias137714.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias222017.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias321354.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias135436.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias163382.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias228241.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias379970.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias261569.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias851516.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias119606.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias59604.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias874054.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias613523.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias314894.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias778468.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias641866.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias920678.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias948704.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias413681.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias229067.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias51492.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias498260.100.yourdomain.com.
+cnalias.100.yourdomain.com. 60	IN	CNAME	cnalias685180.100.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 4631
+

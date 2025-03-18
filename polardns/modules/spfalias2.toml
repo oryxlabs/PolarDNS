@@ -47,7 +47,7 @@ python = '''
            elif req.first_subdomain.startswith("spfalias2"):
               # Send a single SPF (TXT) record with multiple random aliases included one by one
               # BEWARE: This could result in multiplication
-              aliases = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 1
+              aliases = min(int(req.subdomains[1]), 2048) if req.subdomains[1].isnumeric() else 1
               buffer = b''
               answers = []
               doms = []

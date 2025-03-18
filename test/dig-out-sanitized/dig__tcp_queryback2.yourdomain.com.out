@@ -1,0 +1,14 @@
+;; Warning: query response not set
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: rd ad; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;queryback2.<OURDOM>. IN A
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; MSG SIZE  rcvd: <SIZE>
+

@@ -1,0 +1,25 @@
+;; Truncated, retrying in TCP mode.
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.512.tc.nc.<OURDOM>. IN A
+
+;; ANSWER SECTION:
+size.512.tc.nc.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+size.512.tc.nc.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+size.512.tc.nc.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+size.512.tc.nc.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+size.512.tc.nc.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+size.512.tc.nc.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+size.512.tc.nc.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+size.512.tc.nc.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+size.512.tc.nc.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+size.512.tc.nc.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; MSG SIZE  rcvd: <SIZE>
+

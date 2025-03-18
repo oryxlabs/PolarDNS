@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> HTTPS alias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 12888
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.100.yourdomain.com.	IN	HTTPS
+
+;; ANSWER SECTION:
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias424547.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias770803.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias565224.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias695728.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias119992.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias743423.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias311424.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias370759.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias389334.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias138036.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias315717.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias586313.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias659909.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias343585.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias920371.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias936279.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias97344.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias699286.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias562791.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias772955.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias615037.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias680534.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias957125.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias622392.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias336654.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias822946.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias405654.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias401978.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias837131.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias747495.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias242177.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias340234.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias980940.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias778715.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias717698.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias284757.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias713168.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias754963.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias176760.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias13262.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias96183.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias685565.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias644197.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias416620.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias396122.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias128994.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias650118.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias738128.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias777248.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias21201.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias387620.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias422665.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias591683.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias698240.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias844199.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias777593.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias70151.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias661866.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias265819.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias147721.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias515690.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias581013.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias655021.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias8552.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias619053.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias319608.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias886899.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias477640.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias394279.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias482183.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias495473.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias844284.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias706885.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias998528.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias670646.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias320025.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias858991.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias714585.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias941016.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias307583.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias244870.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias63730.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias39537.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias319378.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias404351.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias78001.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias711260.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias15093.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias28603.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias856124.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias500582.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias302802.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias128708.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias160867.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias269679.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias510223.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias217015.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias15591.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias841447.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	HTTPS	0 alias852633.100.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 4629
+

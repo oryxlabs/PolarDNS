@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> htalias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 30978
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;htalias.100.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias560958.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias258193.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias484416.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias266611.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias398603.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias680653.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias318059.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias379082.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias391015.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias757523.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias72721.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias938235.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias38650.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias652489.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias887744.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias511368.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias596727.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias662631.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias342002.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias311170.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias285650.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias514243.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias110724.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias452252.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias574710.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias624619.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias174662.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias766767.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias466309.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias583774.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias29470.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias798573.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias627220.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias413427.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias19158.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias807414.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias152431.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias975899.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias746648.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias5723.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias915483.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias947181.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias194580.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias711766.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias298892.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias32344.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias523496.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias945356.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias47041.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias450095.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias788135.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias784152.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias17026.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias325009.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias74169.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias766704.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias767127.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias290480.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias935861.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias33191.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias538557.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias620464.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias454656.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias831708.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias836890.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias658679.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias82079.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias963189.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias733373.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias100660.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias524521.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias525857.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias534933.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias644534.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias40666.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias50396.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias787259.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias922385.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias949396.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias168964.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias103217.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias217247.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias306058.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias293656.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias876865.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias870200.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias54439.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias950246.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias258786.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias601940.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias726185.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias820812.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias225699.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias541189.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias43692.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias693819.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias499456.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias516251.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias119276.100.yourdomain.com.
+htalias.100.yourdomain.com. 60	IN	HTTPS	0 htalias897785.100.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 4828
+

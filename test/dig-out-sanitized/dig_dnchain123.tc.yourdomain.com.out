@@ -1,0 +1,16 @@
+;; Truncated, retrying in TCP mode.
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;dnchain123.tc.<OURDOM>. IN A
+
+;; ANSWER SECTION:
+dnchain123.tc.<OURDOM>. 60 IN DNAME dnchain124.tc.<OURDOM>.
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; MSG SIZE  rcvd: <SIZE>
+

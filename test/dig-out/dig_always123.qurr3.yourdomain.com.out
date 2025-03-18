@@ -1,0 +1,8 @@
+;; Warning: Message parser reports malformed message packet.
+;; ;; Question section mismatch: got ./TYPE0/CLASS15360
+;; communications error to 127.0.0.1#53: timed out
+
+; <<>> DiG 9.18.10-2-Debian <<>> always123.qurr3.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; no servers could be reached
+

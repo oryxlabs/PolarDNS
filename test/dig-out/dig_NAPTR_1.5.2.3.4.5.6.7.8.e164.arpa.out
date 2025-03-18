@@ -1,0 +1,22 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> NAPTR 1.5.2.3.4.5.6.7.8.e164.arpa @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 51989
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;1.5.2.3.4.5.6.7.8.e164.arpa.	IN	NAPTR
+
+;; ANSWER SECTION:
+1.5.2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 "U" "E2U+sip" "!^.*$!1.5.7.0.2.9.8.1.4.0.9.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 "U" "E2U+sip" "!^.*$!1.5.7.3.2.5.0.4.2.0.0.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 "U" "E2U+sip" "!^.*$!1.5.4.2.4.8.2.5.2.8.4.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 "U" "E2U+sip" "!^.*$!1.5.6.9.5.6.8.6.6.7.1.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60	IN	NAPTR	0 0 "U" "E2U+sip" "!^.*$!1.5.3.7.9.0.8.9.5.4.5.e164.arpa!" .
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 375
+

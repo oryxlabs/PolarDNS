@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> SVCB alias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4992
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.100.yourdomain.com.	IN	SVCB
+
+;; ANSWER SECTION:
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias640296.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias352493.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias533703.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias624696.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias858805.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias113637.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias202094.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias9732.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias804945.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias593866.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias50453.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias50719.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias672122.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias764916.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias562242.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias2901.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias472510.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias48896.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias421790.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias731520.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias697437.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias301411.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias532638.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias700477.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias945804.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias137821.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias222568.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias280592.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias895442.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias367670.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias776333.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias261015.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias565421.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias562033.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias719543.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias802559.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias19983.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias248649.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias920710.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias982237.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias838780.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias715371.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias939097.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias359791.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias268470.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias965394.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias173972.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias965124.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias292203.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias256591.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias584659.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias306759.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias385766.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias36376.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias123257.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias918650.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias181042.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias279384.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias32737.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias78141.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias44776.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias67508.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias92180.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias466931.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias729829.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias375691.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias886427.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias956178.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias905647.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias277673.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias737990.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias132496.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias287635.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias781044.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias108943.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias598200.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias183844.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias379517.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias530893.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias431422.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias367173.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias953028.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias62278.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias246570.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias894891.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias553926.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias901474.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias159844.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias571087.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias944846.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias161181.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias209171.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias832124.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias157986.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias489657.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias506807.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias523544.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias306.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias605261.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SVCB	0 alias654367.100.yourdomain.com.
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 4624
+

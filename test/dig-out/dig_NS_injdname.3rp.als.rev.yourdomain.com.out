@@ -1,0 +1,27 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> NS injdname.3rp.als.rev.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21600
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 2, ADDITIONAL: 2
+
+;; QUESTION SECTION:
+;injdname.3rp.als.rev.yourdomain.com. IN	NS
+
+;; ANSWER SECTION:
+injected.a3rdparty.net.	60	IN	DNAME	always225850.yourdomain.com.
+injdname.3rp.als.rev.yourdomain.com. 60	IN NS	always023636.yourdomain.com.
+
+;; AUTHORITY SECTION:
+injected.a3rdparty.net.	60	IN	DNAME	always225850.yourdomain.com.
+injdname.3rp.als.rev.yourdomain.com. 60	IN NS	always023636.yourdomain.com.
+
+;; ADDITIONAL SECTION:
+injected.a3rdparty.net.	60	IN	DNAME	always225850.yourdomain.com.
+injdname.3rp.als.rev.yourdomain.com. 60	IN NS	always023636.yourdomain.com.
+
+;; Query time: 32 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:42 +04 2025
+;; MSG SIZE  rcvd: 365
+

@@ -1,0 +1,673 @@
+# record injection
+inj.${domain}
+inj.rev.${domain}
+inj.als.${domain}
+inj.als.rev.${domain}
+inj.3rp.${domain}
+inj.3rp.rev.${domain}
+inj.3rp.als.${domain}
+inj.3rp.als.rev.${domain}
+inj.oi.${domain}
+inj.als.oi.${domain}
+inj.3rp.oi.${domain}
+inj.3rp.als.oi.${domain}
+inja.${domain}
+inja.rev.${domain}
+inja.als.${domain}
+inja.als.rev.${domain}
+inja.3rp.${domain}
+inja.3rp.rev.${domain}
+inja.3rp.als.${domain}
+inja.3rp.als.rev.${domain}
+inja.oi.${domain}
+inja.als.oi.${domain}
+inja.3rp.oi.${domain}
+inja.3rp.als.oi.${domain}
+injaaaa.${domain}
+injaaaa.rev.${domain}
+injaaaa.als.${domain}
+injaaaa.als.rev.${domain}
+injaaaa.3rp.${domain}
+injaaaa.3rp.rev.${domain}
+injaaaa.3rp.als.${domain}
+injaaaa.3rp.als.rev.${domain}
+injaaaa.oi.${domain}
+injaaaa.als.oi.${domain}
+injaaaa.3rp.oi.${domain}
+injaaaa.3rp.als.oi.${domain}
+injptr.${domain}
+injptr.rev.${domain}
+injptr.als.${domain}
+injptr.als.rev.${domain}
+injptr.3rp.${domain}
+injptr.3rp.rev.${domain}
+injptr.3rp.als.${domain}
+injptr.3rp.als.rev.${domain}
+injptr.oi.${domain}
+injptr.als.oi.${domain}
+injptr.3rp.oi.${domain}
+injptr.3rp.als.oi.${domain}
+injmx.${domain}
+injmx.rev.${domain}
+injmx.als.${domain}
+injmx.als.rev.${domain}
+injmx.3rp.${domain}
+injmx.3rp.rev.${domain}
+injmx.3rp.als.${domain}
+injmx.3rp.als.rev.${domain}
+injmx.oi.${domain}
+injmx.als.oi.${domain}
+injmx.3rp.oi.${domain}
+injmx.3rp.als.oi.${domain}
+injns.${domain}
+injns.rev.${domain}
+injns.als.${domain}
+injns.als.rev.${domain}
+injns.3rp.${domain}
+injns.3rp.rev.${domain}
+injns.3rp.als.${domain}
+injns.3rp.als.rev.${domain}
+injns.oi.${domain}
+injns.als.oi.${domain}
+injns.3rp.oi.${domain}
+injns.3rp.als.oi.${domain}
+injcname.${domain}
+injcname.rev.${domain}
+injcname.als.${domain}
+injcname.als.rev.${domain}
+injcname.3rp.${domain}
+injcname.3rp.rev.${domain}
+injcname.3rp.als.${domain}
+injcname.3rp.als.rev.${domain}
+injcname.oi.${domain}
+injcname.als.oi.${domain}
+injcname.3rp.oi.${domain}
+injcname.3rp.als.oi.${domain}
+injdname.${domain}
+injdname.rev.${domain}
+injdname.als.${domain}
+injdname.als.rev.${domain}
+injdname.3rp.${domain}
+injdname.3rp.rev.${domain}
+injdname.3rp.als.${domain}
+injdname.3rp.als.rev.${domain}
+injdname.oi.${domain}
+injdname.als.oi.${domain}
+injdname.3rp.oi.${domain}
+injdname.3rp.als.oi.${domain}
+AAAA inj.${domain}
+AAAA inj.rev.${domain}
+AAAA inj.als.${domain}
+AAAA inj.als.rev.${domain}
+AAAA inj.3rp.${domain}
+AAAA inj.3rp.rev.${domain}
+AAAA inj.3rp.als.${domain}
+AAAA inj.3rp.als.rev.${domain}
+AAAA inj.oi.${domain}
+AAAA inj.als.oi.${domain}
+AAAA inj.3rp.oi.${domain}
+AAAA inj.3rp.als.oi.${domain}
+AAAA inja.${domain}
+AAAA inja.rev.${domain}
+AAAA inja.als.${domain}
+AAAA inja.als.rev.${domain}
+AAAA inja.3rp.${domain}
+AAAA inja.3rp.rev.${domain}
+AAAA inja.3rp.als.${domain}
+AAAA inja.3rp.als.rev.${domain}
+AAAA inja.oi.${domain}
+AAAA inja.als.oi.${domain}
+AAAA inja.3rp.oi.${domain}
+AAAA inja.3rp.als.oi.${domain}
+AAAA injaaaa.${domain}
+AAAA injaaaa.rev.${domain}
+AAAA injaaaa.als.${domain}
+AAAA injaaaa.als.rev.${domain}
+AAAA injaaaa.3rp.${domain}
+AAAA injaaaa.3rp.rev.${domain}
+AAAA injaaaa.3rp.als.${domain}
+AAAA injaaaa.3rp.als.rev.${domain}
+AAAA injaaaa.oi.${domain}
+AAAA injaaaa.als.oi.${domain}
+AAAA injaaaa.3rp.oi.${domain}
+AAAA injaaaa.3rp.als.oi.${domain}
+AAAA injptr.${domain}
+AAAA injptr.rev.${domain}
+AAAA injptr.als.${domain}
+AAAA injptr.als.rev.${domain}
+AAAA injptr.3rp.${domain}
+AAAA injptr.3rp.rev.${domain}
+AAAA injptr.3rp.als.${domain}
+AAAA injptr.3rp.als.rev.${domain}
+AAAA injptr.oi.${domain}
+AAAA injptr.als.oi.${domain}
+AAAA injptr.3rp.oi.${domain}
+AAAA injptr.3rp.als.oi.${domain}
+AAAA injmx.${domain}
+AAAA injmx.rev.${domain}
+AAAA injmx.als.${domain}
+AAAA injmx.als.rev.${domain}
+AAAA injmx.3rp.${domain}
+AAAA injmx.3rp.rev.${domain}
+AAAA injmx.3rp.als.${domain}
+AAAA injmx.3rp.als.rev.${domain}
+AAAA injmx.oi.${domain}
+AAAA injmx.als.oi.${domain}
+AAAA injmx.3rp.oi.${domain}
+AAAA injmx.3rp.als.oi.${domain}
+AAAA injns.${domain}
+AAAA injns.rev.${domain}
+AAAA injns.als.${domain}
+AAAA injns.als.rev.${domain}
+AAAA injns.3rp.${domain}
+AAAA injns.3rp.rev.${domain}
+AAAA injns.3rp.als.${domain}
+AAAA injns.3rp.als.rev.${domain}
+AAAA injns.oi.${domain}
+AAAA injns.als.oi.${domain}
+AAAA injns.3rp.oi.${domain}
+AAAA injns.3rp.als.oi.${domain}
+AAAA injcname.${domain}
+AAAA injcname.rev.${domain}
+AAAA injcname.als.${domain}
+AAAA injcname.als.rev.${domain}
+AAAA injcname.3rp.${domain}
+AAAA injcname.3rp.rev.${domain}
+AAAA injcname.3rp.als.${domain}
+AAAA injcname.3rp.als.rev.${domain}
+AAAA injcname.oi.${domain}
+AAAA injcname.als.oi.${domain}
+AAAA injcname.3rp.oi.${domain}
+AAAA injcname.3rp.als.oi.${domain}
+AAAA injdname.${domain}
+AAAA injdname.rev.${domain}
+AAAA injdname.als.${domain}
+AAAA injdname.als.rev.${domain}
+AAAA injdname.3rp.${domain}
+AAAA injdname.3rp.rev.${domain}
+AAAA injdname.3rp.als.${domain}
+AAAA injdname.3rp.als.rev.${domain}
+AAAA injdname.oi.${domain}
+AAAA injdname.als.oi.${domain}
+AAAA injdname.3rp.oi.${domain}
+AAAA injdname.3rp.als.oi.${domain}
+PTR inj.${domain}
+PTR inj.rev.${domain}
+PTR inj.als.${domain}
+PTR inj.als.rev.${domain}
+PTR inj.3rp.${domain}
+PTR inj.3rp.rev.${domain}
+PTR inj.3rp.als.${domain}
+PTR inj.3rp.als.rev.${domain}
+PTR inj.oi.${domain}
+PTR inj.als.oi.${domain}
+PTR inj.3rp.oi.${domain}
+PTR inj.3rp.als.oi.${domain}
+PTR inja.${domain}
+PTR inja.rev.${domain}
+PTR inja.als.${domain}
+PTR inja.als.rev.${domain}
+PTR inja.3rp.${domain}
+PTR inja.3rp.rev.${domain}
+PTR inja.3rp.als.${domain}
+PTR inja.3rp.als.rev.${domain}
+PTR inja.oi.${domain}
+PTR inja.als.oi.${domain}
+PTR inja.3rp.oi.${domain}
+PTR inja.3rp.als.oi.${domain}
+PTR injaaaa.${domain}
+PTR injaaaa.rev.${domain}
+PTR injaaaa.als.${domain}
+PTR injaaaa.als.rev.${domain}
+PTR injaaaa.3rp.${domain}
+PTR injaaaa.3rp.rev.${domain}
+PTR injaaaa.3rp.als.${domain}
+PTR injaaaa.3rp.als.rev.${domain}
+PTR injaaaa.oi.${domain}
+PTR injaaaa.als.oi.${domain}
+PTR injaaaa.3rp.oi.${domain}
+PTR injaaaa.3rp.als.oi.${domain}
+PTR injptr.${domain}
+PTR injptr.rev.${domain}
+PTR injptr.als.${domain}
+PTR injptr.als.rev.${domain}
+PTR injptr.3rp.${domain}
+PTR injptr.3rp.rev.${domain}
+PTR injptr.3rp.als.${domain}
+PTR injptr.3rp.als.rev.${domain}
+PTR injptr.oi.${domain}
+PTR injptr.als.oi.${domain}
+PTR injptr.3rp.oi.${domain}
+PTR injptr.3rp.als.oi.${domain}
+PTR injmx.${domain}
+PTR injmx.rev.${domain}
+PTR injmx.als.${domain}
+PTR injmx.als.rev.${domain}
+PTR injmx.3rp.${domain}
+PTR injmx.3rp.rev.${domain}
+PTR injmx.3rp.als.${domain}
+PTR injmx.3rp.als.rev.${domain}
+PTR injmx.oi.${domain}
+PTR injmx.als.oi.${domain}
+PTR injmx.3rp.oi.${domain}
+PTR injmx.3rp.als.oi.${domain}
+PTR injns.${domain}
+PTR injns.rev.${domain}
+PTR injns.als.${domain}
+PTR injns.als.rev.${domain}
+PTR injns.3rp.${domain}
+PTR injns.3rp.rev.${domain}
+PTR injns.3rp.als.${domain}
+PTR injns.3rp.als.rev.${domain}
+PTR injns.oi.${domain}
+PTR injns.als.oi.${domain}
+PTR injns.3rp.oi.${domain}
+PTR injns.3rp.als.oi.${domain}
+PTR injcname.${domain}
+PTR injcname.rev.${domain}
+PTR injcname.als.${domain}
+PTR injcname.als.rev.${domain}
+PTR injcname.3rp.${domain}
+PTR injcname.3rp.rev.${domain}
+PTR injcname.3rp.als.${domain}
+PTR injcname.3rp.als.rev.${domain}
+PTR injcname.oi.${domain}
+PTR injcname.als.oi.${domain}
+PTR injcname.3rp.oi.${domain}
+PTR injcname.3rp.als.oi.${domain}
+PTR injdname.${domain}
+PTR injdname.rev.${domain}
+PTR injdname.als.${domain}
+PTR injdname.als.rev.${domain}
+PTR injdname.3rp.${domain}
+PTR injdname.3rp.rev.${domain}
+PTR injdname.3rp.als.${domain}
+PTR injdname.3rp.als.rev.${domain}
+PTR injdname.oi.${domain}
+PTR injdname.als.oi.${domain}
+PTR injdname.3rp.oi.${domain}
+PTR injdname.3rp.als.oi.${domain}
+MX inj.${domain}
+MX inj.rev.${domain}
+MX inj.als.${domain}
+MX inj.als.rev.${domain}
+MX inj.3rp.${domain}
+MX inj.3rp.rev.${domain}
+MX inj.3rp.als.${domain}
+MX inj.3rp.als.rev.${domain}
+MX inj.oi.${domain}
+MX inj.als.oi.${domain}
+MX inj.3rp.oi.${domain}
+MX inj.3rp.als.oi.${domain}
+MX inja.${domain}
+MX inja.rev.${domain}
+MX inja.als.${domain}
+MX inja.als.rev.${domain}
+MX inja.3rp.${domain}
+MX inja.3rp.rev.${domain}
+MX inja.3rp.als.${domain}
+MX inja.3rp.als.rev.${domain}
+MX inja.oi.${domain}
+MX inja.als.oi.${domain}
+MX inja.3rp.oi.${domain}
+MX inja.3rp.als.oi.${domain}
+MX injaaaa.${domain}
+MX injaaaa.rev.${domain}
+MX injaaaa.als.${domain}
+MX injaaaa.als.rev.${domain}
+MX injaaaa.3rp.${domain}
+MX injaaaa.3rp.rev.${domain}
+MX injaaaa.3rp.als.${domain}
+MX injaaaa.3rp.als.rev.${domain}
+MX injaaaa.oi.${domain}
+MX injaaaa.als.oi.${domain}
+MX injaaaa.3rp.oi.${domain}
+MX injaaaa.3rp.als.oi.${domain}
+MX injptr.${domain}
+MX injptr.rev.${domain}
+MX injptr.als.${domain}
+MX injptr.als.rev.${domain}
+MX injptr.3rp.${domain}
+MX injptr.3rp.rev.${domain}
+MX injptr.3rp.als.${domain}
+MX injptr.3rp.als.rev.${domain}
+MX injptr.oi.${domain}
+MX injptr.als.oi.${domain}
+MX injptr.3rp.oi.${domain}
+MX injptr.3rp.als.oi.${domain}
+MX injmx.${domain}
+MX injmx.rev.${domain}
+MX injmx.als.${domain}
+MX injmx.als.rev.${domain}
+MX injmx.3rp.${domain}
+MX injmx.3rp.rev.${domain}
+MX injmx.3rp.als.${domain}
+MX injmx.3rp.als.rev.${domain}
+MX injmx.oi.${domain}
+MX injmx.als.oi.${domain}
+MX injmx.3rp.oi.${domain}
+MX injmx.3rp.als.oi.${domain}
+MX injns.${domain}
+MX injns.rev.${domain}
+MX injns.als.${domain}
+MX injns.als.rev.${domain}
+MX injns.3rp.${domain}
+MX injns.3rp.rev.${domain}
+MX injns.3rp.als.${domain}
+MX injns.3rp.als.rev.${domain}
+MX injns.oi.${domain}
+MX injns.als.oi.${domain}
+MX injns.3rp.oi.${domain}
+MX injns.3rp.als.oi.${domain}
+MX injcname.${domain}
+MX injcname.rev.${domain}
+MX injcname.als.${domain}
+MX injcname.als.rev.${domain}
+MX injcname.3rp.${domain}
+MX injcname.3rp.rev.${domain}
+MX injcname.3rp.als.${domain}
+MX injcname.3rp.als.rev.${domain}
+MX injcname.oi.${domain}
+MX injcname.als.oi.${domain}
+MX injcname.3rp.oi.${domain}
+MX injcname.3rp.als.oi.${domain}
+MX injdname.${domain}
+MX injdname.rev.${domain}
+MX injdname.als.${domain}
+MX injdname.als.rev.${domain}
+MX injdname.3rp.${domain}
+MX injdname.3rp.rev.${domain}
+MX injdname.3rp.als.${domain}
+MX injdname.3rp.als.rev.${domain}
+MX injdname.oi.${domain}
+MX injdname.als.oi.${domain}
+MX injdname.3rp.oi.${domain}
+MX injdname.3rp.als.oi.${domain}
+NS inj.${domain}
+NS inj.rev.${domain}
+NS inj.als.${domain}
+NS inj.als.rev.${domain}
+NS inj.3rp.${domain}
+NS inj.3rp.rev.${domain}
+NS inj.3rp.als.${domain}
+NS inj.3rp.als.rev.${domain}
+NS inj.oi.${domain}
+NS inj.als.oi.${domain}
+NS inj.3rp.oi.${domain}
+NS inj.3rp.als.oi.${domain}
+NS inja.${domain}
+NS inja.rev.${domain}
+NS inja.als.${domain}
+NS inja.als.rev.${domain}
+NS inja.3rp.${domain}
+NS inja.3rp.rev.${domain}
+NS inja.3rp.als.${domain}
+NS inja.3rp.als.rev.${domain}
+NS inja.oi.${domain}
+NS inja.als.oi.${domain}
+NS inja.3rp.oi.${domain}
+NS inja.3rp.als.oi.${domain}
+NS injaaaa.${domain}
+NS injaaaa.rev.${domain}
+NS injaaaa.als.${domain}
+NS injaaaa.als.rev.${domain}
+NS injaaaa.3rp.${domain}
+NS injaaaa.3rp.rev.${domain}
+NS injaaaa.3rp.als.${domain}
+NS injaaaa.3rp.als.rev.${domain}
+NS injaaaa.oi.${domain}
+NS injaaaa.als.oi.${domain}
+NS injaaaa.3rp.oi.${domain}
+NS injaaaa.3rp.als.oi.${domain}
+NS injptr.${domain}
+NS injptr.rev.${domain}
+NS injptr.als.${domain}
+NS injptr.als.rev.${domain}
+NS injptr.3rp.${domain}
+NS injptr.3rp.rev.${domain}
+NS injptr.3rp.als.${domain}
+NS injptr.3rp.als.rev.${domain}
+NS injptr.oi.${domain}
+NS injptr.als.oi.${domain}
+NS injptr.3rp.oi.${domain}
+NS injptr.3rp.als.oi.${domain}
+NS injmx.${domain}
+NS injmx.rev.${domain}
+NS injmx.als.${domain}
+NS injmx.als.rev.${domain}
+NS injmx.3rp.${domain}
+NS injmx.3rp.rev.${domain}
+NS injmx.3rp.als.${domain}
+NS injmx.3rp.als.rev.${domain}
+NS injmx.oi.${domain}
+NS injmx.als.oi.${domain}
+NS injmx.3rp.oi.${domain}
+NS injmx.3rp.als.oi.${domain}
+NS injns.${domain}
+NS injns.rev.${domain}
+NS injns.als.${domain}
+NS injns.als.rev.${domain}
+NS injns.3rp.${domain}
+NS injns.3rp.rev.${domain}
+NS injns.3rp.als.${domain}
+NS injns.3rp.als.rev.${domain}
+NS injns.oi.${domain}
+NS injns.als.oi.${domain}
+NS injns.3rp.oi.${domain}
+NS injns.3rp.als.oi.${domain}
+NS injcname.${domain}
+NS injcname.rev.${domain}
+NS injcname.als.${domain}
+NS injcname.als.rev.${domain}
+NS injcname.3rp.${domain}
+NS injcname.3rp.rev.${domain}
+NS injcname.3rp.als.${domain}
+NS injcname.3rp.als.rev.${domain}
+NS injcname.oi.${domain}
+NS injcname.als.oi.${domain}
+NS injcname.3rp.oi.${domain}
+NS injcname.3rp.als.oi.${domain}
+NS injdname.${domain}
+NS injdname.rev.${domain}
+NS injdname.als.${domain}
+NS injdname.als.rev.${domain}
+NS injdname.3rp.${domain}
+NS injdname.3rp.rev.${domain}
+NS injdname.3rp.als.${domain}
+NS injdname.3rp.als.rev.${domain}
+NS injdname.oi.${domain}
+NS injdname.als.oi.${domain}
+NS injdname.3rp.oi.${domain}
+NS injdname.3rp.als.oi.${domain}
+CNAME inj.${domain}
+CNAME inj.rev.${domain}
+CNAME inj.als.${domain}
+CNAME inj.als.rev.${domain}
+CNAME inj.3rp.${domain}
+CNAME inj.3rp.rev.${domain}
+CNAME inj.3rp.als.${domain}
+CNAME inj.3rp.als.rev.${domain}
+CNAME inj.oi.${domain}
+CNAME inj.als.oi.${domain}
+CNAME inj.3rp.oi.${domain}
+CNAME inj.3rp.als.oi.${domain}
+CNAME inja.${domain}
+CNAME inja.rev.${domain}
+CNAME inja.als.${domain}
+CNAME inja.als.rev.${domain}
+CNAME inja.3rp.${domain}
+CNAME inja.3rp.rev.${domain}
+CNAME inja.3rp.als.${domain}
+CNAME inja.3rp.als.rev.${domain}
+CNAME inja.oi.${domain}
+CNAME inja.als.oi.${domain}
+CNAME inja.3rp.oi.${domain}
+CNAME inja.3rp.als.oi.${domain}
+CNAME injaaaa.${domain}
+CNAME injaaaa.rev.${domain}
+CNAME injaaaa.als.${domain}
+CNAME injaaaa.als.rev.${domain}
+CNAME injaaaa.3rp.${domain}
+CNAME injaaaa.3rp.rev.${domain}
+CNAME injaaaa.3rp.als.${domain}
+CNAME injaaaa.3rp.als.rev.${domain}
+CNAME injaaaa.oi.${domain}
+CNAME injaaaa.als.oi.${domain}
+CNAME injaaaa.3rp.oi.${domain}
+CNAME injaaaa.3rp.als.oi.${domain}
+CNAME injptr.${domain}
+CNAME injptr.rev.${domain}
+CNAME injptr.als.${domain}
+CNAME injptr.als.rev.${domain}
+CNAME injptr.3rp.${domain}
+CNAME injptr.3rp.rev.${domain}
+CNAME injptr.3rp.als.${domain}
+CNAME injptr.3rp.als.rev.${domain}
+CNAME injptr.oi.${domain}
+CNAME injptr.als.oi.${domain}
+CNAME injptr.3rp.oi.${domain}
+CNAME injptr.3rp.als.oi.${domain}
+CNAME injmx.${domain}
+CNAME injmx.rev.${domain}
+CNAME injmx.als.${domain}
+CNAME injmx.als.rev.${domain}
+CNAME injmx.3rp.${domain}
+CNAME injmx.3rp.rev.${domain}
+CNAME injmx.3rp.als.${domain}
+CNAME injmx.3rp.als.rev.${domain}
+CNAME injmx.oi.${domain}
+CNAME injmx.als.oi.${domain}
+CNAME injmx.3rp.oi.${domain}
+CNAME injmx.3rp.als.oi.${domain}
+CNAME injns.${domain}
+CNAME injns.rev.${domain}
+CNAME injns.als.${domain}
+CNAME injns.als.rev.${domain}
+CNAME injns.3rp.${domain}
+CNAME injns.3rp.rev.${domain}
+CNAME injns.3rp.als.${domain}
+CNAME injns.3rp.als.rev.${domain}
+CNAME injns.oi.${domain}
+CNAME injns.als.oi.${domain}
+CNAME injns.3rp.oi.${domain}
+CNAME injns.3rp.als.oi.${domain}
+CNAME injcname.${domain}
+CNAME injcname.rev.${domain}
+CNAME injcname.als.${domain}
+CNAME injcname.als.rev.${domain}
+CNAME injcname.3rp.${domain}
+CNAME injcname.3rp.rev.${domain}
+CNAME injcname.3rp.als.${domain}
+CNAME injcname.3rp.als.rev.${domain}
+CNAME injcname.oi.${domain}
+CNAME injcname.als.oi.${domain}
+CNAME injcname.3rp.oi.${domain}
+CNAME injcname.3rp.als.oi.${domain}
+CNAME injdname.${domain}
+CNAME injdname.rev.${domain}
+CNAME injdname.als.${domain}
+CNAME injdname.als.rev.${domain}
+CNAME injdname.3rp.${domain}
+CNAME injdname.3rp.rev.${domain}
+CNAME injdname.3rp.als.${domain}
+CNAME injdname.3rp.als.rev.${domain}
+CNAME injdname.oi.${domain}
+CNAME injdname.als.oi.${domain}
+CNAME injdname.3rp.oi.${domain}
+CNAME injdname.3rp.als.oi.${domain}
+DNAME inj.${domain}
+DNAME inj.rev.${domain}
+DNAME inj.als.${domain}
+DNAME inj.als.rev.${domain}
+DNAME inj.3rp.${domain}
+DNAME inj.3rp.rev.${domain}
+DNAME inj.3rp.als.${domain}
+DNAME inj.3rp.als.rev.${domain}
+DNAME inj.oi.${domain}
+DNAME inj.als.oi.${domain}
+DNAME inj.3rp.oi.${domain}
+DNAME inj.3rp.als.oi.${domain}
+DNAME inja.${domain}
+DNAME inja.rev.${domain}
+DNAME inja.als.${domain}
+DNAME inja.als.rev.${domain}
+DNAME inja.3rp.${domain}
+DNAME inja.3rp.rev.${domain}
+DNAME inja.3rp.als.${domain}
+DNAME inja.3rp.als.rev.${domain}
+DNAME inja.oi.${domain}
+DNAME inja.als.oi.${domain}
+DNAME inja.3rp.oi.${domain}
+DNAME inja.3rp.als.oi.${domain}
+DNAME injaaaa.${domain}
+DNAME injaaaa.rev.${domain}
+DNAME injaaaa.als.${domain}
+DNAME injaaaa.als.rev.${domain}
+DNAME injaaaa.3rp.${domain}
+DNAME injaaaa.3rp.rev.${domain}
+DNAME injaaaa.3rp.als.${domain}
+DNAME injaaaa.3rp.als.rev.${domain}
+DNAME injaaaa.oi.${domain}
+DNAME injaaaa.als.oi.${domain}
+DNAME injaaaa.3rp.oi.${domain}
+DNAME injaaaa.3rp.als.oi.${domain}
+DNAME injptr.${domain}
+DNAME injptr.rev.${domain}
+DNAME injptr.als.${domain}
+DNAME injptr.als.rev.${domain}
+DNAME injptr.3rp.${domain}
+DNAME injptr.3rp.rev.${domain}
+DNAME injptr.3rp.als.${domain}
+DNAME injptr.3rp.als.rev.${domain}
+DNAME injptr.oi.${domain}
+DNAME injptr.als.oi.${domain}
+DNAME injptr.3rp.oi.${domain}
+DNAME injptr.3rp.als.oi.${domain}
+DNAME injmx.${domain}
+DNAME injmx.rev.${domain}
+DNAME injmx.als.${domain}
+DNAME injmx.als.rev.${domain}
+DNAME injmx.3rp.${domain}
+DNAME injmx.3rp.rev.${domain}
+DNAME injmx.3rp.als.${domain}
+DNAME injmx.3rp.als.rev.${domain}
+DNAME injmx.oi.${domain}
+DNAME injmx.als.oi.${domain}
+DNAME injmx.3rp.oi.${domain}
+DNAME injmx.3rp.als.oi.${domain}
+DNAME injns.${domain}
+DNAME injns.rev.${domain}
+DNAME injns.als.${domain}
+DNAME injns.als.rev.${domain}
+DNAME injns.3rp.${domain}
+DNAME injns.3rp.rev.${domain}
+DNAME injns.3rp.als.${domain}
+DNAME injns.3rp.als.rev.${domain}
+DNAME injns.oi.${domain}
+DNAME injns.als.oi.${domain}
+DNAME injns.3rp.oi.${domain}
+DNAME injns.3rp.als.oi.${domain}
+DNAME injcname.${domain}
+DNAME injcname.rev.${domain}
+DNAME injcname.als.${domain}
+DNAME injcname.als.rev.${domain}
+DNAME injcname.3rp.${domain}
+DNAME injcname.3rp.rev.${domain}
+DNAME injcname.3rp.als.${domain}
+DNAME injcname.3rp.als.rev.${domain}
+DNAME injcname.oi.${domain}
+DNAME injcname.als.oi.${domain}
+DNAME injcname.3rp.oi.${domain}
+DNAME injcname.3rp.als.oi.${domain}
+DNAME injdname.${domain}
+DNAME injdname.rev.${domain}
+DNAME injdname.als.${domain}
+DNAME injdname.als.rev.${domain}
+DNAME injdname.3rp.${domain}
+DNAME injdname.3rp.rev.${domain}
+DNAME injdname.3rp.als.${domain}
+DNAME injdname.3rp.als.rev.${domain}
+DNAME injdname.oi.${domain}
+DNAME injdname.als.oi.${domain}
+DNAME injdname.3rp.oi.${domain}
+DNAME injdname.3rp.als.oi.${domain}

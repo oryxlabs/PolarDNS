@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> _mobile._http._tcp.sralias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 1619
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_mobile._http._tcp.sralias.100.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 8149 _mobile._http._tcp.sralias814617.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 37340 _mobile._http._tcp.sralias501008.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 38070 _mobile._http._tcp.sralias532083.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 31595 _mobile._http._tcp.sralias136820.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 62644 _mobile._http._tcp.sralias952000.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 32806 _mobile._http._tcp.sralias980981.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 6051 _mobile._http._tcp.sralias2983.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 20922 _mobile._http._tcp.sralias965550.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 21504 _mobile._http._tcp.sralias34937.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 32643 _mobile._http._tcp.sralias788467.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 755 _mobile._http._tcp.sralias119611.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 10280 _mobile._http._tcp.sralias134892.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 49278 _mobile._http._tcp.sralias937863.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 64227 _mobile._http._tcp.sralias751565.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 45300 _mobile._http._tcp.sralias274110.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 6702 _mobile._http._tcp.sralias217177.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 42983 _mobile._http._tcp.sralias101758.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 58810 _mobile._http._tcp.sralias626352.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 16952 _mobile._http._tcp.sralias619837.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 42938 _mobile._http._tcp.sralias874881.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 56314 _mobile._http._tcp.sralias954293.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 42392 _mobile._http._tcp.sralias817615.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 13464 _mobile._http._tcp.sralias181966.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 56692 _mobile._http._tcp.sralias869167.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 41622 _mobile._http._tcp.sralias817528.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 37046 _mobile._http._tcp.sralias456641.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 5471 _mobile._http._tcp.sralias397029.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 4993 _mobile._http._tcp.sralias61181.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 33639 _mobile._http._tcp.sralias790985.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 38720 _mobile._http._tcp.sralias790286.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 51399 _mobile._http._tcp.sralias643024.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 5452 _mobile._http._tcp.sralias956669.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 42992 _mobile._http._tcp.sralias67286.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 2780 _mobile._http._tcp.sralias882806.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 10345 _mobile._http._tcp.sralias11604.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 27642 _mobile._http._tcp.sralias895017.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 49988 _mobile._http._tcp.sralias546202.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 51094 _mobile._http._tcp.sralias266829.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 28888 _mobile._http._tcp.sralias6500.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 2136 _mobile._http._tcp.sralias64861.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 21252 _mobile._http._tcp.sralias15797.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 48636 _mobile._http._tcp.sralias890712.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 49732 _mobile._http._tcp.sralias693543.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 14412 _mobile._http._tcp.sralias223693.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 53265 _mobile._http._tcp.sralias393288.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 62881 _mobile._http._tcp.sralias293598.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 64584 _mobile._http._tcp.sralias235732.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 20865 _mobile._http._tcp.sralias1789.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 24919 _mobile._http._tcp.sralias797911.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 46932 _mobile._http._tcp.sralias402524.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 42074 _mobile._http._tcp.sralias75814.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 6418 _mobile._http._tcp.sralias210424.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 44063 _mobile._http._tcp.sralias309512.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 1947 _mobile._http._tcp.sralias941208.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 3409 _mobile._http._tcp.sralias317361.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 45642 _mobile._http._tcp.sralias229641.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 9068 _mobile._http._tcp.sralias790889.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 6355 _mobile._http._tcp.sralias163893.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 31766 _mobile._http._tcp.sralias643872.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 54341 _mobile._http._tcp.sralias311156.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 3319 _mobile._http._tcp.sralias108352.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 19348 _mobile._http._tcp.sralias578664.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 34978 _mobile._http._tcp.sralias140414.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 33391 _mobile._http._tcp.sralias996146.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 10662 _mobile._http._tcp.sralias707608.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 21094 _mobile._http._tcp.sralias557867.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 62205 _mobile._http._tcp.sralias308082.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 22393 _mobile._http._tcp.sralias111723.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 32263 _mobile._http._tcp.sralias10835.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 44028 _mobile._http._tcp.sralias145735.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 31821 _mobile._http._tcp.sralias838643.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 39561 _mobile._http._tcp.sralias115982.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 5343 _mobile._http._tcp.sralias338467.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 22672 _mobile._http._tcp.sralias965415.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 3558 _mobile._http._tcp.sralias991348.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 58079 _mobile._http._tcp.sralias526387.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 4715 _mobile._http._tcp.sralias961766.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 48997 _mobile._http._tcp.sralias476500.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 10116 _mobile._http._tcp.sralias94135.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 8002 _mobile._http._tcp.sralias901623.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 58020 _mobile._http._tcp.sralias644342.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 50667 _mobile._http._tcp.sralias100013.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 21968 _mobile._http._tcp.sralias473000.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 21012 _mobile._http._tcp.sralias105642.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 53805 _mobile._http._tcp.sralias586745.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 55436 _mobile._http._tcp.sralias561206.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 11520 _mobile._http._tcp.sralias307902.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 57526 _mobile._http._tcp.sralias893272.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 37217 _mobile._http._tcp.sralias370214.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 29389 _mobile._http._tcp.sralias847638.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 13028 _mobile._http._tcp.sralias197432.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 3300 _mobile._http._tcp.sralias705002.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 44871 _mobile._http._tcp.sralias108890.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 55099 _mobile._http._tcp.sralias458569.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 6731 _mobile._http._tcp.sralias662161.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 9918 _mobile._http._tcp.sralias424782.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 22280 _mobile._http._tcp.sralias869225.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 10623 _mobile._http._tcp.sralias723212.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 59102 _mobile._http._tcp.sralias10058.100.yourdomain.com.
+_mobile._http._tcp.sralias.100.yourdomain.com. 60 IN SRV 0 0 17505 _mobile._http._tcp.sralias166574.100.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 7147
+

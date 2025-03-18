@@ -1,0 +1,133 @@
+# loop.toml
+loop.${domain}
+loop.100.${domain}
+loop.100.98.${domain}
+loop.100.100.${domain}
+CNAME loop.${domain}
+CNAME loop.100.${domain}
+CNAME loop.100.98.${domain}
+CNAME loop.100.100.${domain}
+DNAME loop.${domain}
+DNAME loop.100.${domain}
+DNAME loop.100.98.${domain}
+DNAME loop.100.100.${domain}
+HTTPS loop.${domain}
+HTTPS loop.100.${domain}
+HTTPS loop.100.98.${domain}
+HTTPS loop.100.100.${domain}
+SVCB loop.${domain}
+SVCB loop.100.${domain}
+SVCB loop.100.98.${domain}
+SVCB loop.100.100.${domain}
+SRV loop.${domain}
+SRV loop.100.${domain}
+SRV loop.100.98.${domain}
+SRV loop.100.100.${domain}
+MX loop.${domain}
+MX loop.100.${domain}
+MX loop.100.98.${domain}
+MX loop.100.100.${domain}
+NS loop.${domain}
+NS loop.100.${domain}
+NS loop.100.98.${domain}
+NS loop.100.100.${domain}
+TXT loop.${domain}
+TXT loop.100.${domain}
+TXT loop.100.98.${domain}
+TXT loop.100.100.${domain}
+
+# cnloop.toml
+CNAME cnloop.${domain}
+cnloop.${domain}
+cnloop.5.${domain}
+cnloop.5.4.${domain}
+cnloop.5.5.${domain}
+
+# dnloop.toml
+DNAME dnloop.${domain}
+dnloop.${domain}
+dnloop.5.${domain}
+dnloop.5.4.${domain}
+dnloop.5.5.${domain}
+
+# htloop.toml
+HTTPS htloop.${domain}
+htloop.${domain}
+htloop.5.${domain}
+htloop.5.4.${domain}
+htloop.5.5.${domain}
+
+# svloop.toml
+SVCB svloop.${domain}
+svloop.${domain}
+svloop.5.${domain}
+svloop.5.4.${domain}
+svloop.5.5.${domain}
+SVCB _sip.svloop.${domain}
+_sip.svloop.${domain}
+_sip.svloop.5.${domain}
+_sip.svloop.5.4.${domain}
+_sip.svloop.5.5.${domain}
+SVCB _sip._udp.svloop.${domain}
+_sip._udp.svloop.${domain}
+_sip._udp.svloop.5.${domain}
+_sip._udp.svloop.5.4.${domain}
+_sip._udp.svloop.5.5.${domain}
+SVCB _mobile._http._tcp.svloop.${domain}
+_mobile._http._tcp.svloop.${domain}
+_mobile._http._tcp.svloop.5.${domain}
+_mobile._http._tcp.svloop.5.4.${domain}
+_mobile._http._tcp.svloop.5.5.${domain}
+
+# srloop.toml
+SRV srloop.${domain}
+srloop.${domain}
+srloop.5.${domain}
+srloop.5.4.${domain}
+srloop.5.5.${domain}
+SRV _sip.srloop.${domain}
+_sip.srloop.${domain}
+_sip.srloop.5.${domain}
+_sip.srloop.5.4.${domain}
+_sip.srloop.5.5.${domain}
+SRV _sip._udp.srloop.${domain}
+_sip._udp.srloop.${domain}
+_sip._udp.srloop.5.${domain}
+_sip._udp.srloop.5.4.${domain}
+_sip._udp.srloop.5.5.${domain}
+SRV _mobile._http._tcp.srloop.${domain}
+_mobile._http._tcp.srloop.${domain}
+_mobile._http._tcp.srloop.5.${domain}
+_mobile._http._tcp.srloop.5.4.${domain}
+_mobile._http._tcp.srloop.5.5.${domain}
+
+# mxloop.toml
+MX mxloop.${domain}
+mxloop.${domain}
+mxloop.5.${domain}
+mxloop.5.4.${domain}
+mxloop.5.5.${domain}
+
+# nsloop.toml
+NS nsloop.${domain}
+nsloop.${domain}
+nsloop.5.${domain}
+nsloop.5.4.${domain}
+nsloop.5.5.${domain}
+
+# spfloop.toml
+TXT spfloop.${domain}
+spfloop.${domain}
+spfloop.5.${domain}
+spfloop.5.4.${domain}
+spfloop.5.5.${domain}
+
+# ptrloop1.toml ptrloop2.toml
+-x 192.0.2.0
+-x 192.0.2.100
+-x 198.51.100.0
+-x 198.51.100.255
+
+# nptenumloop.toml
+NAPTR 2.e164.arpa
+NAPTR 2.5.2.3.4.5.6.7.8.e164.arpa

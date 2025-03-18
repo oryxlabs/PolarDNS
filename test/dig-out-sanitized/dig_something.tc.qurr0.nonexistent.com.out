@@ -1,0 +1,11 @@
+;; Truncated, retrying in TCP mode.
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: REFUSED, id: <ID>
+;; flags: qr; QUERY: 0, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: Message has <NUM> extra bytes at end
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; MSG SIZE  rcvd: <SIZE>
+

@@ -1,0 +1,37 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> spfalias2.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64065
+;; flags: qr aa; QUERY: 1, ANSWER: 20, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfalias2.100.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias261934.100.yourdomain.com include:spfalias275763.100.yourdomain.com include:spfalias224833.100.yourdomain.com include:spfalias249298.100.yourdomain.com include:spfalias229753.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias256385.100.yourdomain.com include:spfalias241612.100.yourdomain.com include:spfalias225222.100.yourdomain.com include:spfalias275152.100.yourdomain.com include:spfalias232619.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias241537.100.yourdomain.com include:spfalias283923.100.yourdomain.com include:spfalias223265.100.yourdomain.com include:spfalias276511.100.yourdomain.com include:spfalias238754.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias215753.100.yourdomain.com include:spfalias227140.100.yourdomain.com include:spfalias272567.100.yourdomain.com include:spfalias280976.100.yourdomain.com include:spfalias297578.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias221926.100.yourdomain.com include:spfalias274593.100.yourdomain.com include:spfalias24796.100.yourdomain.com include:spfalias241811.100.yourdomain.com include:spfalias219735.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias241936.100.yourdomain.com include:spfalias230602.100.yourdomain.com include:spfalias25221.100.yourdomain.com include:spfalias229506.100.yourdomain.com include:spfalias270684.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias290680.100.yourdomain.com include:spfalias227871.100.yourdomain.com include:spfalias217994.100.yourdomain.com include:spfalias217667.100.yourdomain.com include:spfalias2916.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias225427.100.yourdomain.com include:spfalias267600.100.yourdomain.com include:spfalias213991.100.yourdomain.com include:spfalias286765.100.yourdomain.com include:spfalias298067.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias23463.100.yourdomain.com include:spfalias283838.100.yourdomain.com include:spfalias23036.100.yourdomain.com include:spfalias28660.100.yourdomain.com include:spfalias299347.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias277942.100.yourdomain.com include:spfalias226998.100.yourdomain.com include:spfalias214438.100.yourdomain.com include:spfalias239397.100.yourdomain.com include:spfalias282636.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias252038.100.yourdomain.com include:spfalias273937.100.yourdomain.com include:spfalias279397.100.yourdomain.com include:spfalias224674.100.yourdomain.com include:spfalias226261.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias293098.100.yourdomain.com include:spfalias284139.100.yourdomain.com include:spfalias228301.100.yourdomain.com include:spfalias235535.100.yourdomain.com include:spfalias278495.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias295576.100.yourdomain.com include:spfalias257135.100.yourdomain.com include:spfalias274648.100.yourdomain.com include:spfalias239715.100.yourdomain.com include:spfalias272887.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias240459.100.yourdomain.com include:spfalias265703.100.yourdomain.com include:spfalias244085.100.yourdomain.com include:spfalias273388.100.yourdomain.com include:spfalias293229.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias292415.100.yourdomain.com include:spfalias28815.100.yourdomain.com include:spfalias228816.100.yourdomain.com include:spfalias26031.100.yourdomain.com include:spfalias270769.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias236732.100.yourdomain.com include:spfalias288805.100.yourdomain.com include:spfalias249983.100.yourdomain.com include:spfalias240547.100.yourdomain.com include:spfalias21704.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias266395.100.yourdomain.com include:spfalias24743.100.yourdomain.com include:spfalias239843.100.yourdomain.com include:spfalias245589.100.yourdomain.com include:spfalias263500.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias241770.100.yourdomain.com include:spfalias243506.100.yourdomain.com include:spfalias253441.100.yourdomain.com include:spfalias215420.100.yourdomain.com include:spfalias237144.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias213219.100.yourdomain.com include:spfalias284295.100.yourdomain.com include:spfalias259021.100.yourdomain.com include:spfalias227648.100.yourdomain.com include:spfalias214129.100.yourdomain.com ~all"
+spfalias2.100.yourdomain.com. 60 IN	TXT	"v=spf1 include:spfalias215821.100.yourdomain.com include:spfalias259837.100.yourdomain.com include:spfalias262970.100.yourdomain.com include:spfalias233813.100.yourdomain.com include:spfalias228209.100.yourdomain.com ~all"
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 4715
+

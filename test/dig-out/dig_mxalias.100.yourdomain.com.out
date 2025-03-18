@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> mxalias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 17368
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;mxalias.100.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias29321.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias762588.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias620252.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias200184.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias447177.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias306943.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias661188.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias739708.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias234588.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias12634.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias759820.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias67753.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias842886.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias969995.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias435064.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias577846.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias211180.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias919389.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias180381.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias377703.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias302611.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias26723.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias113136.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias962767.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias444236.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias326021.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias589831.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias26123.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias395789.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias316151.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias848266.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias570061.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias161976.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias293885.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias440156.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias609817.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias571941.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias10394.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias441782.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias602291.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias2572.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias613288.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias452105.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias771115.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias676604.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias46617.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias572322.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias32442.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias120424.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias456234.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias399105.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias742446.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias940979.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias28132.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias167403.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias174438.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias104410.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias214048.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias531128.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias846845.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias342473.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias404925.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias460988.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias529187.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias334178.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias488317.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias630607.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias77162.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias112998.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias724537.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias589217.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias791623.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias705600.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias627533.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias4754.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias928072.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias532078.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias33518.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias181832.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias639721.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias377061.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias562270.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias1759.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias327784.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias589611.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias86166.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias849936.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias880730.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias571209.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias113429.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias868818.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias691478.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias586195.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias430690.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias861827.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias904233.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias189531.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias15070.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias162215.100.yourdomain.com.
+mxalias.100.yourdomain.com. 60	IN	MX	0 mxalias967488.100.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 4825
+

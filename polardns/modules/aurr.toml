@@ -18,7 +18,7 @@ Where:
 
 - The **`<NUMBER>`** parameter specifies the number of Authority records in the DNS response header. Note that the maximum number of Authority records that can be set is 65535, as it is a 2-byte field.
 '''
-seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, rc, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
 
 [[module.example]]
 description = "In this example, we use the basic [always] feature which always resolves to an IP address. Additionally, we set the number of Authority records (RRs) in the DNS header to 0. This arrangement actually accurately reflects the actual content of the DNS response body since there are no authority records:"
@@ -33,4 +33,4 @@ description = "Similar to the previous examples, but in this case, we set the nu
 command = "dig always.aurr100.yourdomain.com @127.0.0.1"
 
 [module.code]
-# The code is located in the polardns.py file.
+# The code is located in the polardns/core.py file.

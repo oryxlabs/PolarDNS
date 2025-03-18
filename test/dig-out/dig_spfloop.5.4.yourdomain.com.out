@@ -1,0 +1,18 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> spfloop.5.4.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 57813
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;spfloop.5.4.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+spfloop.5.4.yourdomain.com. 60	IN	TXT	"v=spf1 include:spfloop.5.5.yourdomain.com ~all"
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:37 +04 2025
+;; MSG SIZE  rcvd: 103
+

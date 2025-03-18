@@ -59,7 +59,7 @@ if req.first_subdomain.startswith("empty5"):
    # + send arbitrary number of NULLs
    nulls = 1 # number of NULLs to send
    if req.subdomains[1].isnumeric():
-      nulls = int(req.subdomains[1])
+      nulls = min(int(req.subdomains[1]), 65535)
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
    ### QUESTION SECTION ######## - no more

@@ -1,0 +1,46 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> size.512.fc.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7317
+;; flags: qr aa; QUERY: 1, ANSWER: 29, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.512.fc.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.136
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.85
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.51
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.63
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.214
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.212
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.157
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.228
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.208
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.47
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.108
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.122
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.248
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.13
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.65
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.96
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.118
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.200
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.174
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.72
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.92
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.171
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.157
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.81
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.111
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.56
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.85
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.216
+size.512.fc.yourdomain.com. 60	IN	A	127.0.0.134
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:33 +04 2025
+;; MSG SIZE  rcvd: 508
+

@@ -35,4 +35,4 @@ description = "Like other features, you can append anything to the feature name 
 command = "dig always${RANDOM}.10.yourdomain.com @10.211.55.2"
 
 [module.code]
-# The code is located in the polardns.py file.
+# The code is located in the polardns/core.py file.

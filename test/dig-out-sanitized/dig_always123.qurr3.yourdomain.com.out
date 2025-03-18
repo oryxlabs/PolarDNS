@@ -1,0 +1,7 @@
+;; Warning: Message parser reports malformed message packet.
+;; ;; Question section mismatch: got ./TYPE0/CLASS15360
+;; communications error to 127.0.0.1#53: timed out
+
+;; global options: +cmd
+;; no servers could be reached
+

@@ -187,7 +187,8 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
    # Now prepare the injected A record
 
    injdata = b''
-   injip = "6.6.6.6"
+   injip = "6.6.6."
+   injip += str(int(index)%256) if index.isnumeric() else "0"
    injdata  = struct.pack(">H", 4)           ## Data length
    injdata += socket.inet_aton(injip)        ## IP
 

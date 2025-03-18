@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> SRV alias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 40607
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.100.yourdomain.com.	IN	SRV
+
+;; ANSWER SECTION:
+alias.100.yourdomain.com. 60	IN	SRV	0 0 63679 alias712773.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 6506 alias569295.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 31216 alias257767.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 61385 alias489564.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 13872 alias647094.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 16931 alias537529.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 52089 alias332519.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 39077 alias617906.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 59491 alias662433.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 61433 alias112169.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 62285 alias34535.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 3076 alias439627.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 21866 alias902516.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 26212 alias433803.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 57542 alias515229.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 59562 alias971095.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 33416 alias392659.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 33531 alias987187.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 12997 alias111738.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 31676 alias797374.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 6866 alias970691.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 30798 alias216307.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 7391 alias281711.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 7742 alias976994.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 7172 alias715426.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 46285 alias565130.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 52346 alias320077.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 35437 alias947656.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 13672 alias438628.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 50995 alias970395.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 23257 alias678669.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 58566 alias758037.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 29224 alias841678.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 36511 alias133945.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 22325 alias949278.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 27798 alias48500.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 59394 alias641365.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 36441 alias454758.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 25229 alias763726.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 40312 alias12907.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 13344 alias39252.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 42174 alias102044.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 4603 alias113897.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 49181 alias471627.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 53593 alias824294.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 45529 alias495183.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 38924 alias755460.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 7096 alias304163.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 59771 alias537522.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 57386 alias487354.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 32107 alias236278.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 42114 alias241782.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 29010 alias28316.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 42405 alias384412.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 8017 alias641053.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 56923 alias72780.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 20384 alias543117.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 54749 alias179882.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 11111 alias119023.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 30355 alias504328.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 1610 alias258092.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 28553 alias624558.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 1451 alias389734.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 8248 alias791681.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 5716 alias687375.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 22143 alias461114.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 64131 alias924298.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 38028 alias248612.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 4646 alias595440.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 554 alias981304.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 56368 alias811667.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 3599 alias654254.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 9180 alias200568.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 37864 alias970872.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 43642 alias182425.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 39634 alias812738.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 62452 alias889459.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 24193 alias499498.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 41280 alias619689.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 30139 alias795472.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 5145 alias656404.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 18300 alias373095.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 60567 alias299695.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 5739 alias811161.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 24176 alias337844.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 15171 alias262261.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 48368 alias817841.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 64392 alias231554.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 38461 alias988240.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 20895 alias500348.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 37841 alias716777.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 17501 alias785198.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 30602 alias371795.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 50862 alias727019.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 8408 alias92745.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 53626 alias495540.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 14666 alias537113.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 33422 alias22001.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 31778 alias592237.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	SRV	0 0 28708 alias771867.100.yourdomain.com.
+
+;; Query time: 24 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 5034
+

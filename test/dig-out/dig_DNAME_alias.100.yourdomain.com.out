@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> DNAME alias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 57136
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.100.yourdomain.com.	IN	DNAME
+
+;; ANSWER SECTION:
+alias.100.yourdomain.com. 60	IN	DNAME	alias988175.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias642440.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias969082.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias788672.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias547455.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias674985.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias26856.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias983173.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias477164.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias495171.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias289496.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias337118.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias48292.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias838360.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias911311.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias187198.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias88307.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias715535.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias504116.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias14750.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias33172.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias788190.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias325019.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias135195.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias149099.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias40241.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias793303.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias912379.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias328933.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias464264.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias759146.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias948591.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias901427.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias619080.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias718679.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias745791.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias946487.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias892110.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias241276.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias658239.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias11975.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias782143.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias24359.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias327852.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias716275.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias408034.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias919727.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias37900.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias664247.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias369428.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias258632.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias669190.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias73736.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias165397.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias734274.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias413252.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias782730.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias773502.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias690369.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias979369.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias483918.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias80040.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias12725.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias606235.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias4271.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias782113.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias215647.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias122377.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias882026.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias259939.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias425026.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias128320.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias306877.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias672787.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias933992.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias844921.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias760565.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias618682.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias191026.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias35226.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias874748.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias289379.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias759413.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias680478.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias184939.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias1838.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias848038.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias884056.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias508406.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias654393.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias123266.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias832349.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias34457.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias373406.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias745322.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias927163.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias583547.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias502695.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias941500.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	DNAME	alias203010.100.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 4424
+

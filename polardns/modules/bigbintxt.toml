@@ -59,7 +59,7 @@ if req.first_subdomain.startswith("bigbintxt"):
    # Send big binary TXT record
    size = 10  # number of chunks
    if req.subdomains[1].isnumeric():
-      size = int(req.subdomains[1])
+      size = min(int(req.subdomains[1]), 32767)
    chunksize = 255  # chunk size
    if req.subdomains[2].isnumeric():
       chunksize = min(int(req.subdomains[2]), 255)

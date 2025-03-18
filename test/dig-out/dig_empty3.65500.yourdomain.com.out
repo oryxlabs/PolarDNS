@@ -1,0 +1,8 @@
+;; Warning: ID mismatch: expected ID 23268, got 0
+;; Warning: query response not set
+;; communications error to 127.0.0.1#53: timed out
+
+; <<>> DiG 9.18.10-2-Debian <<>> empty3.65500.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; no servers could be reached
+

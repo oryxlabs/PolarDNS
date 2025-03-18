@@ -41,7 +41,7 @@ seealso = "inja, injaaaa, injptr, injcname, injdname, injns, injmx"
 
 [[module.example]]
 description = "In this example, we demonstrate the basic functionality. By default, the injected record appears as the second answer, following the first (legitimate) answer. The injected record unsolicitedly resolves a subdomain under the same parent domain. In the subsequent query, we verify whether the resolver picked up and cached the unsolicited record:"
-command = "dig injptr.yourdomain.com @10.211.55.2; dig -x 6.6.6.6 @10.211.55.2 +norecurse"
+command = "dig injptr.yourdomain.com @10.211.55.2; dig -x 6.6.6.0 @10.211.55.2 +norecurse"
 append = "We can see that the injected record was not cached, as we received `NXDOMAIN` (No such name) status. This means that the injection did not succeed."
 
 [[module.example]]
@@ -56,7 +56,7 @@ append = "The module can handle A, AAAA, CNAME, DNAME, MX, NS and PTR record que
 
 [[module.example]]
 description = "In the following example, we use the **3rp** (3rd-party) parameter to request that the unsolicited record contain a subdomain under a 3rd-party parent domain. If successful, this scenario would have a much greater impact. In the subsequent query, we verify again whether the resolver picked up and cached the unsolicited record:"
-command = "dig injptr123.3rp.yourdomain.com @10.211.55.2; dig -x 6.6.6.6 @10.211.55.2 +norecurse"
+command = "dig injptr123.3rp.yourdomain.com @10.211.55.2; dig -x 6.6.6.123 @10.211.55.2 +norecurse"
 append = "We can see that the injected record was not cached, as we received `NXDOMAIN` (No such name) status. This means that the injection did not succeed."
 
 [[module.example]]
@@ -65,14 +65,14 @@ command = "dig injptr123.3rp.rev.yourdomain.com @10.211.55.2"
 
 [[module.example]]
 description = "In this example, we use the **rpq** parameter to replace the question in the query section with information from the unsolicited record, in an attempt to convince the resolver that it originally requested this record:"
-command = "dig injptr12345.rpq.yourdomain.com @10.211.55.2"
+command = "dig injptr123.rpq.yourdomain.com @10.211.55.2"
 pcapexplain = '''We can see that the client (dig) did not accept the response because the question (in the response) did not match the question in the original query. Here is the actual DNS response that was sent back to dig in this case:
 '''
 append = "We can see that the question (query) was replaced to match the unsolicited record. The question remains as to how different resolvers would handle such a scenario - some resolvers may potentially accept this response."
 
 [[module.example]]
 description = "In the next example, we use the **adq** parameter to add the question in the response asking for the unsolicited record, as another attempt to convince the resolver that it originally requested this record. We can see again that the client (dig) does not accept this response because the question does not match the original query:"
-command = "dig injptr12345.adq.yourdomain.com @10.211.55.2"
+command = "dig injptr123.adq.yourdomain.com @10.211.55.2"
 pcapexplain = "The question remains as to how different resolvers would handle this scenario. Here is the actual DNS response that was generated and returned to dig in this case:"
 append = "We can see that there are two questions - the original query and an additional one matching the unsolicited record."
 
@@ -190,7 +190,8 @@ if req.first_subdomain.startswith("injptr") and (len(req.first_subdomain) == 6 o
    bindom = convDom2Bin(injdom)
    injdata = struct.pack(">H", len(bindom))     ## Data length
    injdata += bindom                            ## domain
-   injdom = "6.6.6.6.in-addr.arpa"
+   injdom = str(int(index)%256) if index.isnumeric() else "0"
+   injdom += ".6.6.6.in-addr.arpa"
 
    ###############################
    ### DNS header ################

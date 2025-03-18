@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> _mobile._http._tcp.svalias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7087
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_mobile._http._tcp.svalias.100.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias229558.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias427540.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias58265.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias671620.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias243138.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias375110.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias278306.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias72102.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias161866.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias516238.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias380887.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias957007.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias161004.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias931586.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias101003.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias235710.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias297126.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias758693.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias346905.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias29687.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias576186.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias872254.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias693386.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias447491.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias800091.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias798953.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias717103.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias197750.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias920300.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias348421.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias752660.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias745947.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias8703.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias514328.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias593840.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias650988.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias546318.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias539158.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias231537.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias715850.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias240815.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias815191.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias972231.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias839962.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias298700.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias776193.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias725850.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias485378.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias390549.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias381926.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias675655.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias815219.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias599613.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias84790.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias327181.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias805776.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias926881.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias783477.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias810666.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias744228.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias4691.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias163297.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias993743.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias172123.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias273913.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias20948.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias368886.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias722997.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias457131.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias772847.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias649754.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias864044.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias539241.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias66215.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias263904.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias427013.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias106036.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias443982.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias885081.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias125214.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias629805.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias271710.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias940535.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias185100.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias55191.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias145373.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias99437.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias383769.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias257374.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias695854.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias536480.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias55148.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias403604.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias457090.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias300570.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias38191.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias842405.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias650500.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias453962.100.yourdomain.com.
+_mobile._http._tcp.svalias.100.yourdomain.com. 60 IN SVCB 0 _mobile._http._tcp.svalias623835.100.yourdomain.com.
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 6749
+

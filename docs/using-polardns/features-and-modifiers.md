@@ -12,7 +12,7 @@ PolarDNS has the following main functionalities:
 1. **Features**: These can produce various DNS responses. Most features have parameters, meaning that it is possible to adjust their behavior to produce variety of different DNS responses.
 1. **Response modifiers**: These can further modify the DNS responses coming out from the PolarDNS server. Modifiers are independent on the selected feature and can be combined freely.
 
-There are over 70 different features and 18 response modifiers currently implemented. By using different features and combining them together with different response modifiers, it is possible to produce countless variants of given response.
+There are over 70 different features and 19 response modifiers currently implemented. By using different features and combining them together with different response modifiers, it is possible to produce countless variants of given response.
 
 See the included **[catalogue](../catalogue/catalogue.html)** of all implemented **features** and **response modifiers**.
 

@@ -1,0 +1,48 @@
+# empty responses
+empty1.${domain}
+empty1.tc.${domain}
++tcp empty1.${domain}
+empty2.${domain}
+empty2.65500.${domain}
+empty2.tc.${domain}
+empty2.65500.tc.${domain}
++tcp empty2.${domain}
++tcp empty2.65500.${domain}
++tcp empty2.10.len50.${domain}
++tcp empty2.50.len50.${domain}
++tcp empty2.50.len5.${domain}
++tcp empty2.50.len0.${domain}
+empty3.${domain}
+empty3.65500.${domain}
+empty3.tc.${domain}
+empty3.65500.tc.${domain}
++tcp empty3.${domain}
++tcp empty3.65500.${domain}
+empty4.${domain}
+empty4.65500.${domain}
+empty4.tc.${domain}
+empty4.65500.tc.${domain}
++tcp empty4.${domain}
++tcp empty4.65500.${domain}
+empty4.0.len200.tc.${domain}
+empty4.10.len200.tc.${domain}
+empty4.1000.len200.tc.${domain}
+empty5.${domain}
+empty5.0.${domain}
+empty5.10.${domain}
+empty6.${domain}
+empty6.tc.${domain}
++tcp empty6.${domain}
+# empty7 is likely to fail
+#empty7.${domain}
+#empty7.tc.${domain}
+#+tcp empty7.${domain}
+close.${domain}
+close.tc.${domain}
++tcp close.${domain}
+timeout.${domain}
++tcp timeout.${domain}
++noedns queryback1.${domain}
++noedns +tcp queryback1.${domain}
+queryback2.${domain}
++tcp queryback2.${domain}

@@ -44,7 +44,7 @@ python = '''
            elif req.first_subdomain.startswith("htalias"):
               # Send multiple random HTTPS aliases (RFC 9460).
               # BEWARE: This could result in multiplication
-              answers = int(req.subdomains[1]) if req.subdomains[1].isnumeric() else 1
+              answers = min(int(req.subdomains[1]), 4096) if req.subdomains[1].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########

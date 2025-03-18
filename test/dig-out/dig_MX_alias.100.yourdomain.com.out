@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> MX alias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 51544
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.100.yourdomain.com.	IN	MX
+
+;; ANSWER SECTION:
+alias.100.yourdomain.com. 60	IN	MX	0 alias7263.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias513696.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias859973.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias591809.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias772743.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias349289.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias929779.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias486883.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias92575.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias304303.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias60784.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias514597.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias654402.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias673410.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias640653.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias620383.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias731219.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias839697.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias518033.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias839739.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias546090.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias819173.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias335057.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias333801.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias584348.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias917151.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias961058.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias945467.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias751794.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias123504.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias28010.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias793551.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias341248.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias59176.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias759981.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias852615.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias660934.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias829179.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias167514.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias524513.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias750915.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias288632.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias909231.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias503214.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias100741.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias58369.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias670145.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias443218.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias674582.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias46120.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias777807.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias63544.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias314521.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias716240.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias759495.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias886708.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias932029.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias834168.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias914971.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias459405.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias308791.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias28294.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias878870.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias401892.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias658386.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias740772.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias854058.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias30508.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias128144.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias782554.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias39204.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias57668.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias276154.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias860455.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias949675.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias853201.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias335112.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias458507.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias137597.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias333174.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias126909.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias3959.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias438246.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias733854.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias584669.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias48168.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias762359.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias821514.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias260620.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias430706.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias909941.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias854944.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias626029.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias637286.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias28045.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias192934.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias118379.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias530114.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias342618.100.yourdomain.com.
+alias.100.yourdomain.com. 60	IN	MX	0 alias122994.100.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 4625
+

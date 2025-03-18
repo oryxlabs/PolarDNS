@@ -1,0 +1,7 @@
+;; Warning: short (< header size) message received
+;; communications error to 127.0.0.1#53: timed out
+
+; <<>> DiG 9.18.10-2-Debian <<>> empty2.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; no servers could be reached
+

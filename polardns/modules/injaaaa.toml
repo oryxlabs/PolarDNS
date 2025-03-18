@@ -187,7 +187,8 @@ if req.first_subdomain.startswith("injaaaa") and (len(req.first_subdomain) == 7 
    # Now prepare the injected AAAA record
 
    injdata = b''
-   injip = "6666:6666:6666:6666:6666:6666:6666:6666"
+   injip = "6666:6666:6666:6666:6666:6666:6666:"
+   injip += str(hex(int(index)%65536)[2:]) if index.isnumeric() else "0"
    injdata = struct.pack(">H", 16)                     ## Data length
    injdata += socket.inet_pton(socket.AF_INET6, injip) ## IP
 

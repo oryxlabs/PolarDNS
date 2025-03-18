@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> nsalias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 33175
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;nsalias.100.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias709620.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias570703.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias298213.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias103668.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias785684.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias773499.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias283190.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias998060.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias776011.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias180136.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias94221.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias363440.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias152977.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias797247.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias633216.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias568547.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias663679.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias527084.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias302508.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias360836.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias521039.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias270791.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias778053.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias323304.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias817113.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias455190.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias412539.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias22953.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias596289.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias809034.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias6988.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias237652.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias368625.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias627468.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias745783.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias670744.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias361598.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias295793.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias5710.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias7934.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias620176.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias918192.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias739692.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias218285.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias149334.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias61333.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias731519.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias230731.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias737234.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias241357.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias490380.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias189399.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias46806.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias667312.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias756763.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias605611.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias898915.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias762545.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias539786.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias770519.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias991674.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias447496.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias742396.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias600186.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias15032.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias904926.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias176759.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias694268.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias979999.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias975141.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias128300.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias362087.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias40814.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias30431.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias999999.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias12144.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias370825.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias218013.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias91808.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias296743.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias778404.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias165155.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias181043.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias709934.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias893729.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias383303.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias367797.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias975048.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias651795.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias727513.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias195764.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias302692.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias536711.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias21415.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias315966.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias63527.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias70353.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias555239.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias198826.100.yourdomain.com.
+nsalias.100.yourdomain.com. 60	IN	NS	nsalias722978.100.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 4626
+

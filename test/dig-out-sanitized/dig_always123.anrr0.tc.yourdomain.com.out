@@ -1,0 +1,14 @@
+;; Truncated, retrying in TCP mode.
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: Message has <NUM> extra bytes at end
+
+;; QUESTION SECTION:
+;always123.anrr0.tc.<OURDOM>. IN A
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; MSG SIZE  rcvd: <SIZE>
+

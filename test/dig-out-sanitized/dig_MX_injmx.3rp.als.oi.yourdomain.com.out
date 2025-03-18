@@ -1,0 +1,21 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;injmx.3rp.als.oi.<OURDOM>. IN MX
+
+;; ANSWER SECTION:
+injected.a3rdparty.net. 60 IN MX 0 always<RANDOM>.<OURDOM>.
+
+;; AUTHORITY SECTION:
+injected.a3rdparty.net. 60 IN MX 0 always<RANDOM>.<OURDOM>.
+
+;; ADDITIONAL SECTION:
+injected.a3rdparty.net. 60 IN MX 0 always<RANDOM>.<OURDOM>.
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>
+

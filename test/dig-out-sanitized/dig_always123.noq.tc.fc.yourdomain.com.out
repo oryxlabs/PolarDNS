@@ -1,0 +1,6 @@
+;; Warning: Message parser reports malformed message packet.
+;; Truncated, retrying in TCP mode.
+;; Got bad packet: bad compression pointer
+28 bytes
+TX ID 84 00 00 01 00 01 00 00 00 00 c0 0c 00 01          ID..............
+00 01 00 00 00 3c 00 04 02 03 04 05                      .....<......

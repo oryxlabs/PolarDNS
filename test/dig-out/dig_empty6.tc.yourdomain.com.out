@@ -1,0 +1,17 @@
+;; Truncated, retrying in TCP mode.
+;; Warning: Message parser reports malformed message packet.
+
+; <<>> DiG 9.18.10-2-Debian <<>> empty6.tc.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 49686
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;empty6.tc.yourdomain.com.	IN	A
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Tue Mar 18 21:11:01 +04 2025
+;; MSG SIZE  rcvd: 42
+

@@ -1,0 +1,18 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> _sip.srloop.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 8349
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_sip.srloop.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+_sip.srloop.yourdomain.com. 60	IN	SRV	0 0 63062 _sip.srloop.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:37 +04 2025
+;; MSG SIZE  rcvd: 90
+

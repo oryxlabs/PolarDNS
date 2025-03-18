@@ -1,0 +1,18 @@
+;; Warning: Message parser reports malformed message packet.
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 4, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.128.fc.cut16.<OURDOM>. IN A
+
+;; ANSWER SECTION:
+size.128.fc.cut16.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+size.128.fc.cut16.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+size.128.fc.cut16.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>
+

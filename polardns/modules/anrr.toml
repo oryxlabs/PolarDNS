@@ -18,7 +18,7 @@ Where:
 
 - The **`<NUMBER>`** parameter specifies the number of Answers in the DNS response header. Note that the maximum number of Answers that can be set is 65535, as it is a 2-byte field.
 '''
-seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, rc, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
 
 [[module.example]]
 description = "In this example, we use the basic [always] feature which always resolves to an IP address. Additionally, we set the number of answer RRs in the DNS header to 0. This arrangement leads to a warning message about 16 extra bytes at the end because the parser is not expecting any answer in the body since the DNS header indicates there are no answers (`ANSWER: 0`):"
@@ -37,4 +37,4 @@ description = "Similar to the previous example, but in this case, we set the num
 command = "dig always.anrr100.yourdomain.com @127.0.0.1"
 
 [module.code]
-# The code is located in the polardns.py file.
+# The code is located in the polardns/core.py file.

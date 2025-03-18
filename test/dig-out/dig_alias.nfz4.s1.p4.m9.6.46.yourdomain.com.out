@@ -1,0 +1,18 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> alias.nfz4.s1.p4.m9.6.46.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 11635
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.nfz4.s1.p4.m9.6.46.yourdomain.com. IN A
+
+;; ANSWER SECTION:
+alias.nfz4.s1.p4.m9.6.46.yourdomain.com. 60 IN CNAME always650478\.\.\.\.\.\.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:56 +04 2025
+;; MSG SIZE  rcvd: 103
+

@@ -1,0 +1,19 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 5, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;1.5.2.3.4.5.6.7.8.e164.arpa. IN NAPTR
+
+;; ANSWER SECTION:
+1.5.2.3.4.5.6.7.8.e164.arpa. 60 IN NAPTR 0 0 "U" "E2U+sip" "!^.*$!1.<RANDOM>.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60 IN NAPTR 0 0 "U" "E2U+sip" "!^.*$!1.<RANDOM>.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60 IN NAPTR 0 0 "U" "E2U+sip" "!^.*$!1.<RANDOM>.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60 IN NAPTR 0 0 "U" "E2U+sip" "!^.*$!1.<RANDOM>.e164.arpa!" .
+1.5.2.3.4.5.6.7.8.e164.arpa. 60 IN NAPTR 0 0 "U" "E2U+sip" "!^.*$!1.<RANDOM>.e164.arpa!" .
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>
+

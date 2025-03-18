@@ -16,7 +16,7 @@ format = '''
 
 This module has no parameters.
 '''
-seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, rc, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
 
 [[module.example]]
 description = '''
@@ -43,4 +43,4 @@ description = "By adding the [rl] modifier to recalculate the length, the parser
 command = "dig size.200.cut64.rl.yourdomain.com @127.0.0.1 +tcp"
 
 [module.code]
-# The code is located in the polardns.py file.
+# The code is located in the polardns/core.py file.

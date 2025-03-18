@@ -1,0 +1,65 @@
+# chain.toml
+chain.${domain}
+chain99.${domain}
+CNAME chain.${domain}
+CNAME chain99.${domain}
+DNAME chain.${domain}
+DNAME chain99.${domain}
+HTTPS chain.${domain}
+HTTPS chain99.${domain}
+SVCB chain.${domain}
+SVCB chain99.${domain}
+SRV chain.${domain}
+SRV chain99.${domain}
+MX chain.${domain}
+MX chain99.${domain}
+NS chain.${domain}
+NS chain99.${domain}
+TXT chain.${domain}
+TXT chain99.${domain}
+
+# cnchain.toml
+cnchain.${domain}
+cnchain12345.${domain}
++tcp cnchain123.${domain}
+
+# dnchain.toml
+dnchain.${domain}
+dnchain23456.${domain}
++tcp dnchain123.${domain}
+
+# htchain.toml
+htchain.${domain}
+htchain34567.${domain}
+
+# mxchain.toml
+mxchain.${domain}
+mxchain56789.${domain}
+
+# nschain.toml
+nschain.${domain}
+nschain34567.${domain}
+
+# spfchain.toml
+spfchain.${domain}
+spfchain34567.${domain}
+
+# svchain.toml
+svchain.${domain}
+svchain45678.${domain}
+_sip.svchain.${domain}
+_sip.svchain45678.${domain}
+_sip._udp.svchain.${domain}
+_sip._udp.svchain45678.${domain}
+_mobile._http._tcp.svchain.${domain}
+_mobile._http._tcp.svchain45678.${domain}
+
+# srchain.toml
+srchain.${domain}
+srchain67890.${domain}
+_sip.srchain.${domain}
+_sip.srchain67890.${domain}
+_sip._udp.srchain.${domain}
+_sip._udp.srchain67890.${domain}
+_mobile._http._tcp.srchain.${domain}
+_mobile._http._tcp.srchain67890.${domain}

@@ -63,7 +63,7 @@ if req.first_subdomain.startswith("badcompress2"):
    # Send answer with arbitrary compression pointer in the ANSWER section in the CNAME name
    offset = 12  # default offset is 12, which points to the domain name in the question
    if req.subdomains[1].isnumeric():
-      offset = int(req.subdomains[1])
+      offset = min(int(req.subdomains[1]), 255)
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
    ### QUESTION SECTION ########

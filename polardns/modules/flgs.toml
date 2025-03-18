@@ -22,7 +22,7 @@ Where:
 
 Note that in a DNS packet the Flags field is a 2-byte field, which means the maximum value can be 65535 in decimal or 0xffff in hexadecimal.
 '''
-seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
+seealso = "newid, tc, noq, slp, ttl, len, cnk, flgs, rc, qurr, anrr, aurr, adrr, cut, add, rl, fc, nc"
 
 [[module.example]]
 description = "In this example, we use the basic [always] feature which always resolves to an IP address. Additionally, we request to set the flags in the response header to the value of `0x8403`. This value indicates that the response is a standard query response, affirms authority over the domain, and sets the reply code to `NXDOMAIN` (No such name):"
@@ -39,4 +39,4 @@ command = "dig always.flgsr.yourdomain.com @127.0.0.1"
 append = "We can see that the client is unable to interpret any of the responses."
 
 [module.code]
-# The code is located in the polardns.py file.
+# The code is located in the polardns/core.py file.

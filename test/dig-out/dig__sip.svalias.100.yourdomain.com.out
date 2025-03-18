@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> _sip.svalias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 20849
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_sip.svalias.100.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias472358.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias234180.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias727441.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias491691.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias761231.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias999250.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias630477.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias786339.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias507567.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias559675.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias650874.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias856699.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias236231.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias684388.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias917864.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias107733.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias16344.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias928.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias168619.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias633045.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias763593.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias297020.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias541360.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias504042.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias990273.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias518089.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias291785.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias903044.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias769780.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias564431.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias600258.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias266028.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias857830.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias943032.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias553212.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias400533.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias585534.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias56551.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias487288.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias626406.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias899225.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias283185.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias594906.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias932882.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias295015.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias156346.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias563640.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias47812.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias563938.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias352718.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias588125.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias397898.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias45275.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias129854.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias800145.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias487706.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias124349.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias216462.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias954777.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias842765.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias331759.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias313800.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias284918.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias703069.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias107244.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias566627.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias171239.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias619712.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias646209.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias482686.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias191669.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias39797.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias691423.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias1102.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias864373.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias323060.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias257252.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias258613.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias862655.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias337719.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias35241.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias285542.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias132502.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias35750.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias329726.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias977203.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias266117.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias766392.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias127043.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias284278.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias877743.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias781742.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias438204.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias883337.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias115229.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias734254.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias308874.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias727928.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias40336.100.yourdomain.com.
+_sip.svalias.100.yourdomain.com. 60 IN	SVCB	0 _sip.svalias775576.100.yourdomain.com.
+
+;; Query time: 12 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 5336
+

@@ -1,0 +1,21 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;inja.als.oi.<OURDOM>. IN CNAME
+
+;; ANSWER SECTION:
+injected.<OURDOM>. 60 IN A 6.6.6.0
+
+;; AUTHORITY SECTION:
+injected.<OURDOM>. 60 IN A 6.6.6.0
+
+;; ADDITIONAL SECTION:
+injected.<OURDOM>. 60 IN A 6.6.6.0
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>
+

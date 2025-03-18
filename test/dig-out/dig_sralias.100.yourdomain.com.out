@@ -1,0 +1,117 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> sralias.100.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 23456
+;; flags: qr aa; QUERY: 1, ANSWER: 100, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;sralias.100.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 59139 sralias695216.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 22099 sralias810765.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 7932 sralias100328.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 43500 sralias118742.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 38509 sralias94496.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 42236 sralias671331.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 41821 sralias732557.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 13885 sralias326706.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 56594 sralias601226.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 41623 sralias555670.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 65073 sralias432519.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 12401 sralias212773.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 5674 sralias368280.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 8308 sralias84304.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 682 sralias783754.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 38614 sralias812681.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 53395 sralias696065.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 44617 sralias214732.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 56668 sralias257807.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 31571 sralias833598.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 40857 sralias254005.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 56611 sralias342399.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 35896 sralias641820.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 62163 sralias863942.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 47349 sralias587880.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 28616 sralias939967.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 60309 sralias83299.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 22252 sralias318443.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 39849 sralias832871.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 47550 sralias274049.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 41800 sralias67513.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 23599 sralias586758.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 19591 sralias156293.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 30219 sralias103964.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 59775 sralias6785.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 26908 sralias44539.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 47282 sralias837099.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 5985 sralias788399.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 44568 sralias477047.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 60713 sralias45746.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 29958 sralias511269.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 15250 sralias902696.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 49375 sralias639872.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 41172 sralias388072.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 39619 sralias447777.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 14787 sralias996138.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 37449 sralias522932.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 13524 sralias141440.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 37236 sralias964880.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 50962 sralias605334.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 54963 sralias557002.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 36490 sralias113206.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 15505 sralias25794.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 13870 sralias792017.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 54004 sralias952898.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 41578 sralias477639.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 27866 sralias568831.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 18170 sralias593479.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 20197 sralias53590.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 16786 sralias949747.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 42558 sralias489492.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 9804 sralias107760.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 15131 sralias678396.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 23563 sralias274545.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 11142 sralias438970.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 46496 sralias971920.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 40166 sralias596681.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 9466 sralias699408.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 51496 sralias749572.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 27017 sralias556824.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 5909 sralias441574.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 64791 sralias524363.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 27076 sralias121151.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 8232 sralias511250.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 30669 sralias712047.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 24780 sralias380226.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 50499 sralias895955.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 27192 sralias133148.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 53106 sralias826819.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 16403 sralias358866.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 63762 sralias635346.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 57789 sralias938529.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 5358 sralias862463.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 24095 sralias163484.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 46136 sralias729489.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 39283 sralias134949.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 12892 sralias41989.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 42580 sralias880312.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 46427 sralias31398.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 59150 sralias831087.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 44576 sralias61377.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 25212 sralias53962.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 34442 sralias700552.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 28297 sralias277659.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 47775 sralias505494.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 46677 sralias179119.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 47245 sralias16771.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 23014 sralias519220.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 56390 sralias671728.100.yourdomain.com.
+sralias.100.yourdomain.com. 60	IN	SRV	0 0 62122 sralias636766.100.yourdomain.com.
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:35 +04 2025
+;; MSG SIZE  rcvd: 5229
+

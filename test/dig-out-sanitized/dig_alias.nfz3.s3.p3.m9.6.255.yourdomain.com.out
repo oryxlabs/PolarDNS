@@ -1,0 +1,15 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;alias.nfz3.s3.p3.m9.6.255.<OURDOM>. IN A
+
+;; ANSWER SECTION:
+alias.nfz3.s3.p3.m9.6.255.<OURDOM>. 60 IN CNAME alias\255\255\255\255\255\255.\255\255\255\255\255\255.\255\255\255\255\255\255.<OURDOM>.
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>
+

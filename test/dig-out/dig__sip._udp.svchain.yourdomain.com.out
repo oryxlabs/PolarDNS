@@ -1,0 +1,18 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> _sip._udp.svchain.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 53174
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;_sip._udp.svchain.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+_sip._udp.svchain.yourdomain.com. 60 IN	SVCB	0 _sip._udp.svchain1.yourdomain.com.
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:36 +04 2025
+;; MSG SIZE  rcvd: 99
+

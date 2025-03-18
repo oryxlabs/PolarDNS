@@ -1,0 +1,30 @@
+${domain} NS
+${domain} TXT
+${domain} MX
++tcp ${domain} NS
++tcp ${domain} TXT
++tcp ${domain} MX
+always123.${domain}
+always.10.${domain}
++tcp always123.${domain}
++tcp always.10.${domain}
+something.nonexistent.com
+nonexistent.${domain}
+nonexistent.com
++tcp something.nonexistent.com
++tcp nonexistent.${domain}
++tcp nonexistent.com
+
+# size.toml
+size.512.fc.${domain}
+size.512.nc.${domain}
+size.512.tc.fc.${domain}
+size.512.tc.nc.${domain}
++tcp size.512.fc.${domain}
++tcp size.512.nc.${domain}
+size.8192.fc.${domain}
+size.8192.nc.${domain}
+size.8192.tc.fc.${domain}
+size.8192.tc.nc.${domain}
++tcp size.8192.fc.${domain}
++tcp size.8192.nc.${domain}

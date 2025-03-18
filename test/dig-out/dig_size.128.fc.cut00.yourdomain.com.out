@@ -1,0 +1,21 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> size.128.fc.cut00.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64813
+;; flags: qr aa; QUERY: 1, ANSWER: 4, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;size.128.fc.cut00.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+size.128.fc.cut00.yourdomain.com. 60 IN	A	127.0.0.121
+size.128.fc.cut00.yourdomain.com. 60 IN	A	127.0.0.154
+size.128.fc.cut00.yourdomain.com. 60 IN	A	127.0.0.240
+size.128.fc.cut00.yourdomain.com. 60 IN	A	127.0.0.200
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Mar 18 21:10:34 +04 2025
+;; MSG SIZE  rcvd: 114
+

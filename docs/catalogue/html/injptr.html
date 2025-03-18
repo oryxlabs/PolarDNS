@@ -46,7 +46,7 @@ parent: "Cache poisoning"
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 53189
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 36632
 ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
@@ -54,36 +54,36 @@ parent: "Cache poisoning"
 
 ;; ANSWER SECTION:
 injptr.yourdomain.com.	60	IN	A	1.2.3.4
-<span style="color:red;">6.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.</span>
+0.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.
 
-;; Query time: 3 msec
+;; Query time: 12 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:22:28 +04 2025
+;; WHEN: Mon Mar 17 01:14:59 +04 2025
 ;; MSG SIZE  rcvd: 112
 
 
-<strong># dig -x 6.6.6.6 @10.211.55.2 +norecurse</strong>
+<strong># dig -x 6.6.6.0 @10.211.55.2 +norecurse</strong>
 
-; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 6.6.6.6 @10.211.55.2 +norecurse
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 6.6.6.0 @10.211.55.2 +norecurse
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="color:red;">NXDOMAIN</span>, id: 35775
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="color:red;">NXDOMAIN</span>, id: 36458
 ;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-;6.6.6.6.in-addr.arpa.		IN	PTR
+;0.6.6.6.in-addr.arpa.		IN	PTR
 
-;; Query time: 3 msec
+;; Query time: 4 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:22:28 +04 2025
-;; MSG SIZE  rcvd: 38</pre></div><p><a href='../outputs/injptr/dig_injptr.yourdomain.com__10.211.55.2__dig__x_6.6.6.6__10.211.55.2__norecurse.pcap'>Download PCAP File</a></p><p><p>We can see that the injected record was not cached, as we received <code class='code-block'>NXDOMAIN</code> (No such name) status. This means that the injection did not succeed.</p></p><br>
+;; WHEN: Mon Mar 17 01:14:59 +04 2025
+;; MSG SIZE  rcvd: 38</pre></div><p><a href='../outputs/injptr/dig_injptr.yourdomain.com__10.211.55.2__dig__x_6.6.6.0__10.211.55.2__norecurse.pcap'>Download PCAP File</a></p><p><p>We can see that the injected record was not cached, as we received <code class='code-block'>NXDOMAIN</code> (No such name) status. This means that the injection did not succeed.</p></p><br>
 <p>In this example, we use the identifier <code class='code-block'>123</code> to label the injected domain name, resulting in the generation of a specific domain name with the same label:</p>
 <div><pre class='output-block'><strong># dig injptr123.yourdomain.com @10.211.55.2</strong>
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr123.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 55255
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 842
 ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
@@ -91,31 +91,31 @@ injptr.yourdomain.com.	60	IN	A	1.2.3.4
 
 ;; ANSWER SECTION:
 injptr123.yourdomain.com. 60	IN	A	1.2.3.4
-<span style="color:red;">6.6.6.6.in-addr.arpa.	60	IN	PTR	injected123.yourdomain.com.</span>
+123.6.6.6.in-addr.arpa.	60	IN	PTR	injected123.yourdomain.com.
 
-;; Query time: 3 msec
+;; Query time: 4 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:22:30 +04 2025
-;; MSG SIZE  rcvd: 118</pre></div><p><a href='../outputs/injptr/dig_injptr123.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>This helps in identifying specific test cases during the testing process.</p></p><br>
+;; WHEN: Mon Mar 17 01:15:01 +04 2025
+;; MSG SIZE  rcvd: 120</pre></div><p><a href='../outputs/injptr/dig_injptr123.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>This helps in identifying specific test cases during the testing process.</p></p><br>
 <p>As mentioned earlier, this module can respond to various record types, not just A records. In this example, we request an NS record. As a result, we receive a valid NS record followed by an unsolicited PTR record:</p>
 <div><pre class='output-block'><strong># dig NS injptr.yourdomain.com @10.211.55.2</strong>
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; NS injptr.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 619
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 2270
 ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;injptr.yourdomain.com.		IN	NS
 
 ;; ANSWER SECTION:
-injptr.yourdomain.com.	60	IN	NS	always276202.yourdomain.com.
-<span style="color:red;">6.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.</span>
+injptr.yourdomain.com.	60	IN	NS	always974579.yourdomain.com.
+0.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.
 
-;; Query time: 3 msec
+;; Query time: 4 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:22:31 +04 2025
+;; WHEN: Mon Mar 17 01:15:02 +04 2025
 ;; MSG SIZE  rcvd: 137</pre></div><p><a href='../outputs/injptr/dig_NS_injptr.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>The module can handle A, AAAA, CNAME, DNAME, MX, NS and PTR record queries.</p></p><br>
 <p>In the following example, we use the <strong>3rp</strong> (3rd-party) parameter to request that the unsolicited record contain a subdomain under a 3rd-party parent domain. If successful, this scenario would have a much greater impact. In the subsequent query, we verify again whether the resolver picked up and cached the unsolicited record:</p>
 <div><pre class='output-block'><strong># dig injptr123.3rp.yourdomain.com @10.211.55.2</strong>
@@ -123,7 +123,7 @@ injptr.yourdomain.com.	60	IN	NS	always276202.yourdomain.com.
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr123.3rp.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 6852
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 28124
 ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
@@ -131,113 +131,113 @@ injptr.yourdomain.com.	60	IN	NS	always276202.yourdomain.com.
 
 ;; ANSWER SECTION:
 injptr123.3rp.yourdomain.com. 60 IN	A	1.2.3.4
-<span style="color:red;">6.6.6.6.in-addr.arpa.	60	IN	PTR	injected123.a3rdparty.net.</span>
+123.6.6.6.in-addr.arpa.	60	IN	PTR	injected123.a3rdparty.net.
 
-;; Query time: 3 msec
+;; Query time: 4 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:22:32 +04 2025
-;; MSG SIZE  rcvd: 121
+;; WHEN: Mon Mar 17 01:15:03 +04 2025
+;; MSG SIZE  rcvd: 123
 
 
-<strong># dig -x 6.6.6.6 @10.211.55.2 +norecurse</strong>
+<strong># dig -x 6.6.6.123 @10.211.55.2 +norecurse</strong>
 
-; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 6.6.6.6 @10.211.55.2 +norecurse
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; -x 6.6.6.123 @10.211.55.2 +norecurse
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="color:red;">NXDOMAIN</span>, id: 27350
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: <span style="color:red;">NXDOMAIN</span>, id: 50748
 ;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-;6.6.6.6.in-addr.arpa.		IN	PTR
+;123.6.6.6.in-addr.arpa.		IN	PTR
 
-;; Query time: 3 msec
+;; Query time: 0 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:22:32 +04 2025
-;; MSG SIZE  rcvd: 38</pre></div><p><a href='../outputs/injptr/dig_injptr123.3rp.yourdomain.com__10.211.55.2__dig__x_6.6.6.6__10.211.55.2__norecurse.pcap'>Download PCAP File</a></p><p><p>We can see that the injected record was not cached, as we received <code class='code-block'>NXDOMAIN</code> (No such name) status. This means that the injection did not succeed.</p></p><br>
+;; WHEN: Mon Mar 17 01:15:03 +04 2025
+;; MSG SIZE  rcvd: 40</pre></div><p><a href='../outputs/injptr/dig_injptr123.3rp.yourdomain.com__10.211.55.2__dig__x_6.6.6.123__10.211.55.2__norecurse.pcap'>Download PCAP File</a></p><p><p>We can see that the injected record was not cached, as we received <code class='code-block'>NXDOMAIN</code> (No such name) status. This means that the injection did not succeed.</p></p><br>
 <p>In this example, we use the <strong>rev</strong> parameter to reverse the order of answers &mdash; the unsolicited record appears first, followed by the legitimate one. This arrangement could potentially increase the likelihood of the injected information being picked up and cached:</p>
 <div><pre class='output-block'><strong># dig injptr123.3rp.rev.yourdomain.com @10.211.55.2</strong>
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr123.3rp.rev.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 899
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 38745
 ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;injptr123.3rp.rev.yourdomain.com. IN	A
 
 ;; ANSWER SECTION:
-<span style="color:red;">6.6.6.6.in-addr.arpa.	60	IN	PTR	injected123.a3rdparty.net.</span>
+123.6.6.6.in-addr.arpa.	60	IN	PTR	injected123.a3rdparty.net.
 injptr123.3rp.rev.yourdomain.com. 60 IN	A	1.2.3.4
 
-;; Query time: 0 msec
+;; Query time: 4 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:22:33 +04 2025
-;; MSG SIZE  rcvd: 125</pre></div><p><a href='../outputs/injptr/dig_injptr123.3rp.rev.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
+;; WHEN: Mon Mar 17 01:15:04 +04 2025
+;; MSG SIZE  rcvd: 127</pre></div><p><a href='../outputs/injptr/dig_injptr123.3rp.rev.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><br>
 <p>In this example, we use the <strong>rpq</strong> parameter to replace the question in the query section with information from the unsolicited record, in an attempt to convince the resolver that it originally requested this record:</p>
-<div><pre class='output-block'><strong># dig injptr12345.rpq.yourdomain.com @10.211.55.2</strong>
+<div><pre class='output-block'><strong># dig injptr123.rpq.yourdomain.com @10.211.55.2</strong>
 
-;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/PTR/IN
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected123.yourdomain.com/PTR/IN
 ;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
-;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/PTR/IN
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected123.yourdomain.com/PTR/IN
 ;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
-;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/PTR/IN
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected123.yourdomain.com/PTR/IN
 ;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
 
-; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr12345.rpq.yourdomain.com @10.211.55.2
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr123.rpq.yourdomain.com @10.211.55.2
 ;; global options: +cmd
-;; no servers could be reached</pre></div><p>We can see that the client (dig) did not accept the response because the question (in the response) did not match the question in the original query. Here is the actual DNS response that was sent back to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37735
+;; no servers could be reached</pre></div><p>We can see that the client (dig) did not accept the response because the question (in the response) did not match the question in the original query. Here is the actual DNS response that was sent back to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 65171
 ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-<span style="color:red;">;injected12345.yourdomain.com.  IN      PTR</span>
+<span style="color:red;">;injected123.yourdomain.com.    IN      PTR</span>
 
 ;; ANSWER SECTION:
-injptr12345.rpq.yourdomain.com. 60      IN      A       1.2.3.4
-<span style="color:red;">6.6.6.6.in-addr.arpa.   60      IN      PTR     injected12345.yourdomain.com.</pre></span><p><a href='../outputs/injptr/dig_injptr12345.rpq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>We can see that the question (query) was replaced to match the unsolicited record. The question remains as to how different resolvers would handle such a scenario &mdash; some resolvers may potentially accept this response.</p></p><br>
+injptr123.rpq.yourdomain.com. 60      IN      A       1.2.3.4
+123.6.6.6.in-addr.arpa. 60      IN      PTR     injected123.yourdomain.com.</pre><p><a href='../outputs/injptr/dig_injptr123.rpq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>We can see that the question (query) was replaced to match the unsolicited record. The question remains as to how different resolvers would handle such a scenario &mdash; some resolvers may potentially accept this response.</p></p><br>
 <p>In the next example, we use the <strong>adq</strong> parameter to add the question in the response asking for the unsolicited record, as another attempt to convince the resolver that it originally requested this record. We can see again that the client (dig) does not accept this response because the question does not match the original query:</p>
-<div><pre class='output-block'><strong># dig injptr12345.adq.yourdomain.com @10.211.55.2</strong>
+<div><pre class='output-block'><strong># dig injptr123.adq.yourdomain.com @10.211.55.2</strong>
 
 ;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
-;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/PTR/IN
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected123.yourdomain.com/PTR/IN
 ;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
 ;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
-;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/PTR/IN
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected123.yourdomain.com/PTR/IN
 ;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
 ;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
-;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected12345.yourdomain.com/PTR/IN
+;; ;; <span style="background-color: yellow;">Question section mismatch</span>: got injected123.yourdomain.com/PTR/IN
 ;; communications <span style="background-color: yellow;">error</span> to 10.211.55.2#53: timed out
 
-; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr12345.adq.yourdomain.com @10.211.55.2
+; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr123.adq.yourdomain.com @10.211.55.2
 ;; global options: +cmd
-;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle this scenario. Here is the actual DNS response that was generated and returned to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37296
+;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle this scenario. Here is the actual DNS response that was generated and returned to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 28478
 ;; flags: qr aa; QUERY: 2, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
-;injptr12345.adq.yourdomain.com. IN      A
-<span style="color:red;">;injected12345.yourdomain.com.  IN      PTR</span>
+;injptr123.adq.yourdomain.com.  IN      A
+<span style="color:red;">;injected123.yourdomain.com.    IN      PTR</span>
 
 ;; ANSWER SECTION:
-injptr12345.adq.yourdomain.com. 60      IN      A       1.2.3.4
-<span style="color:red;">6.6.6.6.in-addr.arpa.   60      IN      PTR     injected12345.yourdomain.com.</pre></span><p><a href='../outputs/injptr/dig_injptr12345.adq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>We can see that there are two questions &mdash; the original query and an additional one matching the unsolicited record.</p></p><br>
+injptr123.adq.yourdomain.com. 60      IN      A       1.2.3.4
+123.6.6.6.in-addr.arpa. 60      IN      PTR     injected123.yourdomain.com.</pre><p><a href='../outputs/injptr/dig_injptr123.adq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>We can see that there are two questions &mdash; the original query and an additional one matching the unsolicited record.</p></p><br>
 <p>In this example, the <strong>oi</strong> (only injected) parameter causes the answers to include only the injected (unsolicited) record, without the actual answer to the original query:</p>
 <div><pre class='output-block'><strong># dig injptr.oi.yourdomain.com @10.211.55.2</strong>
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr.oi.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 66
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 44007
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 ;injptr.oi.yourdomain.com.	IN	A
 
 ;; ANSWER SECTION:
-<span style="color:red;">6.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.</span>
+0.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.
 
-;; Query time: 3 msec
+;; Query time: 4 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:23:08 +04 2025
+;; WHEN: Mon Mar 17 01:15:39 +04 2025
 ;; MSG SIZE  rcvd: 99</pre></div><p><a href='../outputs/injptr/dig_injptr.oi.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>Note that the question remains the same as in the original query.</p></p><br>
 <p>Here, we also request to replace the question in the query section with the unsolicited domain name. We can see that the dig client does not accept the response again because the question does not match the original query:</p>
 <div><pre class='output-block'><strong># dig injptr.oi.rpq.yourdomain.com @10.211.55.2</strong>
@@ -251,21 +251,21 @@ injptr12345.adq.yourdomain.com. 60      IN      A       1.2.3.4
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr.oi.rpq.yourdomain.com @10.211.55.2
 ;; global options: +cmd
-;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle such a scenario. Here is the actual DNS response that was sent back to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 59043
+;; no servers could be reached</pre></div><p>The question remains as to how different resolvers would handle such a scenario. Here is the actual DNS response that was sent back to dig in this case:</p><pre class='output-block'>;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31971
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
 <span style="color:red;">;injected.yourdomain.com.       IN      PTR</span>
 
 ;; ANSWER SECTION:
-<span style="color:red;">6.6.6.6.in-addr.arpa.   60      IN      PTR     injected.yourdomain.com.</pre></span><p><a href='../outputs/injptr/dig_injptr.oi.rpq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>Some resolvers may potentially accept this response.</p></p><br>
+0.6.6.6.in-addr.arpa.   60      IN      PTR     injected.yourdomain.com.</pre><p><a href='../outputs/injptr/dig_injptr.oi.rpq.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>Some resolvers may potentially accept this response.</p></p><br>
 <p>Lastly, in this example, we use the <strong>als</strong> (all sections) parameter to include the records in all sections of the DNS response:</p>
 <div><pre class='output-block'><strong># dig injptr.als.yourdomain.com @10.211.55.2</strong>
 
 ; &lt;&lt;&gt;&gt; DiG 9.18.10-2-Debian &lt;&lt;&gt;&gt; injptr.als.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 22819
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 33482
 ;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 2, ADDITIONAL: 2
 
 ;; QUESTION SECTION:
@@ -273,19 +273,19 @@ injptr12345.adq.yourdomain.com. 60      IN      A       1.2.3.4
 
 ;; ANSWER SECTION:
 injptr.als.yourdomain.com. 60	IN	A	1.2.3.4
-<span style="color:red;">6.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.</span>
+0.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.
 
 ;; AUTHORITY SECTION:
 injptr.als.yourdomain.com. 60	IN	A	1.2.3.4
-<span style="color:red;">6.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.</span>
+0.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.
 
 ;; ADDITIONAL SECTION:
 injptr.als.yourdomain.com. 60	IN	A	1.2.3.4
-<span style="color:red;">6.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.</span>
+0.6.6.6.in-addr.arpa.	60	IN	PTR	injected.yourdomain.com.
 
-;; Query time: 3 msec
+;; Query time: 4 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jan 14 13:23:26 +04 2025
+;; WHEN: Mon Mar 17 01:15:57 +04 2025
 ;; MSG SIZE  rcvd: 262</pre></div><p><a href='../outputs/injptr/dig_injptr.als.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>This could potentially increase the likelihood of the injected information being picked up and stored.</p>
 <p>Keep in mind that all these parameters can be combined to create different injection variants.</p></p><br>
 

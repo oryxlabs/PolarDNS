@@ -43,7 +43,7 @@ if req.first_subdomain.startswith("empty2"):
    # Send arbitrary number of NULLs
    nulls = 1 # number of NULLs to send
    if req.subdomains[1].isnumeric():
-      nulls = int(req.subdomains[1])
+      nulls = min(int(req.subdomains[1]), 65535)
    buffer = b"\x00" * nulls
    log("only %d NULL(s)" % (nulls))
    if proto == "tcp":

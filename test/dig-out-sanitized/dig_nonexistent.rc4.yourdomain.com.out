@@ -1,0 +1,14 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOTIMP, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+
+;; WARNING: EDNS query returned status NOTIMP - retry with '+noedns'
+
+;; QUESTION SECTION:
+;nonexistent.rc4.<OURDOM>. IN A
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>
+

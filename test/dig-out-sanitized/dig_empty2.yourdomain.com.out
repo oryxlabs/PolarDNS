@@ -1,0 +1,6 @@
+;; Warning: short (< header size) message received
+;; communications error to 127.0.0.1#53: timed out
+
+;; global options: +cmd
+;; no servers could be reached
+

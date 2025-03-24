@@ -114,32 +114,32 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
 
    index = req.first_subdomain[4:]
 
-   if "3rp" in req.subdomains:  # inject a 3rd party domain
+   if "3rp" in req.subdomains_lc:  # inject a 3rd party domain
       injdom = "injected" + index + "." + a3rdparty_domain
       addcustomlog("3P")
    else:
       injdom = "injected" + index + "." + req.sld_tld_domain
 
-   if "rpq" in req.subdomains:  # replace the question with our injected stuffs
+   if "rpq" in req.subdomains_lc:  # replace the question with our injected stuffs
       orig_req_domain = req.full_domain
       req.full_domain = injdom
       req.type_bin = getTypeBin(req.inj_type_str) 
       addcustomlog("RPQ")
 
-   if "adq" in req.subdomains:  # add additional question for our injected stuffs
+   if "adq" in req.subdomains_lc:  # add additional question for our injected stuffs
       resp.QURR = req.QURR+1
       addedquestions  = convDom2Bin(injdom) + getTypeBin(req.inj_type_str) + req.class_bin
       addcustomlog("ADQ")
 
-   if "oi" in req.subdomains:   # only injected
+   if "oi" in req.subdomains_lc:   # only injected
       answers = 1
       addcustomlog("OI")
 
-   if "rev" in req.subdomains:  # reversed / injected first
+   if "rev" in req.subdomains_lc:  # reversed / injected first
       reversed = 1
       addcustomlog("REV")
 
-   if "als" in req.subdomains:  # all sections
+   if "als" in req.subdomains_lc:  # all sections
       allsections = 1
       addcustomlog("ALS")
 
@@ -205,7 +205,7 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
    ###############################
    ### ANSWER SECTION ############
    # first answer
-   if "rpq" in req.subdomains:
+   if "rpq" in req.subdomains_lc:
       req.full_domain = orig_req_domain  # switch back to the original domain
       resp.compress = 0  # query contains the injected domain, cannot use it for compression
    if answers > 1:
@@ -236,7 +236,7 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
    if allsections:
       ### AUTHORITY SECTION #########
       # first answer
-      if "rpq" in req.subdomains:
+      if "rpq" in req.subdomains_lc:
          req.full_domain = orig_req_domain  # switch back to the original domain
          resp.compress = 0  # query contains the injected domain, cannot use it for compression
       if answers > 1:
@@ -266,7 +266,7 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
       ###############################
       ### ADDITIONAL SECTION ########
       # first answer
-      if "rpq" in req.subdomains:
+      if "rpq" in req.subdomains_lc:
          req.full_domain = orig_req_domain  # switch back to the original domain
          resp.compress = 0  # query contains the injected domain, cannot use it for compression
       if answers > 1:

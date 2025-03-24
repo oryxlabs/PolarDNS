@@ -1,3 +1,12 @@
+24/Mar/2025
+- release version 1.6.3
+- added reusable GitHub Workflow for end-to-end (E2E) testing of DNS resolvers
+- added example GitHub Workflow integration for BIND9, PowerDNS, Knot Resolver, Unbound, CoreDNS, and Dnsmasq
+- added a template for E2E tests
+
+19/Mar/2025
+- fixed 0x20 encoding (randomly mixed uppercase and lowercase in DNS queries) in all record injection modules
+
 18/Mar/2025
 - release version 1.6.2
 - major rework of the polardns test runner `test/run.sh`, now based on actual dig outputs rather than just checksums

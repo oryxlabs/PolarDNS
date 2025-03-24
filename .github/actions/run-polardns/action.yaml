@@ -1,0 +1,40 @@
+name: Run PolarDNS server
+inputs:
+  resolver:
+    required: false
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create network
+      if: ${{ inputs.resolver }}
+      shell: bash
+      run: |
+        docker network create --driver=bridge --subnet=192.168.0.0/16 polardns
+
+    - name: Connect target
+      if: ${{ inputs.resolver }}
+      shell: bash
+      run: |
+        docker network connect --ip "192.168.0.10" polardns ${{ inputs.resolver }}
+
+    - name: Run PolarDNS in docker
+      if: ${{ inputs.resolver }}
+      shell: bash
+      run: |
+        docker run -d --name polardns --network polardns --ip "192.168.0.11" oryxlabs/polardns:latest
+        sleep 5
+
+    - name: Sanity check
+      shell: bash
+      run: |
+        echo "--------------------"
+        echo "Sanity check"
+        echo "--------------------"
+        output=$(dig @127.0.0.1 -p 10053 always.yourdomain.com A +noedns)
+        
+        echo "output: $output"
+        echo $output | grep "NOERROR"
+        echo $output | grep "2.3.4.5"
+

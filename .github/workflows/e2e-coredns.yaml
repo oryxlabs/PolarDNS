@@ -1,0 +1,58 @@
+name: E2E CoreDNS
+on:
+  - workflow_dispatch
+jobs:
+  tests:
+    runs-on: [linux, self-hosted]
+    strategy:
+      matrix:
+        version:
+          - "1.12.0"
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.DEV_AWS_ECR_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.DEV_AWS_ECR_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.DEV_AWS_ECR_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - uses: actions/checkout@v4
+
+      - name: Run CoreDNS
+        run: |
+          docker run --name coredns -p 10053:53/udp -p 10053:53/tcp -d -v "${{ github.workspace }}/.github/workflows/e2e-coredns/Corefile:/Corefile" coredns/coredns:${{ matrix.version }}
+          sleep 10
+
+      - name: Run PolarDNS
+        uses: ./.github/actions/run-polardns
+        with:
+          resolver: coredns
+
+      - name: Run E2E tests
+        uses: ./.github/actions/e2e-tests
+        continue-on-error: true
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          path: e2e-tests
+          name: e2e-test-results-coredns-${{ matrix.version }}
+          if-no-files-found: ignore
+
+      - name: Debug running containers
+        if: failure()
+        run: |
+          docker ps -a
+
+      - name: Debug CoreDNS
+        if: failure()
+        run: |
+          docker logs coredns
+
+      - name: Debug PolarDNS
+        run: |
+          docker logs polardns

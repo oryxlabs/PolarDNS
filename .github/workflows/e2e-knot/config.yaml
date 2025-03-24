@@ -1,0 +1,23 @@
+workers: 2
+logging:
+  level: info
+network:
+  do-ipv6: false
+  listen:
+    - interface: 0.0.0.0@53
+dnssec: false
+
+# allow non-recursive queries
+options:
+  refuse-no-rd: false
+
+# disable management API
+# management:
+#   interface: 127.0.0.1@5000
+
+forward:
+  - subtree: yourdomain.com
+    servers: [ 192.168.0.11 ]
+    options:
+      authoritative: true
+      dnssec: false

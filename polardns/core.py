@@ -17,7 +17,7 @@ import os
 from polardns import nfz
 from polardns import consts
 
-polardns_version = "1.6.2"
+polardns_version = "1.6.3"
 
 ################################
 

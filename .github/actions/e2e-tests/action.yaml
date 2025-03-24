@@ -1,0 +1,10 @@
+name: End-to-end testing with running resolver
+
+runs:
+  using: "composite"
+  steps:
+    - name: E2E Tests
+      shell: bash
+      run: |
+        cd ${{ github.workspace }}/test-e2e || exit 1
+        ./run.sh 127.0.0.1 10053 yourdomain.com

@@ -474,9 +474,9 @@ def send_buf(self, buffer, totallen = 0):
       buflen = totallen or len(buffer)
 
    if hasattr(resp, "cutcount"):
-      buflen -= resp.rl * resp.cutcount  # adjust the length
+      buflen -= resp.recalc * resp.cutcount  # adjust the length
    if hasattr(resp, "addbyte"):
-      buflen += resp.rl * resp.addcount  # adjust the length
+      buflen += resp.recalc * resp.addcount  # adjust the length
 
    buflen = min(buflen, 65535) # max DNS packet size
    try:
@@ -656,19 +656,19 @@ def process_DNS(self, req):
         print("Request (HEX):", proto, req.HEX) if debug else True
 
         ##################################
-        # Make a nice client IP/name string for logging on the console
+        # Form the client info string for logging on the console
         try:
             # try replace the client IP string with a name if we know this client
             sender_label = known_servers[self.client_address[0]]
         except:
             # if we don't know this client IP, just put the IP address then
             sender_label = self.client_address[0]
-        # finally, make the nice client string
+        # finally, form the client info string
+        # format: proto://ip-address:port id
+        #   e.g.: tcp://54.166.138.71:59965 09b5
         req.info = format(proto) + "://" + sender_label + ":" + \
                    format(self.client_address[1]) + " " + \
                    binascii.hexlify(req.RAW[0:2]).decode('ascii')
-        #      proto://ip-address:port id
-        # e.g. tcp://54.166.138.71:59965 09b5
 
         #print("thread id: %d" % (threading.get_ident()))
         ##################################
@@ -682,10 +682,10 @@ def process_DNS(self, req):
         req.ADRR  = int.from_bytes(req.RAW[10:12], 'big')
 
         # decode the domain name in the question
+        req.full_domain = ""   # sOMeThINg.whaTEVeR.ANytHinG.cOM
         req.subdomains = []    # sOMeThINg whaTEVeR ANytHinG cOM
         req.subdomains_lc = [] # something whatever anything com
-        req.full_domain = ""   # sOMeThINg.whaTEVeR.ANytHinG.cOM
-        offset = 12
+        offset = 12 # offset where the first query (the actual domain name) starts
         try:
            while True:
                size = int.from_bytes(req.RAW[offset:offset+1], 'big')
@@ -710,7 +710,7 @@ def process_DNS(self, req):
         try:
             req.first_subdomain = req.subdomains_lc[0]  # something
         except:
-            # someone is asking for the root e.g., for the root name servers, where the requested domain name is just empty
+            # query is empty, that means query for the root domain e.g., for the root name servers
             req.first_subdomain = ""
 
         try:
@@ -782,8 +782,8 @@ def process_DNS(self, req):
         print("SLD + TLD:", req.sld_tld_domain) if debug else True
 
         ###############################################
-        # 3. Check for global modifiers here which can influence how we respond.
-        # These modifiers can come in the requested domain name in any position as a separate subdomain.
+        # 4. Check for global modifiers which influence how we respond.
+        # These modifiers can come in the requested domain name in any position as a separate subdomain (label).
          
         # Supported global modifiers are:
         #  slp   - delay before responding (in miliseconds) e.g.:
@@ -815,15 +815,15 @@ def process_DNS(self, req):
         resp.sleep = config_sleep
         resp.TTL = config_ttl
         resp.len = -1
-        resp.rl = 0  # recalculate length in TCP (in case cut/add is used)
+        resp.recalc = 0  # recalculate length in TCP (in case cut/add is used)
         resp.noq = req.QURR # number of questions
         resp.QURR = req.QURR # number of questions
 
         resp.ID = req.ID # naturaly, set the ID in the response to the same ID as in the query, but
                          # keep in mind that a new random ID can be generated via the 'newid' global modifier
 
-        # Check if any domain label starts with any of the global modifiers
-        # Is there custom sleep (".slpXXXX.") or custom TTL (".ttlXXX.") or custom length (".lenXXX.") in the domain name?
+        # Check each domain label for presence of global modifiers. For example, is there custom sleep (".slpXXXX.")
+        # or custom TTL (".ttlXXX.") or custom length (".lenXXX.") requested in the domain name?
         for index, label in enumerate(req.subdomains_lc):
             #######################
             if label.startswith("slp"):        # custom delay requested
@@ -930,7 +930,7 @@ def process_DNS(self, req):
                resp.compress = 1
                addcustomlog("FC")
             #######################
-            elif label.startswith("cnk"):      # send in N-byte long chunks
+            elif label.startswith("cnk"):      # send out the response in N-byte long chunks
                if label[3:].isnumeric():
                   resp.chunked = int(label[3:])
                   addcustomlog("CHUNKED:" + str(resp.chunked))
@@ -953,7 +953,7 @@ def process_DNS(self, req):
                   addcustomlog("ADD:" + str(resp.addcount) + "." + str(resp.addbyte))
             #######################
             elif label == "rl":                # recalculate length in TCP
-               resp.rl = 1                     # in case 'cut' or 'add' was used
+               resp.recalc = 1                 # in case 'cut' or 'add' was used
                addcustomlog("RL")
             #######################
             # DO NOT REMOVE (additional modifiers)
@@ -973,7 +973,7 @@ def process_DNS(self, req):
                return
 
         ###############################################
-        # 4. The main logical functionality starts here where it is possible to respond in a custom way to any specific query.
+        # 5. The main logical functionality starts here where it is possible to respond in a custom way to any specific query.
         # In every if/elsif branch we craft the response and send it out back to the client.
          
         # First check if we are authoritative for the requested domain

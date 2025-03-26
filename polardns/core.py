@@ -842,7 +842,10 @@ def process_DNS(self, req):
                   addcustomlog("LEN:" + str(resp.len))
             #######################
             elif label == "newid":             # new random transaction ID
-               resp.ID = struct.pack(">H", random.getrandbits(16))
+               while True:
+                  resp.ID = struct.pack(">H", random.getrandbits(16))
+                  if resp.ID != req.ID:
+                     break
                addcustomlog("NEWID")
             #######################
             elif label.startswith("rc"):      # set custom reply-code (RCODE) in the DNS header

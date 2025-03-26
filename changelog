@@ -1,3 +1,10 @@
+26/Mar/2025
+- fixed the `newid` modifier to ensure the transaction ID in the response always differs from the ID in the query
+- updated documentation
+
+25/Mar/2025
+- added compression when uploading E2E test results in the GitHub Workflow
+
 24/Mar/2025
 - release version 1.6.3
 - added reusable GitHub Workflow for end-to-end (E2E) testing of DNS resolvers

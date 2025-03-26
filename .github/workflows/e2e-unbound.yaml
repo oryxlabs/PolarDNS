@@ -39,6 +39,19 @@ jobs:
         uses: ./.github/actions/e2e-tests
         continue-on-error: true
 
+      - name: Collect Docker logs
+        run: |
+          mkdir -p test-e2e/debug
+          docker ps -a >test-e2e/debug/docker.log
+
+      - name: Collect Unbound logs
+        run: |
+          docker logs unbound >test-e2e/debug/unbound.log
+
+      - name: Collect PolarDNS logs
+        run: |
+          docker logs polardns >test-e2e/debug/polardns.log
+
       - name: Compress test results
         run: tar -czf test-e2e-results-unbound-${{ matrix.version }}.tar.gz -C test-e2e .
 
@@ -49,16 +62,3 @@ jobs:
           name: test-e2e-results-unbound-${{ matrix.version }}
           if-no-files-found: ignore
 
-      - name: Debug running containers
-        if: failure()
-        run: |
-          docker ps -a
-
-      - name: Debug Unbound
-        if: failure()
-        run: |
-          docker logs unbound
-
-      - name: Debug PolarDNS
-        run: |
-          docker logs polardns

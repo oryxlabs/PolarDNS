@@ -31,4 +31,4 @@ For instance, how does it handle a situation when it obtains a malformed DNS res
 
 ---
 
-| Previous: [Testing of Recursive DNS Resolvers](testing-recursive-resolvers) | Next: [Adding New Features](../adding-new-features/adding-new-features) |
+| Previous: [Testing of Recursive DNS Resolvers](testing-recursive-resolvers) | Next: [Automated E2E Testing with GitHub Actions](github-actions-e2e) |

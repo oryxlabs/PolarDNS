@@ -17,6 +17,7 @@ has_toc: false
 1. [Features and Response Modifiers Explained](features-and-modifiers)
 1. [Testing of Recursive DNS Resolvers](testing-recursive-resolvers)
 1. [Testing Process Breakdown](testing-process-breakdown)
+1. [Automated E2E Testing with GitHub Actions](github-actions-e2e)
 
 --- 
 

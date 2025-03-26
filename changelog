@@ -1,4 +1,5 @@
 26/Mar/2025
+- include resolver and polardns logs in the GitHub Workflows for E2E tests
 - fixed the `newid` modifier to ensure the transaction ID in the response always differs from the ID in the query
 - updated documentation
 

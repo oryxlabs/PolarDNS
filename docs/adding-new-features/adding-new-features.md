@@ -23,4 +23,4 @@ has_toc: false
 
 --- 
 
-| Previous: [Testing Process Breakdown](../using-polardns/testing-process-breakdown) | Next: [Introduction](introduction) |
+| Previous: [Automated E2E Testing with GitHub Actions](../using-polardns/github-actions-e2e) | Next: [Introduction](introduction) |

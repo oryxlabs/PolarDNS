@@ -1,6 +1,14 @@
+04/Apr/2025
+- release version 1.6.4
+- added option to act universally authoritative for any domain, configurable via config file
+- implemented support for responding to NS and SOA queries for all subdomains
+- updated test runner `test/run.sh` to support convenient reference output updates
+- various minor fixes across `polardns/core.py`, modules, and E2E workflows
+- consolidated tests (total test count: 2369)
+
 26/Mar/2025
-- include resolver and polardns logs in the GitHub Workflows for E2E tests
-- fixed the `newid` modifier to ensure the transaction ID in the response always differs from the ID in the query
+- enhanced E2E workflows to include resolver and PolarDNS logs in test artifacts
+- fixed the `newid` modifier to ensure the response transaction ID always differs from the query
 - updated documentation
 
 25/Mar/2025

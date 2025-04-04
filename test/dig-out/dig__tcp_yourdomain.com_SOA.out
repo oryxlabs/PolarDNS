@@ -1,0 +1,18 @@
+
+; <<>> DiG 9.18.10-2-Debian <<>> +tcp yourdomain.com SOA @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 9733
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;yourdomain.com.			IN	SOA
+
+;; ANSWER SECTION:
+yourdomain.com.		60	IN	SOA	ns1.yourdomain.com. hostmaster.yourdomain.com. 2023052903 10800 3600 604800 3600
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
+;; WHEN: Fri Apr 04 15:54:31 +04 2025
+;; MSG SIZE  rcvd: 111
+

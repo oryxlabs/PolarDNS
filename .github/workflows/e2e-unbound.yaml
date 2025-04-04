@@ -42,15 +42,15 @@ jobs:
       - name: Collect Docker logs
         run: |
           mkdir -p test-e2e/debug
-          docker ps -a >test-e2e/debug/docker.log
+          docker ps -a >test-e2e/debug/docker.log 2>&1
 
       - name: Collect Unbound logs
         run: |
-          docker logs unbound >test-e2e/debug/unbound.log
+          docker logs unbound >test-e2e/debug/unbound.log 2>&1
 
       - name: Collect PolarDNS logs
         run: |
-          docker logs polardns >test-e2e/debug/polardns.log
+          docker logs polardns >test-e2e/debug/polardns.log 2>&1
 
       - name: Compress test results
         run: tar -czf test-e2e-results-unbound-${{ matrix.version }}.tar.gz -C test-e2e .

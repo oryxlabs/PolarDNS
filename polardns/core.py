@@ -17,7 +17,7 @@ import os
 from polardns import nfz
 from polardns import consts
 
-polardns_version = "1.6.3"
+polardns_version = "1.6.4"
 
 ################################
 
@@ -42,6 +42,10 @@ config_ttl = int(config['ttl'])
 config_sleep = float(config['sleep'])
 config_compression = int(config['compression'])
 config_parse_edns0 = config['parse_edns0']
+primary_domain = config['domain']
+primary_ns1_ip = config['ns1']
+primary_ns2_ip = config['ns2']
+universally_authoritative = config['authoritative_for_any']
 
 # a domain which is a 3rd party which we don't control
 a3rdparty_domain = config['a3rdparty_domain']
@@ -58,10 +62,8 @@ ZONEFILE = {
    "ns1."+config['domain']:   {"A": config['ns1']},
    "ns2."+config['domain']:   {"A": config['ns2']},
    "end."+config['domain']:   {"A": "1.2.3.4"},
-   config['domain']:       {"NS": "ns1."+config['domain'],
-                             "MX": "10 mail1."+config['domain'],
-                             "TXT": "hello, this is a testing domain",
-                             "SOA": "ns1."+config['domain']+" hostmaster."+config['domain']+" 2023052903 10800 3600 604800 3600"},
+   config['domain']:       {"MX": "10 mail1."+config['domain'],
+                            "TXT": "hello, this is a testing domain"},
    "mail1."+config['domain']:                    {"A": "1.2.3.4"},
    "hello."+config['domain']:                    {"A": "1.2.3.4"},
    "injected."+a3rdparty_domain:                 {"A": "6.6.6.0"},
@@ -682,9 +684,10 @@ def process_DNS(self, req):
         req.ADRR  = int.from_bytes(req.RAW[10:12], 'big')
 
         # decode the domain name in the question
-        req.full_domain = ""   # sOMeThINg.whaTEVeR.ANytHinG.cOM
-        req.subdomains = []    # sOMeThINg whaTEVeR ANytHinG cOM
-        req.subdomains_lc = [] # something whatever anything com
+        req.full_domain = ""    # sOMeThINg.whaTEVeR.ANytHinG.cOM
+        req.full_domain_lc = "" # something.whatever.anything.com
+        req.subdomains = []     # sOMeThINg whaTEVeR ANytHinG cOM
+        req.subdomains_lc = []  # something whatever anything com
         offset = 12 # offset where the first query (the actual domain name) starts
         try:
            while True:
@@ -706,6 +709,8 @@ def process_DNS(self, req):
            stamp = str(time.time()).ljust(18, "0")
            print("%s | %s ? ? | ERROR: Cannot parse query name | (len: %d) %s" % (stamp, req.info, len(req.RAW)+2, binascii.b2a_hex(req.RAW)))
            return
+
+        req.full_domain_lc = req.full_domain.lower()
 
         try:
             req.first_subdomain = req.subdomains_lc[0]  # something
@@ -943,7 +948,7 @@ def process_DNS(self, req):
                   resp.cutcount = int(label[3:])
                   addcustomlog("CUT:" + str(resp.cutcount))
             #######################
-            elif label.startswith("add"):  # add N bytes to the end of the packet
+            elif label.startswith("add"):      # add N bytes to the end of the packet
                if label[3:].isnumeric():
                   resp.addcount = int(label[3:]) if label[3:].isnumeric() else 0
                   next_subdom = req.subdomains[index+1]
@@ -982,39 +987,21 @@ def process_DNS(self, req):
         # First check if we are authoritative for the requested domain
 
         #####################################################################
-        if req.type_str == "NS" and (req.sld_tld_domain == "." or req.sld_tld_domain not in OURDOMAINS):
-           # Asking for the root nameservers or some other nameservers for a domain we are not authoritative for
-           # dig . @127.0.0.1 NS +noedns
-           # #########################
-           # 1) Close the connection
-           # todo: send proper response
-           log("just closing connection")
-           time.sleep(resp.sleep)
-           close_conn(self)
-        #####################################################################
-        elif req.sld_tld_domain not in OURDOMAINS and req.tld != "arpa":
-           # We are NOT authoritative, send Refused
-           log("Refused")
+        if req.sld_tld_domain not in OURDOMAINS and req.tld != "arpa" and not universally_authoritative:
+           # We are NOT authoritative for this domain, let's respond with REFUSED
            ### DNS header ########
            # Response, Non-Authoritative, Refused
            buffer = prep_dns_header(b'\x80\x05', req.QURR, 0, 0, 0)
            ### QUESTION SECTION ########
            if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
            # no answer section, only send out the header
+           log("Refused")
            send_buf(self, buffer)
         #####################################################################
         else: # We are authoritative
-           if ZONEFILE.get(req.full_domain.lower()) != None:
-              # We have the domain in the zone file, so let's try to return proper record
-              # Check if we have such record in our zone file for the domain
-              if req.type_str not in ZONEFILE[req.full_domain.lower()]:
-                 # We don't have this record, so let's respond with NXDOMAIN
-                 buffer = prep_dns_header(b'\x84\x03', req.QURR, 0, 0, 0)
-                 if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
-                 send_buf(self, buffer)
-                 log("NXDOMAIN")
-                 return
-              ans = ZONEFILE[req.full_domain.lower()][req.type_str]
+           if ZONEFILE.get(req.full_domain_lc) != None and req.type_str in ZONEFILE[req.full_domain_lc]:
+              # We have the record in the zone file, so let's try to return proper record
+              ans = ZONEFILE[req.full_domain_lc][req.type_str]
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
               ### QUESTION SECTION ########
@@ -1058,6 +1045,95 @@ def process_DNS(self, req):
               log("%s %s" % (req.type_str, ans))
               send_buf(self, buffer)
               #####################################################################
+           # DO NOT REMOVE (additional features)
+           elif req.full_domain == "version.polar" and req.type_str == "TXT" and req.class_str == "CH":
+              # Version
+              v = "PolarDNS " + polardns_version
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              # A
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              buffer += getTypeBin("TXT") + getClassBin("CH")
+              buffer += struct.pack(">L", resp.TTL)         ## TTL
+              buffer += struct.pack(">H", len(v)+1)         ## Data length
+              buffer += convData2Bin(v.replace(".", "<DOT>"))
+              # log and send
+              log("Version %s" % (v))
+              send_buf(self, buffer)
+              #####################################################################
+           elif req.type_str == "NS":
+              # Queries asking for NS record for any subdomain, respond with proper NS records + glue
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, 2, 0, 2)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              # ns1
+              ns1bin = convDom2Bin("ns1." + primary_domain)
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              buffer += req.type_bin + req.class_bin   ## NS
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += struct.pack(">H", len(ns1bin)) ## Data length
+              buffer += ns1bin                         ## The data
+              # ns2
+              ns2bin = convDom2Bin("ns2." + primary_domain)
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              buffer += req.type_bin + req.class_bin   ## NS
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += struct.pack(">H", len(ns2bin)) ## Data length
+              buffer += ns2bin                         ## The data
+              ### ADDITIONAL SECTION ########
+              # ns1
+              buffer += ns1bin
+              buffer += getTypeBin("A") + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += struct.pack(">H", 4)           ## Data length
+              buffer += socket.inet_aton(primary_ns1_ip)
+              # ns2
+              buffer += ns2bin
+              buffer += getTypeBin("A") + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += struct.pack(">H", 4)           ## Data length
+              buffer += socket.inet_aton(primary_ns2_ip)
+              # log and send
+              log("NS %s, NS %s, A %s, A %s" % ("ns1." + primary_domain, "ns2." + primary_domain, primary_ns1_ip, primary_ns2_ip))
+              send_buf(self, buffer)
+              #####################################################################
+           elif req.type_str == "SOA":
+              # Queries asking for SOA record for any subdomain, respond with proper SOA record
+              data_prins = "ns1." + primary_domain
+              data_pricon = "hostmaster." + primary_domain
+              data_serial=2023052903
+              data_zoreft=10800
+              data_frrt=3600
+              data_zoneet=604800
+              data_minttl=3600
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              buffer += req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              # SOA
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              data = convDom2Bin(data_prins)           ## Primary NS
+              data += convDom2Bin(data_pricon)         ## Primary contact
+              data += struct.pack(">L", data_serial)   ## Serial
+              data += struct.pack(">L", data_zoreft)   ## Zone refresh timer
+              data += struct.pack(">L", data_frrt)     ## Failed refresh retry timer
+              data += struct.pack(">L", data_zoneet)   ## Zone expiry timer
+              data += struct.pack(">L", data_minttl)   ## Minimum TTL
+              size = len(data)
+              buffer += struct.pack(">H", size)        ## Data length
+              buffer += data                           ## The data
+              # log and send
+              log("SOA %s %s %d %d %d %d %d" % (data_prins, data_pricon, data_serial, data_zoreft, data_frrt, data_zoneet, data_minttl))
+              send_buf(self, buffer)
+              #####################################################################
            elif req.first_subdomain.startswith("always") or req.first_subdomain.startswith("something"):
               # Always resolve what starts with always or something
               ip = ""
@@ -1092,24 +1168,6 @@ def process_DNS(self, req):
               log("%s %s" % (resp.type_str, ip))
               send_buf(self, buffer)
               #####################################################################
-           elif req.full_domain == "version.polar" and req.type_str == "TXT" and req.class_str == "CH":
-              # Version
-              v = "PolarDNS " + polardns_version
-              ### DNS header ########
-              buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
-              ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
-              ### ANSWER SECTION ########
-              # A
-              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
-              buffer += getTypeBin("TXT") + getClassBin("CH")
-              buffer += struct.pack(">L", resp.TTL)         ## TTL
-              buffer += struct.pack(">H", len(v)+1)         ## Data length
-              buffer += convData2Bin(v.replace(".", "<DOT>"))
-              # log and send
-              log("Version %s" % (v))
-              send_buf(self, buffer)
-           # DO NOT REMOVE (additional features)
            else:
               # Otherwise send not found (NXDOMAIN)
               ### DNS header ########

@@ -40,16 +40,16 @@ always.10.cnk50.slp100.tc.${domain}
 
 nonexistent.noq.${domain}
 nonexistent.noq.qurr0.${domain}
-something.noq.nonexistent.com
-something.noq.qurr0.nonexistent.com
+something.noq.nc.nonexistent.com
+something.noq.qurr0.nc.nonexistent.com
 nonexistent.tc.noq.${domain}
 nonexistent.tc.noq.qurr0.${domain}
-something.tc.noq.nonexistent.com
-something.tc.noq.qurr0.nonexistent.com
+something.tc.noq.nc.nonexistent.com
+something.tc.noq.qurr0.nc.nonexistent.com
 +tcp nonexistent.noq.${domain}
 +tcp nonexistent.noq.qurr0.${domain}
-+tcp something.noq.nonexistent.com
-+tcp something.noq.qurr0.nonexistent.com
++tcp something.noq.nc.nonexistent.com
++tcp something.noq.qurr0.nc.nonexistent.com
 
 nonexistent.tc.${domain}
 nonexistent.tc.qurr0.${domain}

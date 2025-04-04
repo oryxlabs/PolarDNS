@@ -1,18 +1,32 @@
+. NS
+. SOA
 ${domain} NS
+${domain} SOA
 ${domain} TXT
 ${domain} MX
 +tcp ${domain} NS
++tcp ${domain} SOA
 +tcp ${domain} TXT
 +tcp ${domain} MX
 always123.${domain}
+always123.${domain} NS
+always123.${domain} SOA
 always.10.${domain}
 +tcp always123.${domain}
 +tcp always.10.${domain}
 something.nonexistent.com
+something.nonexistent.com NS
+something.nonexistent.com SOA
 nonexistent.${domain}
+nonexistent.${domain} NS
+nonexistent.${domain} SOA
 nonexistent.com
+nonexistent NS
+nonexistent SOA
 +tcp something.nonexistent.com
 +tcp nonexistent.${domain}
++tcp nonexistent.${domain} NS
++tcp nonexistent.${domain} SOA
 +tcp nonexistent.com
 
 # size.toml

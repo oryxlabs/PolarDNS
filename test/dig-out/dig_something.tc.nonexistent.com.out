@@ -3,7 +3,7 @@
 ; <<>> DiG 9.18.10-2-Debian <<>> something.tc.nonexistent.com @127.0.0.1 +tries=1 +timeout=1 -p 53
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: REFUSED, id: 16060
+;; ->>HEADER<<- opcode: QUERY, status: REFUSED, id: 33089
 ;; flags: qr; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
 
 ;; QUESTION SECTION:
@@ -11,6 +11,6 @@
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
-;; WHEN: Tue Mar 18 21:10:34 +04 2025
+;; WHEN: Fri Apr 04 15:46:59 +04 2025
 ;; MSG SIZE  rcvd: 46
 

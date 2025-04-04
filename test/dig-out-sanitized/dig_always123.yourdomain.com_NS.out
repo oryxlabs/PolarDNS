@@ -1,0 +1,20 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 2
+
+;; QUESTION SECTION:
+;always123.<OURDOM>. IN NS
+
+;; ANSWER SECTION:
+always123.<OURDOM>. 60 IN NS ns1.<OURDOM>.
+always123.<OURDOM>. 60 IN NS ns2.<OURDOM>.
+
+;; ADDITIONAL SECTION:
+ns1.<OURDOM>. 60 IN A 127.0.0.1
+ns2.<OURDOM>. 60 IN A 127.0.0.1
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>
+

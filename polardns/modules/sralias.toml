@@ -90,7 +90,7 @@ python = '''
               log("%d SRV aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
               send_buf(self, buffer)
               #####################################################################
-           elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("sralias") or req.subdomains_lc[2].startswith("sralias") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("sralias"))):
+           elif req.first_subdomain.startswith("_") and (req.subdomains_lc[1].startswith("sralias") or req.subdomains_lc[2].startswith("sralias") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("sralias"))):
               # Send multiple random SRV aliases (RFC 2782) for any domain name with attribute leaves 
               # (domains prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.sralias...'
               # BEWARE: This could result in multiplication

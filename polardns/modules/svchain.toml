@@ -77,7 +77,7 @@ python = '''
               log("SVCB %s" % (new_domain_name))
               send_buf(self, buffer)
               #####################################################################
-           elif req.subdomains[0][0:1] == "_" and (req.subdomains_lc[1].startswith("svchain") or req.subdomains_lc[2].startswith("svchain") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("svchain"))):
+           elif req.first_subdomain.startswith("_") and (req.subdomains_lc[1].startswith("svchain") or req.subdomains_lc[2].startswith("svchain") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("svchain"))):
               # Send incremented SVCB alias (RFC 9460) for any domain name with attribute leaves (domains
               # prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.svchain...'
               new_domain_name = increment_chain()

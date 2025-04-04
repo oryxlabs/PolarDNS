@@ -7,6 +7,7 @@ timeout=1
 threads=10
 failstop=0
 copynew=0
+updatefailed=0
 debug=0
 
 SED="sed"
@@ -106,44 +107,51 @@ runtest() {
       cp -p -- "${out_sanitized}" "${dig_out_ref_ok}"
     fi
   elif [ $((result)) -ne 0 ]; then
-    echo "${dom}" >>"${this_test_run_dir}/tests.failed"
-    echo "FAIL  dig ${dom}"
-    echo "      ${dig_cmd}"
-    echo "      diff ${ref_sanitized} ${out_sanitized}"
-    if [ $((debug)) -eq 1 ]; then
-      diff ${ref_sanitized} ${out_sanitized}
-      echo "-------------------------------------"
-    elif [ $((debug)) -eq 2 ]; then
-      diff -y ${ref_sanitized} ${out_sanitized}
-      echo "-------------------------------------"
-    elif [ $((debug)) -eq 3 ]; then
-      echo "- - - - - - - - - - - - - - - - - - -"
-      echo "Got dig output (sanitized):"
-      cat ${out_sanitized}
-      echo "- - - - - - - - - - - - - - - - - - -"
-      echo "Reference dig output (sanitized):"
-      cat ${ref_sanitized}
-      echo "- - - - - - - - - - - - - - - - - - -"
-      echo "Comparison:"
-      diff -y --color ${ref_sanitized} ${out_sanitized}
-      echo "-------------------------------------"
-    elif [ $((debug)) -gt 3 ]; then
-      echo "- - - - - - - - - - - - - - - - - - -"
-      echo "Got dig output:"
-      cat ${out}
-      echo "- - - - - - - - - - - - - - - - - - -"
-      echo "Got dig output (sanitized):"
-      cat ${out_sanitized}
-      echo "- - - - - - - - - - - - - - - - - - -"
-      echo "Reference dig output (sanitized):"
-      cat ${ref_sanitized}
-      echo "- - - - - - - - - - - - - - - - - - -"
-      echo "Comparison:"
-      diff -y --color ${ref_sanitized} ${out_sanitized}
-      echo "-------------------------------------"
-    fi
-    if [ $((failstop)) -eq 1 ]; then
-      exit 1
+    if [ $((updatefailed)) -eq 1 ]; then
+      echo "${dom}" >>"${this_test_run_dir}/tests.updated"
+      echo "UPDATE dig ${dom}"
+      cp -p -- "${out}" "${dig_out_ref}"
+      cp -p -- "${out_sanitized}" "${dig_out_ref_ok}"
+    else
+      echo "${dom}" >>"${this_test_run_dir}/tests.failed"
+      echo "FAIL  dig ${dom}"
+      echo "      ${dig_cmd}"
+      echo "      diff ${ref_sanitized} ${out_sanitized}"
+      if [ $((debug)) -eq 1 ]; then
+        diff ${ref_sanitized} ${out_sanitized}
+        echo "-------------------------------------"
+      elif [ $((debug)) -eq 2 ]; then
+        diff -y ${ref_sanitized} ${out_sanitized}
+        echo "-------------------------------------"
+      elif [ $((debug)) -eq 3 ]; then
+        echo "- - - - - - - - - - - - - - - - - - -"
+        echo "Got dig output (sanitized):"
+        cat ${out_sanitized}
+        echo "- - - - - - - - - - - - - - - - - - -"
+        echo "Reference dig output (sanitized):"
+        cat ${ref_sanitized}
+        echo "- - - - - - - - - - - - - - - - - - -"
+        echo "Comparison:"
+        diff -y --color ${ref_sanitized} ${out_sanitized}
+        echo "-------------------------------------"
+      elif [ $((debug)) -gt 3 ]; then
+        echo "- - - - - - - - - - - - - - - - - - -"
+        echo "Got dig output:"
+        cat ${out}
+        echo "- - - - - - - - - - - - - - - - - - -"
+        echo "Got dig output (sanitized):"
+        cat ${out_sanitized}
+        echo "- - - - - - - - - - - - - - - - - - -"
+        echo "Reference dig output (sanitized):"
+        cat ${ref_sanitized}
+        echo "- - - - - - - - - - - - - - - - - - -"
+        echo "Comparison:"
+        diff -y --color ${ref_sanitized} ${out_sanitized}
+        echo "-------------------------------------"
+      fi
+      if [ $((failstop)) -eq 1 ]; then
+        exit 1
+      fi
     fi
   else
     echo "${dom}" >>"${this_test_run_dir}/tests.passed"
@@ -175,13 +183,15 @@ eval_results() {
   failcount=`wc -l "${test_run_dir}/tests.failed" | awk '{print $1}'`
   addcount=`wc -l "${test_run_dir}/tests.added" | awk '{print $1}'`
   newcount=`wc -l "${test_run_dir}/tests.new" | awk '{print $1}'`
+  updcount=`wc -l "${test_run_dir}/tests.updated" | awk '{print $1}'`
   
   echo
-  echo "TESTS: ${testcount}"
-  echo " PASS: ${passcount}"
-  echo " FAIL: ${failcount}"
-  if [ $((newcount)) -gt 0 ]; then echo "  NEW: ${newcount}"; fi
-  if [ $((addcount)) -gt 0 ]; then echo "ADDED: ${addcount}"; fi
+  echo " TESTS: ${testcount}"
+  echo "  PASS: ${passcount}"
+  echo "  FAIL: ${failcount}"
+  if [ $((newcount)) -gt 0 ]; then echo "   NEW: ${newcount}"; fi
+  if [ $((addcount)) -gt 0 ]; then echo " ADDED: ${addcount}"; fi
+  if [ $((updcount)) -gt 0 ]; then echo "UPDATE: ${updcount}"; fi
 }
 
 #######################################
@@ -198,6 +208,7 @@ Available options:
  -s  stop after first failed test
  -d  increase debug level (up to -dddd)
  -c  copy dig output of NEW tests into repository
+ -u  update dig output of FAILED tests, copy into repository
 
 ----------------------------------------
 Use-cases:
@@ -210,6 +221,9 @@ $0 failed
 
 $0 -dddd failed
      will re-run only the previously failed tests with the highest debug level
+
+$0 -u failed
+     will update the test outputs of failed tests in the reference repository
 
 $0 new
      will re-run only the previously new tests
@@ -224,6 +238,7 @@ $0 test/tests.injections
      will run only the test suite for record injections
 
 EOF
+  rm -rf -- "${this_test_run_dir}"
 }
 
 #######################################
@@ -240,6 +255,7 @@ EOF
   touch -- "${this_test_run_dir}/tests.failed"
   touch -- "${this_test_run_dir}/tests.added"
   touch -- "${this_test_run_dir}/tests.new"
+  touch -- "${this_test_run_dir}/tests.updated"
 } &>/dev/null
 
 #######################################
@@ -260,7 +276,7 @@ torun=(
 #######################################
 # process arguments
 
-while getopts "hsdc" opt; do
+while getopts "hsdcu" opt; do
   case "$opt" in
     h)
        usage
@@ -274,6 +290,9 @@ while getopts "hsdc" opt; do
        ;;
     c)
        copynew=1
+       ;;
+    u)
+       updatefailed=1
        ;;
     *)
        usage

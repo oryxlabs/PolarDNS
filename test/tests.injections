@@ -1,16 +1,4 @@
 # record injection
-inj.${domain}
-inj.rev.${domain}
-inj.als.${domain}
-inj.als.rev.${domain}
-inj.3rp.${domain}
-inj.3rp.rev.${domain}
-inj.3rp.als.${domain}
-inj.3rp.als.rev.${domain}
-inj.oi.${domain}
-inj.als.oi.${domain}
-inj.3rp.oi.${domain}
-inj.3rp.als.oi.${domain}
 inja.${domain}
 inja.rev.${domain}
 inja.als.${domain}
@@ -95,18 +83,6 @@ injdname.oi.${domain}
 injdname.als.oi.${domain}
 injdname.3rp.oi.${domain}
 injdname.3rp.als.oi.${domain}
-AAAA inj.${domain}
-AAAA inj.rev.${domain}
-AAAA inj.als.${domain}
-AAAA inj.als.rev.${domain}
-AAAA inj.3rp.${domain}
-AAAA inj.3rp.rev.${domain}
-AAAA inj.3rp.als.${domain}
-AAAA inj.3rp.als.rev.${domain}
-AAAA inj.oi.${domain}
-AAAA inj.als.oi.${domain}
-AAAA inj.3rp.oi.${domain}
-AAAA inj.3rp.als.oi.${domain}
 AAAA inja.${domain}
 AAAA inja.rev.${domain}
 AAAA inja.als.${domain}
@@ -191,18 +167,6 @@ AAAA injdname.oi.${domain}
 AAAA injdname.als.oi.${domain}
 AAAA injdname.3rp.oi.${domain}
 AAAA injdname.3rp.als.oi.${domain}
-PTR inj.${domain}
-PTR inj.rev.${domain}
-PTR inj.als.${domain}
-PTR inj.als.rev.${domain}
-PTR inj.3rp.${domain}
-PTR inj.3rp.rev.${domain}
-PTR inj.3rp.als.${domain}
-PTR inj.3rp.als.rev.${domain}
-PTR inj.oi.${domain}
-PTR inj.als.oi.${domain}
-PTR inj.3rp.oi.${domain}
-PTR inj.3rp.als.oi.${domain}
 PTR inja.${domain}
 PTR inja.rev.${domain}
 PTR inja.als.${domain}
@@ -287,18 +251,6 @@ PTR injdname.oi.${domain}
 PTR injdname.als.oi.${domain}
 PTR injdname.3rp.oi.${domain}
 PTR injdname.3rp.als.oi.${domain}
-MX inj.${domain}
-MX inj.rev.${domain}
-MX inj.als.${domain}
-MX inj.als.rev.${domain}
-MX inj.3rp.${domain}
-MX inj.3rp.rev.${domain}
-MX inj.3rp.als.${domain}
-MX inj.3rp.als.rev.${domain}
-MX inj.oi.${domain}
-MX inj.als.oi.${domain}
-MX inj.3rp.oi.${domain}
-MX inj.3rp.als.oi.${domain}
 MX inja.${domain}
 MX inja.rev.${domain}
 MX inja.als.${domain}
@@ -383,18 +335,6 @@ MX injdname.oi.${domain}
 MX injdname.als.oi.${domain}
 MX injdname.3rp.oi.${domain}
 MX injdname.3rp.als.oi.${domain}
-NS inj.${domain}
-NS inj.rev.${domain}
-NS inj.als.${domain}
-NS inj.als.rev.${domain}
-NS inj.3rp.${domain}
-NS inj.3rp.rev.${domain}
-NS inj.3rp.als.${domain}
-NS inj.3rp.als.rev.${domain}
-NS inj.oi.${domain}
-NS inj.als.oi.${domain}
-NS inj.3rp.oi.${domain}
-NS inj.3rp.als.oi.${domain}
 NS inja.${domain}
 NS inja.rev.${domain}
 NS inja.als.${domain}
@@ -479,18 +419,6 @@ NS injdname.oi.${domain}
 NS injdname.als.oi.${domain}
 NS injdname.3rp.oi.${domain}
 NS injdname.3rp.als.oi.${domain}
-CNAME inj.${domain}
-CNAME inj.rev.${domain}
-CNAME inj.als.${domain}
-CNAME inj.als.rev.${domain}
-CNAME inj.3rp.${domain}
-CNAME inj.3rp.rev.${domain}
-CNAME inj.3rp.als.${domain}
-CNAME inj.3rp.als.rev.${domain}
-CNAME inj.oi.${domain}
-CNAME inj.als.oi.${domain}
-CNAME inj.3rp.oi.${domain}
-CNAME inj.3rp.als.oi.${domain}
 CNAME inja.${domain}
 CNAME inja.rev.${domain}
 CNAME inja.als.${domain}
@@ -575,18 +503,6 @@ CNAME injdname.oi.${domain}
 CNAME injdname.als.oi.${domain}
 CNAME injdname.3rp.oi.${domain}
 CNAME injdname.3rp.als.oi.${domain}
-DNAME inj.${domain}
-DNAME inj.rev.${domain}
-DNAME inj.als.${domain}
-DNAME inj.als.rev.${domain}
-DNAME inj.3rp.${domain}
-DNAME inj.3rp.rev.${domain}
-DNAME inj.3rp.als.${domain}
-DNAME inj.3rp.als.rev.${domain}
-DNAME inj.oi.${domain}
-DNAME inj.als.oi.${domain}
-DNAME inj.3rp.oi.${domain}
-DNAME inj.3rp.als.oi.${domain}
 DNAME inja.${domain}
 DNAME inja.rev.${domain}
 DNAME inja.als.${domain}

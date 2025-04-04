@@ -3,26 +3,31 @@ domain = 'yourdomain.com'
 ns1 = '127.0.0.1'
 ns2 = '127.0.0.1'
 
-# server address
+# Server address
 listen_addr = '0.0.0.0:53'
 
-# debug (0 or 1)
+# Debug (0 or 1)
 debug = 0
 
-# default TTL
+# Default TTL
 ttl = 60
 
-# use compression by default (0 or 1)
+# Use compression by default (0 or 1)
 compression = 1
 
-# parse the EDNS(0) and its OPT pseudo-record (0 or 1)
+# Parse the EDNS(0) and its OPT pseudo-record (0 or 1)
 parse_edns0 = 1
 
-# default latency (in ms)
+# Default latency (in ms)
 sleep = 0
 
-# a 3rdparty domain which we don't own
+# A 3rdparty domain which we don't own
 a3rdparty_domain = 'a3rdparty.net'
+
+# When enabled, PolarDNS will respond authoritatively (AA=1) for *any* domain.
+# WARNING: This breaks DNS protocol compliance and can mislead resolvers.
+# Use only in isolated test environments. DO NOT expose to the public internet.
+authoritative_for_any = 0
 
 known_servers = """
 127.0.0.1   localhost

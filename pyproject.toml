@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "polardns"
-version = "1.6.3"
+version = "1.6.4"
 description = "A specialized authoritative DNS server for penetration testing and vulnerability research."
 readme = "README.md"
 authors = [{name = "Ivan Jedek", email = "ivan.jedek@oryxlabs.com"}]

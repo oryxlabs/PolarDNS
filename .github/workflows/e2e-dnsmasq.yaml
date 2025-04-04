@@ -39,15 +39,15 @@ jobs:
       - name: Collect Docker logs
         run: |
           mkdir -p test-e2e/debug
-          docker ps -a >test-e2e/debug/docker.log
+          docker ps -a >test-e2e/debug/docker.log 2>&1
 
       - name: Collect Dnsmasq logs
         run: |
-          docker logs dnsmasq >test-e2e/debug/dnsmasq.log
+          docker logs dnsmasq >test-e2e/debug/dnsmasq.log 2>&1
 
       - name: Collect PolarDNS logs
         run: |
-          docker logs polardns >test-e2e/debug/polardns.log
+          docker logs polardns >test-e2e/debug/polardns.log 2>&1
 
       - name: Compress test results
         run: tar -czf test-e2e-results-dnsmasq-${{ matrix.version }}.tar.gz -C test-e2e .

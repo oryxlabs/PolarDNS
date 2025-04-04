@@ -41,15 +41,15 @@ jobs:
       - name: Collect Docker logs
         run: |
           mkdir -p test-e2e/debug
-          docker ps -a >test-e2e/debug/docker.log
+          docker ps -a >test-e2e/debug/docker.log 2>&1
 
       - name: Collect Bind9 logs
         run: |
-          docker logs bind9 >test-e2e/debug/bind9.log
+          docker logs bind9 >test-e2e/debug/bind9.log 2>&1
 
       - name: Collect PolarDNS logs
         run: |
-          docker logs polardns >test-e2e/debug/polardns.log
+          docker logs polardns >test-e2e/debug/polardns.log 2>&1
 
       - name: Compress test results
         run: tar -czf test-e2e-results-bind9-${{ matrix.version }}.tar.gz -C test-e2e .

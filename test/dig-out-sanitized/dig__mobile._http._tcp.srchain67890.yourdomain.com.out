@@ -12,4 +12,3 @@ _mobile._http._tcp.srchain67890.<OURDOM>. 60 IN SRV 0 0  <PORT> _mobile._http._t
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

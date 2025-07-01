@@ -1,3 +1,22 @@
+01/Jul/2025
+- release version 1.6.5
+- added support for configuring arbitrary number of nameservers managing the domain
+- added zone delegation support, allowing subdomains to be delegated to different nameservers via the configuration file
+- added the `nsgluetest` module for testing discrepancies between NS records in the zone and glue records in the parent
+- added the `a` feature for generating RFC-compliant responses to A queries, also allowing to generate any IP address
+- implemented internal tracking of query counts per domain name
+- added the `count` feature for retrieving the number of queries made to a specific domain
+- added the `wild` feature designed to evaluate how resolvers handle wildcard records
+- implemented support for returning SOA records in the Authority section for NODATA and NXDOMAIN situations
+- improved support and handling of 0x20 encoding in all modules
+- improved handling and parsing of the configuration file
+- improved EDNS0 option parsing and handling
+- various fixes across `polardns.py`, individual modules and the test runner `test/run.sh`
+- updated tests outputs for compatibility with DiG version 9.20.7
+- added tests (total test count: 2399)
+- updated documentation
+
+
 04/Apr/2025
 - release version 1.6.4
 - added option to act universally authoritative for any domain, configurable via config file

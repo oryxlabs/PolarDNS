@@ -1,0 +1,73 @@
+[module]
+name = "a"
+type = "feature"
+info = "Return A record (IPv4 address)"
+short = "Send A record with a random or a specific IPv4 address"
+category = "General features"
+records = "A"
+desc = '''
+This module returns an A record with a random IPv4 address from the TEST-NET-1 network range by default.
+
+Alternatively, the client can specify the exact IP address to be returned by specifying it in hexadecimal format in the query.
+'''
+format = '''
+**`a<00000000-ffffffff>.<NUMBER>.yourdomain.com`**
+
+Where:
+
+- The **`<00000000-ffffffff>`** parameter defines the IPv4 address to be generated, specified in hexadecimal format.
+- The **`<NUMBER>`** parameter defines how many A records should be generated in the response.
+'''
+
+[[module.example]]
+description = "The most basic example returns a random IPv4 address from the TEST-NET-1 (`192.0.2.0/24`) network range:"
+command = "dig a.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to generate `1.1.1.1` IPv4 address:"
+command = "dig a01010101.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to generate `192.168.0.1` IPv4 address:"
+command = "dig ac0a80001.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request to generate ten (10) `192.168.0.1` IPv4 addresses:"
+command = "dig ac0a80001.10.yourdomain.com @127.0.0.1"
+
+[module.code]
+python = '''
+           elif req.first_subdomain[0] == 'a' and (len(req.first_subdomain) == 1 or (req.first_subdomain[1] != 'l' and len(req.first_subdomain) > 8)):
+              # For A queries, respond with A record
+              answers = min(int(req.subdomains[1]), 4096) if req.subdomains[1].isnumeric() else 1
+              if not answers or req.type_str != "A":
+                 # For non A queries, or 0 answers, send RFC-compliant response
+                 log("NOERROR + SOA in Authority section")
+                 send_soa(self)
+                 return
+              if len(req.first_subdomain) > 8 and all(c in "0123456789abcdefABCDEF" for c in req.first_subdomain[1:9]):
+                 iphex = str(req.first_subdomain[1:9])
+                 ip = ".".join(map(str, bytes.fromhex(iphex)))
+              else:
+                 #ip = '.'.join(str(random.getrandbits(8)) for _ in range(4))  # random IP
+                 ip = "192.0.2." + str(random.getrandbits(8))   # random IP from TEST-NET-1 range
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', resp.QURR, answers, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              # A
+              for i in range(answers):
+                 if hasattr(resp, "nfz"):
+                    buffer += name_fuzz(resp.nfz)
+                 else:
+                    buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
+                 buffer += getTypeBin("A") + getClassBin("IN")
+                 buffer += struct.pack(">L", resp.TTL)    ## TTL
+                 buffer += struct.pack(">H", 4)           ## Data length
+                 buffer += socket.inet_aton(ip)           ## IP
+              # log and send
+              log("A %s" % (ip))
+              send_buf(self, buffer)
+              #####################################################################
+''' 

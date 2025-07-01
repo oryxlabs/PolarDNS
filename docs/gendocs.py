@@ -95,7 +95,7 @@ def format_rfc_links(rfc_string):
 
 def capitalize_item(item):
     # Match and split known keywords (alias, loop, chain)
-    parts = re.split(r'(alias|loop|chain|enum|back|compress|ptr|fuzz|inj|many|bin|txt|new)', item, flags=re.IGNORECASE)
+    parts = re.split(r'(alias|loop|chain|enum|back|compress|ptr|fuzz|inj|many|bin|txt|new|glue|test)', item, flags=re.IGNORECASE)
     # Capitalize each part and join them back
     return ''.join(part.capitalize() for part in parts)
 

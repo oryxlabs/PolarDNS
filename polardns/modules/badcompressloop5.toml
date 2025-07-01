@@ -38,7 +38,7 @@ if req.first_subdomain.startswith("badcompressloop5"):
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
    ### QUESTION SECTION ########
-   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    # CNAME
    buffer += b"\xc0\x0c" + getTypeBin("CNAME") + getClassBin("IN")

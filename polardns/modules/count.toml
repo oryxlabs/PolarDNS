@@ -1,0 +1,62 @@
+[module]
+name = "count"
+type = "feature"
+info = "Count Number of Queries"
+short = "Counts number of queries performed for a given domain name"
+category = "General features"
+records = ""
+desc = '''
+PolarDNS internally tracks the number of times each domain name has been queried.
+
+This feature allows clients to retrieve the query count for a specific domain name.
+
+The module returns a TXT record containing the total number of queries received for the specified domain since the PolarDNS server was started.
+'''
+format = '''
+**`count.*`**
+
+This module has no parameters.
+'''
+
+[[module.example]]
+description = '''
+The following examples demostrate the functionality of this module. We will use the basic [always] feature which always resolves to an IP address.
+
+In this example, we want to meassure how many times the `always12345.yourdomain.com` domain has been queried so far. By prepending the `count` subdomain to the domain name, we retrieve the current query count:
+'''
+command = "dig count.always12345.yourdomain.com @127.0.0.1 #1"
+append = "We can see that at this point, the query count for the domain is 0. This means that this domain has never been queried."
+
+[[module.example]]
+description = "Now, let’s query the domain. The response includes an IP address, as expected from the [always] feature. This query also internally increments the counter for the domain:"
+command = "dig always12345.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Now, let's retrieve the query count again:"
+command = "dig count.always12345.yourdomain.com @127.0.0.1 #b"
+append = '''We can see that the query count for this domain has increased.
+
+Using this feature, we can measure query count for any domain name.
+'''
+
+[module.code]
+python = '''
+           elif req.first_subdomain == "count":
+              dom = ".".join(req.subdomains[1:])
+              count = str(query_counter[dom])
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              # TXT
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
+              buffer += getTypeBin("TXT") + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)        ## TTL
+              buffer += struct.pack(">H", len(count)+1)    ## Data length
+              buffer += convData2Bin(count)
+              # log and send
+              log("Count: %s" % (count))
+              send_buf(self, buffer)
+              #####################################################################
+'''

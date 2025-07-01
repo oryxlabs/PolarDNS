@@ -12,4 +12,3 @@ alias.nfz6.s3.p10.m0.6.<OURDOM>. 60 IN CNAME alias<RANDOM>.<OURDOM-NOTLD>.<NUL><
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

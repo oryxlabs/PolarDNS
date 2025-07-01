@@ -12,4 +12,3 @@ loop.100.100.<OURDOM>. 60 IN TXT "v=spf1 include:loop.100.1.<OURDOM> ~all"
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

@@ -1,3 +1,4 @@
+;; missing question section
 
 ;; global options: +cmd
 ;; Got answer:
@@ -9,4 +10,3 @@ always123.qurr0.noq.nc.<OURDOM>. 60 IN A 2.3.4.5
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

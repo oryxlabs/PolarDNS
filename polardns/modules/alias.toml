@@ -86,7 +86,7 @@ python = '''
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               doms = []
               match req.type_str:
@@ -95,7 +95,7 @@ python = '''
                     for i in range(answers):
                         dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
-                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                         buffer += getTypeBin("DNAME") + getClassBin("IN")
                         buffer += struct.pack(">L", resp.TTL)      ## TTL
                         buffer += struct.pack(">H", len(bindom))   ## Data length
@@ -107,7 +107,7 @@ python = '''
                         dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
                         data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
-                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                         buffer += getTypeBin("HTTPS") + getClassBin("IN")
                         buffer += struct.pack(">L", resp.TTL)    ## TTL
                         buffer += struct.pack(">H", data_len)    ## Data length
@@ -120,8 +120,7 @@ python = '''
                         dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
                         data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
-                        data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
-                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                         buffer += getTypeBin("SVCB") + getClassBin("IN")
                         buffer += struct.pack(">L", resp.TTL)    ## TTL
                         buffer += struct.pack(">H", data_len)    ## Data length
@@ -133,10 +132,9 @@ python = '''
                     for i in range(answers):
                         dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
-                        data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
                         port = random.getrandbits(16)
                         data_len = 2+2+2+len(bindom)  # Priority (2 bytes) + Weight (2 bytes) + Port (2 bytes) + Target domain
-                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                         buffer += getTypeBin("SRV") + getClassBin("IN")
                         buffer += struct.pack(">L", resp.TTL)    ## TTL
                         buffer += struct.pack(">H", data_len)    ## Data length
@@ -150,9 +148,8 @@ python = '''
                     for i in range(answers):
                         dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
-                        data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
                         data_len = 2+len(bindom)                 # Priority (2 bytes) + Target domain
-                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                         buffer += getTypeBin("MX") + getClassBin("IN")
                         buffer += struct.pack(">L", resp.TTL)    ## TTL
                         buffer += struct.pack(">H", data_len)    ## Data length
@@ -164,7 +161,7 @@ python = '''
                     for i in range(answers):
                         dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
-                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                         buffer += getTypeBin("NS") + getClassBin("IN")
                         buffer += struct.pack(">L", resp.TTL)      ## TTL
                         buffer += struct.pack(">H", len(bindom))   ## Data length
@@ -175,7 +172,7 @@ python = '''
                     for i in range(answers):
                         dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         data = "v=spf1 include:" + dom + " ~all"
-                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                         buffer += getTypeBin("TXT") + getClassBin("IN")
                         buffer += struct.pack(">L", resp.TTL)      ## TTL
                         buffer += struct.pack(">H", len(data)+1)   ## Data length (2B)
@@ -187,8 +184,7 @@ python = '''
                     for i in range(answers):
                         dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                         bindom = convDom2Bin(dom)
-                        data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
-                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                         buffer += getTypeBin("CNAME") + getClassBin("IN")
                         buffer += struct.pack(">L", resp.TTL)      ## TTL
                         buffer += struct.pack(">H", len(bindom))   ## Data length

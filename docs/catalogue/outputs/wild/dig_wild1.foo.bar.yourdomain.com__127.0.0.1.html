@@ -1,0 +1,18 @@
+<pre class='output-block'><strong># dig wild1.foo.bar.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; wild1.foo.bar.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 19880
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;wild1.foo.bar.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+*.foo.bar.yourdomain.com. 60	IN	CNAME	always005421.foo.bar.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 01 10:31:50 +04 2025
+;; MSG SIZE  rcvd: 119</pre>

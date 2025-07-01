@@ -1,10 +1,6 @@
 ;; Warning: Message parser reports malformed message packet.
+;; ;; Question section mismatch: got <OURDOM>/SOA/IN
+;; communications error to 127.0.0.1#53: timed out
 
 ;; global options: +cmd
-;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: <ID>
-;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
-
-;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; MSG SIZE  rcvd: <SIZE>
-
+;; no servers could be reached

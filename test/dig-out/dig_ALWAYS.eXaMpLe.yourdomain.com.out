@@ -1,0 +1,18 @@
+
+; <<>> DiG 9.20.7-1-Debian <<>> ALWAYS.eXaMpLe.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 23367
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;ALWAYS.eXaMpLe.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+ALWAYS.eXaMpLe.yourdomain.com. 60 IN	A	2.3.4.5
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Thu Jun 26 11:25:54 +04 2025
+;; MSG SIZE  rcvd: 63
+

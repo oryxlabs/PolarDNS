@@ -46,7 +46,7 @@ if req.first_subdomain.startswith("queryback4"):
        ### DNS header ########
        buffer = prep_dns_header(req.FLAGS, req.QURR, 0, 0, 0)
        ### QUESTION SECTION ########
-       newname = "queryback4" + str(random.getrandbits(66)) + "." + ".".join(req.subdomains[1:])
+       newname = "queryback4" + str(random.getrandbits(66)) + "." + ".".join(req.subdomains_20[1:])
        if resp.noq: buffer += convDom2Bin(newname) + req.type_bin + req.class_bin
        log("sending back new similar query to udp://" + sender + ":53")
        # send back the query to port udp 53

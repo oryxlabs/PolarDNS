@@ -114,32 +114,32 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
 
    index = req.first_subdomain[4:]
 
-   if "3rp" in req.subdomains_lc:  # inject a 3rd party domain
+   if "3rp" in req.subdomains:  # inject a 3rd party domain
       injdom = "injected" + index + "." + a3rdparty_domain
       addcustomlog("3P")
    else:
       injdom = "injected" + index + "." + req.sld_tld_domain
 
-   if "rpq" in req.subdomains_lc:  # replace the question with our injected stuffs
-      orig_req_domain = req.full_domain
-      req.full_domain = injdom
+   if "rpq" in req.subdomains:  # replace the question with our injected stuffs
+      orig_req_domain = req.full_domain_20
+      req.full_domain_20 = injdom
       req.type_bin = getTypeBin(req.inj_type_str) 
       addcustomlog("RPQ")
 
-   if "adq" in req.subdomains_lc:  # add additional question for our injected stuffs
+   if "adq" in req.subdomains:  # add additional question for our injected stuffs
       resp.QURR = req.QURR+1
       addedquestions  = convDom2Bin(injdom) + getTypeBin(req.inj_type_str) + req.class_bin
       addcustomlog("ADQ")
 
-   if "oi" in req.subdomains_lc:   # only injected
+   if "oi" in req.subdomains:   # only injected
       answers = 1
       addcustomlog("OI")
 
-   if "rev" in req.subdomains_lc:  # reversed / injected first
+   if "rev" in req.subdomains:  # reversed / injected first
       reversed = 1
       addcustomlog("REV")
 
-   if "als" in req.subdomains_lc:  # all sections
+   if "als" in req.subdomains:  # all sections
       allsections = 1
       addcustomlog("ALS")
 
@@ -200,13 +200,13 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
       buffer = prep_dns_header(b'\x84\x00', resp.QURR, answers, 0, 0)
    ###############################
    ### QUESTION SECTION ##########
-   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
    buffer += addedquestions
    ###############################
    ### ANSWER SECTION ############
    # first answer
-   if "rpq" in req.subdomains_lc:
-      req.full_domain = orig_req_domain  # switch back to the original domain
+   if "rpq" in req.subdomains:
+      req.full_domain_20 = orig_req_domain  # switch back to the original domain
       resp.compress = 0  # query contains the injected domain, cannot use it for compression
    if answers > 1:
       if reversed:
@@ -216,14 +216,14 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
          buffer += injdata
       else:
          # normal order, first legit record
-         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
          buffer += getTypeBin(req.type_str) + getClassBin("IN")
          buffer += struct.pack(">L", resp.TTL)
          buffer += okdata
    # second answer
    if reversed and answers > 1:
       # reversed order, now legit record
-      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
       buffer += getTypeBin(req.type_str) + getClassBin("IN")
       buffer += struct.pack(">L", resp.TTL)
       buffer += okdata
@@ -236,8 +236,8 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
    if allsections:
       ### AUTHORITY SECTION #########
       # first answer
-      if "rpq" in req.subdomains_lc:
-         req.full_domain = orig_req_domain  # switch back to the original domain
+      if "rpq" in req.subdomains:
+         req.full_domain_20 = orig_req_domain  # switch back to the original domain
          resp.compress = 0  # query contains the injected domain, cannot use it for compression
       if answers > 1:
          if reversed:
@@ -247,14 +247,14 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
             buffer += injdata
          else:
             # normal order, first legit record
-            buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+            buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
             buffer += getTypeBin(req.type_str) + getClassBin("IN")
             buffer += struct.pack(">L", resp.TTL)
             buffer += okdata
       # second answer
       if reversed and answers > 1:
          # reversed order, now legit record
-         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
          buffer += getTypeBin(req.type_str) + getClassBin("IN")
          buffer += struct.pack(">L", resp.TTL)
          buffer += okdata
@@ -266,8 +266,8 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
       ###############################
       ### ADDITIONAL SECTION ########
       # first answer
-      if "rpq" in req.subdomains_lc:
-         req.full_domain = orig_req_domain  # switch back to the original domain
+      if "rpq" in req.subdomains:
+         req.full_domain_20 = orig_req_domain  # switch back to the original domain
          resp.compress = 0  # query contains the injected domain, cannot use it for compression
       if answers > 1:
          if reversed:
@@ -277,14 +277,14 @@ if req.first_subdomain.startswith("inja") and (len(req.first_subdomain) == 4 or 
             buffer += injdata
          else:
             # normal order, first legit record
-            buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+            buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
             buffer += getTypeBin(req.type_str) + getClassBin("IN")
             buffer += struct.pack(">L", resp.TTL)
             buffer += okdata
       # second answer
       if reversed and answers > 1:
          # reversed order, now legit record
-         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+         buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
          buffer += getTypeBin(req.type_str) + getClassBin("IN")
          buffer += struct.pack(">L", resp.TTL)
          buffer += okdata

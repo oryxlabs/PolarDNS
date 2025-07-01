@@ -41,10 +41,10 @@ if req.first_subdomain.startswith("afuzz1"):
    ### DNS header #######
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
    ### QUESTION SECTION ########
-   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    newip = "6.6.6." + str(byte)
-   tmpdom = convDom2Bin(req.full_domain) # first convert to dns name notation
+   tmpdom = convDom2Bin(req.full_domain_20) # first convert to dns name notation
    newdom = tmpdom[0:3]              #  \
    newdom += struct.pack(">B", byte) #    > replace the 3rd char with chosen byte
    newdom += tmpdom[4:]              #  /
@@ -54,9 +54,9 @@ if req.first_subdomain.startswith("afuzz1"):
    buffer += struct.pack(">H", 4)                      ## Data length
    buffer += socket.inet_aton(newip)                   ## IP
    # log and send
-   strdom = req.full_domain[0:2]
+   strdom = req.full_domain_20[0:2]
    strdom += "\\x%0.2x" % byte
-   strdom += req.full_domain[3:]
+   strdom += req.full_domain_20[3:]
    log("A %s -> %s" % (strdom, newip))
    send_buf(self, buffer)
 '''

@@ -2,13 +2,15 @@
 ;; global options: +cmd
 ;; Got answer:
 ;; ->>HEADER<<- opcode: QUERY, status: NOTIMP, id: <ID>
-;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 0
 
 ;; WARNING: EDNS query returned status NOTIMP - retry with '+noedns'
 
 ;; QUESTION SECTION:
 ;nonexistent.rc4.<OURDOM>. IN A
 
+;; AUTHORITY SECTION:
+<OURDOM>. 60 IN SOA ns1.<OURDOM>. hostmaster.<OURDOM>. 2023052903 10800 3600 <RANDOM> 3600
+
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

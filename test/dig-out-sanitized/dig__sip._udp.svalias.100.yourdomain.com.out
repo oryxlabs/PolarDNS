@@ -111,4 +111,3 @@ _sip._udp.svalias.100.<OURDOM>. 60 IN SVCB 0 _sip._udp.svalias<RANDOM>.100.<OURD
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

@@ -45,12 +45,12 @@ if req.first_subdomain.startswith("self") or req.first_subdomain.startswith("wha
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', resp.QURR, 1, 0, 1)
    ### QUESTION SECTION ########
-   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    if req.type_str == "TXT":
       # TXT
       ipport = str(self.client_address[0]) + ":" + str(self.client_address[1])
-      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
       buffer += getTypeBin("TXT") + getClassBin("IN")
       buffer += struct.pack(">L", resp.TTL)      ## TTL
       buffer += struct.pack(">H", len(ipport)+1) ## Data length
@@ -58,7 +58,7 @@ if req.first_subdomain.startswith("self") or req.first_subdomain.startswith("wha
       buffer += bytes(ipport, "utf-8")
       # A
       ip = self.client_address[0]
-      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
       buffer += getTypeBin("A") + getClassBin("IN")
       buffer += struct.pack(">L", self.client_address[1])    ## TTL (the port number)
       buffer += struct.pack(">H", 4)           ## Data length
@@ -67,14 +67,14 @@ if req.first_subdomain.startswith("self") or req.first_subdomain.startswith("wha
    else:
       # A
       ip = self.client_address[0]
-      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
       buffer += getTypeBin("A") + getClassBin("IN")
       buffer += struct.pack(">L", self.client_address[1])    ## TTL (the port number)
       buffer += struct.pack(">H", 4)           ## Data length
       buffer += socket.inet_aton(ip)           ## IP
       # TXT
       ipport = str(self.client_address[0]) + ":" + str(self.client_address[1])
-      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+      buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
       buffer += getTypeBin("TXT") + getClassBin("IN")
       buffer += struct.pack(">L", resp.TTL)      ## TTL
       buffer += struct.pack(">H", len(ipport)+1) ## Data length

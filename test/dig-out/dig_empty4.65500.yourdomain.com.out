@@ -1,14 +1,15 @@
 ;; Warning: query response not set
+;; missing question section
 
-; <<>> DiG 9.18.10-2-Debian <<>> empty4.65500.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+; <<>> DiG 9.20.7-1-Debian <<>> empty4.65500.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15937
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 19007
 ;; flags:; QUERY: 0, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
 ;; WARNING: Message has 65490 extra bytes at end
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Mar 18 21:11:00 +04 2025
+;; WHEN: Mon Jun 16 11:56:57 +04 2025
 ;; MSG SIZE  rcvd: 65502
 

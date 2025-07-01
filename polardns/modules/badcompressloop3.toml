@@ -40,7 +40,7 @@ if req.first_subdomain.startswith("badcompressloop3"):
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
    ### QUESTION SECTION ########
-   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    # CNAME
    offset_to_last_cname = len(req.full_domain) + 12 + 18     ## forward pointer to the CNAME in the end

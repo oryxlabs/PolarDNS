@@ -111,4 +111,3 @@ alias.100.<OURDOM>. 60 IN MX 0 alias<RANDOM>.100.<OURDOM>.
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

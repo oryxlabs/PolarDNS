@@ -68,7 +68,7 @@ python = '''
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               doms = []
               for i in range(answers):
@@ -77,7 +77,7 @@ python = '''
                   port = random.getrandbits(16)
                   bindom = convDom2Bin(dom)
                   data_len = 2+2+2+len(bindom)  # Priority (2 bytes) + Weight (2 bytes) + Port (2 bytes) + Target domain
-                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                   buffer += getTypeBin("SRV") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)    ## TTL
                   buffer += struct.pack(">H", data_len)    ## Data length
@@ -90,20 +90,20 @@ python = '''
               log("%d SRV aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
               send_buf(self, buffer)
               #####################################################################
-           elif req.first_subdomain.startswith("_") and (req.subdomains_lc[1].startswith("sralias") or req.subdomains_lc[2].startswith("sralias") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("sralias"))):
+           elif req.first_subdomain.startswith("_") and (req.subdomains[1].startswith("sralias") or req.subdomains[2].startswith("sralias") or (len(req.subdomains) > 3 and req.subdomains[3].startswith("sralias"))):
               # Send multiple random SRV aliases (RFC 2782) for any domain name with attribute leaves 
               # (domains prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.sralias...'
               # BEWARE: This could result in multiplication
               offset = 1      # _a.sralias.10.yourdomain.com
-              if req.subdomains_lc[2].startswith("sralias"):
+              if req.subdomains[2].startswith("sralias"):
                  offset = 2   # _a._b.sralias.10.yourdomain.com
-              elif req.subdomains_lc[3].startswith("sralias"):
+              elif req.subdomains[3].startswith("sralias"):
                  offset = 3   # _a._b._c.sralias.10.yourdomain.com
               answers = min(int(req.subdomains[offset+1]), 4096) if req.subdomains[offset+1].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               doms = []
               for i in range(answers):
@@ -112,7 +112,7 @@ python = '''
                   port = random.getrandbits(16)
                   bindom = convDom2Bin(dom)
                   data_len = 2+2+2+len(bindom)  # Priority (2 bytes) + Weight (2 bytes) + Port (2 bytes) + Target domain
-                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                   buffer += getTypeBin("SRV") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)    ## TTL
                   buffer += struct.pack(">H", data_len)    ## Data length

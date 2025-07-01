@@ -50,7 +50,7 @@ elif req.first_subdomain.startswith("size"):
    desired_size = min(int(req.subdomains[1]), 65535) if req.subdomains[1].isnumeric() else 512
 
    # compute how much space we have left after we add the necessities
-   req.full_domain_bin = convDom2Bin(req.full_domain)
+   req.full_domain_bin = convDom2Bin(req.full_domain_20)
    req_name_len = len(req.full_domain_bin)
 
    resp.type_str = "A"

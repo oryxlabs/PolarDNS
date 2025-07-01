@@ -50,10 +50,10 @@ if req.first_subdomain.startswith("afuzz2"):
    ### DNS header #######
    buffer = prep_dns_header(b'\x84\x00', req.QURR, answers+1, 0, 0)
    ### QUESTION SECTION ########
-   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    #for b in range(1, 255):
-   tmpdom = convDom2Bin(req.full_domain)
+   tmpdom = convDom2Bin(req.full_domain_20)
    # multiple bad A
    for b in range(1, answers+1):
        newip = "6.6.6." + str(b-1)
@@ -65,7 +65,7 @@ if req.first_subdomain.startswith("afuzz2"):
        buffer += struct.pack(">H", 4)                  ## Data length
        buffer += socket.inet_aton(newip)               ## IP
    # good A
-   buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
    buffer += struct.pack(">L", resp.TTL)            ## TTL
    buffer += struct.pack(">H", 4)                   ## Data length
    buffer += socket.inet_aton("2.3.4.5")            ## IP

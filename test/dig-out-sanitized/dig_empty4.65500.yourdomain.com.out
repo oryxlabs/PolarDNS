@@ -1,4 +1,5 @@
 ;; Warning: query response not set
+;; missing question section
 
 ;; global options: +cmd
 ;; Got answer:
@@ -8,4 +9,3 @@
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

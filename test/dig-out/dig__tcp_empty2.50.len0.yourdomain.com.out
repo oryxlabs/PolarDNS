@@ -1,1 +1,5 @@
-;; ERROR: short (< header size) message
+;; communications error to 127.0.0.1#53: out of range
+
+; <<>> DiG 9.20.7-1-Debian <<>> +tcp empty2.50.len0.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; no servers could be reached

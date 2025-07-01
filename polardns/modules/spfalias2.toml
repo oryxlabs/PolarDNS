@@ -53,14 +53,14 @@ python = '''
               doms = []
               data = "v=spf1"
               for i in range(aliases):
-                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else "spfalias2" + str(random.getrandbits(20) % 100000) + "." + ".".join(req.subdomains[1:])
+                  dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else "spfalias2" + str(random.getrandbits(20) % 100000) + "." + ".".join(req.subdomains_20[1:])
                   doms.append(dom)
                   tmpdata = data + " include:" + dom
                   if len(tmpdata) > 250:
                      # we need another answer record since
                      # the max size for TXT label is 255 bytes
                      data += " ~all"  # the additional 5 bytes
-                     buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                     buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                      buffer += getTypeBin("TXT") + getClassBin("IN")
                      buffer += struct.pack(">L", resp.TTL)      ## TTL
                      buffer += struct.pack(">H", len(data)+1)   ## Data length (2B)
@@ -72,7 +72,7 @@ python = '''
                      if i == aliases-1:
                         # this is also the last alias
                         data += " ~all"
-                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                        buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                         buffer += getTypeBin("TXT") + getClassBin("IN")
                         buffer += struct.pack(">L", resp.TTL)      ## TTL
                         buffer += struct.pack(">H", len(data)+1)   ## Data length (2B)
@@ -84,7 +84,7 @@ python = '''
                   if i == aliases-1:
                      # this is the last alias
                      data += " ~all"
-                     buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                     buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                      buffer += getTypeBin("TXT") + getClassBin("IN")
                      buffer += struct.pack(">L", resp.TTL)      ## TTL
                      buffer += struct.pack(">H", len(data)+1)   ## Data length (2B)
@@ -94,7 +94,7 @@ python = '''
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, len(answers), 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               for i in range(len(answers)):
                   buffer += answers[i]

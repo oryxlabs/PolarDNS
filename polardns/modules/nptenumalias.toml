@@ -56,17 +56,17 @@ python = '''
 
               # figure out the ending part of the domain which is not a number any more
               # in order to preserve the parameters if any
-              for i, part in enumerate(req.subdomains):
+              for i, part in enumerate(req.subdomains_20):
                   if not part.isnumeric():
-                     dom_end = '.' + '.'.join(req.subdomains[i:])
+                     dom_end = '.' + '.'.join(req.subdomains_20[i:])
                      break
               else:
-                  dom_end = req.full_domain
+                  dom_end = req.full_domain_20
 
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               doms = []
               for i in range(answers):
@@ -80,7 +80,7 @@ python = '''
                   replacement = b'\x00'
 
                   data_len = 2+2+1+len(flags)+1+len(service)+1+len(regex)+len(replacement)
-                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)  ## Name
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)  ## Name
                   buffer += getTypeBin("NAPTR") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)     ## TTL
                   buffer += struct.pack(">H", data_len)     ## Data length (2B)

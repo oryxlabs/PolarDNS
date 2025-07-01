@@ -1,0 +1,94 @@
+---
+layout: default
+title: "Count - Count Number of Queries"
+parent: "General features"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Count - Count Number of Queries</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Count - Count Number of Queries</h1>
+<p>PolarDNS internally tracks the number of times each domain name has been queried.</p>
+<p>This feature allows clients to retrieve the query count for a specific domain name.</p>
+<p>The module returns a TXT record containing the total number of queries received for the specified domain since the PolarDNS server was started.</p><p><strong>Category:</strong> <a href='../general-features.html'>General features</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>count.*</strong></pre>
+
+<p>This module has no parameters.</p>
+<h2>Examples</h2>
+<p>The following examples demostrate the functionality of this module. We will use the basic <a href="always.html">always</a> feature which always resolves to an IP address.</p>
+<p>In this example, we want to meassure how many times the <code class='code-block'>always12345.yourdomain.com</code> domain has been queried so far. By prepending the <code class='code-block'>count</code> subdomain to the domain name, we retrieve the current query count:</p>
+<div><pre class='output-block'><strong># dig count.always12345.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; count.always12345.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 23057
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;count.always12345.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+count.always12345.yourdomain.com. 60 IN	TXT	&quot;0&quot;
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Jun 20 15:00:11 +04 2025
+;; MSG SIZE  rcvd: 64</pre>
+</div><p><a href='../outputs/count/dig_count.always12345.yourdomain.com__127.0.0.1__1.pcap'>Download PCAP File</a></p><p><p>We can see that at this point, the query count for the domain is 0. This means that this domain has never been queried.</p></p><br>
+<p>Now, let’s query the domain. The response includes an IP address, as expected from the <a href="always.html">always</a> feature. This query also internally increments the counter for the domain:</p>
+<div><pre class='output-block'><strong># dig always12345.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; always12345.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 8943
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;always12345.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+always12345.yourdomain.com. 60	IN	A	2.3.4.5
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Jun 20 15:00:13 +04 2025
+;; MSG SIZE  rcvd: 60</pre></div><p><a href='../outputs/count/dig_always12345.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Now, let&#x27;s retrieve the query count again:</p>
+<div><pre class='output-block'><strong># dig count.always12345.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; count.always12345.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 55790
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;count.always12345.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+count.always12345.yourdomain.com. 60 IN	TXT	&quot;1&quot;
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Fri Jun 20 15:00:14 +04 2025
+;; MSG SIZE  rcvd: 64</pre>
+</div><p><a href='../outputs/count/dig_count.always12345.yourdomain.com__127.0.0.1__b.pcap'>Download PCAP File</a></p><p><p>We can see that the query count for this domain has increased.</p>
+<p>Using this feature, we can measure query count for any domain name.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="a.html">A - Return A record (IPv4 address)</a></li>
+<li><a href="always.html">Always - Always Resolve to IP Address</a></li>
+<li><a href="self.html">Self - What Is My IP Address</a></li>
+<li><a href="size.html">Size - Max A or AAAA Records Within Size Limit</a></li>
+<li><a href="wild.html">Wild - Wildcard Label Records</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

@@ -43,17 +43,17 @@ python = '''
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               order       = 0
               pref        = 0
               flags       = b'U'          # Flags = "U" (URI)
               service     = b'E2U+sip'    # Service = SIP
-              regex       = bytes("!^.*$!" + req.full_domain + "!", "utf-8")
+              regex       = bytes("!^.*$!" + req.full_domain_20 + "!", "utf-8")
               replacement = b'\x00'
 
               data_len = 2+2+1+len(flags)+1+len(service)+1+len(regex)+len(replacement)
-              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)  ## Name
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)  ## Name
               buffer += getTypeBin("NAPTR") + getClassBin("IN")
               buffer += struct.pack(">L", resp.TTL)     ## TTL
               buffer += struct.pack(">H", data_len)     ## Data length (2B)
@@ -67,7 +67,7 @@ python = '''
               buffer += regex                           ## Regex
               buffer += replacement                     ## Replacement
               # log and send
-              log("NAPTR ENUM loop %s" % (req.full_domain))
+              log("NAPTR ENUM loop %s" % (req.full_domain_20))
               send_buf(self, buffer)
               #####################################################################
 '''

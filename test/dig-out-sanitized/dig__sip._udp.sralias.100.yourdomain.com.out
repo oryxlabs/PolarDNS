@@ -111,4 +111,3 @@ _sip._udp.sralias.100.<OURDOM>. 60 IN SRV 0 0  <PORT> _sip._udp.sralias<RANDOM>.
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

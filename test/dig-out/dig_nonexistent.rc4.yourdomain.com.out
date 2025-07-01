@@ -1,17 +1,20 @@
 
-; <<>> DiG 9.18.10-2-Debian <<>> nonexistent.rc4.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+; <<>> DiG 9.20.7-1-Debian <<>> nonexistent.rc4.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOTIMP, id: 43860
-;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; ->>HEADER<<- opcode: QUERY, status: NOTIMP, id: 47730
+;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 0
 
 ;; WARNING: EDNS query returned status NOTIMP - retry with '+noedns'
 
 ;; QUESTION SECTION:
 ;nonexistent.rc4.yourdomain.com.	IN	A
 
-;; Query time: 28 msec
+;; AUTHORITY SECTION:
+yourdomain.com.		60	IN	SOA	ns1.yourdomain.com. hostmaster.yourdomain.com. 2023052903 10800 3600 604800 3600
+
+;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Mar 18 21:10:33 +04 2025
-;; MSG SIZE  rcvd: 48
+;; WHEN: Mon Jun 16 13:22:16 +04 2025
+;; MSG SIZE  rcvd: 141
 

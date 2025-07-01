@@ -12,4 +12,3 @@ spfalias<RANDOM>.<OURDOM>. 60 IN TXT "v=spf1 include:spfalias<RANDOM>.<OURDOM> ~
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

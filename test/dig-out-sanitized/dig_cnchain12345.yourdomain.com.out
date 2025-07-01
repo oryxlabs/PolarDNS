@@ -12,4 +12,3 @@ cnchain12345.<OURDOM>. 60 IN CNAME cnchain12346.<OURDOM>.
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

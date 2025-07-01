@@ -22,4 +22,3 @@ size.512.tc.nc.<OURDOM>. 60 IN A 127.0.0.<RANDOM>
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
 ;; MSG SIZE  rcvd: <SIZE>
-

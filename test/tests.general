@@ -42,3 +42,45 @@ size.8192.tc.fc.${domain}
 size.8192.tc.nc.${domain}
 +tcp size.8192.fc.${domain}
 +tcp size.8192.nc.${domain}
+
+# a.toml
+afffefdfc.${domain}
+afffefdfc.${domain} A
++tcp afffefdfc.${domain} A
+
+# count.toml
+count.always123.${domain}
+count.alwaysabcd.${domain}
+
+# wild.toml
+wild.hello.${domain}
+wild0.hello.${domain}
+wild1.hello.${domain}
+wild2.hello.${domain}
+*.wild.hello.${domain}
+*.wild0.hello.${domain}
+*.wild1.hello.${domain}
+*.wild2.hello.${domain}
+*.wild3.hello.${domain}
+*.wild4.hello.${domain}
+*.wild5.hello.${domain}
+
+# 0x20 encoding
+ALWAYS.eXaMpLe.${domain}
+AlIaS.eXaMpLe.${domain}
+NsLoOp.encODING.${domain}
+dNcHaIn.ENCoding.${domain}
+
+# zone delegation
+always.sub.${domain}
+always.always.sub.${domain}
++tcp always.always.sub.${domain}
+always.some.other.subdomain.${domain}
+
+# nsgluetest.toml
+nsgluetest0.${domain}
+nsgluetest1.${domain}
+nsgluetest0.sub.${domain}
+nsgluetest1.sub.${domain}
+nsgluetest0.some.other.subdomain.${domain}
+nsgluetest1.some.other.subdomain.${domain}

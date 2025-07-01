@@ -1,5 +1,7 @@
+;; missing question section
 ;; Truncated, retrying in TCP mode.
 ;; Warning: Message parser reports malformed message packet.
+;; missing question section
 
 ;; global options: +cmd
 ;; Got answer:
@@ -9,4 +11,3 @@
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
 ;; MSG SIZE  rcvd: <SIZE>
-

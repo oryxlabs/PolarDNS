@@ -35,22 +35,22 @@ append = "This setup effectively creates a loop."
 
 [module.code]
 python = '''
-           elif req.full_domain.lower().endswith(".100.51.198.in-addr.arpa"):
+           elif req.full_domain.endswith(".100.51.198.in-addr.arpa"):
               # Asking for a reverse record for the IP address 198.51.100.x (x.100.51.198.in-addr.arpa PTR record).
               # The 198.51.100.0/24 network range is TEST-NET-2 typically used for documentation/examples.
               # Let's respond back with the incremented domain name, all the way up to 198.51.100.255 and then
               # back to 198.51.100.0 indefinitely, effectively creating a loop.
               host = int(req.first_subdomain)
               host = 0 if host >= 255 else host + 1
-              dom = str(host) + "." + ".".join(req.subdomains[1:])
+              dom = str(host) + "." + ".".join(req.subdomains_20[1:])
               bindom = convDom2Bin(dom)
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               # PTR alias records
-              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
               buffer += getTypeBin("PTR") + getClassBin("IN")
               buffer += struct.pack(">L", resp.TTL)    ## TTL
               buffer += struct.pack(">H", len(bindom)) ## Data length

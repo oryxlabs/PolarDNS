@@ -66,7 +66,7 @@ python = '''
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               doms = []
               for i in range(answers):
@@ -74,7 +74,7 @@ python = '''
                   dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                   bindom = convDom2Bin(dom)
                   data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
-                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                   buffer += getTypeBin("SVCB") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)    ## TTL
                   buffer += struct.pack(">H", data_len)    ## Data length
@@ -85,20 +85,20 @@ python = '''
               log("%d SVCB aliases: %s" % (answers, ', '.join(map(str, doms[:3])) + (', ...' if answers > 3 else '')))
               send_buf(self, buffer)
               #####################################################################
-           elif req.first_subdomain.startswith("_") and (req.subdomains_lc[1].startswith("svalias") or req.subdomains_lc[2].startswith("svalias") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("svalias"))):
+           elif req.first_subdomain.startswith("_") and (req.subdomains[1].startswith("svalias") or req.subdomains[2].startswith("svalias") or (len(req.subdomains) > 3 and req.subdomains[3].startswith("svalias"))):
               # Send multiple random SVCB aliases (RFC 9460) for any domain name with attribute leaves
               # (domains prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.svalias...'
               # BEWARE: This could result in multiplication
               offset = 1      # _a.svalias.10.yourdomain.com
-              if req.subdomains_lc[2].startswith("svalias"):
+              if req.subdomains[2].startswith("svalias"):
                  offset = 2   # _a._b.svalias.10.yourdomain.com
-              elif req.subdomains_lc[3].startswith("svalias"):
+              elif req.subdomains[3].startswith("svalias"):
                  offset = 3   # _a._b._c.svalias.10.yourdomain.com
               answers = min(int(req.subdomains[offset+1]), 4096) if req.subdomains[offset+1].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               doms = []
               for i in range(answers):
@@ -106,7 +106,7 @@ python = '''
                   dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                   bindom = convDom2Bin(dom)
                   data_len = 2+len(bindom)  # SvcPriority (2 bytes) + the target name
-                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                   buffer += getTypeBin("SVCB") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)    ## TTL
                   buffer += struct.pack(">H", data_len)    ## Data length

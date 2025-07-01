@@ -59,7 +59,7 @@ if req.first_subdomain.startswith("manybintxt"):
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, nans, 0, 0)
    ### QUESTION SECTION ########
-   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    for i in range(nans):
        # max label size is 255 bytes, so chunk it
@@ -71,7 +71,7 @@ if req.first_subdomain.startswith("manybintxt"):
           parts.append(part)
        data = b''.join(parts)
 
-       buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+       buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
        buffer += getTypeBin("TXT") + getClassBin("IN")
        buffer += struct.pack(">L", resp.TTL)           ## TTL
        buffer += struct.pack(">H", len(data))          ## Data length

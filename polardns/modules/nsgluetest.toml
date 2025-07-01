@@ -1,0 +1,105 @@
+[module]
+name = "nsgluetest"
+type = "feature"
+info = "Name Server Glue Test"
+short = "NS records in zone vs. glue records in parent"
+category = "Cache poisoning"
+records = "A, AAAA"
+desc = '''
+This module is designed to test zone delegation and analyze resolver behavior when nameserver glue records differ between the child zone and the parent zone.
+
+The module returns a sample `A` record with an IPv4 address from the TEST-NET-1 range. The response also includes authoritative data - an `NS` record in the authority section and a corresponding glue `A` record in the additional section, pointing to the nameserver’s IP address.
+
+This module allows the client to specify which nameserver glue should be included in the response. The list of available nameservers can be configured in the PolarDNS configuration file `polardns.toml`.
+'''
+format = '''
+**`nsgluetest<INDEX>.sub.yourdomain.com`**
+
+Where:
+
+- The **`<INDEX>`** parameter specifies which nameserver glue to include in the response. The list of nameservers for each zone is configurable in the PolarDNS configuration file.
+'''
+
+[[module.example]]
+description = '''
+In the following examples, we configured in the main PolarDNS configuration file that the `sub.yourdomain.com` zone is delegated to an external nameserver. In the child zone’s PolarDNS configuration, we intentionally specified multiple different nameservers managing this zone.
+
+Now, by sending the following query to the parent zone’s nameserver, we observe that the subdomain is delegated and managed by another nameserver:
+'''
+command = "dig nsgluetest0.sub.yourdomain.com @127.0.0.1"
+append = "We can see that the `sub.yourdomain.com` zone is managed by `ns.sub.yourdomain.com` at `10.211.55.2`."
+
+[[module.example]]
+description = "When we query the designated nameserver directly, it returns the response and reaffirms its authority over the zone by including authoritative data - namely the `NS` and `A` (glue) records:"
+command = "dig nsgluetest0.sub.yourdomain.com @10.211.55.2"
+append = "We can see that the authoritative zone information matches that provided by the parent nameserver."
+
+[[module.example]]
+description = "Next, we request the inclusion of the second nameserver - intentionally misconfigured in the child zone's PolarDNS configuration file - as glue. The response still includes the answer but presents conflicting authoritative information for the zone:"
+command = "dig nsgluetest1.sub.yourdomain.com @10.211.55.2"
+append = "Here, we observe that the `sub.yourdomain.com` zone is indicated as being managed by `ns.sub.yourdomain.com` at `6.6.6.6`, which conflicts with the information provided by the parent zone. This inconsistency may potentially confuse the resolver."
+
+[module.code]
+python = '''
+           elif req.first_subdomain.startswith("nsgluetest"):
+              suffix = req.first_subdomain[10:]
+              index = int(suffix[0]) if suffix and suffix[0].isdigit() else 0
+              # # # # # #
+              ip = ""
+              data = b''
+              resp.type_str = ""
+              answers = min(int(req.subdomains[1]), 4096) if req.subdomains[1].isnumeric() else 1
+              if req.type_str == "AAAA":
+                 resp.type_str = "AAAA"
+                 ip = "1111:2222:3333:4444:5555:6666:7777:8888"
+                 data  = struct.pack(">H", 16)                 ## Data length
+                 data += socket.inet_pton(socket.AF_INET6, ip) ## IP
+              else:
+                 ip = "2.3.4.5"
+                 resp.type_str = "A"
+                 data  = struct.pack(">H", 4)      ## Data length
+                 data += socket.inet_aton(ip)      ## IP
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', resp.QURR, answers, 1, 1)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              # A or AAAA
+              for i in range(answers):
+                 if hasattr(resp, "nfz"):
+                    buffer += name_fuzz(resp.nfz)
+                 else:
+                    buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
+                 buffer += getTypeBin(resp.type_str) + getClassBin("IN")
+                 buffer += struct.pack(">L", resp.TTL)    ## TTL
+                 buffer += data
+              ### AUTHORITY SECTION ########
+              nsname = "ns." + primary_domain
+              # NS
+              nsbin = convDom2Bin(nsname)
+              subdom = ".".join(req.subdomains[1:])
+              buffer += convDom2Bin(subdom)
+              buffer += getTypeBin("NS") + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += struct.pack(">H", len(nsbin))  ## Data length
+              buffer += nsbin                          ## The data
+              ### ADDITIONAL SECTION ########
+              # let's find the delegation information defined in the config file
+              matched_subdom = next((key for key in delegated_subdomains if req.full_domain.endswith(key)), None)
+              if matched_subdom:
+                  # pick the glue (child NS's IP) from the config file based on the index (glue0 = glue[0], glue1 = glue[1] etc.)
+                  # 0 should be a good glue
+                  # 1 possibly a bad glue
+                  nsip = delegated_subdomains[matched_subdom][index] if index < len(delegated_subdomains[matched_subdom]) else delegated_subdomains[matched_subdom][-1]
+              else:
+                  nsip = primary_domain_ns[index] if index < len(primary_domain_ns) else primary_domain_ns[-1]
+              buffer += nsbin
+              buffer += getTypeBin("A") + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += struct.pack(">H", 4)           ## Data length
+              buffer += socket.inet_aton(nsip)
+              # log and send
+              log("A %s + NS %s A %s" % (ip, nsname, nsip))
+              send_buf(self, buffer)
+              #####################################################################
+'''

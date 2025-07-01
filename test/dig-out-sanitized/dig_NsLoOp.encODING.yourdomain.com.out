@@ -1,0 +1,14 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;NsLoOp.encODING.<OURDOM>. IN A
+
+;; ANSWER SECTION:
+NsLoOp.encODING.<OURDOM>. 60 IN NS NsLoOp.encODING.<OURDOM>.
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>

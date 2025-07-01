@@ -48,7 +48,7 @@ python = '''
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               doms = []
               for i in range(answers):
@@ -56,7 +56,7 @@ python = '''
                   dom = name_fuzz(resp.nfz) if hasattr(resp, "nfz") else random_chain()
                   bindom = convDom2Bin(dom)
                   data_len = 2+len(bindom)                 # Priority (2 bytes) + Target domain
-                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                   buffer += getTypeBin("MX") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)    ## TTL
                   buffer += struct.pack(">H", data_len)    ## Data length

@@ -12,4 +12,3 @@ cnloop.5.<OURDOM>. 60 IN CNAME cnloop.5.1.<OURDOM>.
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

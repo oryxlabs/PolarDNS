@@ -64,33 +64,34 @@ if req.first_subdomain.startswith("srloop"):
       cur = int(req.subdomains[2])
       if cur >= max:
          # go back to the beginning of the loop
-         new_domain_name = req.subdomains[0] + "." + str(max) + ".1"
+         new_domain_name = req.subdomains_20[0] + "." + str(max) + ".1"
       else:
          # increment the current index
-         new_domain_name = req.subdomains[0] + "." + str(max) + "." + str(cur+1)
+         new_domain_name = req.subdomains_20[0] + "." + str(max) + "." + str(cur+1)
       for i in range(len(req.subdomains)-3):
-         new_domain_name += "." + req.subdomains[i+3]
+         new_domain_name += "." + req.subdomains_20[i+3]
    elif req.subdomains[1].isnumeric():
       # we are in beginning of a loop with a requested max value, e.g.:
       # srloop.10.yourdomain.com
       max = int(req.subdomains[1])
       if max < 1:
          max = 1
-      new_domain_name = req.subdomains[0] + "." + str(max) + "." + "1"
+      new_domain_name = req.subdomains_20[0] + "." + str(max) + "." + "1"
       for i in range(len(req.subdomains)-2):
-         new_domain_name += "." + req.subdomains[i+2]
+         new_domain_name += "." + req.subdomains_20[i+2]
    else:
       # just immediate loop
-      new_domain_name = req.full_domain
+      new_domain_name = req.full_domain_20
+
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
    ### QUESTION SECTION ########
-   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    port = random.getrandbits(16)
    bindom = convDom2Bin(new_domain_name)
    data_len = 2+2+2+len(bindom)  # Priority (2 bytes) + Weight (2 bytes) + Port (2 bytes) + Target domain
-   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
    buffer += getTypeBin("SRV") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)    ## TTL
    buffer += struct.pack(">H", data_len)    ## Data length
@@ -102,19 +103,19 @@ if req.first_subdomain.startswith("srloop"):
    log("SRV LOOP %s" % (new_domain_name))
    send_buf(self, buffer)
    #####################################################################
-elif req.first_subdomain.startswith("_") and (req.subdomains_lc[1].startswith("srloop") or req.subdomains_lc[2].startswith("srloop") or (len(req.subdomains_lc) > 3 and req.subdomains_lc[3].startswith("srloop"))):
+elif req.first_subdomain.startswith("_") and (req.subdomains[1].startswith("srloop") or req.subdomains[2].startswith("srloop") or (len(req.subdomains) > 3 and req.subdomains[3].startswith("srloop"))):
    # Do an alias loop in a SRV record for any domain name with attribute leaves (domains
    # prefixed with an underscore), up to 3 levels e.g., '_sub._service._proto.srloop...'
 
    offset=1        # _a.srloop.10.yourdomain.com
-   if req.subdomains_lc[2].startswith("srloop"):
+   if req.subdomains[2].startswith("srloop"):
       offset = 2   # _a._b.srloop.10.yourdomain.com
-   elif req.subdomains_lc[3].startswith("srloop"):
+   elif req.subdomains[3].startswith("srloop"):
       offset = 3   # _a._b._c.srloop.10.yourdomain.com
 
    new_domain_name = ""
    for i in range(offset+1):
-      new_domain_name += req.subdomains[i] + "."
+      new_domain_name += req.subdomains_20[i] + "."
 
    if req.subdomains[offset+1].isnumeric() and req.subdomains[offset+2].isnumeric():
       # we are already in a loop, e.g.:
@@ -128,7 +129,7 @@ elif req.first_subdomain.startswith("_") and (req.subdomains_lc[1].startswith("s
          # increment the current index
          new_domain_name += str(max) + "." + str(cur+1)
       for i in range(len(req.subdomains)-3-offset):
-         new_domain_name += "." + req.subdomains[i+3+offset]
+         new_domain_name += "." + req.subdomains_20[i+3+offset]
    elif req.subdomains[offset+1].isnumeric():
       # we are in beginning of a loop with a requested max value, e.g.:
       # _abc.srloop.10.yourdomain.com
@@ -137,20 +138,20 @@ elif req.first_subdomain.startswith("_") and (req.subdomains_lc[1].startswith("s
          max = 1
       new_domain_name += str(max) + "." + "1"
       for i in range(len(req.subdomains)-2-offset):
-         new_domain_name += "." + req.subdomains[i+2+offset]
+         new_domain_name += "." + req.subdomains_20[i+2+offset]
    else:
       # just immediate loop
-      new_domain_name = req.full_domain
+      new_domain_name = req.full_domain_20
 
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
    ### QUESTION SECTION ########
-   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    port = random.getrandbits(16)
    bindom = convDom2Bin(new_domain_name)
    data_len = 2+2+2+len(bindom)  # Priority (2 bytes) + Weight (2 bytes) + Port (2 bytes) + Target domain
-   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+   buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
    buffer += getTypeBin("SRV") + getClassBin("IN")
    buffer += struct.pack(">L", resp.TTL)    ## TTL
    buffer += struct.pack(">H", data_len)    ## Data length

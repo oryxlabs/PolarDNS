@@ -1,0 +1,213 @@
+---
+layout: default
+title: "Wild - Wildcard Label Records"
+parent: "General features"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Wild - Wildcard Label Records</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Wild - Wildcard Label Records</h1>
+<p>This module is designed to evaluate how resolvers handle wildcard records &mdash; DNS records that contain a wildcard label (an asterisk *) in the domain name.</p>
+<p>The module supports both responding to wildcard queries and generating responses that include wildcard domain names.</p>
+<p>Responses may include either A records or CNAME records with varying values.</p>
+<p>Note: Domain names containing an explicit wildcard label (*) are non-compliant according to DNS standards and are considered malformed. Resolvers should treat such names as invalid or broken.</p><p><strong>Category:</strong> <a href='../general-features.html'>General features</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>wild&lt;VARIANT&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>
+<p>The <strong><code class='code-block'>&lt;VARIANT&gt;</code></strong> parameter specifies the type of wildcard record and the corresponding value to be generated. The following 3 (three) variants are supported:</p>
+<ul>
+<li>
+<p><strong><code class='code-block'>wild0</code></strong> returns an <code class='code-block'>A</code> record indicating that <code class='code-block'>*.yourdomain.com</code> resolves to the IPv4 address <code class='code-block'>3.4.5.6</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>wild1</code></strong> returns a <code class='code-block'>CNAME</code> record indicating that <code class='code-block'>*.yourdomain.com</code> is an alias for a resolvable domain.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>wild2</code></strong> returns a <code class='code-block'>CNAME</code> record indicating that <code class='code-block'>*.yourdomain.com</code> is an alias for a non-resolvable domain.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Additionaly, the following format is also supported:</p>
+<pre class='output-block'><strong>*.wild&lt;VARIANT&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>
+<p>The <strong><code class='code-block'>&lt;VARIANT&gt;</code></strong> parameter specifies the type of wildcard record and the corresponding value to be generated. The following 6 (six) variants are supported:</p>
+<ul>
+<li>
+<p><strong><code class='code-block'>*.wild0</code></strong> returns an <code class='code-block'>A</code> record indicating that <code class='code-block'>*.wild0.yourdomain.com</code> (a wildcard entry) resolves to the IPv4 address <code class='code-block'>3.4.5.6</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>*.wild1</code></strong> returns a <code class='code-block'>CNAME</code> record indicating that <code class='code-block'>*.wild1.yourdomain.com</code> (a wildcard entry) is an alias for a resolvable domain.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>*.wild2</code></strong> returns a <code class='code-block'>CNAME</code> record indicating that <code class='code-block'>*.wild2.yourdomain.com</code> (a wildcard entry) is an alias for a non-resolvable domain.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>*.wild3</code></strong> returns an <code class='code-block'>A</code> record indicating that <code class='code-block'>test.wild3.yourdomain.com</code> (an exact entry) resolves to the IPv4 address <code class='code-block'>3.4.5.6</code>.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>*.wild4</code></strong> returns a <code class='code-block'>CNAME</code> record indicating that <code class='code-block'>test.wild4.yourdomain.com</code> (an exact entry) is an alias for a resolvable domain.</p>
+</li>
+<li>
+<p><strong><code class='code-block'>*.wild5</code></strong> returns a <code class='code-block'>CNAME</code> record indicating that <code class='code-block'>test.wild5.yourdomain.com</code> (an exact entry) is an alias for a non-resolvable domain.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2>Examples</h2>
+<p>The most basic example returns an <code class='code-block'>A</code> record indicating that a wildcard entry <code class='code-block'>*.yourdomain.com</code> resolves to the IPv4 address <code class='code-block'>3.4.5.6</code> as shown here:</p>
+<div><pre class='output-block'><strong># dig wild.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; wild.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 52283
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;wild.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+*.yourdomain.com.	60	IN	A	3.4.5.6
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 01 10:36:15 +04 2025
+;; MSG SIZE  rcvd: 69</pre></div><p><a href='../outputs/wild/dig_wild.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>According to RFC specifications, resolvers should neither cache such responses nor interpret them as valid records.</p></p><br>
+<p>In the <code class='code-block'>wild1</code> variant, the query returns a <code class='code-block'>CNAME</code> record indicating that the wildcard entry <code class='code-block'>*.yourdomain.com</code> is an alias for another domain &mdash; in this case a resolvable domain:</p>
+<div><pre class='output-block'><strong># dig wild1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; wild1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 36541
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;wild1.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+*.yourdomain.com.	60	IN	CNAME	always924329.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 01 10:31:48 +04 2025
+;; MSG SIZE  rcvd: 95</pre></div><p><a href='../outputs/wild/dig_wild1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>A subsequent query to <code class='code-block'>always681822.yourdomain.com</code> will resolve to an IP address, as the <a href="always.html">always</a> feature is designed to consistently return one. However, a resolver should not initiate this query, as the response is generally considered invalid.</p></p><br>
+<p>This example demonstrates that the module supports arbitrary subdomains &mdash; for instance, <code class='code-block'>foo.bar.yourdomain.com</code> in this case:</p>
+<div><pre class='output-block'><strong># dig wild1.foo.bar.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; wild1.foo.bar.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 19880
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;wild1.foo.bar.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+*.foo.bar.yourdomain.com. 60	IN	CNAME	always005421.foo.bar.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 01 10:31:50 +04 2025
+;; MSG SIZE  rcvd: 119</pre></div><p><a href='../outputs/wild/dig_wild1.foo.bar.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>A consequent query to <code class='code-block'>always830671.foo.bar.yourdomain.com</code> will again resolve this to an IP address.</p></p><br>
+<p>In the <code class='code-block'>wild2</code> variant, the query returns a <code class='code-block'>CNAME</code> record indicating that the wildcard entry is an alias for a non-resolvable domain in this case:</p>
+<div><pre class='output-block'><strong># dig wild2.foo.bar.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; wild2.foo.bar.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 38901
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;wild2.foo.bar.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+*.foo.bar.yourdomain.com. 60	IN	CNAME	nonres606555.foo.bar.yourdomain.com.
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 01 10:36:16 +04 2025
+;; MSG SIZE  rcvd: 119</pre></div><p><a href='../outputs/wild/dig_wild2.foo.bar.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>A consequent query to <code class='code-block'>nonres412831.foo.bar.yourdomain.com</code> will return NXDOMAIN as this domain does not exist.</p></p><br>
+<p>Now let&#x27;s explore the alternative format involving querying subdomains containing the literal <code class='code-block'>*.</code> (wildcard label) at the beginning of the domain name.</p>
+<p>In this example, we query the basic <code class='code-block'>*.wild</code> variant. The response includes an <code class='code-block'>A</code> record indicating that the exact domain name &mdash; wildcard label included &mdash; resolves to the IPv4 address <code class='code-block'>3.4.5.6</code>:</p>
+<div><pre class='output-block'><strong># dig *.wild.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; *.wild.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 55436
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;*.wild.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+*.wild.yourdomain.com.	60	IN	A	3.4.5.6
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 01 10:36:17 +04 2025
+;; MSG SIZE  rcvd: 55</pre></div><p><a href='../outputs/wild/dig__.wild.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>Resolvers should neither cache such responses nor interpret them as wildcard records. Domain names containing an explicit asterisk (*) are treated as literal labels, not wildcard patterns, and thus are generally not valid for matching purposes. Responses to such queries are non-compliant and should be discarded.</p></p><br>
+<p>In this example, we request the <code class='code-block'>*.wild1</code> variant, which closely resembles the previous case, but returns a <code class='code-block'>CNAME</code> record instead:</p>
+<div><pre class='output-block'><strong># dig *.wild1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; *.wild1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 3257
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;*.wild1.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+*.wild1.yourdomain.com.	60	IN	CNAME	always034415.wild1.yourdomain.com.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 01 10:31:53 +04 2025
+;; MSG SIZE  rcvd: 87</pre></div><p><a href='../outputs/wild/dig__.wild1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>Again, a resolver should avoid initiating any subsequent queries, as the response is generally considered invalid.</p></p><br>
+<p>In this example, we request the <code class='code-block'>*.wild3</code> variant, which modifies the domain name (owner name) in the answer section to include a specific hostname instead of a wildcard label:</p>
+<div><pre class='output-block'><strong># dig *.wild3.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; *.wild3.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 63069
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;*.wild3.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+test.wild3.yourdomain.com. 60	IN	A	3.4.5.6
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 01 10:31:55 +04 2025
+;; MSG SIZE  rcvd: 81</pre></div><p><a href='../outputs/wild/dig__.wild3.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>As previously noted, domain names with an explicit asterisk (*) are interpreted as literal labels rather than wildcard patterns. Furthermore, due to a mismatch between the QNAME in the query and the owner name in the answer section, resolvers should not treat the response as valid.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="a.html">A - Return A record (IPv4 address)</a></li>
+<li><a href="always.html">Always - Always Resolve to IP Address</a></li>
+<li><a href="count.html">Count - Count Number of Queries</a></li>
+<li><a href="self.html">Self - What Is My IP Address</a></li>
+<li><a href="size.html">Size - Max A or AAAA Records Within Size Limit</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

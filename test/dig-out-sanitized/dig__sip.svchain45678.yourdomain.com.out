@@ -12,4 +12,3 @@ _sip.svchain45678.<OURDOM>. 60 IN SVCB 0 _sip.svchain45679.<OURDOM>.
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

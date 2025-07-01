@@ -67,7 +67,7 @@ if req.first_subdomain.startswith("badcompress2"):
    ### DNS header ########
    buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
    ### QUESTION SECTION ########
-   if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+   if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
    ### ANSWER SECTION ########
    # CNAME
    buffer += b"\xc0\x0c" + getTypeBin("CNAME") + getClassBin("IN")  ## using compression here, no problem
@@ -76,7 +76,7 @@ if req.first_subdomain.startswith("badcompress2"):
    buffer += struct.pack(">H", len(dom))                      ## Data length
    buffer += dom                                              ## CNAME value
    # log and send
-   log("CNAME abc.%s (badcomp 2, CNAME, offset %d)" % (req.full_domain, offset))
+   log("CNAME abc.%s (badcomp 2, CNAME, offset %d)" % (req.full_domain_20, offset))
    send_buf(self, buffer)
    #####################################################################
 '''

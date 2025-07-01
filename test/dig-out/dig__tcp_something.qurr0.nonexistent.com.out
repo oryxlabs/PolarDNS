@@ -1,13 +1,14 @@
+;; missing question section
 
-; <<>> DiG 9.18.10-2-Debian <<>> +tcp something.qurr0.nonexistent.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+; <<>> DiG 9.20.7-1-Debian <<>> +tcp something.qurr0.nonexistent.com @127.0.0.1 +tries=1 +timeout=1 -p 53
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: REFUSED, id: 42186
+;; ->>HEADER<<- opcode: QUERY, status: REFUSED, id: 37617
 ;; flags: qr; QUERY: 0, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
 ;; WARNING: Message has 37 extra bytes at end
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
-;; WHEN: Fri Apr 04 15:46:59 +04 2025
+;; WHEN: Mon Jun 16 11:56:57 +04 2025
 ;; MSG SIZE  rcvd: 49
 

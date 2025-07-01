@@ -1,4 +1,5 @@
 ;; Truncated, retrying in TCP mode.
+;; missing question section
 
 ;; global options: +cmd
 ;; Got answer:
@@ -7,4 +8,3 @@
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
 ;; MSG SIZE  rcvd: <SIZE>
-

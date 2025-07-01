@@ -14,10 +14,11 @@ import string
 import struct
 import time
 import os
+from collections import defaultdict
 from polardns import nfz
 from polardns import consts
 
-polardns_version = "1.6.4"
+polardns_version = "1.6.5"
 
 ################################
 
@@ -29,51 +30,71 @@ with config_file.open("rb") as f:
 config = {k:v for k,v in _config['main'].items() if k != 'known_servers'}
 
 known_servers = {}
-for line in _config['main']['known_servers'].split('\n'):
-    if not line:
-        continue
-    host, ip_address = line.split()
-    known_servers[host] = ip_address
+config_lines = _config['main'].get('known_servers', '').strip()
+if config_lines:
+    for line in _config['main']['known_servers'].split('\n'):
+        if not line:
+            continue
+        host, ip_address = line.split()
+        known_servers[host] = ip_address
 
-debug = config['debug']
+delegated_subdomains = {}
+config_lines = _config['main'].get('delegated_subdomains', '').strip()
+if config_lines:
+    for line in config_lines.split('\n'):
+        if not line.strip():
+            continue
+        parts = line.split()
+        subdomain = parts[0]
+        ip_addresses = parts[1:]
+        delegated_subdomains[subdomain] = ip_addresses
+
+# for counting the incoming queries
+query_counter = defaultdict(int)
+
+debug = config.get('debug', 0)
 #debug = 1
 
-config_ttl = int(config['ttl'])
-config_sleep = float(config['sleep'])
-config_compression = int(config['compression'])
-config_parse_edns0 = config['parse_edns0']
-primary_domain = config['domain']
-primary_ns1_ip = config['ns1']
-primary_ns2_ip = config['ns2']
-universally_authoritative = config['authoritative_for_any']
+config_listen_addr = config.get('listen_addr', '127.0.0.1:53')
+config_ttl = int(config.get('ttl', 60))
+config_sleep = float(config.get('sleep', 0))
+config_compression = int(config.get('compression', 1))
+config_parse_edns0 = int(config.get('parse_edns0', 1))
+primary_domain = config.get('domain', 'yourdomain.com')
+universally_authoritative = config.get('authoritative_for_any', 0)
 
-# a domain which is a 3rd party which we don't control
-a3rdparty_domain = config['a3rdparty_domain']
+primary_domain_ns = []
+for key in sorted(config.keys()):
+    if key.startswith('ns') and key[2:].isdigit():
+        primary_domain_ns.append(config[key])
+
+# domain which is a 3rd party which we don't control
+a3rdparty_domain = config.get('a3rdparty_domain', 'a3rdparty.net')
 
 # domains which we want to be authoritative for
 OURDOMAINS = [
-   config['domain'],
+   primary_domain,
    a3rdparty_domain,
    "anything.com",
    "version.polar"
 ]
 
 ZONEFILE = {
-   "ns1."+config['domain']:   {"A": config['ns1']},
-   "ns2."+config['domain']:   {"A": config['ns2']},
-   "end."+config['domain']:   {"A": "1.2.3.4"},
-   config['domain']:       {"MX": "10 mail1."+config['domain'],
+   "ns1."+primary_domain:   {"A": primary_domain_ns[0]},
+   "ns2."+primary_domain:   {"A": primary_domain_ns[1]},
+   "end."+primary_domain:   {"A": "1.2.3.4"},
+   primary_domain:       {"MX": "10 mail1."+primary_domain,
                             "TXT": "hello, this is a testing domain"},
-   "mail1."+config['domain']:                    {"A": "1.2.3.4"},
-   "hello."+config['domain']:                    {"A": "1.2.3.4"},
+   "mail1."+primary_domain:                    {"A": "1.2.3.4"},
+   "hello."+primary_domain:                    {"A": "1.2.3.4"},
    "injected."+a3rdparty_domain:                 {"A": "6.6.6.0"},
    "injected10."+a3rdparty_domain:               {"A": "6.6.6.10"},
    "injected11."+a3rdparty_domain:               {"A": "6.6.6.11"},
    "injected12."+a3rdparty_domain:               {"A": "6.6.6.12"},
    "injected13."+a3rdparty_domain:               {"A": "6.6.6.13"},
-   "ns1."+a3rdparty_domain:                      {"A": config['ns1']},
-   "ns1."+a3rdparty_domain+"."+config['domain']: {"A": config['ns1']},
-   "ns1."+config['domain']+"."+a3rdparty_domain: {"A": config['ns1']}
+   "ns1."+a3rdparty_domain:                      {"A": primary_domain_ns[0]},
+   "ns1."+a3rdparty_domain+"."+primary_domain: {"A": primary_domain_ns[0]},
+   "ns1."+primary_domain+"."+a3rdparty_domain: {"A": primary_domain_ns[0]}
 }
 
 # Function to get DNS class name (string) from code (int)
@@ -300,15 +321,15 @@ def name_fuzz(n):
 # Function to increment chainXXX if there is one
 
 def increment_chain():
-   new_subdomains = req.subdomains
+   new_subdomains = req.subdomains_20
 
    # in case of domains with attribute leaves (domains prefixed with an underscore),
    # do not modify the leading underscored subdomains (up to first 3 subdomains)
    # e.g., '_sub._service._proto...'
    skip = 0
    for i in range(3):
-       if req.subdomains[2-i][0:1] == "_":
-          new_subdomains = req.subdomains[3-i:]
+       if req.subdomains_20[2-i][0:1] == "_":
+          new_subdomains = req.subdomains_20[3-i:]
           skip = 3-i
           break
 
@@ -349,7 +370,7 @@ def increment_chain():
    if skip:
       tmp = ""
       for i in range(skip):
-         tmp += req.subdomains[i] + "."
+         tmp += req.subdomains_20[i] + "."
       new_domain_name = tmp + new_domain_name
 
    print("new domain name:", new_domain_name) if debug else True
@@ -359,21 +380,21 @@ def increment_chain():
 # Function to generate random chainXXX
 
 def random_chain():
-   new_subdomains = req.subdomains
+   new_subdomains = req.subdomains_20
 
    # in case of domains with attribute leaves (domains prefixed with an underscore),
    # do not modify the leading underscored subdomains (up to first 3 subdomains)
    # e.g., '_sub._service._proto...'
    skip = 0
    for i in range(3):
-       if req.subdomains[2-i][0:1] == "_":
-          new_subdomains = req.subdomains[3-i:]
+       if req.subdomains_20[2-i][0:1] == "_":
+          new_subdomains = req.subdomains_20[3-i:]
           skip = 3-i
           break
 
    first_subdomain = new_subdomains[0]
    first_subdomain_length = len(first_subdomain)
-   new_random_number = random.getrandbits(20) % 1000000
+   new_random_number = '{:06d}'.format(random.getrandbits(20) % 1000000)
 
    # how many last characters are numeric
    hmlcan = 0
@@ -406,7 +427,7 @@ def random_chain():
    if skip:
       tmp = ""
       for i in range(skip):
-         tmp += req.subdomains[i] + "."
+         tmp += req.subdomains_20[i] + "."
       new_domain_name = tmp + new_domain_name
 
    print("new domain name:", new_domain_name) if debug else True
@@ -426,9 +447,9 @@ def log(m):
        else:
           end = " (Use LEN only in TCP!)"
     try:
-       print("%s | %s %s %s | (%s) %s%s" % (stamp, req.info, req.type_str, req.full_domain, req.customlog, m, end))
+       print("%s | %s %s %s | (%s) %s%s" % (stamp, req.info, req.type_str, req.full_domain_20, req.customlog, m, end))
     except:
-       print("%s | %s %s %s | %s%s" % (stamp, req.info, req.type_str, req.full_domain, m, end))
+       print("%s | %s %s %s | %s%s" % (stamp, req.info, req.type_str, req.full_domain_20, m, end))
 
 ################################
 # Add custom message to the message on the console
@@ -544,6 +565,40 @@ def timeout_conn(self):
       self.rfile.close()
       self.wfile.close()
  
+
+################################
+# Send SOA response
+
+#                         AA + NOERROR  AnswerRR  AuthorityRR
+def send_soa(self, flags = b'\x84\x00', anrr = 0, aurr = 1):
+    data_prins = "ns1." + primary_domain
+    data_pricon = "hostmaster." + primary_domain
+    data_serial=2023052903
+    data_zoreft=10800
+    data_frrt=3600
+    data_zoneet=604800
+    data_minttl=3600
+    ### DNS header ########
+    buffer = prep_dns_header(flags, req.QURR, anrr, aurr, 0)
+    ### QUESTION SECTION ########
+    if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
+    ### AUTHORITY SECTION ########
+    # SOA
+    buffer += convDom2Bin(primary_domain)
+    buffer += getTypeBin("SOA") + req.class_bin
+    buffer += struct.pack(">L", resp.TTL)    ## TTL
+    data = convDom2Bin(data_prins)           ## Primary NS
+    data += convDom2Bin(data_pricon)         ## Primary contact
+    data += struct.pack(">L", data_serial)   ## Serial
+    data += struct.pack(">L", data_zoreft)   ## Zone refresh timer
+    data += struct.pack(">L", data_frrt)     ## Failed refresh retry timer
+    data += struct.pack(">L", data_zoneet)   ## Zone expiry timer
+    data += struct.pack(">L", data_minttl)   ## Minimum TTL
+    size = len(data)
+    buffer += struct.pack(">H", size)        ## Data length
+    buffer += data                           ## The data
+    send_buf(self, buffer)
+
 ################################
 # Function to get a sample random data appropriate to the record type
 
@@ -629,6 +684,7 @@ class MyUDPHandler(socketserver.DatagramRequestHandler):
         req.RAW = self.request[0]
         if len(req.RAW) < 12:
            # packet too short
+           close_conn(self)
            return
         process_DNS(self, req)
     # override the finish function of the socketserver, because it throws an exception
@@ -644,6 +700,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         req.RAW = self.request.recv(1024)
         if len(req.RAW) < 14:
            # packet too short
+           close_conn(self)
            return
         req.len = req.RAW[0:2]
         req.RAW = req.RAW[2:]
@@ -683,11 +740,11 @@ def process_DNS(self, req):
         req.AURR  = int.from_bytes(req.RAW[8:10], 'big')
         req.ADRR  = int.from_bytes(req.RAW[10:12], 'big')
 
-        # decode the domain name in the question
-        req.full_domain = ""    # sOMeThINg.whaTEVeR.ANytHinG.cOM
-        req.full_domain_lc = "" # something.whatever.anything.com
-        req.subdomains = []     # sOMeThINg whaTEVeR ANytHinG cOM
-        req.subdomains_lc = []  # something whatever anything com
+        # decode the domain name in the question, keep the original case also (0x20 encoding)
+        req.full_domain_20 = "" # sOMeThINg.whaTEVeR.ANytHinG.cOM
+        req.full_domain = ""    # something.whatever.anything.com
+        req.subdomains_20 = []  # sOMeThINg whaTEVeR ANytHinG cOM
+        req.subdomains = []     # something whatever anything com
         offset = 12 # offset where the first query (the actual domain name) starts
         try:
            while True:
@@ -698,22 +755,24 @@ def process_DNS(self, req):
                label = req.RAW[offset+1:offset+1+size].decode('utf-8', 'backslashreplace')
                label = label.replace(".", "<DOT>")
                print("size: %d, label: %s" % (size, label)) if debug else True
-               req.subdomains.append(label)
-               req.subdomains_lc.append(label.lower())
+               req.subdomains_20.append(label)
+               req.subdomains.append(label.lower())
                if offset == 12:
-                 req.full_domain = label
+                 req.full_domain_20 = label
                else:
-                 req.full_domain += "." + label
+                 req.full_domain_20 += "." + label
                offset += size + 1
         except:
            stamp = str(time.time()).ljust(18, "0")
-           print("%s | %s ? ? | ERROR: Cannot parse query name | (len: %d) %s" % (stamp, req.info, len(req.RAW)+2, binascii.b2a_hex(req.RAW)))
+           print("%s | %s ? ? | ERROR: Cannot parse query name | (packet len: %d)" % (stamp, req.info, len(req.RAW)+2))
+           close_conn(self)
            return
 
-        req.full_domain_lc = req.full_domain.lower()
+        req.full_domain = req.full_domain_20.lower()
+        query_counter[req.full_domain] += 1
 
         try:
-            req.first_subdomain = req.subdomains_lc[0]  # something
+            req.first_subdomain = req.subdomains[0]  # something
         except:
             # query is empty, that means query for the root domain e.g., for the root name servers
             req.first_subdomain = ""
@@ -728,10 +787,11 @@ def process_DNS(self, req):
             req.class_str = getClassName(req.class_int)
         except:
            stamp = str(time.time()).ljust(18, "0")
-           print("%s | %s ? %s | ERROR: Cannot parse query | (len: %d) %s" % (stamp, req.info, req.full_domain.strip(), len(req.RAW)+2, binascii.b2a_hex(req.RAW)))
+           print("%s | %s ? %s | ERROR: Cannot parse query (packet len: %d)" % (stamp, req.info, req.full_domain_20.strip(), len(req.RAW)+2))
+           close_conn(self)
            return
 
-        print("Request from %s %s %s" % (req.info, req.type_str, req.full_domain)) if debug else True
+        print("Request from %s %s %s" % (req.info, req.type_str, req.full_domain_20)) if debug else True
 
         ###############################################
         # 2. Parse out also the EDNS0 and its OPT pseudo-section with dnssec flag and cookies
@@ -752,7 +812,11 @@ def process_DNS(self, req):
             
             # Ensure that there are enough bytes left for the next part of parsing
             if len(req.RAW) < offset + 11 + req.edns_opt_len:
-                raise ValueError("Insufficient data in EDNS0 section")
+                #raise ValueError("Insufficient data in EDNS0 section")
+                stamp = str(time.time()).ljust(18, "0")
+                print("%s | %s ? %s | ERROR: Insufficient data in EDNS0 section (packet len: %d)" % (stamp, req.info, req.full_domain_20.strip(), len(req.RAW)+2))
+                close_conn(self)
+                return
             
             # Extract EDNS0 option fields
             req.edns_opt_opt_code = int.from_bytes(req.RAW[offset+11:offset+13], 'big') # 2 bytes
@@ -768,7 +832,11 @@ def process_DNS(self, req):
                         # Remaining bytes for the server cookie
                         req.edns_opt_opt_server_cookie = req.RAW[offset+23:offset+23+(req.edns_opt_opt_len-8)]
                 else:
-                    raise ValueError("Invalid client cookie length")
+                    #raise ValueError("Invalid client cookie length")
+                    stamp = str(time.time()).ljust(18, "0")
+                    print("%s | %s ? %s | ERROR: Invalid client cookie length in EDNS0 section (packet len: %d)" % (stamp, req.info, req.full_domain_20.strip(), len(req.RAW)+2))
+                    close_conn(self)
+                    return
 
             print("client cookie:", req.edns_opt_opt_client_cookie.hex()) if debug else True
             print("server cookie:", req.edns_opt_opt_server_cookie.hex()) if debug else True
@@ -778,8 +846,8 @@ def process_DNS(self, req):
         # 3. Extract SLD+TLD to see later if we are authoritative or not
 
         try:
-            req.sld = req.subdomains_lc[int(len(req.subdomains_lc)-2)]  # anything
-            req.tld = req.subdomains_lc[int(len(req.subdomains_lc)-1)]  # com
+            req.sld = req.subdomains[int(len(req.subdomains)-2)]  # anything
+            req.tld = req.subdomains[int(len(req.subdomains)-1)]  # com
         except:
             req.sld = ""
             req.tld = ""
@@ -829,7 +897,7 @@ def process_DNS(self, req):
 
         # Check each domain label for presence of global modifiers. For example, is there custom sleep (".slpXXXX.")
         # or custom TTL (".ttlXXX.") or custom length (".lenXXX.") requested in the domain name?
-        for index, label in enumerate(req.subdomains_lc):
+        for index, label in enumerate(req.subdomains):
             #######################
             if label.startswith("slp"):        # custom delay requested
                if label[3:].isnumeric():
@@ -975,7 +1043,7 @@ def process_DNS(self, req):
                buffer += struct.pack(">H", 0)
                buffer += struct.pack(">H", 0)
                buffer += struct.pack(">H", 0)
-               if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+               if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
                log("only a header with truncated flag (TC)")
                send_buf(self, buffer)
                return
@@ -987,27 +1055,27 @@ def process_DNS(self, req):
         # First check if we are authoritative for the requested domain
 
         #####################################################################
-        if req.sld_tld_domain not in OURDOMAINS and req.tld != "arpa" and not universally_authoritative:
+        if req.sld_tld_domain not in OURDOMAINS and not req.full_domain.endswith(primary_domain) and req.tld != "arpa" and not universally_authoritative:
            # We are NOT authoritative for this domain, let's respond with REFUSED
            ### DNS header ########
            # Response, Non-Authoritative, Refused
            buffer = prep_dns_header(b'\x80\x05', req.QURR, 0, 0, 0)
            ### QUESTION SECTION ########
-           if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+           if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
            # no answer section, only send out the header
            log("Refused")
            send_buf(self, buffer)
         #####################################################################
         else: # We are authoritative
-           if ZONEFILE.get(req.full_domain_lc) != None and req.type_str in ZONEFILE[req.full_domain_lc]:
+           if ZONEFILE.get(req.full_domain) != None and req.type_str in ZONEFILE[req.full_domain]:
               # We have the record in the zone file, so let's try to return proper record
-              ans = ZONEFILE[req.full_domain_lc][req.type_str]
+              ans = ZONEFILE[req.full_domain][req.type_str]
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
-              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
               buffer += req.type_bin + req.class_bin
               buffer += struct.pack(">L", resp.TTL)     ## TTL
               # # ################################### # #
@@ -1045,17 +1113,44 @@ def process_DNS(self, req):
               log("%s %s" % (req.type_str, ans))
               send_buf(self, buffer)
               #####################################################################
+           elif primary_domain not in delegated_subdomains and (matched_subdom := next((key for key in delegated_subdomains if req.full_domain.endswith(key)), None)):
+              # Delegate this query, send NS record with the glue (IP of the nameserver)
+              nsname = "ns." + matched_subdom
+              nsip = delegated_subdomains[matched_subdom][0]   # The first NS glue (RECOMMENDED to put a valid glue/NS's IP address in the config file)
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, 0, 1, 1)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
+              ### AUTHORITY SECTION ########
+              # NS
+              nsbin = convDom2Bin(nsname)
+              buffer += convDom2Bin(matched_subdom)
+              buffer += getTypeBin("NS") + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += struct.pack(">H", len(nsbin))  ## Data length
+              buffer += nsbin                          ## The data
+              ### ADDITIONAL SECTION ########
+              # A (glue)
+              buffer += nsbin
+              buffer += getTypeBin("A") + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += struct.pack(">H", 4)           ## Data length
+              buffer += socket.inet_aton(nsip)
+              # log and send
+              log("Delegating to NS %s (A %s)" % (nsname, nsip))
+              send_buf(self, buffer)
+              #####################################################################
            # DO NOT REMOVE (additional features)
+              #####################################################################
            elif req.full_domain == "version.polar" and req.type_str == "TXT" and req.class_str == "CH":
               # Version
               v = "PolarDNS " + polardns_version
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
-              # A
-              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+              # TXT
+              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
               buffer += getTypeBin("TXT") + getClassBin("CH")
               buffer += struct.pack(">L", resp.TTL)         ## TTL
               buffer += struct.pack(">H", len(v)+1)         ## Data length
@@ -1066,76 +1161,49 @@ def process_DNS(self, req):
               #####################################################################
            elif req.type_str == "NS":
               # Queries asking for NS record for any subdomain, respond with proper NS records + glue
-              buffer = prep_dns_header(b'\x84\x00', req.QURR, 2, 0, 2)
+              nns = len(primary_domain_ns)
+              buffer = prep_dns_header(b'\x84\x00', req.QURR, nns, 0, nns)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
-              # ns1
-              ns1bin = convDom2Bin("ns1." + primary_domain)
-              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
-              buffer += req.type_bin + req.class_bin   ## NS
-              buffer += struct.pack(">L", resp.TTL)    ## TTL
-              buffer += struct.pack(">H", len(ns1bin)) ## Data length
-              buffer += ns1bin                         ## The data
-              # ns2
-              ns2bin = convDom2Bin("ns2." + primary_domain)
-              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
-              buffer += req.type_bin + req.class_bin   ## NS
-              buffer += struct.pack(">L", resp.TTL)    ## TTL
-              buffer += struct.pack(">H", len(ns2bin)) ## Data length
-              buffer += ns2bin                         ## The data
+              nsbin = []
+              for i in range(nns):
+                 # nsN
+                 nsbin.append(convDom2Bin("ns" + str(i+1) + "." + primary_domain))
+                 buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
+                 buffer += req.type_bin + req.class_bin     ## NS
+                 buffer += struct.pack(">L", resp.TTL)      ## TTL
+                 buffer += struct.pack(">H", len(nsbin[i])) ## Data length
+                 buffer += nsbin[i]                         ## The data
               ### ADDITIONAL SECTION ########
-              # ns1
-              buffer += ns1bin
-              buffer += getTypeBin("A") + getClassBin("IN")
-              buffer += struct.pack(">L", resp.TTL)    ## TTL
-              buffer += struct.pack(">H", 4)           ## Data length
-              buffer += socket.inet_aton(primary_ns1_ip)
-              # ns2
-              buffer += ns2bin
-              buffer += getTypeBin("A") + getClassBin("IN")
-              buffer += struct.pack(">L", resp.TTL)    ## TTL
-              buffer += struct.pack(">H", 4)           ## Data length
-              buffer += socket.inet_aton(primary_ns2_ip)
+              for i in range(nns):
+                 # nsN glue
+                 buffer += nsbin[i]
+                 buffer += getTypeBin("A") + getClassBin("IN")
+                 buffer += struct.pack(">L", resp.TTL)    ## TTL
+                 buffer += struct.pack(">H", 4)           ## Data length
+                 buffer += socket.inet_aton(primary_domain_ns[i])
               # log and send
-              log("NS %s, NS %s, A %s, A %s" % ("ns1." + primary_domain, "ns2." + primary_domain, primary_ns1_ip, primary_ns2_ip))
+              log("%d NS record(s) with glue" % nns)
               send_buf(self, buffer)
               #####################################################################
            elif req.type_str == "SOA":
-              # Queries asking for SOA record for any subdomain, respond with proper SOA record
-              data_prins = "ns1." + primary_domain
-              data_pricon = "hostmaster." + primary_domain
-              data_serial=2023052903
-              data_zoreft=10800
-              data_frrt=3600
-              data_zoneet=604800
-              data_minttl=3600
-              ### DNS header ########
-              buffer = prep_dns_header(b'\x84\x00', req.QURR, 1, 0, 0)
-              ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
-              ### ANSWER SECTION ########
-              buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
-              buffer += req.type_bin + req.class_bin
-              ### ANSWER SECTION ########
-              # SOA
-              buffer += struct.pack(">L", resp.TTL)    ## TTL
-              data = convDom2Bin(data_prins)           ## Primary NS
-              data += convDom2Bin(data_pricon)         ## Primary contact
-              data += struct.pack(">L", data_serial)   ## Serial
-              data += struct.pack(">L", data_zoreft)   ## Zone refresh timer
-              data += struct.pack(">L", data_frrt)     ## Failed refresh retry timer
-              data += struct.pack(">L", data_zoneet)   ## Zone expiry timer
-              data += struct.pack(">L", data_minttl)   ## Minimum TTL
-              size = len(data)
-              buffer += struct.pack(">H", size)        ## Data length
-              buffer += data                           ## The data
-              # log and send
-              log("SOA %s %s %d %d %d %d %d" % (data_prins, data_pricon, data_serial, data_zoreft, data_frrt, data_zoneet, data_minttl))
-              send_buf(self, buffer)
+              if req.full_domain == primary_domain:
+                 # direct SOA query for our domain (at the apex)
+                 log("NOERROR + SOA in Answer")
+                 send_soa(self, anrr = 1, aurr = 0)
+              elif req.full_domain.endswith(primary_domain):
+                 # direct SOA query for our subdomains (potentially anything)
+                 log("NOERROR + SOA in Authority")
+                 send_soa(self)
+              else:
+                 # direct SOA query for everything else
+                 log("NXDOMAIN + SOA in Authority")
+                 send_soa(self, flags = b'\x84\x03')
               #####################################################################
            elif req.first_subdomain.startswith("always") or req.first_subdomain.startswith("something"):
               # Always resolve what starts with always or something
+              answers = min(int(req.subdomains[1]), 4096) if req.subdomains[1].isnumeric() else 1
               ip = ""
               data = b''
               resp.type_str = ""
@@ -1149,18 +1217,17 @@ def process_DNS(self, req):
                  resp.type_str = "A"
                  data  = struct.pack(">H", 4)      ## Data length
                  data += socket.inet_aton(ip)      ## IP
-              answers = min(int(req.subdomains[1]), 4096) if req.subdomains[1].isnumeric() else 1
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', resp.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               # A or AAAA
               for i in range(answers):
                  if hasattr(resp, "nfz"):
                     buffer += name_fuzz(resp.nfz)
                  else:
-                    buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                    buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                  buffer += getTypeBin(resp.type_str) + getClassBin("IN")
                  buffer += struct.pack(">L", resp.TTL)    ## TTL
                  buffer += data
@@ -1169,14 +1236,9 @@ def process_DNS(self, req):
               send_buf(self, buffer)
               #####################################################################
            else:
-              # Otherwise send not found (NXDOMAIN)
-              ### DNS header ########
-              buffer = prep_dns_header(b'\x84\x03', req.QURR, 0, 0, 0)
-              ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
-              # log and send empty answer
-              log("NXDOMAIN")
-              send_buf(self, buffer)
+              # Otherwise send NXDOMAIN and SOA
+              log("NXDOMAIN + SOA in Authority")
+              send_soa(self, flags = b'\x84\x03')
               #####################################################################
 
 ################################
@@ -1244,7 +1306,7 @@ def main():
    stamp = str(time.time()).ljust(18, "0")
    print("%s | PolarDNS v%s server starting up" % (stamp, polardns_version))
    print("%s | Using '%s' config file" % (stamp, config_file))
-   ip, sep, port = config['listen_addr'].rpartition(':')
+   ip, sep, port = config_listen_addr.rpartition(':')
    assert sep
    ip = str(ip)
    port = int(port)

@@ -1,7 +1,7 @@
 [main]
 domain = 'yourdomain.com'
 ns1 = '127.0.0.1'
-ns2 = '127.0.0.1'
+ns2 = '0.0.0.0'
 
 # Server address
 listen_addr = '0.0.0.0:53'
@@ -35,4 +35,11 @@ known_servers = """
 1.2.3.5     powerdns2
 2.3.4.5     bind-test1
 4.5.6.7     msdns-test1
+"""
+
+# Delegated subdomains along with the list of nameservers to which they are delegated.
+# Example: <subdomain>  <good glue>  <bad glue>
+delegated_subdomains = """
+sub.yourdomain.com                    127.0.1.1   127.0.1.2
+some.other.subdomain.yourdomain.com   127.0.2.1   127.0.2.2
 """

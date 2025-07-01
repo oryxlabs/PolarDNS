@@ -1,10 +1,13 @@
 ;; Truncated, retrying in TCP mode.
+;; missing question section
 
 ;; global options: +cmd
 ;; Got answer:
 ;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: <ID>
-;; flags: qr aa; QUERY: 0, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; flags: qr aa; QUERY: 0, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 0
+
+;; AUTHORITY SECTION:
+<OURDOM>. 60 IN SOA ns1.<OURDOM>. hostmaster.<OURDOM>. 2023052903 10800 3600 <RANDOM> 3600
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (TCP)
 ;; MSG SIZE  rcvd: <SIZE>
-

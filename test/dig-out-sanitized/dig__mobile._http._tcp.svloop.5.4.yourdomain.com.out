@@ -12,4 +12,3 @@ _mobile._http._tcp.svloop.5.4.<OURDOM>. 60 IN SVCB 0 _mobile._http._tcp.svloop.5
 
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
 ;; MSG SIZE  rcvd: <SIZE>
-

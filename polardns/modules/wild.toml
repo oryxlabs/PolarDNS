@@ -1,0 +1,203 @@
+[module]
+name = "wild"
+type = "feature"
+info = "Wildcard Label Records"
+short = "Respond to or generate wildcard label records"
+category = "General features"
+records = "A, CNAME"
+desc = '''
+This module is designed to evaluate how resolvers handle wildcard records - DNS records that contain a wildcard label (an asterisk *) in the domain name.
+
+The module supports both responding to wildcard queries and generating responses that include wildcard domain names.
+
+Responses may include either A records or CNAME records with varying values.
+
+Note: Domain names containing an explicit wildcard label (*) are non-compliant according to DNS standards and are considered malformed. Resolvers should treat such names as invalid or broken.
+'''
+format = '''
+**`wild<VARIANT>.yourdomain.com`**
+
+Where:
+
+- The **`<VARIANT>`** parameter specifies the type of wildcard record and the corresponding value to be generated. The following 3 (three) variants are supported:
+
+	- **`wild0`** returns an `A` record indicating that `*.yourdomain.com` resolves to the IPv4 address `3.4.5.6`.
+
+	- **`wild1`** returns a `CNAME` record indicating that `*.yourdomain.com` is an alias for a resolvable domain.
+
+	- **`wild2`** returns a `CNAME` record indicating that `*.yourdomain.com` is an alias for a non-resolvable domain.
+
+Additionaly, the following format is also supported:
+
+**`*.wild<VARIANT>.yourdomain.com`**
+
+Where:
+
+- The **`<VARIANT>`** parameter specifies the type of wildcard record and the corresponding value to be generated. The following 6 (six) variants are supported:
+
+	- **`*.wild0`** returns an `A` record indicating that `*.wild0.yourdomain.com` (a wildcard entry) resolves to the IPv4 address `3.4.5.6`.
+
+	- **`*.wild1`** returns a `CNAME` record indicating that `*.wild1.yourdomain.com` (a wildcard entry) is an alias for a resolvable domain.
+
+	- **`*.wild2`** returns a `CNAME` record indicating that `*.wild2.yourdomain.com` (a wildcard entry) is an alias for a non-resolvable domain.
+
+	- **`*.wild3`** returns an `A` record indicating that `test.wild3.yourdomain.com` (an exact entry) resolves to the IPv4 address `3.4.5.6`.
+
+	- **`*.wild4`** returns a `CNAME` record indicating that `test.wild4.yourdomain.com` (an exact entry) is an alias for a resolvable domain.
+
+	- **`*.wild5`** returns a `CNAME` record indicating that `test.wild5.yourdomain.com` (an exact entry) is an alias for a non-resolvable domain.
+'''
+
+[[module.example]]
+description = "The most basic example returns an `A` record indicating that a wildcard entry `*.yourdomain.com` resolves to the IPv4 address `3.4.5.6` as shown here:"
+command = "dig wild.yourdomain.com @127.0.0.1"
+append = "According to RFC specifications, resolvers should neither cache such responses nor interpret them as valid records."
+
+[[module.example]]
+description = "In the `wild1` variant, the query returns a `CNAME` record indicating that the wildcard entry `*.yourdomain.com` is an alias for another domain - in this case a resolvable domain:"
+command = "dig wild1.yourdomain.com @127.0.0.1"
+append = "A subsequent query to `always681822.yourdomain.com` will resolve to an IP address, as the [always] feature is designed to consistently return one. However, a resolver should not initiate this query, as the response is generally considered invalid."
+
+[[module.example]]
+description = "This example demonstrates that the module supports arbitrary subdomains - for instance, `foo.bar.yourdomain.com` in this case:"
+command = "dig wild1.foo.bar.yourdomain.com @127.0.0.1"
+append = "A consequent query to `always830671.foo.bar.yourdomain.com` will again resolve this to an IP address."
+
+[[module.example]]
+description = "In the `wild2` variant, the query returns a `CNAME` record indicating that the wildcard entry is an alias for a non-resolvable domain in this case:"
+command = "dig wild2.foo.bar.yourdomain.com @127.0.0.1"
+append = "A consequent query to `nonres412831.foo.bar.yourdomain.com` will return NXDOMAIN as this domain does not exist."
+
+[[module.example]]
+description = '''
+Now let's explore the alternative format involving querying subdomains containing the literal `*.` (wildcard label) at the beginning of the domain name.
+
+In this example, we query the basic `*.wild` variant. The response includes an `A` record indicating that the exact domain name - wildcard label included - resolves to the IPv4 address `3.4.5.6`:
+'''
+command = "dig *.wild.yourdomain.com @127.0.0.1"
+append = "Resolvers should neither cache such responses nor interpret them as wildcard records. Domain names containing an explicit asterisk (*) are treated as literal labels, not wildcard patterns, and thus are generally not valid for matching purposes. Responses to such queries are non-compliant and should be discarded."
+
+[[module.example]]
+description = "In this example, we request the `*.wild1` variant, which closely resembles the previous case, but returns a `CNAME` record instead:"
+command = "dig *.wild1.yourdomain.com @127.0.0.1"
+append = "Again, a resolver should avoid initiating any subsequent queries, as the response is generally considered invalid."
+
+[[module.example]]
+description = "In this example, we request the `*.wild3` variant, which modifies the domain name (owner name) in the answer section to include a specific hostname instead of a wildcard label:"
+command = "dig *.wild3.yourdomain.com @127.0.0.1"
+append = "As previously noted, domain names with an explicit asterisk (*) are interpreted as literal labels rather than wildcard patterns. Furthermore, due to a mismatch between the QNAME in the query and the owner name in the answer section, resolvers should not treat the response as valid."
+
+[module.code]
+python = '''
+           elif req.first_subdomain.startswith("wild"):
+              # Return a wildcard response
+              ip = ""
+              dom = ""
+              data = b''
+              datalog = ''
+              resp.type_str = ""
+              if len(req.first_subdomain) > 4:
+                 code = int(req.first_subdomain[4])
+                 match code:
+                    case 1:
+                       resp.type_str = "CNAME"
+                       dom = "always" + str('{:06d}'.format(random.getrandbits(20) % 1000000)) + "." + ".".join(req.subdomains_20[1:])
+                       datalog = dom
+                       bindom = convDom2Bin(dom)
+                       data  = struct.pack(">H", len(bindom)) ## Data length
+                       data += bindom                         ## CNAME domain
+                    case 2:
+                       resp.type_str = "CNAME"
+                       dom = "nonres" + str('{:06d}'.format(random.getrandbits(20) % 1000000)) + "." + ".".join(req.subdomains_20[1:])
+                       datalog = dom
+                       bindom = convDom2Bin(dom)
+                       data  = struct.pack(">H", len(bindom)) ## Data length
+                       data += bindom                         ## CNAME domain
+                    case _:
+                       resp.type_str = "A"
+                       ip = "3.4.5.6"
+                       datalog = ip
+                       data  = struct.pack(">H", 4)      ## Data length
+                       data += socket.inet_aton(ip)      ## IP
+              else:
+                 resp.type_str = "A"
+                 ip = "3.4.5.6"
+                 datalog = ip
+                 data  = struct.pack(">H", 4)      ## Data length
+                 data += socket.inet_aton(ip)      ## IP
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', resp.QURR, 1, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              # A/CNAME
+              wilddom = "*." + ".".join(req.subdomains_20[1:])
+              buffer += convDom2Bin(wilddom)
+              buffer += getTypeBin(resp.type_str) + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += data
+              # log and send
+              log("%s %s %s" % (resp.type_str, wilddom, datalog))
+              send_buf(self, buffer)
+              #####################################################################
+           elif req.full_domain.startswith("*.wild"):
+              # Return a wildcard response
+              ip = ""
+              dom = ""
+              data = b''
+              data_str = ''
+              ans_qname = b''
+              ans_qname_str = ''
+              resp.type_str = ""
+              if req.subdomains[1][4:].isnumeric():
+                 code = int(req.subdomains[1][4])
+                 if code > 2:
+                    ans_qname_str = "test." + ".".join(req.subdomains_20[1:])
+                    ans_qname = convDom2Bin(ans_qname_str)
+                 else:
+                    ans_qname_str = req.full_domain_20
+                    ans_qname = b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
+                 match code:
+                    case 1|4:
+                       dom = "always" + str('{:06d}'.format(random.getrandbits(20) % 1000000)) + "." + ".".join(req.subdomains_20[1:])
+                       resp.type_str = "CNAME"
+                       data_str = dom
+                       bindom = convDom2Bin(dom)
+                       data  = struct.pack(">H", len(bindom)) ## Data length
+                       data += bindom                         ## CNAME domain
+                    case 2|5:
+                       dom = "nonres" + str('{:06d}'.format(random.getrandbits(20) % 1000000)) + "." + ".".join(req.subdomains_20[1:])
+                       resp.type_str = "CNAME"
+                       data_str = dom
+                       bindom = convDom2Bin(dom)
+                       data  = struct.pack(">H", len(bindom)) ## Data length
+                       data += bindom                         ## CNAME domain
+                    case _:
+                       resp.type_str = "A"
+                       ip = "3.4.5.6"
+                       data_str = ip
+                       data  = struct.pack(">H", 4)      ## Data length
+                       data += socket.inet_aton(ip)      ## IP
+              else:
+                 ans_qname_str = req.full_domain_20
+                 ans_qname = b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
+                 resp.type_str = "A"
+                 ip = "3.4.5.6"
+                 data_str = ip
+                 data  = struct.pack(">H", 4)      ## Data length
+                 data += socket.inet_aton(ip)      ## IP
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', resp.QURR, 1, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              # A/CNAME
+              buffer += ans_qname
+              buffer += getTypeBin(resp.type_str) + getClassBin("IN")
+              buffer += struct.pack(">L", resp.TTL)    ## TTL
+              buffer += data
+              # log and send
+              log("%s -> %s %s" % (ans_qname_str, resp.type_str, data_str))
+              send_buf(self, buffer)
+              #####################################################################
+''' 

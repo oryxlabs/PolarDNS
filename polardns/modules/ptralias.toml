@@ -55,7 +55,7 @@ command = "dig -x 10.1000.0.0 @127.0.0.1"
 
 [module.code]
 python = '''
-           elif req.full_domain.lower().endswith(".10.in-addr.arpa"):
+           elif req.full_domain.endswith(".10.in-addr.arpa"):
               # Asking for a reverse record for the IP address 10.x.y.z (z.y.x.10.in-arpa.addr PTR record).
               # The 10.0.0.0/8 network range is a private network range for internal use only.
               # Let's respond with x number of PTR records containing 10.x.<RANDOM>.<RANDOM>.in-addr.arpa
@@ -66,7 +66,7 @@ python = '''
               ### DNS header ########
               buffer = prep_dns_header(b'\x84\x00', req.QURR, answers, 0, 0)
               ### QUESTION SECTION ########
-              if resp.noq: buffer += convDom2Bin(req.full_domain) + req.type_bin + req.class_bin
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
               ### ANSWER SECTION ########
               doms = []
               for i in range(answers):
@@ -76,7 +76,7 @@ python = '''
                   #      z    .     y    .           x             .     10
                   dom = r2 + "." + r1 + "." + req.subdomains[2] + "." + "10.in-addr.arpa"
                   bindom = convDom2Bin(dom)
-                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain)
+                  buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
                   buffer += getTypeBin("PTR") + getClassBin("IN")
                   buffer += struct.pack(">L", resp.TTL)           ## TTL
                   buffer += struct.pack(">H", len(bindom))        ## Data length

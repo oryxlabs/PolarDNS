@@ -1,0 +1,121 @@
+---
+layout: default
+title: "A - Return A record (IPv4 address)"
+parent: "General features"
+---
+
+<!DOCTYPE html>
+<head>
+<title>A - Return A record (IPv4 address)</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>A - Return A record (IPv4 address)</h1>
+<p>This module returns an A record with a random IPv4 address from the TEST-NET-1 network range by default.</p>
+<p>Alternatively, the client can specify the exact IP address to be returned by specifying it in hexadecimal format in the query.</p><p><strong>Category:</strong> <a href='../general-features.html'>General features</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>a&lt;00000000-ffffffff&gt;.&lt;NUMBER&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>The <strong><code class='code-block'>&lt;00000000-ffffffff&gt;</code></strong> parameter defines the IPv4 address to be generated, specified in hexadecimal format.</li>
+<li>The <strong><code class='code-block'>&lt;NUMBER&gt;</code></strong> parameter defines how many A records should be generated in the response.</li>
+</ul>
+<h2>Examples</h2>
+<p>The most basic example returns a random IPv4 address from the TEST-NET-1 (<code class='code-block'>192.0.2.0/24</code>) network range:</p>
+<div><pre class='output-block'><strong># dig a.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; a.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 30677
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;a.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+a.yourdomain.com.	60	IN	A	192.0.2.97
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Jun 30 15:42:15 +04 2025
+;; MSG SIZE  rcvd: 50</pre></div><p><a href='../outputs/a/dig_a.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request to generate <code class='code-block'>1.1.1.1</code> IPv4 address:</p>
+<div><pre class='output-block'><strong># dig a01010101.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; a01010101.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 62406
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;a01010101.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+a01010101.yourdomain.com. 60	IN	A	1.1.1.1
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Jun 23 01:09:05 +04 2025
+;; MSG SIZE  rcvd: 58</pre></div><p><a href='../outputs/a/dig_a01010101.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request to generate <code class='code-block'>192.168.0.1</code> IPv4 address:</p>
+<div><pre class='output-block'><strong># dig ac0a80001.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; ac0a80001.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 21400
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;ac0a80001.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+ac0a80001.yourdomain.com. 60	IN	A	192.168.0.1
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Jun 23 01:06:56 +04 2025
+;; MSG SIZE  rcvd: 58</pre></div><p><a href='../outputs/a/dig_ac0a80001.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request to generate ten (10) <code class='code-block'>192.168.0.1</code> IPv4 addresses:</p>
+<div><pre class='output-block'><strong># dig ac0a80001.10.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; ac0a80001.10.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 53864
+;; flags: qr aa; QUERY: 1, ANSWER: 10, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;ac0a80001.10.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+ac0a80001.10.yourdomain.com. 60	IN	A	192.168.0.1
+ac0a80001.10.yourdomain.com. 60	IN	A	192.168.0.1
+ac0a80001.10.yourdomain.com. 60	IN	A	192.168.0.1
+ac0a80001.10.yourdomain.com. 60	IN	A	192.168.0.1
+ac0a80001.10.yourdomain.com. 60	IN	A	192.168.0.1
+ac0a80001.10.yourdomain.com. 60	IN	A	192.168.0.1
+ac0a80001.10.yourdomain.com. 60	IN	A	192.168.0.1
+ac0a80001.10.yourdomain.com. 60	IN	A	192.168.0.1
+ac0a80001.10.yourdomain.com. 60	IN	A	192.168.0.1
+ac0a80001.10.yourdomain.com. 60	IN	A	192.168.0.1
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Jun 23 01:06:57 +04 2025
+;; MSG SIZE  rcvd: 205</pre></div><p><a href='../outputs/a/dig_ac0a80001.10.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="always.html">Always - Always Resolve to IP Address</a></li>
+<li><a href="count.html">Count - Count Number of Queries</a></li>
+<li><a href="self.html">Self - What Is My IP Address</a></li>
+<li><a href="size.html">Size - Max A or AAAA Records Within Size Limit</a></li>
+<li><a href="wild.html">Wild - Wildcard Label Records</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

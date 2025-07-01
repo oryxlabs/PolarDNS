@@ -10,7 +10,10 @@ copynew=0
 updatefailed=0
 debug=0
 
+DIG="dig"
+#DIG="/path/to/dig-9.18.10-2/dig"
 SED="sed"
+AWK="awk"
 if [ "`uname -s`" == "Darwin" ]; then SED="gsed"; fi
 
 timestamp="`date +%y%m%d_%H%M%S`"
@@ -23,6 +26,8 @@ dig_out_ref="${testroot}/dig-out"
 dig_out_ref_ok="${testroot}/dig-out-sanitized"
 dig_out_now="${this_test_run_dir}/dig-out"
 dig_out_now_ok="${this_test_run_dir}/dig-out-sanitized"
+dig_out_last="${last_test_run_dir}/dig-out"
+dig_out_last_ok="${last_test_run_dir}/dig-out-sanitized"
 
 trap "eval_results "${this_test_run_dir}"; rm -rf -- \"${this_test_run_dir}\"; kill -9 $$" INT
 
@@ -37,9 +42,17 @@ if [ ! -f "${config}" ]; then
     config="polardns/polardns.toml"
   fi
 fi
-domain="`grep -v '^#' ${config} | grep -m1 "domain = " | awk '{print $3}' | cut -f2 -d"'"`"
+domain="`grep -v '^#' ${config} | grep -m1 "domain = " | ${AWK} '{print $3}' | cut -f2 -d"'"`"
 if [ "${domain}" == "" ]; then
-  echo "ERROR: cannot load domain name"
+  #echo "ERROR: cannot load domain name"
+  cat <<EOF
+ERROR: cannot load domain name from the '${config}' config file.
+
+Add domain to the config file:
+
+[main]
+domain = 'yourdomain.com'
+EOF
   exit 1
 fi
 
@@ -63,7 +76,8 @@ sanitize_dig_output() {
   | ${SED} -e 's/alias[0-9]\+/alias<RANDOM>/g;s/\(\.10\.in-addr\.arpa\..*PTR\s*\)[0-9]\+\.[0-9]\+\./\1<RANDOM>.<RANDOM>./g' \
   | ${SED} -e '0,/^\([0-9a-f]\{2\} \)\{16\} /s/^\([0-9a-f]\{2\} \)\{2\}\(\([0-9a-f]\{2\} \)\{14\} *\)[^ ][^ ]/TX ID \2ID/1' \
   | ${SED} -e "s/#${target_port}/#53/g;s/${target_ip}/127\.0\.0\.1/g;s/^\(size.*127\.0\.0\.\).*$/\1<RANDOM>/g" \
-  | ${SED} -e 's/!1\.\([0-9]\+\.\)\+\(e164\.arpa!" \.\)/!1.<RANDOM>.\2/'
+  | ${SED} -e 's/!1\.\([0-9]\+\.\)\+\(e164\.arpa!" \.\)/!1.<RANDOM>.\2/' \
+  | ${AWK} 'NF {last = NR} {line[NR] = $0} END {for (i = 1; i <= last; i++) print line[i]}'
 }
 
 #######################################
@@ -77,7 +91,7 @@ runtest() {
   out_sanitized="${dig_out_now_ok}/${cmdfn}" # current dig output
   ref_sanitized="${dig_out_ref_ok}/${cmdfn}" # reference dig output
 
-  dig_cmd="dig ${dom} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port}"
+  dig_cmd="${DIG} ${dom} @${target_ip} +tries=1 +timeout=${timeout} -p ${target_port}"
   ${dig_cmd} &>"${out}"
   sanitize_dig_output <"${out}" &>"${out_sanitized}"
 
@@ -99,7 +113,7 @@ runtest() {
       cat ${out_sanitized}
       echo "- - - - - - - - - - - - - - - - - - -"
       echo "Use -c to save the current dig output as reference."
-      echo "-------------------------------------"
+      echo "-------------------------------------------------------------------------"
     else
       echo "${dom}" >>"${this_test_run_dir}/tests.added"
       echo "ADDED dig ${dom}"
@@ -116,13 +130,17 @@ runtest() {
       echo "${dom}" >>"${this_test_run_dir}/tests.failed"
       echo "FAIL  dig ${dom}"
       echo "      ${dig_cmd}"
-      echo "      diff ${ref_sanitized} ${out_sanitized}"
+      if [ $((del_my_test_run_dir)) -eq 1 ]; then
+        echo "      diff ${ref_sanitized} ${dig_out_last_ok}/${cmdfn}"
+      else
+        echo "      diff ${ref_sanitized} ${out_sanitized}"
+      fi
       if [ $((debug)) -eq 1 ]; then
         diff ${ref_sanitized} ${out_sanitized}
-        echo "-------------------------------------"
+        echo "-------------------------------------------------------------------------"
       elif [ $((debug)) -eq 2 ]; then
         diff -y ${ref_sanitized} ${out_sanitized}
-        echo "-------------------------------------"
+        echo "-------------------------------------------------------------------------"
       elif [ $((debug)) -eq 3 ]; then
         echo "- - - - - - - - - - - - - - - - - - -"
         echo "Got dig output (sanitized):"
@@ -133,7 +151,7 @@ runtest() {
         echo "- - - - - - - - - - - - - - - - - - -"
         echo "Comparison:"
         diff -y --color ${ref_sanitized} ${out_sanitized}
-        echo "-------------------------------------"
+        echo "-------------------------------------------------------------------------"
       elif [ $((debug)) -gt 3 ]; then
         echo "- - - - - - - - - - - - - - - - - - -"
         echo "Got dig output:"
@@ -147,7 +165,7 @@ runtest() {
         echo "- - - - - - - - - - - - - - - - - - -"
         echo "Comparison:"
         diff -y --color ${ref_sanitized} ${out_sanitized}
-        echo "-------------------------------------"
+        echo "-------------------------------------------------------------------------"
       fi
       if [ $((failstop)) -eq 1 ]; then
         exit 1
@@ -163,11 +181,11 @@ runtest() {
       echo "- - - - - - - - - - - - - - - - - - -"
       echo "Got dig output (sanitized):"
       cat ${out_sanitized}
-      echo "-------------------------------------"
+      echo "-------------------------------------------------------------------------"
     elif [ $((debug)) -gt 2 ]; then
       echo "- - - - - - - - - - - - - - - - - - -"
       cat ${out_sanitized}
-      echo "-------------------------------------"
+      echo "-------------------------------------------------------------------------"
       #diff -y ${ref_sanitized} ${out_sanitized}
     fi
   fi
@@ -178,12 +196,12 @@ runtest() {
 eval_results() {
   test_run_dir="$1"
 
-  testcount=`wc -l "${test_run_dir}/tests.executed" | awk '{print $1}'`
-  passcount=`wc -l "${test_run_dir}/tests.passed" | awk '{print $1}'`
-  failcount=`wc -l "${test_run_dir}/tests.failed" | awk '{print $1}'`
-  addcount=`wc -l "${test_run_dir}/tests.added" | awk '{print $1}'`
-  newcount=`wc -l "${test_run_dir}/tests.new" | awk '{print $1}'`
-  updcount=`wc -l "${test_run_dir}/tests.updated" | awk '{print $1}'`
+  testcount=`wc -l "${test_run_dir}/tests.executed" | ${AWK} '{print $1}'`
+  passcount=`wc -l "${test_run_dir}/tests.passed" | ${AWK} '{print $1}'`
+  failcount=`wc -l "${test_run_dir}/tests.failed" | ${AWK} '{print $1}'`
+  addcount=`wc -l "${test_run_dir}/tests.added" | ${AWK} '{print $1}'`
+  newcount=`wc -l "${test_run_dir}/tests.new" | ${AWK} '{print $1}'`
+  updcount=`wc -l "${test_run_dir}/tests.updated" | ${AWK} '{print $1}'`
   
   echo
   echo " TESTS: ${testcount}"

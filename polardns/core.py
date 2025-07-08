@@ -18,7 +18,7 @@ from collections import defaultdict
 from polardns import nfz
 from polardns import consts
 
-polardns_version = "1.6.5"
+polardns_version = "1.6.6"
 
 ################################
 
@@ -931,7 +931,10 @@ def process_DNS(self, req):
                if flgs.isnumeric():
                   resp.FLGS = struct.pack(">H", min(int(flgs), 65535))
                elif flgs[:2] == "0x":
-                  resp.FLGS = struct.pack(">H", min(int(flgs[2:], base=16), 65535))
+                  try:
+                     resp.FLGS = struct.pack(">H", min(int(flgs[2:], base=16), 65535))
+                  except (ValueError, IndexError):
+                     pass
                elif flgs == "r":
                   resp.FLGS = struct.pack(">H", random.getrandbits(16))
                addcustomlog("FLGS:" + flgs)

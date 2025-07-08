@@ -1,0 +1,20 @@
+<pre class='output-block'><strong># dig rrfz.t65535.c65535.l20.d20.b255.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; rrfz.t65535.c65535.l20.d20.b255.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 20942
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;rrfz.t65535.c65535.l20.d20.b255.yourdomain.com.	IN A
+
+;; ANSWER SECTION:
+rrfz.t65535.c65535.l20.d20.b255.yourdomain.com.	60 CLASS65535 TYPE65535	\# 20 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 08 11:31:41 +04 2025
+;; MSG SIZE  rcvd: 96</pre>

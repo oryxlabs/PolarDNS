@@ -1,0 +1,15 @@
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: <ID>
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;rrfz.2.b0xfe.<OURDOM>. IN A
+
+;; ANSWER SECTION:
+rrfz.2.b0xfe.<OURDOM>. 60 IN A 254.254.254.254
+rrfz.2.b0xfe.<OURDOM>. 60 IN A 254.254.254.254
+
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; MSG SIZE  rcvd: <SIZE>

@@ -1,0 +1,127 @@
+[module]
+name = "rrfz"
+type = "feature"
+info = "Resource Record Fuzzing Generator"
+short = "Resource Record (RR) fuzzing generator"
+category = "Fuzzing"
+records = "any"
+desc = '''
+This module allows users to generate custom resource records (RRs) in the Answer section, based on parameters defined in the query.
+
+Clients can specify the record type, DNS class, declared data length (RDLENGTH), actual data size, and the number of records to include in the response. Additionally, users can specify the byte values used to populate the data section.
+
+This allows crafting of a wide range of custom DNS responses, including highly non-compliant, corrupted, or intentionally malformed records.
+
+It is particularly useful for evaluating the robustness of recursive resolvers and clients in handling (parsing) malformed or non-standard records - for example, discrepancies between declared and actual data sizes, corrupted records, or use of unsupported or obsolete record types.
+
+By default, the module returns an A record with a randomly generated IPv4 address, using the following parameters:
+
+- **Record Type**: 1 (A / Host Address)
+- **DNS Class**: 1 (IN / Internet)
+- **Declared Data Length**: 4
+- **Actual Data Size**: 4 (IPv4 address)
+- **Data Payload**: Random bytes
+
+'''
+rfc = "RFC1035"
+format = '''
+**`rrfz.<NUMBER>.t<TYPE>.c<CLASS>.l<RDLEN>.d<DATALEN>.b<BYTE>.yourdomain.com`**
+
+Where:
+
+- The **`NUMBER`** parameter specifies how many records should be generated in the response.
+
+- The **`TYPE`** parameter defines the RR type to generate. There are 65,535 possible values, as defined by the 2-byte field limit. Common types include A, AAAA, NS, SOA, MX, etc. A complete list of types and their numeric values can be found [here](https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-4). 
+
+- The **`CLASS`** parameter defines the DNS class for each record. Like types, there are 65,535 possible values. In practice, only IN (1) and CH (3) are widely used. A list of defined classes is available [here](https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-2).
+
+- The **`RDLEN`** parameter specifies the declared data length in bytes for the record's data section. This value can range up to 65,535, as defined by the 2-byte field limit.
+
+- The **`DATALEN`** parameter specifies the actual data length in bytes of the data payload in the record. The payload is filled with random bytes by default. Optionally, a specific **`<BYTE>`** value can be used to fill the payload.
+
+- The **`BYTE`** parameter specifies the byte value to be repeated to fill the payload. It can either be:
+
+	- A hexadecimal number (0x0 - 0xff)
+	- A decimal number (0 - 255)
+	- Ommited, which results in a random value being used (default)
+'''
+
+[[module.example]]
+description = "As mentioned above, the default behavior of the module is to generate a DNS response containing a single A record with a randomly generated IPv4 address:"
+command = "dig rrfz.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In the following example, we begin customizing the record by specifying that the data section should be filled with the byte value 1 (0x01). We can see that this produces the IPv4 address `1.1.1.1` instead of a randomly generated one:"
+command = "dig rrfz.b1.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we specify that both the declared data length and the actual data size are exactly 3 bytes (`.l3.d3.`). Since a valid IPv4 address requires 4 bytes, the parser cannot interpret this data as a valid address:"
+command = "dig rrfz.l3.d3.yourdomain.com @127.0.0.1"
+append = "Instead, the client (dig) displays no answer, even though the header indicates that one is present (`ANSWER: 1`). It only reports the presence of 3 unexpected bytes at the end of the packet."
+
+[[module.example]]
+description = "In this example, we specify the declared data length of exactly 4 bytes (`.l4.`) - the correct size for an IPv4 address - while also setting the actual data size to 5 bytes (`.d5.`). As a result, the parser detects one extra byte beyond the expected IPv4 address length:"
+command = "dig rrfz.l4.d5.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "Now, we generate a response containing two records (`.2.`) identical to the previous example - each record with one extra byte beyond the expected size. The response should include two answers, however we can see that the parser is unable to process it:"
+command = "dig rrfz.2.l4.d5.yourdomain.com @127.0.0.1"
+append = "This is caused by the unexpected trailing byte in the first record, which disrupts the parsing logic."
+
+[[module.example]]
+description = "Here, we can see that without the extra byte, the response would be parsed correctly:"
+command = "dig rrfz.2.l4.d4.yourdomain.com @127.0.0.1"
+
+[[module.example]]
+description = "In this example, we request a response containing a record with the RR type set to 65535, DNS class set to 65535, both the declared and actual data lengths set to 20 bytes, and the data section filled with the byte value 255 (0xFF). This results in the following unusual-looking response:"
+command = "dig rrfz.t65535.c65535.l20.d20.b255.yourdomain.com @127.0.0.1"
+append = "We can see that the client (dig) struggles to parse this unusual response, reporting it as malformed. However, when inspected in Wireshark, the response does not appear to be explicitly malformed - the record type and class are simply unknown or unrecognized."
+
+[module.code]
+python = '''
+           elif req.first_subdomain.startswith("rrfz"):
+              # Resource Record Fuzzing - craft custom resource record
+              answers = min(int(req.subdomains[1]), 4096) if req.subdomains[1].isnumeric() else 1
+              ctype = 1     # type 1 = A (IPv4 address)
+              cclass = 1    # class 1 = IN 
+              dlen = 4      # declared data length = 4 bytes (IPv4 address size)
+              rdlen = 4     # real data length     = 4 bytes (IPv4 address size)
+              rdbyte = "r"  # real data made of which byte? r = random
+              ##for index, label in enumerate(req.subdomains[1:5]):
+              for label in req.subdomains[1:6]:
+                 if label[1:].isnumeric():
+                    if label.startswith("t"):
+                       ctype = min(int(label[1:]), 65535)
+                    elif label.startswith("c"):
+                       cclass = min(int(label[1:]), 65535)
+                    elif label.startswith("l"):
+                       dlen = min(int(label[1:]), 65535)
+                    elif label.startswith("d"):
+                       rdlen = min(int(label[1:]), 65535)
+                    elif label.startswith("b"):
+                       rdbyte = min(int(label[1:]), 255)
+                 elif label.startswith("b0x"):
+                    try:
+                       rdbyte = min(int(label[3:], base=16), 255)
+                    except (ValueError, IndexError):
+                       pass
+              ### DNS header ########
+              buffer = prep_dns_header(b'\x84\x00', resp.QURR, answers, 0, 0)
+              ### QUESTION SECTION ########
+              if resp.noq: buffer += convDom2Bin(req.full_domain_20) + req.type_bin + req.class_bin
+              ### ANSWER SECTION ########
+              for i in range(answers):
+                 if hasattr(resp, "nfz"):
+                    buffer += name_fuzz(resp.nfz)
+                 else:
+                    buffer += b'\xc0\x0c' if resp.compress else convDom2Bin(req.full_domain_20)
+                 buffer += struct.pack(">H", ctype)       ## Type
+                 buffer += struct.pack(">H", cclass)      ## Class
+                 buffer += struct.pack(">L", resp.TTL)    ## TTL
+                 buffer += struct.pack(">H", dlen)        ## Data length
+                 buffer += os.urandom(rdlen) if rdbyte == "r" else bytes([rdbyte] * rdlen)  # Data
+              # log and send
+              log("TYPE:%d CLASS:%d DATALEN:%d DATA:%d.%s" % (ctype, cclass, dlen, rdlen, str(rdbyte)))
+              send_buf(self, buffer)
+              #####################################################################
+'''

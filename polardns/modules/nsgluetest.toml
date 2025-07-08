@@ -55,7 +55,8 @@ python = '''
                  data  = struct.pack(">H", 16)                 ## Data length
                  data += socket.inet_pton(socket.AF_INET6, ip) ## IP
               else:
-                 ip = "2.3.4.5"
+                 #ip = "2.3.4.5"
+                 ip = "192.0.2." + str(random.getrandbits(8))   # random IP from TEST-NET-1 range
                  resp.type_str = "A"
                  data  = struct.pack(">H", 4)      ## Data length
                  data += socket.inet_aton(ip)      ## IP

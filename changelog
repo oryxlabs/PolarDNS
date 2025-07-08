@@ -1,3 +1,10 @@
+08/Jul/2025
+- release version 1.6.6
+- added the `rrfz` module for resource record fuzzing
+- various small fixes across `polardns.py`, individual modules and the test runner `test/run.sh`
+- added tests (total test count: 2405)
+- updated documentation
+
 01/Jul/2025
 - release version 1.6.5
 - added support for configuring arbitrary number of nameservers managing the domain

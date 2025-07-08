@@ -8,7 +8,7 @@
 ;nsgluetest0.<OURDOM>. IN A
 
 ;; ANSWER SECTION:
-nsgluetest0.<OURDOM>. 60 IN A 2.3.4.5
+nsgluetest0.<OURDOM>. 60 IN A 192.0.2.<RANDOM>
 
 ;; AUTHORITY SECTION:
 <OURDOM>. 60 IN NS ns.<OURDOM>.

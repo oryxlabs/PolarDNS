@@ -30,7 +30,7 @@ parent: "Cache poisoning"
 ; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; nsgluetest0.sub.yourdomain.com @127.0.0.1
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 31722
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 55489
 ;; flags: qr aa; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
 
 ;; QUESTION SECTION:
@@ -44,7 +44,7 @@ ns.sub.yourdomain.com.	60	IN	A	10.211.55.2
 
 ;; Query time: 0 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jul 01 10:43:51 +04 2025
+;; WHEN: Tue Jul 08 15:11:22 +04 2025
 ;; MSG SIZE  rcvd: 138</pre></div><p><a href='../outputs/nsgluetest/dig_nsgluetest0.sub.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that the <code class='code-block'>sub.yourdomain.com</code> zone is managed by <code class='code-block'>ns.sub.yourdomain.com</code> at <code class='code-block'>10.211.55.2</code>.</p></p><br>
 <p>When we query the designated nameserver directly, it returns the response and reaffirms its authority over the zone by including authoritative data &mdash; namely the <code class='code-block'>NS</code> and <code class='code-block'>A</code> (glue) records:</p>
 <div><pre class='output-block'><strong># dig nsgluetest0.sub.yourdomain.com @10.211.55.2</strong>
@@ -52,14 +52,14 @@ ns.sub.yourdomain.com.	60	IN	A	10.211.55.2
 ; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; nsgluetest0.sub.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 25141
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 44703
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 1
 
 ;; QUESTION SECTION:
 ;nsgluetest0.sub.yourdomain.com.	IN	A
 
 ;; ANSWER SECTION:
-nsgluetest0.sub.yourdomain.com.	60 IN	A	2.3.4.5
+nsgluetest0.sub.yourdomain.com.	60 IN	A	192.0.2.79
 
 ;; AUTHORITY SECTION:
 sub.yourdomain.com.	60	IN	NS	ns.sub.yourdomain.com.
@@ -67,9 +67,9 @@ sub.yourdomain.com.	60	IN	NS	ns.sub.yourdomain.com.
 ;; ADDITIONAL SECTION:
 ns.sub.yourdomain.com.	60	IN	A	10.211.55.2
 
-;; Query time: 8 msec
+;; Query time: 12 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jul 01 10:47:10 +04 2025
+;; WHEN: Tue Jul 08 15:13:20 +04 2025
 ;; MSG SIZE  rcvd: 154</pre></div><p><a href='../outputs/nsgluetest/dig_nsgluetest0.sub.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>We can see that the authoritative zone information matches that provided by the parent nameserver.</p></p><br>
 <p>Next, we request the inclusion of the second nameserver &mdash; intentionally misconfigured in the child zone&#x27;s PolarDNS configuration file &mdash; as glue. The response still includes the answer but presents conflicting authoritative information for the zone:</p>
 <div><pre class='output-block'><strong># dig nsgluetest1.sub.yourdomain.com @10.211.55.2</strong>
@@ -77,14 +77,14 @@ ns.sub.yourdomain.com.	60	IN	A	10.211.55.2
 ; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; nsgluetest1.sub.yourdomain.com @10.211.55.2
 ;; global options: +cmd
 ;; Got answer:
-;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 31351
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 39051
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 1
 
 ;; QUESTION SECTION:
 ;nsgluetest1.sub.yourdomain.com.	IN	A
 
 ;; ANSWER SECTION:
-nsgluetest1.sub.yourdomain.com.	60 IN	A	2.3.4.5
+nsgluetest1.sub.yourdomain.com.	60 IN	A	192.0.2.183
 
 ;; AUTHORITY SECTION:
 sub.yourdomain.com.	60	IN	NS	ns.sub.yourdomain.com.
@@ -92,9 +92,9 @@ sub.yourdomain.com.	60	IN	NS	ns.sub.yourdomain.com.
 ;; ADDITIONAL SECTION:
 ns.sub.yourdomain.com.	60	IN	A	6.6.6.6
 
-;; Query time: 8 msec
+;; Query time: 12 msec
 ;; SERVER: 10.211.55.2#53(10.211.55.2) (UDP)
-;; WHEN: Tue Jul 01 10:47:12 +04 2025
+;; WHEN: Tue Jul 08 15:13:21 +04 2025
 ;; MSG SIZE  rcvd: 154</pre></div><p><a href='../outputs/nsgluetest/dig_nsgluetest1.sub.yourdomain.com__10.211.55.2.pcap'>Download PCAP File</a></p><p><p>Here, we observe that the <code class='code-block'>sub.yourdomain.com</code> zone is indicated as being managed by <code class='code-block'>ns.sub.yourdomain.com</code> at <code class='code-block'>6.6.6.6</code>, which conflicts with the information provided by the parent zone. This inconsistency may potentially confuse the resolver.</p></p><br>
 
 <h2>From the same category</h2>

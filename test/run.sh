@@ -76,7 +76,7 @@ sanitize_dig_output() {
   | ${SED} -e 's/alias[0-9]\+/alias<RANDOM>/g;s/\(\.10\.in-addr\.arpa\..*PTR\s*\)[0-9]\+\.[0-9]\+\./\1<RANDOM>.<RANDOM>./g' \
   | ${SED} -e '0,/^\([0-9a-f]\{2\} \)\{16\} /s/^\([0-9a-f]\{2\} \)\{2\}\(\([0-9a-f]\{2\} \)\{14\} *\)[^ ][^ ]/TX ID \2ID/1' \
   | ${SED} -e "s/#${target_port}/#53/g;s/${target_ip}/127\.0\.0\.1/g;s/^\(size.*127\.0\.0\.\).*$/\1<RANDOM>/g" \
-  | ${SED} -e 's/!1\.\([0-9]\+\.\)\+\(e164\.arpa!" \.\)/!1.<RANDOM>.\2/' \
+  | ${SED} -e 's/!1\.\([0-9]\+\.\)\+\(e164\.arpa!" \.\)/!1.<RANDOM>.\2/;s/\(192\.0\.2\.\).*$/\1<RANDOM>/g' \
   | ${AWK} 'NF {last = NR} {line[NR] = $0} END {for (i = 1; i <= last; i++) print line[i]}'
 }
 

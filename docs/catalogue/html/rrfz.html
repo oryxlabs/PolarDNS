@@ -1,0 +1,197 @@
+---
+layout: default
+title: "Rrfz - Resource Record Fuzzing Generator"
+parent: "Fuzzing"
+---
+
+<!DOCTYPE html>
+<head>
+<title>Rrfz - Resource Record Fuzzing Generator</title>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown.min.css">
+</head>
+<body>
+<h1>Rrfz - Resource Record Fuzzing Generator</h1>
+<p>This module allows users to generate custom resource records (RRs) in the Answer section, based on parameters defined in the query.</p>
+<p>Clients can specify the record type, DNS class, declared data length (RDLENGTH), actual data size, and the number of records to include in the response. Additionally, users can specify the byte values used to populate the data section.</p>
+<p>This allows crafting of a wide range of custom DNS responses, including highly non-compliant, corrupted, or intentionally malformed records.</p>
+<p>It is particularly useful for evaluating the robustness of recursive resolvers and clients in handling (parsing) malformed or non-standard records &mdash; for example, discrepancies between declared and actual data sizes, corrupted records, or use of unsupported or obsolete record types.</p>
+<p>By default, the module returns an A record with a randomly generated IPv4 address, using the following parameters:</p>
+<ul>
+<li><strong>Record Type</strong>: 1 (A / Host Address)</li>
+<li><strong>DNS Class</strong>: 1 (IN / Internet)</li>
+<li><strong>Declared Data Length</strong>: 4</li>
+<li><strong>Actual Data Size</strong>: 4 (IPv4 address)</li>
+<li><strong>Data Payload</strong>: Random bytes</li>
+</ul><p><strong>Category:</strong> <a href='../fuzzing.html'>Fuzzing</a></p><p><strong>RFCs:</strong> <a href="https://datatracker.ietf.org/doc/rfc1035/" target="_blank">RFC1035</a></p>
+<h2>Format</h2>
+<pre class='output-block'><strong>rrfz.&lt;NUMBER&gt;.t&lt;TYPE&gt;.c&lt;CLASS&gt;.l&lt;RDLEN&gt;.d&lt;DATALEN&gt;.b&lt;BYTE&gt;.yourdomain.com</strong></pre>
+
+<p>Where:</p>
+<ul>
+<li>
+<p>The <strong><code class='code-block'>NUMBER</code></strong> parameter specifies how many records should be generated in the response.</p>
+</li>
+<li>
+<p>The <strong><code class='code-block'>TYPE</code></strong> parameter defines the RR type to generate. There are 65,535 possible values, as defined by the 2-byte field limit. Common types include A, AAAA, NS, SOA, MX, etc. A complete list of types and their numeric values can be found <a href="https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-4" target="_blank">here</a>. </p>
+</li>
+<li>
+<p>The <strong><code class='code-block'>CLASS</code></strong> parameter defines the DNS class for each record. Like types, there are 65,535 possible values. In practice, only IN (1) and CH (3) are widely used. A list of defined classes is available <a href="https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-2" target="_blank">here</a>.</p>
+</li>
+<li>
+<p>The <strong><code class='code-block'>RDLEN</code></strong> parameter specifies the declared data length in bytes for the record&#x27;s data section. This value can range up to 65,535, as defined by the 2-byte field limit.</p>
+</li>
+<li>
+<p>The <strong><code class='code-block'>DATALEN</code></strong> parameter specifies the actual data length in bytes of the data payload in the record. The payload is filled with random bytes by default. Optionally, a specific <strong><code class='code-block'>&lt;BYTE&gt;</code></strong> value can be used to fill the payload.</p>
+</li>
+<li>
+<p>The <strong><code class='code-block'>BYTE</code></strong> parameter specifies the byte value to be repeated to fill the payload. It can either be:</p>
+<ul>
+<li>A hexadecimal number (0x0 &mdash; 0xff)</li>
+<li>A decimal number (0 &mdash; 255)</li>
+<li>Ommited, which results in a random value being used (default)</li>
+</ul>
+</li>
+</ul>
+<h2>Examples</h2>
+<p>As mentioned above, the default behavior of the module is to generate a DNS response containing a single A record with a randomly generated IPv4 address:</p>
+<div><pre class='output-block'><strong># dig rrfz.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; rrfz.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 1187
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;rrfz.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+rrfz.yourdomain.com.	60	IN	A	195.164.236.154
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Jul 07 09:46:36 +04 2025
+;; MSG SIZE  rcvd: 53</pre></div><p><a href='../outputs/rrfz/dig_rrfz.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In the following example, we begin customizing the record by specifying that the data section should be filled with the byte value 1 (0x01). We can see that this produces the IPv4 address <code class='code-block'>1.1.1.1</code> instead of a randomly generated one:</p>
+<div><pre class='output-block'><strong># dig rrfz.b1.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; rrfz.b1.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 34456
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;rrfz.b1.yourdomain.com.		IN	A
+
+;; ANSWER SECTION:
+rrfz.b1.yourdomain.com.	60	IN	A	1.1.1.1
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 08 14:38:24 +04 2025
+;; MSG SIZE  rcvd: 56</pre></div><p><a href='../outputs/rrfz/dig_rrfz.b1.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we specify that both the declared data length and the actual data size are exactly 3 bytes (<code class='code-block'>.l3.d3.</code>). Since a valid IPv4 address requires 4 bytes, the parser cannot interpret this data as a valid address:</p>
+<div><pre class='output-block'><strong># dig rrfz.l3.d3.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; rrfz.l3.d3.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 13895
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 3 extra bytes at end
+
+;; QUESTION SECTION:
+;rrfz.l3.d3.yourdomain.com.	IN	A
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Jul 07 09:46:37 +04 2025
+;; MSG SIZE  rcvd: 58</pre></div><p><a href='../outputs/rrfz/dig_rrfz.l3.d3.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>Instead, the client (dig) displays no answer, even though the header indicates that one is present (<code class='code-block'>ANSWER: 1</code>). It only reports the presence of 3 unexpected bytes at the end of the packet.</p></p><br>
+<p>In this example, we specify the declared data length of exactly 4 bytes (<code class='code-block'>.l4.</code>) &mdash; the correct size for an IPv4 address &mdash; while also setting the actual data size to 5 bytes (<code class='code-block'>.d5.</code>). As a result, the parser detects one extra byte beyond the expected IPv4 address length:</p>
+<div><pre class='output-block'><strong># dig rrfz.l4.d5.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; rrfz.l4.d5.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 52046
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+;; <span style="background-color: yellow;">WARNING</span>: Message has 1 extra bytes at end
+
+;; QUESTION SECTION:
+;rrfz.l4.d5.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+rrfz.l4.d5.yourdomain.com. 60	IN	A	55.148.82.125
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Jul 07 15:29:08 +04 2025
+;; MSG SIZE  rcvd: 60</pre></div><p><a href='../outputs/rrfz/dig_rrfz.l4.d5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>Now, we generate a response containing two records (<code class='code-block'>.2.</code>) identical to the previous example &mdash; each record with one extra byte beyond the expected size. The response should include two answers, however we can see that the parser is unable to process it:</p>
+<div><pre class='output-block'><strong># dig rrfz.2.l4.d5.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Got bad packet</span>: bad compression pointer
+79 bytes
+5c 61 84 00 00 01 00 02 00 00 00 00 04 72 72 66          \a...........rrf
+7a 01 32 02 6c 34 02 64 35 0a 79 6f 75 72 64 6f          z.2.l4.d5.yourdo
+6d 61 69 6e 03 63 6f 6d 00 00 01 00 01 c0 0c 00          main.com........
+01 00 01 00 00 00 3c 00 04 67 c9 fd e6 ee c0 0c          ......&lt;..g......
+00 01 00 01 00 00 00 3c 00 04 45 21 da e9 60             .......&lt;..E!..`</pre></div><p><a href='../outputs/rrfz/dig_rrfz.2.l4.d5.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>This is caused by the unexpected trailing byte in the first record, which disrupts the parsing logic.</p></p><br>
+<p>Here, we can see that without the extra byte, the response would be parsed correctly:</p>
+<div><pre class='output-block'><strong># dig rrfz.2.l4.d4.yourdomain.com @127.0.0.1</strong>
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; rrfz.2.l4.d4.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 62544
+;; flags: qr aa; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;rrfz.2.l4.d4.yourdomain.com.	IN	A
+
+;; ANSWER SECTION:
+rrfz.2.l4.d4.yourdomain.com. 60	IN	A	63.60.182.137
+rrfz.2.l4.d4.yourdomain.com. 60	IN	A	23.161.129.75
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 08 11:49:32 +04 2025
+;; MSG SIZE  rcvd: 77</pre></div><p><a href='../outputs/rrfz/dig_rrfz.2.l4.d4.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><br>
+<p>In this example, we request a response containing a record with the RR type set to 65535, DNS class set to 65535, both the declared and actual data lengths set to 20 bytes, and the data section filled with the byte value 255 (0xFF). This results in the following unusual-looking response:</p>
+<div><pre class='output-block'><strong># dig rrfz.t65535.c65535.l20.d20.b255.yourdomain.com @127.0.0.1</strong>
+
+;; <span style="background-color: yellow;">Warning</span>: Message parser reports malformed message packet.
+
+; &lt;&lt;&gt;&gt; DiG 9.20.7-1-Debian &lt;&lt;&gt;&gt; rrfz.t65535.c65535.l20.d20.b255.yourdomain.com @127.0.0.1
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 20942
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;rrfz.t65535.c65535.l20.d20.b255.yourdomain.com.	IN A
+
+;; ANSWER SECTION:
+rrfz.t65535.c65535.l20.d20.b255.yourdomain.com.	60 CLASS65535 TYPE65535	\# 20 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+
+;; Query time: 8 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Tue Jul 08 11:31:41 +04 2025
+;; MSG SIZE  rcvd: 96</pre></div><p><a href='../outputs/rrfz/dig_rrfz.t65535.c65535.l20.d20.b255.yourdomain.com__127.0.0.1.pcap'>Download PCAP File</a></p><p><p>We can see that the client (dig) struggles to parse this unusual response, reporting it as malformed. However, when inspected in Wireshark, the response does not appear to be explicitly malformed &mdash; the record type and class are simply unknown or unrecognized.</p></p><br>
+
+<h2>From the same category</h2>
+<ul><li><a href="afuzz1.html">AFuzz1 - Single A Record with Arbitrary Byte</a></li>
+<li><a href="afuzz2.html">AFuzz2 - Many Bogus A Records and Legit A Record</a></li>
+<li><a href="bigbintxt.html">BigBinTxt - TXT Record with Multiple Binary Strings</a></li>
+<li><a href="bigtxt.html">BigTxt - TXT Record with Multiple Text Strings</a></li>
+<li><a href="manybintxt.html">ManyBinTxt - Many TXT Records with Binary Data</a></li>
+<li><a href="manytxt.html">ManyTxt - Many TXT Records with Random Text</a></li>
+<li><a href="nfz.html">Nfz - Name Fuzzing Generator</a></li>
+</ul>
+<br><p>Go <strong><u><a href='../catalogue.html'>back to catalogue</a></strong></u>.</p>
+</body>
+</html>

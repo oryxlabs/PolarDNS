@@ -84,3 +84,11 @@ nsgluetest0.sub.${domain}
 nsgluetest1.sub.${domain}
 nsgluetest0.some.other.subdomain.${domain}
 nsgluetest1.some.other.subdomain.${domain}
+
+# rrfz.toml
+rrfz.l4.d5.b100.${domain}
+rrfz.t16.l2.d2.b1.${domain}
+rrfz.c0.b0.${domain}
+rrfz.d5000.b255.${domain}
+rrfz.2.b0xfe.${domain}
+rrfz.t999999.c999999.d999999.l1008.b999999.${domain}

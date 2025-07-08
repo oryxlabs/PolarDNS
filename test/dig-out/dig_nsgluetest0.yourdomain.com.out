@@ -2,14 +2,14 @@
 ; <<>> DiG 9.20.7-1-Debian <<>> nsgluetest0.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
 ;; global options: +cmd
 ;; Got answer:
-;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 54212
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 13927
 ;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 1
 
 ;; QUESTION SECTION:
 ;nsgluetest0.yourdomain.com.	IN	A
 
 ;; ANSWER SECTION:
-nsgluetest0.yourdomain.com. 60	IN	A	2.3.4.5
+nsgluetest0.yourdomain.com. 60	IN	A	192.0.2.108
 
 ;; AUTHORITY SECTION:
 yourdomain.com.		60	IN	NS	ns.yourdomain.com.
@@ -17,8 +17,8 @@ yourdomain.com.		60	IN	NS	ns.yourdomain.com.
 ;; ADDITIONAL SECTION:
 ns.yourdomain.com.	60	IN	A	127.0.0.1
 
-;; Query time: 0 msec
+;; Query time: 4 msec
 ;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
-;; WHEN: Tue Jul 01 13:58:13 +04 2025
+;; WHEN: Fri Jul 04 11:27:46 +04 2025
 ;; MSG SIZE  rcvd: 138
 

@@ -1,0 +1,18 @@
+
+; <<>> DiG 9.20.7-1-Debian <<>> rrfz.t16.l2.d2.b1.yourdomain.com @127.0.0.1 +tries=1 +timeout=1 -p 53
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 29637
+;; flags: qr aa; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;rrfz.t16.l2.d2.b1.yourdomain.com. IN	A
+
+;; ANSWER SECTION:
+rrfz.t16.l2.d2.b1.yourdomain.com. 60 IN	TXT	"\001"
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1) (UDP)
+;; WHEN: Mon Jul 07 14:23:05 +04 2025
+;; MSG SIZE  rcvd: 64
+
